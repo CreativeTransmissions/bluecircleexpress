@@ -1,0 +1,6 @@
+[submodule "includes/ct-utils"]
+	path = includes/ct-utils
+	url = git@github.com:CreativeTransmissions/ct-utils.git
+[submodule "includes/ct-db"]
+	path = includes/ct-db
+	url = git@github.com:CreativeTransmissions/ct-db.git
