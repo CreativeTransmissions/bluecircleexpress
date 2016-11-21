@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/includes
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/includes
  */
 
 /**
@@ -23,11 +23,11 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/includes
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/includes
  * @author     Your Name <email@example.com>
  */
-class WP_Sell_Software {
+class WP_Balance_Voucher {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,7 +35,7 @@ class WP_Sell_Software {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      WP_Sell_Software_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      WP_Balance_Voucher_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -70,7 +70,7 @@ class WP_Sell_Software {
 
 	public function __construct() {
 
-		$this->plugin_name = 'WP Sell Software';
+		$this->plugin_name = 'WP Balance Soucher';
 		$this->plugin_slug = 'Wp-Sell-Software';
 		$this->version = '1.0.0';
 
@@ -122,10 +122,10 @@ class WP_Sell_Software {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - WP_Sell_Software_Loader. Orchestrates the hooks of the plugin.
-	 * - WP_Sell_Software_i18n. Defines internationalization functionality.
-	 * - WP_Sell_Software_Admin. Defines all hooks for the admin area.
-	 * - WP_Sell_Software_Public. Defines all hooks for the public side of the site.
+	 * - WP_Balance_Voucher_Loader. Orchestrates the hooks of the plugin.
+	 * - WP_Balance_Voucher_i18n. Defines internationalization functionality.
+	 * - WP_Balance_Voucher_Admin. Defines all hooks for the admin area.
+	 * - WP_Balance_Voucher_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -139,24 +139,24 @@ class WP_Sell_Software {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-sell-software-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-balance-voucher-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-sell-software-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-balance-voucher-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-sell-software-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-balance-voucher-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-sell-software-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-balance-voucher-public.php';
 
 		/**
 		 * The class responsible for defining the database structure
@@ -183,14 +183,14 @@ class WP_Sell_Software {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/ct-utils/class-ct-ajax.php';
 		
 
-		$this->loader = new WP_Sell_Software_Loader();
+		$this->loader = new WP_Balance_Voucher_Loader();
 
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the WP_Sell_Software_i18n class in order to set the domain and to register the hook
+	 * Uses the WP_Balance_Voucher_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -198,7 +198,7 @@ class WP_Sell_Software {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new WP_Sell_Software_i18n();
+		$plugin_i18n = new WP_Balance_Voucher_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
@@ -213,7 +213,7 @@ class WP_Sell_Software {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new WP_Sell_Software_Admin( $this->get_plugin_name(),  $this->get_version(), $this->get_plugin_slug());
+		$plugin_admin = new WP_Balance_Voucher_Admin( $this->get_plugin_name(),  $this->get_version(), $this->get_plugin_slug());
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -231,7 +231,7 @@ class WP_Sell_Software {
 	 * @access   private
 	 */
 	private function define_public_hooks() {
-		$plugin_public = new WP_Sell_Software_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
+		$plugin_public = new WP_Balance_Voucher_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
 		add_shortcode( 'ctwpsellsoftware', array( $plugin_public, 'display_wp_sell_software' ) );
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_scripts');	
@@ -278,7 +278,7 @@ class WP_Sell_Software {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    WP_Sell_Software_Loader    Orchestrates the hooks of the plugin.
+	 * @return    WP_Balance_Voucher_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;
@@ -303,8 +303,8 @@ class WP_Sell_Software {
 
 	public static function get_custom_db(){
 		//define and register tables
-		$cdb = new WP_Sell_Software\CT_CDB(array('prefix'=>'sell'));
-		$db_config = new WP_Sell_Software\DB_Config();
+		$cdb = new WP_Balance_Voucher\CT_CDB(array('prefix'=>'sell'));
+		$db_config = new WP_Balance_Voucher\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
 		$cdb->define_table($db_config->get_config('ct_customers'));

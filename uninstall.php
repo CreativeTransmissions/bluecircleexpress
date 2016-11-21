@@ -22,7 +22,7 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Sell_Software
+ * @package    WP_Balance_Voucher
  */
 
 // If uninstall not called from WordPress, then exit.

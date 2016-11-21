@@ -8,8 +8,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/admin/partials
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/admin/partials
  */
 ?>
 

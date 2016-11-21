@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/includes
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/includes
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/includes
  * @author     Your Name <email@example.com>
  */
-class WP_Sell_Software_Deactivator {
+class WP_Balance_Voucher_Deactivator {
 
 	/**
 	 * Short Description. (use period)

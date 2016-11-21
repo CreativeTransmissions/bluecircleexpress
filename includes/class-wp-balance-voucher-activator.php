@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/includes
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/includes
  */
 
 /**
@@ -16,12 +16,12 @@
  * This class defines all code necessary to run during the plugin's activation.
  *
  * @since      1.0.0
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/includes
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/includes
  * @author     Your Name <email@example.com>
  */
 
-class WP_Sell_Software_Activator {
+class WP_Balance_Voucher_Activator {
 
 	/**
 	 * Short Description. (use period)
@@ -39,7 +39,7 @@ class WP_Sell_Software_Activator {
 
 	public static function init_database(){
 		//set up custom database on activate 
-		$plugin = new WP_Sell_Software(); 
+		$plugin = new WP_Balance_Voucher(); 
 		$plugin->load_dependencies();
 		$cdb = $plugin->get_custom_db();
 		$cdb->create_tables();

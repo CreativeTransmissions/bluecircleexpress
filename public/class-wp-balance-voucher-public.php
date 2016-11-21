@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/public
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/public
  */
 
 /**
@@ -16,11 +16,11 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/public
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/public
  * @author     Your Name <email@example.com>
  */
-class WP_Sell_Software_Public {
+class WP_Balance_Voucher_Public {
 
 	/**
 	 * The ID of this plugin.
@@ -69,8 +69,8 @@ class WP_Sell_Software_Public {
 
 	private static function register_tables(){
 		//define and register tables
-		$this->cdb = new WP_Sell_Software\CT_CDB(array('prefix'=>'sell'));
-		$db_config = new WP_Sell_Software\DB_Config();
+		$this->cdb = new WP_Balance_Voucher\CT_CDB(array('prefix'=>'sell'));
+		$db_config = new WP_Balance_Voucher\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
 		$this->cdb->define_table($db_config->get_config('customers'));
@@ -94,14 +94,14 @@ class WP_Sell_Software_Public {
 	    $this->pd_product 	= $attributes['product_id'];
 	    $ct_product 		= self::get_product_by_paddleid($this->pd_product);
 		$this->ct_product 	= $ct_product['id'];
-     	$this->view 		= 'partials/wp-sell-software-public-display.php';
+     	$this->view 		= 'partials/wp-balance-voucher-public-display.php';
 		ob_start();
 	   	include $this->view;
 	   	return ob_get_clean();
 	}
 
 	public function get_product_by_paddleid($paddle_id){
-		$plugin = new WP_Sell_Software();
+		$plugin = new WP_Balance_Voucher();
 		$this->cdb = $plugin->get_custom_db();
 		if(empty($paddle_id)){
 			return false;
@@ -120,10 +120,10 @@ class WP_Sell_Software_Public {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in WP_Sell_Software_Loader as all of the hooks are defined
+		 * defined in WP_Balance_Voucher_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The WP_Sell_Software_Loader will then create the relationship
+		 * The WP_Balance_Voucher_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -131,7 +131,7 @@ class WP_Sell_Software_Public {
 		if ( ! $add_my_script_flag )
 			return;
 		wp_enqueue_style( $this->plugin_slug."-parsley", plugin_dir_url( __FILE__ ) . 'css/parsley.css', array(), '', 'all' );
-		wp_enqueue_style( $this->plugin_slug.'-public', plugin_dir_url( __FILE__ ) . 'css/wp-sell-software-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_slug.'-public', plugin_dir_url( __FILE__ ) . 'css/wp-balance-voucher-public.css', array(), $this->version, 'all' );
 
 	}
 
@@ -146,10 +146,10 @@ class WP_Sell_Software_Public {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in WP_Sell_Software_Loader as all of the hooks are defined
+		 * defined in WP_Balance_Voucher_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The WP_Sell_Software_Loader will then create the relationship
+		 * The WP_Balance_Voucher_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -158,7 +158,7 @@ class WP_Sell_Software_Public {
 			return;
 		wp_enqueue_script( $this->plugin_slug.'-parsley-script', plugin_dir_url( __FILE__ ) . 'js/parsley.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_slug.'-public-main', plugin_dir_url( __FILE__ ) . 'js/public-main.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( $this->plugin_slug.'-public', plugin_dir_url( __FILE__ ) . 'js/wp-sell-software-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_slug.'-public', plugin_dir_url( __FILE__ ) . 'js/wp-balance-voucher-public.js', array( 'jquery' ), $this->version, false );
 		wp_localize_script( $this->plugin_slug.'-public', 'WpSellSoftwareSettings', array('ajaxUrl' => admin_url( 'admin-ajax.php' ), 'vendorId'=>$this->vendor_id));
 		wp_enqueue_script( $this->plugin_slug.'-paddle', 'https://cdn.paddle.com/paddle/paddle.js', array( $this->plugin_slug.'-public' ), '', false );
 
@@ -270,9 +270,9 @@ class WP_Sell_Software_Public {
 	}	
 
 	public function save_sale(){
-		$plugin = new WP_Sell_Software();
+		$plugin = new WP_Balance_Voucher();
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new WP_Sell_Software\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new WP_Balance_Voucher\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 		$this->sale = self::save('ct_customers_products');
 		$message ='Product purchased successfully';
@@ -288,9 +288,9 @@ class WP_Sell_Software_Public {
 	}
 
 	public function save_customer(){
-		$plugin = new WP_Sell_Software();
+		$plugin = new WP_Balance_Voucher();
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new WP_Sell_Software\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new WP_Balance_Voucher\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 		
 		// // save job request from customer facing form
 		if($this->log_requests == true){

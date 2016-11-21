@@ -5,13 +5,13 @@
  *
  * @link       http://example.com
  * @since      1.0.0
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/includes
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/includes
  * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  * @copyright 2016 Creative Transmissions
  */
 
-namespace WP_Sell_Software;
+namespace WP_Balance_Voucher;
 class DB_Config {
 
 	public function __construct() {

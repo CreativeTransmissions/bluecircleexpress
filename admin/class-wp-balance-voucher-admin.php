@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/admin
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/admin
  */
 
 /**
@@ -16,11 +16,11 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    WP_Sell_Software
- * @subpackage WP_Sell_Software/admin
+ * @package    WP_Balance_Voucher
+ * @subpackage WP_Balance_Voucher/admin
  * @author     Your Name <email@example.com>
  */
-class WP_Sell_Software_Admin {
+class WP_Balance_Voucher_Admin {
 
 	/**
 	 * The ID of this plugin.
@@ -301,13 +301,13 @@ class WP_Sell_Software_Admin {
 	 * @since    1.0.0
 	 */
 	public function display_plugin_admin_page() {
-		include_once( 'partials/wp-sell-software-admin-display.php' );
+		include_once( 'partials/wp-balance-voucher-admin-display.php' );
 	}
 
 	public function settings_admin_init() {
-		$this->ajax = new WP_Sell_Software\CT_AJAX();
-		$this->cdb = WP_Sell_Software::get_custom_db();
-		$this->dbui = new WP_Sell_Software\CT_DBUI(array('cdb'=>$this->cdb));
+		$this->ajax = new WP_Balance_Voucher\CT_AJAX();
+		$this->cdb = WP_Balance_Voucher::get_custom_db();
+		$this->dbui = new WP_Balance_Voucher\CT_DBUI(array('cdb'=>$this->cdb));
 		self::register_tab_1_settings();
 		self::register_tab_2_settings();
 		self::register_tab_3_settings();
@@ -418,10 +418,10 @@ class WP_Sell_Software_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in WP_Sell_Software_Loader as all of the hooks are defined
+		 * defined in WP_Balance_Voucher_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The WP_Sell_Software_Loader will then create the relationship
+		 * The WP_Balance_Voucher_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -431,7 +431,7 @@ class WP_Sell_Software_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-sell-software-admin.css', array(), $this->version, 'all' );
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-balance-voucher-admin.css', array(), $this->version, 'all' );
 		}
 	}
 
@@ -446,10 +446,10 @@ class WP_Sell_Software_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in WP_Sell_Software_Loader as all of the hooks are defined
+		 * defined in WP_Balance_Voucher_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The WP_Sell_Software_Loader will then create the relationship
+		 * The WP_Balance_Voucher_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -461,7 +461,7 @@ class WP_Sell_Software_Admin {
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
 			wp_enqueue_script( $this->plugin_name.'jqui', 'http://code.jquery.com/ui/1.11.3/jquery-ui.min.js', '', 1.11, True );
 			wp_enqueue_script( $this->plugin_name.'_wp_sell_software_admin_main', plugin_dir_url( __FILE__ ) . 'js/wp_sell_software_admin_main.js', array( 'jquery' ), $this->version, true );
-			wp_enqueue_script( $this->plugin_name.'_wp-sell-software-admin', plugin_dir_url( __FILE__ ) . 'js/wp-sell-software-admin.js', array( $this->plugin_name.'_wp_sell_software_admin_main' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_name.'_wp-balance-voucher-admin', plugin_dir_url( __FILE__ ) . 'js/wp-balance-voucher-admin.js', array( $this->plugin_name.'_wp_sell_software_admin_main' ), $this->version, true );
 		}
 	}
 

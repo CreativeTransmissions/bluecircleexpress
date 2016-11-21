@@ -10,12 +10,12 @@
  *
  * @link              http://example.com
  * @since             1.0.0
- * @package           WP_Sell_Software
+ * @package           WP_Balance_Voucher
  *
  * @wordpress-plugin
- * Plugin Name:       WP Sell Software
+ * Plugin Name:       WP Balance Voucher
  * Plugin URI:        http://example.com/plugin-name-uri/
- * Description:       A plugin for selling software products and subscriptions through the paddle.com API
+ * Description:       A plugin for http://balance.jimbyrne.co.uk/
  * Version:           1.0.0
  * Author:            Creative Transmissions
  * Author URI:        http://creativetransmissions.com/
@@ -32,20 +32,20 @@ if ( ! defined( 'WPINC' ) ) {
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-wp-sell-software-activator.php
+ * This action is documented in includes/class-wp-balance-voucher-activator.php
  */
 function activate_plugin_name() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-sell-software-activator.php';
-	WP_Sell_Software_Activator::activate();
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-balance-voucher-activator.php';
+	WP_Balance_Voucher_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-wp-sell-software-deactivator.php
+ * This action is documented in includes/class-wp-balance-voucher-deactivator.php
  */
 function deactivate_plugin_name() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-sell-software-deactivator.php';
-	WP_Sell_Software_Deactivator::deactivate();
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-balance-voucher-deactivator.php';
+	WP_Balance_Voucher_Deactivator::deactivate();
 }
 
 register_activation_hook( __FILE__, 'activate_plugin_name' );
@@ -55,7 +55,7 @@ register_deactivation_hook( __FILE__, 'deactivate_plugin_name' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-wp-sell-software.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-wp-balance-voucher.php';
 
 /**
  * Begins execution of the plugin.
@@ -68,7 +68,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-wp-sell-software.php';
  */
 function run_plugin_name() {
 
-	$plugin = new WP_Sell_Software();
+	$plugin = new WP_Balance_Voucher();
 	$plugin->run();
 
 }
