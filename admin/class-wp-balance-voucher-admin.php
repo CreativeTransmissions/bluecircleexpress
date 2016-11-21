@@ -460,8 +460,8 @@ class WP_Balance_Voucher_Admin {
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
 			wp_enqueue_script( $this->plugin_name.'jqui', 'http://code.jquery.com/ui/1.11.3/jquery-ui.min.js', '', 1.11, True );
-			wp_enqueue_script( $this->plugin_name.'_wp_sell_software_admin_main', plugin_dir_url( __FILE__ ) . 'js/wp_sell_software_admin_main.js', array( 'jquery' ), $this->version, true );
-			wp_enqueue_script( $this->plugin_name.'_wp-balance-voucher-admin', plugin_dir_url( __FILE__ ) . 'js/wp-balance-voucher-admin.js', array( $this->plugin_name.'_wp_sell_software_admin_main' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_name.'_wp_balance_voucher_admin_main', plugin_dir_url( __FILE__ ) . 'js/wp_balance_voucher_admin_main.js', array( 'jquery' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_name.'_wp-balance-voucher-admin', plugin_dir_url( __FILE__ ) . 'js/wp-balance-voucher-admin.js', array( $this->plugin_name.'_wp_balance_voucher_admin_main' ), $this->version, true );
 		}
 	}
 

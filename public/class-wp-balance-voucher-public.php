@@ -85,7 +85,7 @@ class WP_Balance_Voucher_Public {
 	 * @since    1.0.0
 	 */
 
-	public function display_wp_sell_software($atts) {
+	public function display_wp_balance_voucher($atts) {
 		global $add_my_script_flag;
 		$add_my_script_flag = true; //to load the script if shortcode called
 		$attributes = shortcode_atts( array(

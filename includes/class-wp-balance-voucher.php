@@ -232,7 +232,7 @@ class WP_Balance_Voucher {
 	 */
 	private function define_public_hooks() {
 		$plugin_public = new WP_Balance_Voucher_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
-		add_shortcode( 'ctwpsellsoftware', array( $plugin_public, 'display_wp_sell_software' ) );
+		add_shortcode( 'ctwpsellsoftware', array( $plugin_public, 'display_wp_balance_voucher' ) );
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_scripts');	
 		$this->loader->add_action( 'wp_ajax_save_customer', $plugin_public, 'save_customer');		
