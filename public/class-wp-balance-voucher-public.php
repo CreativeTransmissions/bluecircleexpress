@@ -7,7 +7,7 @@
  * @since      1.0.0
  *
  * @package    WP_Balance_Voucher
- * @subpackage WP_Balance_Voucher/public
+ * @subpackage WP_Balance_Voucher/public 
  */
 
 /**
