@@ -79,6 +79,7 @@ class WP_Balance_Voucher_Public {
 		$this->define_table($db_config->get_config('event_logs')); 
 		$this->define_table($db_config->get_config('event_data'));
 	}
+
 	/**
 	 * Register the shortcode and display the form.
 	 *
@@ -87,6 +88,14 @@ class WP_Balance_Voucher_Public {
 
 	public function display_wp_balance_voucher($atts) {
 		global $add_my_script_flag;
+		$args = array( 'post_type' => 'product', 'posts_per_page' => 5,'tax_query' => array(
+			array(
+				'taxonomy' => 'product_cat',
+				'terms' => $atts,
+				'operator' => 'IN',
+			)
+        ), 'orderby' => 'rand' );
+        $this->voucher_list = new WP_Query( $args );
 		$add_my_script_flag = true; //to load the script if shortcode called
 		$attributes = shortcode_atts( array(
 	        'product_id' => '',

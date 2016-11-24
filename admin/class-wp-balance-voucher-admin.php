@@ -285,8 +285,8 @@ class WP_Balance_Voucher_Admin {
 		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
 		 */
 		$this->plugin_screen_hook_suffix = add_menu_page(
-			__( 'Wp Sell Software', $this->plugin_slug ),
-			__( 'Wp Sell Software', $this->plugin_slug ),
+			__( 'Wp Vouchers', $this->plugin_slug ),
+			__( 'Wp Vouchers', $this->plugin_slug ),
 			'manage_options',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )

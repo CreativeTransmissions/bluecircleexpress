@@ -98,6 +98,7 @@
 						e.preventDefault;
 					});
 					$(this.element).on('click','input:submit', function(e){
+					
 						e.preventDefault();
 						if($(that.element).parsley().validate()){
 							that.submitForm()
@@ -110,6 +111,43 @@
 					       	parsleyField.validationResult = true;
 					        return true;
 				    	}
+					});
+					//show/hide postal form
+					$('#digital_form, #postal_form, #digital_to_someone_box, #postal_to_someone_box').addClass("hide_box");
+                    //hide radio button from label
+	                $("#digital_label input, #postal_label input").addClass("switch_radios");
+                    //highlight currently selected radio button
+					$('input[name="vtype"]').on("click", function() {
+						$('input[name="vtype"]').parents("label").removeClass("selected");
+						$(this).parents("label").addClass("selected");
+					});
+					$('input[name="postal_vvalue"]').on("click", function() {
+						$('input[name="postal_vvalue"]').parents("label").removeClass("selected");
+						$(this).parents("label").addClass("selected");
+					});
+					$('input[id="digital"]').on("click", function() { 
+						$('#digital_form').removeClass("hide_box").addClass("show_box"); 
+						$('#postal_form').addClass("hide_box").removeClass("show_box"); 
+					});
+	                $('input[id="postal"]').on("click", function() { 
+					    $('#digital_form').addClass("hide_box").removeClass("show_box"); 
+						$('#postal_form').removeClass("hide_box").addClass("show_box"); 
+					});
+					$('input[id="digital_to_someone"]').on("click", function() { 
+						$('#digital_to_someone_box').removeClass("hide_box"); 
+						$('#digital_to_someone_box').addClass("show_box");
+					});
+					$('input[id="digital_to_me"]').on("click", function() {
+						$('#digital_to_someone_box').addClass("hide_box"); 
+						$('#digital_to_someone_box').removeClass("show_box");
+					});
+					$('input[id="postal_to_someone"]').on("click", function() { 
+					    $('#postal_to_someone_box').removeClass("hide_box"); 
+						$('#postal_to_someone_box').addClass("show_box");
+					});
+	                $('input[id="postal_to_me"]').on("click", function() { 
+					    $('#postal_to_someone_box').addClass("hide_box"); 
+						$('#postal_to_someone_box').removeClass("show_box");
 					});
 				
 				},

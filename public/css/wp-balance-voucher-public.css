@@ -454,3 +454,135 @@ button.ui-datepicker-current {
 .tq-row{
 	padding:0px !important;
 }
+/*
+ *css for voucher wrapper
+*/
+#quote-form h3 {
+    color: #a28b1b;
+    font-size: 1.1em;
+    font-weight: normal;
+    margin-bottom: 0.5em;
+}
+
+#digital_label:hover, #digital_label:focus, #postal_label:hover, #postal_label:focus, label.selected {
+    background: #05715a none repeat scroll 0 0 !important;
+    color: #fff;
+    cursor: pointer;
+}
+#voucher_opt label{
+    display: inline-block !important;
+}
+#voucher_opt label {
+    background: #ddd none repeat scroll 0 0;
+    border-radius: 5px;
+    display: block;
+    font-size: 1em;
+    padding: 10px;
+    text-transform: uppercase !important;
+    width: auto !important;
+}
+#quote-form fieldset {
+    clear: both;
+}
+#quote-form fieldset {
+    margin-bottom: 5px;
+}
+#quote-form fieldset {
+    background: #ddd none repeat scroll 0 0;
+    border: 0 none;
+    border-radius: 5px;
+    margin: 10px 0 30px;
+    padding: 20px 20px 35px;
+	width:619px;
+}
+#quote-form legend,{
+    display: none;
+}
+#quote-form fieldset h2 {
+    color: #444;
+    font-weight: bold;
+}
+p {
+    margin: 0 0 1.5em;
+}
+abbr, acronym {
+    cursor: help;
+}
+#quote-form p {
+    line-height: 1.4;
+}
+.fixed_denominations {
+    margin-bottom: 1em;
+    overflow: hidden;
+}
+fieldset div {
+    clear: both;
+}
+#quote-form .fixed_denominations label {
+    background: #eee none repeat scroll 0 0 !important;
+    border: 3px solid #bbb;
+    cursor: pointer !important;
+    display: block;
+    float: left;
+    height: 40px;
+    line-height: 38px !important;
+    position: relative;
+    text-align: center !important;
+    width: 13%;
+}
+#quote-form .fixed_denominations label:hover,#quote-form .fixed_denominations label:focus, #quote-form .fixed_denominations label.selected {
+    background: #d3fff5 none repeat scroll 0 0;
+    border-color: #05715a;
+    color: #004f3d;
+}
+#quote-form label, .yogas #quote-form label {
+    display: block;
+    line-height: 1.2;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    text-transform: lowercase;
+}
+.js #quote-form .fixed_denominations label input {
+    left: -99999px;
+    position: absolute;
+}
+.radios label {
+    width: auto !important;
+}
+#this_address {
+    background: #ccc none repeat scroll 0 0;
+    margin: 20px -20px;
+    overflow: hidden;
+    padding: 20px;
+}
+#this_address h3 {
+    color: #222 !important;
+}
+#quote-form h3 {
+    color: #a28b1b;
+    font-size: 1.1em;
+    font-weight: normal;
+    margin-bottom: 0.5em;
+}
+#quote-form input[type="text"], input[type="email"], input[type="password"], select, textarea {
+    border: 0 none;
+    font: 100% Calibri,Verdana,Arial,sans-serif;
+    margin-bottom: 5px;
+    padding: 2px;
+    width: auto;
+}
+#quote-form input.button {
+    cursor: pointer;
+    padding: 2px 5px;
+}
+/*.bt-flabels__error-desc {
+    opacity:1;
+    position: static !important;
+}*/
+.show_box {
+   display:block;
+}
+.hide_box{
+   display:none;
+}
+
