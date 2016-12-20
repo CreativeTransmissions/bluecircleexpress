@@ -69,7 +69,7 @@ class TransitQuote_Premium_Public {
 
 	private static function register_tables(){
 		//define and register tables
-		$this->cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'sell'));
+		$this->cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'tq_pre'));
 		$db_config = new TransitQuote_Premium\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
