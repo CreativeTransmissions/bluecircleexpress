@@ -32,19 +32,19 @@ if ( ! defined( 'WPINC' ) ) {
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-wp-balance-voucher-activator.php
+ * This action is documented in includes/class-transitquote-premium-activator.php
  */
 function activate_plugin_name() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-balance-voucher-activator.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-transitquote-premium-activator.php';
 	TransitQuote_Premium_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-wp-balance-voucher-deactivator.php
+ * This action is documented in includes/class-transitquote-premium-deactivator.php
  */
 function deactivate_plugin_name() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-balance-voucher-deactivator.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-transitquote-premium-deactivator.php';
 	TransitQuote_Premium_Deactivator::deactivate();
 }
 
@@ -55,7 +55,7 @@ register_deactivation_hook( __FILE__, 'deactivate_plugin_name' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-wp-balance-voucher.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-transitquote-premium.php';
 
 /**
  * Begins execution of the plugin.
