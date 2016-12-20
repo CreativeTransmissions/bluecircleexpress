@@ -10,7 +10,7 @@
  *
  * @link              http://example.com
  * @since             1.0.0
- * @package           WP_Balance_Voucher
+ * @package           TransitQuote_Premium
  *
  * @wordpress-plugin
  * Plugin Name:       WP Balance Voucher
@@ -36,7 +36,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 function activate_plugin_name() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-balance-voucher-activator.php';
-	WP_Balance_Voucher_Activator::activate();
+	TransitQuote_Premium_Activator::activate();
 }
 
 /**
@@ -45,7 +45,7 @@ function activate_plugin_name() {
  */
 function deactivate_plugin_name() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-balance-voucher-deactivator.php';
-	WP_Balance_Voucher_Deactivator::deactivate();
+	TransitQuote_Premium_Deactivator::deactivate();
 }
 
 register_activation_hook( __FILE__, 'activate_plugin_name' );
@@ -68,7 +68,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-wp-balance-voucher.php';
  */
 function run_plugin_name() {
 
-	$plugin = new WP_Balance_Voucher();
+	$plugin = new TransitQuote_Premium();
 	$plugin->run();
 
 }

@@ -22,7 +22,7 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Balance_Voucher
+ * @package    TransitQuote_Premium
  */
 
 // If uninstall not called from WordPress, then exit.

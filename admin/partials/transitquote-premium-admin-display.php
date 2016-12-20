@@ -8,8 +8,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Balance_Voucher
- * @subpackage WP_Balance_Voucher/admin/partials
+ * @package    TransitQuote_Premium
+ * @subpackage TransitQuote_Premium/admin/partials
  */
 ?>
 

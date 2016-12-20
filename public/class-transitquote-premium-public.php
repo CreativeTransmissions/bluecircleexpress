@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Balance_Voucher
- * @subpackage WP_Balance_Voucher/public 
+ * @package    TransitQuote_Premium
+ * @subpackage TransitQuote_Premium/public 
  */
 
 /**
@@ -16,11 +16,11 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    WP_Balance_Voucher
- * @subpackage WP_Balance_Voucher/public
+ * @package    TransitQuote_Premium
+ * @subpackage TransitQuote_Premium/public
  * @author     Your Name <email@example.com>
  */
-class WP_Balance_Voucher_Public {
+class TransitQuote_Premium_Public {
 
 	/**
 	 * The ID of this plugin.
@@ -69,8 +69,8 @@ class WP_Balance_Voucher_Public {
 
 	private static function register_tables(){
 		//define and register tables
-		$this->cdb = new WP_Balance_Voucher\CT_CDB(array('prefix'=>'sell'));
-		$db_config = new WP_Balance_Voucher\DB_Config();
+		$this->cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'sell'));
+		$db_config = new TransitQuote_Premium\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
 		$this->cdb->define_table($db_config->get_config('customers'));
@@ -86,7 +86,7 @@ class WP_Balance_Voucher_Public {
 	 * @since    1.0.0
 	 */
 
-	public function display_wp_balance_voucher($atts) {
+	public function display_TransitQuote_Premium($atts) {
 		global $add_my_script_flag;
 		$args = array( 'post_type' => 'product', 'posts_per_page' => 5,'tax_query' => array(
 			array(
@@ -110,7 +110,7 @@ class WP_Balance_Voucher_Public {
 	}
 
 	public function get_product_by_paddleid($paddle_id){
-		$plugin = new WP_Balance_Voucher();
+		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
 		if(empty($paddle_id)){
 			return false;
@@ -129,10 +129,10 @@ class WP_Balance_Voucher_Public {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in WP_Balance_Voucher_Loader as all of the hooks are defined
+		 * defined in TransitQuote_Premium_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The WP_Balance_Voucher_Loader will then create the relationship
+		 * The TransitQuote_Premium_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -155,10 +155,10 @@ class WP_Balance_Voucher_Public {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in WP_Balance_Voucher_Loader as all of the hooks are defined
+		 * defined in TransitQuote_Premium_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The WP_Balance_Voucher_Loader will then create the relationship
+		 * The TransitQuote_Premium_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -279,9 +279,9 @@ class WP_Balance_Voucher_Public {
 	}	
 
 	public function save_sale(){
-		$plugin = new WP_Balance_Voucher();
+		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new WP_Balance_Voucher\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 		$this->sale = self::save('ct_customers_products');
 		$message ='Product purchased successfully';
@@ -297,9 +297,9 @@ class WP_Balance_Voucher_Public {
 	}
 
 	public function save_customer(){
-		$plugin = new WP_Balance_Voucher();
+		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new WP_Balance_Voucher\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 		
 		// // save job request from customer facing form
 		if($this->log_requests == true){

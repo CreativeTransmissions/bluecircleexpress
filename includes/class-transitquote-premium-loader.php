@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Balance_Voucher
- * @subpackage WP_Balance_Voucher/includes
+ * @package    TransitQuote_Premium
+ * @subpackage TransitQuote_Premium/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    WP_Balance_Voucher
- * @subpackage WP_Balance_Voucher/includes
+ * @package    TransitQuote_Premium
+ * @subpackage TransitQuote_Premium/includes
  * @author     Your Name <email@example.com>
  */
-class WP_Balance_Voucher_Loader {
+class TransitQuote_Premium_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WP_Balance_Voucher
- * @subpackage WP_Balance_Voucher/includes
+ * @package    TransitQuote_Premium
+ * @subpackage TransitQuote_Premium/includes
  */
 
 /**
@@ -23,11 +23,11 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    WP_Balance_Voucher
- * @subpackage WP_Balance_Voucher/includes
+ * @package    TransitQuote_Premium
+ * @subpackage TransitQuote_Premium/includes
  * @author     Your Name <email@example.com>
  */
-class WP_Balance_Voucher {
+class TransitQuote_Premium {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,7 +35,7 @@ class WP_Balance_Voucher {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      WP_Balance_Voucher_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      TransitQuote_Premium_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -122,10 +122,10 @@ class WP_Balance_Voucher {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - WP_Balance_Voucher_Loader. Orchestrates the hooks of the plugin.
-	 * - WP_Balance_Voucher_i18n. Defines internationalization functionality.
-	 * - WP_Balance_Voucher_Admin. Defines all hooks for the admin area.
-	 * - WP_Balance_Voucher_Public. Defines all hooks for the public side of the site.
+	 * - TransitQuote_Premium_Loader. Orchestrates the hooks of the plugin.
+	 * - TransitQuote_Premium_i18n. Defines internationalization functionality.
+	 * - TransitQuote_Premium_Admin. Defines all hooks for the admin area.
+	 * - TransitQuote_Premium_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -183,14 +183,14 @@ class WP_Balance_Voucher {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/ct-utils/class-ct-ajax.php';
 		
 
-		$this->loader = new WP_Balance_Voucher_Loader();
+		$this->loader = new TransitQuote_Premium_Loader();
 
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the WP_Balance_Voucher_i18n class in order to set the domain and to register the hook
+	 * Uses the TransitQuote_Premium_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -198,7 +198,7 @@ class WP_Balance_Voucher {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new WP_Balance_Voucher_i18n();
+		$plugin_i18n = new TransitQuote_Premium_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
@@ -213,7 +213,7 @@ class WP_Balance_Voucher {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new WP_Balance_Voucher_Admin( $this->get_plugin_name(),  $this->get_version(), $this->get_plugin_slug());
+		$plugin_admin = new TransitQuote_Premium_Admin( $this->get_plugin_name(),  $this->get_version(), $this->get_plugin_slug());
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -231,8 +231,8 @@ class WP_Balance_Voucher {
 	 * @access   private
 	 */
 	private function define_public_hooks() {
-		$plugin_public = new WP_Balance_Voucher_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
-		add_shortcode( 'ctwpvouchers', array( $plugin_public, 'display_wp_balance_voucher' ) );
+		$plugin_public = new TransitQuote_Premium_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
+		add_shortcode( 'ctwpvouchers', array( $plugin_public, 'display_TransitQuote_Premium' ) );
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_scripts');	
 		$this->loader->add_action( 'wp_ajax_save_customer', $plugin_public, 'save_customer');		
@@ -278,7 +278,7 @@ class WP_Balance_Voucher {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    WP_Balance_Voucher_Loader    Orchestrates the hooks of the plugin.
+	 * @return    TransitQuote_Premium_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;
@@ -303,8 +303,8 @@ class WP_Balance_Voucher {
 
 	public static function get_custom_db(){
 		//define and register tables
-		$cdb = new WP_Balance_Voucher\CT_CDB(array('prefix'=>'sell'));
-		$db_config = new WP_Balance_Voucher\DB_Config();
+		$cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'sell'));
+		$db_config = new TransitQuote_Premium\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
 		$cdb->define_table($db_config->get_config('ct_customers'));

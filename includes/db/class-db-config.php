@@ -5,13 +5,13 @@
  *
  * @link       http://example.com
  * @since      1.0.0
- * @package    WP_Balance_Voucher
- * @subpackage WP_Balance_Voucher/includes
+ * @package    TransitQuote_Premium
+ * @subpackage TransitQuote_Premium/includes
  * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  * @copyright 2016 Creative Transmissions
  */
 
-namespace WP_Balance_Voucher;
+namespace TransitQuote_Premium;
 class DB_Config {
 
 	public function __construct() {
