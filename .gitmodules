@@ -4,3 +4,6 @@
 [submodule "includes/ct-db"]
 	path = includes/ct-db
 	url = git@github.com:CreativeTransmissions/ct-db.git
+[submodule "public/js/js-transitquote"]
+	path = public/js/js-transitquote
+	url = git@github.com:CreativeTransmissions/jq-transitquote.git
