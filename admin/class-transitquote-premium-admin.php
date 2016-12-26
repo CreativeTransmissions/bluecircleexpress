@@ -285,8 +285,8 @@ class TransitQuote_Premium_Admin {
 		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
 		 */
 		$this->plugin_screen_hook_suffix = add_menu_page(
-			__( 'Wp Vouchers', $this->plugin_slug ),
-			__( 'Wp Vouchers', $this->plugin_slug ),
+			__( 'TransitQuote Premium', $this->plugin_slug ),
+			__( 'TransitQuote Premium', $this->plugin_slug ),
 			'manage_options',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )
@@ -301,7 +301,7 @@ class TransitQuote_Premium_Admin {
 	 * @since    1.0.0
 	 */
 	public function display_plugin_admin_page() {
-		include_once( 'partials/wp-balance-voucher-admin-display.php' );
+		include_once( 'partials/transitquote-premium-admin-display.php' );
 	}
 
 	public function settings_admin_init() {
@@ -311,6 +311,8 @@ class TransitQuote_Premium_Admin {
 		self::register_tab_1_settings();
 		self::register_tab_2_settings();
 		self::register_tab_3_settings();
+		// self::register_tab_4_settings();
+		// self::register_tab_5_settings();
 	}
 
 

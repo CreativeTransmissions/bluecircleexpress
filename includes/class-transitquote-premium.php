@@ -70,8 +70,8 @@ class TransitQuote_Premium {
 
 	public function __construct() {
 
-		$this->plugin_name = 'WP Balance Soucher';
-		$this->plugin_slug = 'Wp-Sell-Software';
+		$this->plugin_name = 'TransitQuote Premium';
+		$this->plugin_slug = 'transitQuote-premium';
 		$this->version = '1.0.0';
 
 		$this->load_dependencies();
@@ -303,15 +303,24 @@ class TransitQuote_Premium {
 
 	public static function get_custom_db(){
 		//define and register tables
-		$cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'sell'));
+		$cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'premium'));
 		$db_config = new TransitQuote_Premium\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
-		$cdb->define_table($db_config->get_config('ct_customers'));
-		$cdb->define_table($db_config->get_config('ct_products')); 
-		$cdb->define_table($db_config->get_config('ct_customers_products')); 
-		$cdb->define_table($db_config->get_config('ct_event_logs')); 
-		$cdb->define_table($db_config->get_config('ct_event_data'));
+		$cdb->define_table($db_config->get_config('tp_customers'));
+		$cdb->define_table($db_config->get_config('tp_quotes'));
+		$cdb->define_table($db_config->get_config('tp_vehicle_types'));
+		$cdb->define_table($db_config->get_config('tp_payment_types'));
+		$cdb->define_table($db_config->get_config('tp_payment_status_types'));
+		$cdb->define_table($db_config->get_config('tp_status_types'));
+		$cdb->define_table($db_config->get_config('tp_jobs'));
+		$cdb->define_table($db_config->get_config('tp_locations'));
+		$cdb->define_table($db_config->get_config('tp_surcharges'));
+		$cdb->define_table($db_config->get_config('tp_quote_surcharges'));
+		$cdb->define_table($db_config->get_config('tp_journeys'));
+		$cdb->define_table($db_config->get_config('tp_rates'));
+		$cdb->define_table($db_config->get_config('tp_event_logs')); 
+		$cdb->define_table($db_config->get_config('tp_event_data'));
 		return $cdb;
 	}
 
@@ -324,13 +333,9 @@ class TransitQuote_Premium {
 		//populate status table
 		$created = date('Y-m-d G:i:s');
 		$modified = $created;
-		if($cdb->get_count('ct_products')==0){
-			$cdb->update_row('ct_products', array('name'=>'TransitQuote Lite', 'description' => 'TransitQuote Lite', 'paddleid'=> '500997', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('ct_products', array('name'=>'TransitQuote Lite With customisation service', 'description' => 'TransitQuote Lite With customisation service', 'paddleid'=> '2', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('ct_products', array('name'=>'TransitQuote Pro', 'description' => 'TransitQuote Pro', 'paddleid'=> '508112', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('ct_products', array('name'=>'TransitQuote Pro With customisation service', 'description' => 'TransitQuote Pro With customisation service', 'paddleid'=> '4', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('ct_products', array('name'=>'TransitQuote Premium', 'description' => 'TransitQuote Premium', 'paddleid'=> '5', 'created'=>$created, 'modified'=>$modified ));			
-		};	
+		// if($cdb->get_count('tablename')==0){ //can insert some default data here by replacing the table name and fields
+		// 	$cdb->update_row('ct_products', array('name'=>'TransitQuote Lite', 'description' => 'TransitQuote Lite', 'paddleid'=> '500997', 'created'=>$created, 'modified'=>$modified ));			
+		// };	
 		return;
 	}
 	

@@ -13,15 +13,15 @@
  * @package           TransitQuote_Premium
  *
  * @wordpress-plugin
- * Plugin Name:       WP Balance Voucher
+ * Plugin Name:       TransitQuote Premium
  * Plugin URI:        http://example.com/plugin-name-uri/
- * Description:       A plugin for http://balance.jimbyrne.co.uk/
+ * Description:       Base plugin heaving all the functionalities to start.
  * Version:           1.0.0
  * Author:            Creative Transmissions
  * Author URI:        http://creativetransmissions.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       plugin-name
+ * Text Domain:       transitquote-premium
  * Domain Path:       /languages
  */
 
@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
  * The code that runs during plugin activation.
  * This action is documented in includes/class-transitquote-premium-activator.php
  */
-function activate_plugin_name() {
+function activate_transitquote_premium() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-transitquote-premium-activator.php';
 	TransitQuote_Premium_Activator::activate();
 }
@@ -43,13 +43,13 @@ function activate_plugin_name() {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-transitquote-premium-deactivator.php
  */
-function deactivate_plugin_name() {
+function deactivate_transitquote_premium() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-transitquote-premium-deactivator.php';
 	TransitQuote_Premium_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_plugin_name' );
-register_deactivation_hook( __FILE__, 'deactivate_plugin_name' );
+register_activation_hook( __FILE__, 'activate_transitquote_premium' );
+register_deactivation_hook( __FILE__, 'deactivate_transitquote_premium' );
 
 /**
  * The core plugin class that is used to define internationalization,
@@ -66,16 +66,16 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-transitquote-premium.php';
  *
  * @since    1.0.0
  */
-function run_plugin_name() {
+function run_transitquote_premium() {
 
 	$plugin = new TransitQuote_Premium();
 	$plugin->run();
 
 }
-function ct_save_error($tmp_plugin){
-  	update_option( 'wp_sell_plugin_activation_error',  ob_get_contents() );
+function tp_save_error($tmp_plugin){
+  	update_option( 'wp_premium_plugin_activation_error',  ob_get_contents() );
 }
 
-add_action( 'activated_plugin', 'ct_save_error' );
+add_action( 'activated_plugin', 'tp_save_error' );
 
-run_plugin_name();
+run_transitquote_premium();
