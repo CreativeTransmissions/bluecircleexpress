@@ -71,7 +71,7 @@ class TransitQuote_Premium {
 	public function __construct() {
 
 		$this->plugin_name = 'TransitQuote Premium';
-		$this->plugin_slug = 'transitQuote-premium';
+		$this->plugin_slug = 'transitquote-premium';
 		$this->version = '1.0.0';
 
 		$this->load_dependencies();
@@ -215,12 +215,22 @@ class TransitQuote_Premium {
 
 		$plugin_admin = new TransitQuote_Premium_Admin( $this->get_plugin_name(),  $this->get_version(), $this->get_plugin_slug());
 
+		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . $this->get_plugin_slug() . '.php' );
+
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'settings_admin_init' );
-		$this->loader->add_action( 'wp_ajax_ct_load_table', $plugin_admin, 'load_table_callback' );
-		$this->loader->add_action( 'wp_ajax_ct_save_record', $plugin_admin, 'save_record_callback' );
+		// $this->loader->add_action( 'wp_ajax_ct_load_table', $plugin_admin, 'load_table_callback' );
+		// $this->loader->add_action( 'wp_ajax_ct_save_record', $plugin_admin, 'save_record_callback' );
+		$this->loader->add_filter( 'plugin_action_links_'.$plugin_basename, $plugin_admin, 'add_action_links' );
+
+
+		$this->loader->add_action( 'wp_ajax_save_record', $plugin_admin, 'save_record_callback' );
+		$this->loader->add_action( 'wp_ajax_delete_record', $plugin_admin, 'delete_record_callback' );
+		$this->loader->add_action( 'wp_ajax_select_options', $plugin_admin, 'select_options_callback' );
+		$this->loader->add_action( 'wp_ajax_load_table', $plugin_admin, 'load_table_callback' );
+		$this->loader->add_action( 'wp_ajax_load_job_details', $plugin_admin, 'load_job_details_callback' );
 	}
 
 	/**
@@ -307,20 +317,20 @@ class TransitQuote_Premium {
 		$db_config = new TransitQuote_Premium\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
-		$cdb->define_table($db_config->get_config('tp_customers'));
-		$cdb->define_table($db_config->get_config('tp_quotes'));
-		$cdb->define_table($db_config->get_config('tp_vehicle_types'));
-		$cdb->define_table($db_config->get_config('tp_payment_types'));
-		$cdb->define_table($db_config->get_config('tp_payment_status_types'));
-		$cdb->define_table($db_config->get_config('tp_status_types'));
-		$cdb->define_table($db_config->get_config('tp_jobs'));
-		$cdb->define_table($db_config->get_config('tp_locations'));
-		$cdb->define_table($db_config->get_config('tp_surcharges'));
-		$cdb->define_table($db_config->get_config('tp_quote_surcharges'));
-		$cdb->define_table($db_config->get_config('tp_journeys'));
-		$cdb->define_table($db_config->get_config('tp_rates'));
-		$cdb->define_table($db_config->get_config('tp_event_logs')); 
-		$cdb->define_table($db_config->get_config('tp_event_data'));
+		$cdb->define_table($db_config->get_config('customers'));
+		$cdb->define_table($db_config->get_config('quotes'));
+		$cdb->define_table($db_config->get_config('vehicle_types'));
+		$cdb->define_table($db_config->get_config('payment_types'));
+		$cdb->define_table($db_config->get_config('payment_status_types'));
+		$cdb->define_table($db_config->get_config('status_types'));
+		$cdb->define_table($db_config->get_config('jobs'));
+		$cdb->define_table($db_config->get_config('locations'));
+		$cdb->define_table($db_config->get_config('surcharges'));
+		$cdb->define_table($db_config->get_config('quote_surcharges'));
+		$cdb->define_table($db_config->get_config('journeys'));
+		$cdb->define_table($db_config->get_config('rates'));
+		$cdb->define_table($db_config->get_config('event_logs')); 
+		$cdb->define_table($db_config->get_config('event_data'));
 		return $cdb;
 	}
 

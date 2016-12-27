@@ -32,7 +32,9 @@ class TransitQuote_Premium_Public {
 	private $plugin_name;
 	private $plugin_slug;
 	private $vendor_id;
-
+    private $tab_1_settings_key = 'rates';
+	private $tab_2_settings_key = 'pro_quote_options';
+	private $tab_5_settings_key = 'email_options';
 	/**
 	 * The version of this plugin.
 	 *
@@ -66,7 +68,24 @@ class TransitQuote_Premium_Public {
 	*/
 	   	
 	}
+    public function get_rates_list(){
+    	$plugin = new TransitQuote_Premium();
+		$this->cdb = $plugin->get_custom_db();
+    	$sql = "select distinct * 
+    				from (select distinct * 
+								from wp_premium_rates
+								where distance <> 0
+							order by service_type_id, distance
+							) r
+					union
+				select distinct * from (
+					select distinct * 
+						from wp_premium_rates
+					where distance = 0) r2;";
 
+		$data = $this->cdb->query($sql);
+		return $data;
+    }
 	private static function register_tables(){
 		//define and register tables
 		$this->cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'tq_pre'));
@@ -401,6 +420,37 @@ class TransitQuote_Premium_Public {
 		//remove_filter( 'wp_mail_content_type', 'set_html_content_type' );
 
 		return $html_email;
+	}
+	public function get_api_string(){
+		$api_string = '';
+
+		$this->api_key = self::get_setting($this->tab_2_settings_key, 'api_key');
+		if(!empty($this->api_key)){
+			$api_string = '&key='.$this->api_key;
+		};
+
+		return $api_string;
+	}
+
+	public function get_oldest_job_date(){
+		$plugin = new TransitQuote_Premium();
+		$this->cdb = $plugin->get_custom_db();
+		$jobs = $this->cdb->get_rows('jobs', array(), array('id', 'created'), null);
+		if(empty($jobs)){
+			return 'no jobs';
+		};
+		if(!isset($jobs[0])){
+			 return 'no first job';
+		};
+		return $jobs[0]['created'];
+	}
+	public function get_setting($tab, $name, $default = ''){
+		//get and escape setting
+		if(empty($this->{$tab}[$name])){
+			return $default;
+		} else {
+			return esc_attr($this->{$tab}[$name]);
+		}
 	}
 	public function get_notification_emails(){
         // return self::get_setting($this->tab_5_settings_key, 'notify', get_option( 'admin_email' ));

@@ -1,33 +1,6 @@
 ;(function ( $, window, document, undefined ) {
 
-	/**
-	 * All of the code for your admin-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
-	 */
-// Create the defaults once
+		// Create the defaults once
 		var pluginName = "wpSellSoftwareAdmin",
 				defaults = {
 				feedback_header_el: '.admin-form h2',
@@ -54,27 +27,26 @@
 				},
 
 				initTab: function(){
+
 					switch(this.tab){
-						case 'ct_customers':
-							this.initCustomersProductsTabUI('customer');						
-							this.initCustomersProductsTabEvents('customer');
-							this.initEditTableEvents('ct_customers');
+						case 'pro_quote_options':
+							this.initQuoteTabEvents();
 						break;
-						case 'ct_products':
-							this.initCustomersProductsTabUI('product');						
-							this.initCustomersProductsTabEvents('product');
-							this.initEditTableEvents('ct_products');
-						break;						
-						case 'ct_sales':
-							// this.initCustomersProductsTabUI('customers_product');	
-							this.initSalesTabUI();
-							this.initSalesTabEvents();
-							// this.initEditTableEvents('jobs');
-						break;
+						case 'surcharges':
+							//this.initCustomerTabUI();						
+							this.initSurchargeTabEvents();
+							this.initEditTableEvents('service_types_surcharges');
+						break;	
+						case 'customers':
+							this.initCustomersTabUI();						
+							this.initCustomersTabEvents();
+							this.initEditTableEvents('customers');
+						break;	
+						case 'transportation_requests':
 						default:
-							this.initCustomersProductsTabUI('customer');						
-							this.initCustomersProductsTabEvents('customer');
-							this.initEditTableEvents('ct_customers');
+							this.initJobsTabUI();
+							this.initJobsTabEvents();
+							this.initEditTableEvents('jobs');
 						break;
 					}
 				},
@@ -90,26 +62,25 @@
 					var d = new Date();
 					d.setMonth( d.getMonth( ) - 1 );
 					$('.datepicker').datepicker();
-					$('.datepicker').datepicker('option','changeMonth', true);
 					$('.datepicker').datepicker('option', 'altFormat','yy-mm-dd' );
-					$('.datepicker').datepicker('option', 'dateFormat','dd/mm/yy' );					
+					$('.datepicker').datepicker('option', 'dateFormat','dd/mm/yy' );
 					$('#from_date').datepicker('option', 'altField','#from_date_alt');
 					$('#from_date').datepicker('setDate', d);
 					$('#to_date').datepicker('option', 'altField','#to_date_alt');
-					$('#to_date').datepicker('setDate', new Date());					
+					$('#to_date').datepicker('setDate', new Date());
+
 				},
 
-				initSalesTabEvents: function(){
+				initJobsTabEvents: function(){
 					var that = this;
 
-					this.editTable = $('#ct_customers_products_table')[0];
+					this.editTable = $('#jobs_table')[0];
 
 					//expand details row on click 
-					//we will not expand the sale for now
-					// $('#ct_customers_products_table').on('click', 'tr', function(e){
-					// 	var dataId = $(this).attr('data-id');
-					// 	that.clickJobRow(dataId);
-					// });
+					$('#jobs_table').on('click', 'tr', function(e){
+						var dataId = $(this).attr('data-id');
+						that.clickJobRow(dataId);
+					});
 
 					//refresh table on change date range
 					$('#to_date').datepicker('option', 'onSelect', function(){
@@ -117,7 +88,7 @@
 						that.loadTable({
 							from_date: $('#from_date_alt').val(),
 							to_date: $('#to_date_alt').val(),
-							table: 'ct_customers_products'
+							table: 'jobs'
 						});
 					});
 
@@ -127,7 +98,7 @@
 						that.loadTable({
 							from_date: $('#from_date_alt').val(),
 							to_date: $('#to_date_alt').val(),
-							table: 'ct_customers_products'
+							table: 'jobs'
 						});
 					});
 				},
@@ -146,17 +117,17 @@
 					});
 				},
 
-				initCustomersProductsTabEvents: function(entity){
+				initCustomersTabEvents: function(){
 					var that = this;
 					//set form to read/populate
-					this.editForm = $('#edit_'+entity+'_form')[0];
-					this.editTable = $('#ct_'+entity+'s_table')[0];
+					this.editForm = $('#edit_customer_form')[0];
+					this.editTable = $('#customers_table')[0];
 
-					this.editRecordMessage = 'Editing '+entity+' details';
-					this.newRecordMessage = 'Enter new '+entity+' details'
+					this.editRecordMessage = 'Editing Customer Details';
+					this.newRecordMessage = 'Enter New Customer Details'
 
 					//Clear / New Plaza
-					$('#clear_'+entity+'').on('click', function(e){
+					$('#clear_customer').on('click', function(e){
 						e.preventDefault();
 						that.clearForm(this);
 						that.updateLegend(that.editForm, that.newRecordMessage);
@@ -171,21 +142,22 @@
 					
 				},
 
-				initSalesTabUI: function(){
+				initJobsTabUI: function(){
 					var that = this;
 					this.initDatePicker();
 					this.loadTable({
 						from_date: $('#from_date_alt').val(),
 						to_date: $('#to_date_alt').val(),
-						table: 'ct_customers_products'
+						table: 'jobs'
 					});
 							
 				},
 
-				initCustomersProductsTabUI: function(entity){
+				initCustomersTabUI: function(){
 					var that = this;
+
 					this.loadTable({
-						table: 'ct_'+entity+'s'
+						table: 'customers'
 					});
 							
 				},
@@ -498,13 +470,13 @@
 					var that = this;
 
 					//get the row for the data id
-					var saleRow = this.getRow('ct_customers_products_table', dataId);
-					if(!saleRow){
+					var jobRow = this.getRow('jobs_table', dataId);
+					if(!jobRow){
 						return false;
 					};
 
 					//get the next row down - the expandable one
-					var nextRow = $(saleRow).next();
+					var nextRow = $(jobRow).next();
 					if(!nextRow){
 						return false;
 					};
@@ -706,27 +678,28 @@
 				},
 
 				loadTable: function(options){
-					
 					var that = this;
-					
+
 					if(!options.table){
 						return false;
 					};
 
-					var tableName = options.table+'_table';					
+					var tableName = options.table+'_table';
+					
 					this.spinner(true);
 
 					$('#'+tableName+' tbody').empty();
 
 					var data = $.extend({
-							 	action: 'ct_load_table',
+							 	action: 'load_table',
 							 }, options );
-					
+
 					$.post(this.settings.ajaxUrl, data, function(response) {
 						if(response.success){
 							$('#'+tableName+' tbody').append(response.html);
 						} else {
 							that.updateProgress('error - see console');
+							console.log(response);
 						};
 						that.spinner(false);
 						if(options.callback){
@@ -971,4 +944,5 @@
 				// chain jQuery functions
 				return this;
 		};
+
 })( jQuery, window, document );

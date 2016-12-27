@@ -4,7 +4,7 @@
 	$(function () {
 		$('#wpbody-content').wpSellSoftwareAdmin({
 			ajaxUrl:ajaxurl,
-			//data: TransitQuoteProSettings
+			data: TransitQuotePremiumSettings
 		});
 	});
 

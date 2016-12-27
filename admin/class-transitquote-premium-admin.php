@@ -33,9 +33,11 @@ class TransitQuote_Premium_Admin {
 	private $plugin_slug;
 	protected $plugin_screen_hook_suffix = null;
 
-	private $tab_1_settings_key = 'ct_customers';
-    private $tab_2_settings_key = 'ct_products';
-	private $tab_3_settings_key = 'ct_sales';
+    private $tab_1_settings_key = 'rates';
+	private $tab_2_settings_key = 'pro_quote_options';
+	private $tab_3_settings_key = 'customers';
+	private $tab_4_settings_key = 'transportation_requests';
+	private $tab_5_settings_key = 'email_options';
 	
 	/**
 	 * The version of this plugin.
@@ -53,10 +55,586 @@ class TransitQuote_Premium_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name,  $version, $plugin_slug ) {
+	public function __construct( $plugin_name, $version, $plugin_slug ) {
 		$this->plugin_name = $plugin_name;
 		$this->plugin_slug = $plugin_slug;
 		$this->version = $version;
+		$this->plugin = new TransitQuote_Premium_Public($plugin_name,  $version, $plugin_slug);
+	}
+
+	/**
+	 * Register the administration menu for this plugin into the WordPress Dashboard menu.
+	 *
+	 * @since    1.0.0
+	 */
+	public function add_plugin_admin_menu() {
+
+		/*
+		 * Add a settings page for this plugin to the Settings menu.
+		 *
+		 * NOTE:  Alternative menu locations are available via WordPress administration menu functions.
+		 *
+		 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
+		 *
+		 * @TODO:
+		 *
+		 * - Change 'Page Title' to the title of your plugin admin page
+		 * - Change 'Menu Text' to the text for menu item for the plugin settings page
+		 * - Change 'manage_options' to the capability you see fit
+		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
+		 */
+		$this->plugin_screen_hook_suffix = add_menu_page(
+			__( 'TransitQuote Premium', $this->plugin_slug ),
+			__( 'TransitQuote Premium', $this->plugin_slug ),
+			'manage_options',
+			$this->plugin_slug,
+			array( $this, 'display_plugin_admin_page' )
+		);
+
+	}
+
+	public function add_action_links( $links ) {
+
+		return array_merge(
+			array(
+				'settings' => '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', $this->plugin_slug ) . '</a>'
+			),
+			$links
+		);
+
+	}
+	/**
+	 * Render the settings page for this plugin.
+	 *
+	 * @since    1.0.0
+	 */
+
+	public function display_plugin_admin_page() {
+		include_once( 'partials/transitquote-premium-admin-display.php' );
+	}
+
+
+	/**
+	 * Initialize plugin settings.
+	 *
+	 * @since    1.0.0
+	 */
+	public function settings_admin_init() {
+		$this->ajax = new TransitQuote_Premium\CT_AJAX();
+		$this->cdb = TransitQuote_Premium::get_custom_db();
+		$this->dbui = new TransitQuote_Premium\CT_DBUI(array('cdb'=>$this->cdb));
+		self::register_tab_1_settings();
+		self::register_tab_2_settings();
+		self::register_tab_3_settings();
+		self::register_tab_4_settings();
+		self::register_tab_5_settings();
+	}
+
+	/**
+	 * NOTE:     Actions are points in the execution of a page or process
+	 *           lifecycle that WordPress fires.
+	 *
+	 * @since    1.0.0
+	 */
+
+	public function plugin_options_tabs() {
+         $this->current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $this->tab_1_settings_key;
+         //if url is not pointing to a tab, set to default
+         if(!array_key_exists($this->current_tab, $this->plugin_settings_tabs)){
+			$this->current_tab = $this->tab_4_settings_key;
+         };
+         screen_icon();
+         echo '<h2 class="nav-tab-wrapper">';
+         foreach ( $this->plugin_settings_tabs as $tab_key => $tab_caption ) {
+             $active = $this->current_tab == $tab_key ? 'nav-tab-active' : '';
+             echo '<a class="nav-tab ' . $active . '" href="?page=' . $this->plugin_slug . '&tab=' . $tab_key . '">' . $tab_caption . '</a>';
+         }
+         echo '<div class="spinner"></div></h2>';
+    }
+	public function get_setting($tab, $name, $default = ''){
+		//get and escape setting
+		if(empty($this->{$tab}[$name])){
+			return $default;
+		} else {
+			return esc_attr($this->{$tab}[$name]);
+		}
+	}
+	function register_tab_1_settings(){
+		$this->plugin_settings_tabs[$this->tab_1_settings_key] = 'Rates'; //Tab name
+		register_setting( $this->tab_1_settings_key, $this->tab_1_settings_key ); //register settings for tab
+	    add_settings_section( 'rates', 'Rates',  array( $this, 'rates_callback' ), $this->tab_1_settings_key);
+	}
+	function rates_callback(){
+		$this->distance_unit = $this->plugin->get_setting('pro_quote_options', 'distance_unit', 'Kilometer');
+		$help = '<p>Rates are either a set price up to a maximum driving distance, a price per mile or km travelled, a price per each hour of travel time or a combination of both.</p>'.
+				'<p>Prices will be used for distances up to the Max Distance entered below.</p>'.
+				'<p>You can set multiple rates depending on the Max Distance, for example $2 per mile for up to Max Distance 20 miles and then $4 per mile for up to Max Distance 40 miles.</p>'.
+				'<p>Enter a rate with Max Distance 0 to calculate the rate for journeys over the highest distance boundary.</p>'.
+				'<p>For flats rate without any distance boundaries set Max Distance to 0 only.</p>';
+
+		echo $help;
+	}
+	function register_tab_2_settings(){
+		$this->plugin_settings_tabs[$this->tab_2_settings_key] = 'Quote Options'; //Tab name
+		register_setting( $this->tab_2_settings_key, $this->tab_2_settings_key ); //register settings for tab
+	    add_settings_section( 'pro_quote_options', 'Quote Options',  array( $this, 'pro_quote_options_callback' ), $this->tab_2_settings_key);
+   	    add_settings_field( 'success_message', 'Success Message',  array( $this, 'success_message_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
+   	    add_settings_field( 'min_notice', 'Minimum Notice Period',  array( $this, 'min_notice_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
+   	    add_settings_field( 'min_notice_charge', 'Minimum Notice Charge',  array( $this, 'min_notice_charge_callback' ), $this->tab_2_settings_key, 'pro_quote_options');   	    
+   	    add_settings_field( 'currency', 'Currency Symbol',  array( $this, 'currency_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
+   	    add_settings_field( 'quote_element', 'Quote Display Element',  array( $this, 'quote_element_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
+   	    add_settings_field( 'distance_unit', 'Distance Unit',  array( $this, 'distance_unit_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
+   	    add_settings_field( 'layout', 'Layout',  array( $this, 'layout_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
+   	    add_settings_field( 'start_location', 'Start Location',  array( $this, 'start_location_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
+   	    add_settings_field( 'geolocate', 'Geolocation',  array( $this, 'geolocate_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
+   	    add_settings_field( 'api_key', 'API Key',  array( $this, 'api_key_callback' ), $this->tab_2_settings_key, 'pro_quote_options' );
+	}
+	function min_notice_callback(){
+		$value = $this->plugin->get_setting('pro_quote_options', 'min_notice', '24:00');
+		echo '<input type="text" name="'.$this->tab_2_settings_key.'[min_notice]" value="'.$value.'"/>';
+		echo "<p>Please enter minimum notice period before which an additional charge is incurred.</p>";
+	}
+	function min_notice_charge_callback(){
+		$value = $this->plugin->get_setting('pro_quote_options', 'min_notice_charge', '200');
+		echo '<input type="text" name="'.$this->tab_2_settings_key.'[min_notice_charge]" value="'.$value.'"/>';
+		echo "<p>Please enter the additional charge in dollars for jobs booked within 24 hours..</p>";
+	}
+	function currency_callback(){
+		$value = $this->plugin->get_currency();
+		echo '<input type="text" name="'.$this->tab_2_settings_key.'[currency]" value="'.$value.'"/>';
+		echo "<p>Please enter the currency symbol or text to display. For example: £, $, GBP, USD etc..</p>";
+	}
+	function quote_element_callback(){
+		$value = $this->plugin->get_setting('pro_quote_options', 'quote_element', 'quote');
+		echo '<input type="text" name="'.$this->tab_2_settings_key.'[quote_element]" value="'.$value.'"/>';
+		echo "<p>Please enter the class or id of the html element in which to display the final quote.</p>".
+			"<p>Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.</p>";
+	}
+	function distance_unit_callback(){
+		$value =  $this->plugin->get_distance_unit();
+		if($value=='Kilometer'){
+			$km_selected = 'selected="selected"';
+			$m_selected = '';
+		} else {
+			$m_selected = 'selected="selected"';
+			$km_selected = '';
+		};
+		echo '<select name="'.$this->tab_2_settings_key.'[distance_unit]">';
+		echo '<option '.$km_selected.'>Kilometer</option><option '.$m_selected.'>Mile</option></select>';
+		echo '<p>Please choose the distance unit to use for the quote calculation.</p>';
+	}
+	function start_location_callback(){
+		include_once( 'partials/place_selector.php' );
+	}
+	function geolocate_callback(){
+		$value = $this->plugin->get_geolocate();
+		echo '<label for "'.$this->tab_2_settings_key.'[geolocate]['.$value.']">Detect Location</label>';
+		echo '<input type="checkbox" id="geolocate"  name="'.$this->tab_2_settings_key.'[geolocate]" value="1" '.checked( 1 == $value,true,false).'/>';
+		echo '<p>Choose whether to attempt to detect the customers location to determine the location displayed on the map.</p>';		
+	}
+	public function api_key_callback() {
+	    $value = $this->plugin->get_setting($this->tab_2_settings_key, 'api_key');
+		echo '<label for="'.$this->tab_2_settings_key.'[api_key]">Google Maps API Key:</label>';
+		echo '<input type="text" name="'.$this->tab_2_settings_key.'[api_key]" value="'.$value.'"/><br/>';
+		echo '<p>The API Key is only valid on your registered domain so this field should only be populated in the live environment.</p>';
+	}	
+	function success_message_callback(){
+		$value = $this->plugin->get_success_message();
+		echo '<textarea class="wide" name="'.$this->tab_2_settings_key.'[success_message]">'.$value.'</textarea>';
+		echo "<p>Please enter the message that will be displayed to the customer after their quote has been saved and displayed on screen.<br/>This should explain any next steps they must take to confirm their booking.</p>";
+	}
+	function layout_callback() {	 
+	    $options = get_option( $this->tab_2_settings_key );
+	    $html = '<input type="radio" id="radio_example_one" name="'.$this->tab_2_settings_key.'[layout]" value="1"' . checked( 1, $options['layout'], false ) . '/>';
+	    $html .= '<label for="radio_example_one">Inline Map</label>&nbsp;&nbsp;&nbsp;';	     
+	    $html .= '<input type="radio" id="radio_example_two" name="'.$this->tab_2_settings_key.'[layout]" value="2"' . checked( 2, $options['layout'], false ) . '/>';
+	    $html .= '<label for="radio_example_two">Pop-Up Map</label>';	     
+	    $html .= "<p>Please select which format you want to display for map.</p>";	     
+	    echo $html;	 
+	}
+	function pro_quote_options_callback(){
+	}
+	function register_tab_3_settings(){
+
+		// Define name displayed on tab
+		$this->plugin_settings_tabs[$this->tab_3_settings_key] = 'Customers';
+
+		// Register settings for tab with the settings API
+		register_setting( $this->tab_3_settings_key, $this->tab_3_settings_key ); 
+
+		// Add settings section for this tab including a callback function to display tab content
+	    add_settings_section( 'customers', 'Customers',  array( $this, 'customers_callback' ), $this->tab_3_settings_key);
+	}
+	function customers_callback(){
+		//get the no of customers to determine whether to show empty message or loading message
+		$this->customer_count = $this->cdb->get_count('customers');
+		if($this->customer_count == 0){
+			$this->empty_message = 'There are no customers in the database yet.';
+		} else {
+			$this->empty_message = 'Loading customers...';
+		};
+		$help = '<p>All customers who have previously requested transportation are listed here.</p>';
+		echo $help;
+	}
+	function register_tab_4_settings(){
+		$this->plugin_settings_tabs[$this->tab_4_settings_key] = 'Jobs'; //Tab name
+		register_setting( $this->tab_4_settings_key, $this->tab_4_settings_key ); //register settings for tab
+	    add_settings_section( 'jobs', 'Jobs',  array( $this, 'jobs_callback' ), $this->tab_4_settings_key);
+	}
+	function jobs_callback(){
+		$this->jobs_count = $this->cdb->get_count('jobs');
+		if($this->jobs_count == 0){
+			$this->empty_message = 'There are no jobs in the database yet.';
+		} else {
+			$this->empty_message = 'Loading jobs list...';
+		};		
+		$help = '<p>All jobs are listed below. Click on a job to show the full details.</p>';
+		echo $help;
+	}
+	function register_tab_5_settings(){
+
+		$this->plugin_settings_tabs[$this->tab_5_settings_key] = 'Email Options'; //Tab name
+		register_setting( $this->tab_5_settings_key, $this->tab_5_settings_key ); //register settings for tab
+	    add_settings_section( 'email_options', 'Emails Options',  array( $this, 'email_options_callback' ), $this->tab_5_settings_key);
+
+ 		add_settings_field( 'notify', 'Send New Job Emails To',  array( $this, 'notify_callback' ), $this->tab_5_settings_key, 'email_options');
+	   	add_settings_field( 'notify', 'Send New Job Emails To',  array( $this, 'notify_callback' ), $this->tab_5_settings_key, 'email_options');
+	   	add_settings_field( 'from_address', 'Reply Address for Customer Quote Emails',  array( $this, 'from_address_callback' ), $this->tab_5_settings_key, 'email_options');
+	   	add_settings_field( 'from_name', 'Contact Name for Customer Quote Emails',  array( $this, 'from_name_callback' ), $this->tab_5_settings_key, 'email_options');
+	   	add_settings_field( 'customer_subject', 'Customer Quote Email Subject',  array( $this, 'customer_subject_callback' ), $this->tab_5_settings_key, 'email_options');
+	   	add_settings_field( 'customer_message', 'Customer Quote Email Message',  array( $this, 'customer_message_callback' ), $this->tab_5_settings_key, 'email_options');
+   	}
+	function email_options_callback(){
+	}
+	function notify_callback(){
+		$value = $this->plugin->get_notification_emails();
+		echo '<input class="wide" type="text" name="'.$this->tab_5_settings_key.'[notify]" value="'.$value.'"/>';
+		echo "<p>Please enter the email addresses that will recieve new job requests. You can enter more than one by separating them with a comma.<br/>Example: <b>boss@mycompany.com, staff@mycompany.com</b></p>";
+	}
+	function from_address_callback(){
+		$value = $this->plugin->get_from_address();
+		echo '<input class="wide" type="text" name="'.$this->tab_5_settings_key.'[from_address]" value="'.$value.'"/>';
+		echo "<p>Please enter the <em>From</em> email address that customers will recieve their quote emails from.<br/>Example: <b>customerservice@mycompany.com</b></p>";
+	}
+	function from_name_callback(){
+		$value = $this->plugin->get_from_name();
+		echo '<input class="wide" type="text" name="'.$this->tab_5_settings_key.'[from_name]" value="'.$value.'"/>';
+		echo "<p>Please enter the contact name for the email address that customers will recieve their quote emails from.<br/>Example: <b>My Company Name</b> &ltcustomerservice@mycompany.com&gt;</p>";
+	}
+	function customer_subject_callback(){
+		$value = $this->plugin->get_customer_subject();
+		echo '<input class="wide" type="text" name="'.$this->tab_5_settings_key.'[customer_subject]" value="'.$value.'"/>';
+		echo "<p>Please enter the email subject for customer quote emails.<br/>Example: <b>Your Tranporation Quote</b></p>";
+	}
+	function customer_message_callback(){
+		$value = $this->plugin->get_customer_message();
+		echo '<textarea class="wide" name="'.$this->tab_5_settings_key.'[customer_message]">'.$value.'</textarea>';
+		echo "<p>Please enter the message to your customer that will appear above the journey details and quote.</p>";
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 * Register the stylesheets for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_styles() {
+
+		/**
+		 * This function is provided for demonstration purposes only.
+		 *
+		 * An instance of this class should be passed to the run() function
+		 * defined in TransitQuote_Premium_Loader as all of the hooks are defined
+		 * in that particular class.
+		 *
+		 * The TransitQuote_Premium_Loader will then create the relationship
+		 * between the defined hooks and the functions defined in this
+		 * class.
+		 */
+		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/transitquote-premium-admin.css', array(), $this->version, 'all' );
+		}
+	}
+
+	/**
+	 * Register the JavaScript for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_scripts() {
+
+		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
+
+			$this->start_place_name = $this->plugin->get_setting('pro_quote_options', 'start_place_name', 'Glasgow');
+			$this->start_lat = $this->plugin->get_setting('pro_quote_options', 'start_lat','55.870853');
+			$this->start_lng = $this->plugin->get_setting('pro_quote_options', 'start_lng', '-4.252036');
+			$this->min_notice = $this->plugin->get_setting('pro_quote_options', 'min_notice', '24:00');
+			$this->min_notice_charge = $this->plugin->get_setting('pro_quote_options', 'min_notice_charge', '200');
+			$this->oldest_job_date = $this->plugin->get_oldest_job_date();
+			$this->api_string = $this->plugin->get_api_string();
+
+			$tq_settings = array('startLat'=>$this->start_lat,
+								'startLng'=>$this->start_lng,
+								'startPlaceName'=>$this->start_place_name,
+								'oldestJobDate'=>$this->oldest_job_date
+							);
+
+			if(!empty($this->api_key)){
+				$tq_settings['apiKey'] = $this->api_key;
+			};
+
+			
+			wp_enqueue_script( $this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
+			wp_enqueue_script( $this->plugin_slug.'-jqui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.min.js', '', 1.10, True );
+			wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( '../public/assets/js/jquery.ui.map.js', __FILE__ ), array( 'jquery','jqui'), '', True );
+			wp_enqueue_script( $this->plugin_slug.'-place-selector',plugin_dir_url( __FILE__ ). 'assets/js/place-selector.js', array( 'jquery' ), '', True );
+
+			wp_enqueue_script( $this->plugin_slug.'-admin-js', plugin_dir_url( __FILE__ ) . 'js/transitquote-premium-admin.js', array( $this->plugin_slug.'jquery' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_slug.'-admin-script', plugins_url( __FILE__ ).'assets/js/transitquote-premium-admin-main.js', array( $this->plugin_slug.'-admin-js' ), '', True );
+
+
+			wp_localize_script( $this->plugin_slug . '-admin-js', 'TransitQuotePremiumSettings', $tq_settings);
+
+
+		}
+
+	}
+
+
+
+
+
+
+
+
+
+
+	private function debug($data = null){
+		$this->plugin->debug($data);
+	}
+	public function get_job($job_id = null){
+    	//get job record from property or database
+    	if(empty($job_id)){
+    		//no id passed so 
+    		if(empty($this->job)){
+    			/// no current job property so return false
+    			return false;
+    		};
+			//return current job property if there is one
+			return $this->job;
+    	};
+		//a job id has been passed so get the job record from the database
+		return $this->cdb->get_row('jobs',$job_id);
+    }
+
+	function get_jobs($filters = null, $dates = null){
+
+    	//current and future only
+    	$clauses = array();/*"date(wp_premium_jobs.delivery_date) >= CURDATE() ",*/
+    	$filter_sql = '';
+    	/*if(!empty($filters)){
+			foreach ($filters as $name => $values) {
+	     		if(strpos($name, '.')==-1){
+	     			//no table specified so filter jobs table
+	    			$clauses[] = 'wp_premium_jobs.'.$name.' IN('.implode(',',$values).')';
+	    		} else {
+	    			if(is_array($values)){
+	    				$clauses[] = $name.' IN('.implode(',',$values).')';
+	    			} else {
+	    				$clauses[] = $name.' IN('.$values.')';
+	    			}
+	    		}
+	    	}
+
+	    	$filter_sql = 'where '.implode(' AND ', $clauses);  	
+    	};*/
+
+    	if(!empty($dates)){
+	    	$filter_sql .= " where date(wp_premium_jobs.created) <= '".$dates['to_date']."' and date(wp_premium_jobs.created) >= '".$dates['from_date']."'"; 
+    	};    	
+
+    	$sql = "SELECT	wp_premium_jobs.id,
+						wp_premium_jobs.delivery_contact_name,
+						-- wp_premium_jobs.service_type_id,
+						-- CASE service_type_id WHEN 1 THEN 'Commercial' ELSE 'Domestic' END as move_type,
+						wp_premium_jobs.delivery_time,
+						wp_premium_jobs.description,
+						wp_premium_jobs.customer_id,
+						wp_premium_jobs.accepted_quote_id,
+						wp_premium_jobs.vehicle_type_id,
+						wp_premium_jobs.created,
+						wp_premium_jobs.modified,
+						trim(concat(c.first_name,' ',c.last_name)) as last_name,
+						lo.address as pick_up,
+						ld.address as drop_off,
+						v.name as vehicle_type,
+						q.total as quote 
+					FROM wp_premium_jobs 
+						left join wp_tq_journeys j 
+							on j.job_id = wp_premium_jobs.id 
+						left join wp_tq_locations lo 
+							on lo.id = j.origin_location_id 
+						left join wp_tq_locations ld 
+							on ld.id = j.dest_location_id 
+						left join wp_tq_customers c 
+							on c.id = wp_premium_jobs.customer_id 
+						left join wp_tq_vehicle_types v 
+							on v.id = wp_premium_jobs.vehicle_type_id 
+						left join wp_tq_quotes q 
+							on q.id = wp_premium_jobs.accepted_quote_id
+			".$filter_sql." 
+			order by wp_premium_jobs.id desc;";
+
+		$data = $this->cdb->query($sql);
+		return $data;
+    }
+
+	public function load_job_details_callback(){
+		//get the job id for the post parameters
+		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
+
+		//load the job record from the database
+		$this->job = self::get_job($job_id);
+
+		if($this->job===false){
+			//couldnt find a job record
+			$this->ajax->log_error(array('name'=>'Could not details for request',
+                            'value'=>'job_id: '.$job_id));
+
+			//return error to display on screen
+			$this->ajax->respond('Could not load request reference: '.$job_id);
+			return false;
+		};
+
+		//get related data
+		$this->job = $this->plugin->get_job_details($this->job);
+
+		//output the view which will be returned via ajax and inserted into the hidden
+		include('partials/job_details.php'); 
+		
+		die();
+	}
+
+	public function load_table_callback(){
+		$table = $this->ajax->param(array('name'=>'table'));
+		$html = self::load_table($table);
+		$response = array('success'=>'true',
+								'html'=>$html);
+		$this->ajax->respond($response);
+	}
+
+	private function delete_record($options){
+		if(!isset($options['table'])){
+			return false;
+		};
+		if(!isset($options['id'])){
+			return false;
+		}
+		
+		return $this->cdb->delete_row($options);
+	}
+
+	private function load_table($table, $params = array()){
+		if(empty($table)){
+			return false;
+		};
+		switch ($table) {
+			case 'rates':
+				if(isset($params['query'])){
+					//use standard options for table_rows to allow for only returning a single row to ui after an update
+					$defaults = array(
+							'table'=>'rates',
+							'fields'=>array('id', 'distance','amount','unit','hour'),
+							'inputs'=>false,
+							'actions'=>array('Edit', 'Delete')
+							);
+				} else {
+					//returning whole table so get rates sorted for admin panel with 0 at the end
+					$rates_data = $this->plugin->get_rates_list();
+
+					$defaults = array(
+								'data'=>$rates_data, //supply data instead of running a query
+								'table'=>'rates',
+								'fields'=>array('id', 'distance','amount','unit','hour'),
+								'inputs'=>false,
+								'actions'=>array('Edit', 'Delete')
+								);
+				};
+			break;
+			case 'customers':
+				$defaults = array(
+					'table'=>'customers',
+					'fields'=>array('id','last_name', 'first_name','email','phone'),
+					'inputs'=>false
+				);
+			break;
+			case 'jobs':
+				$from_date = $this->ajax->param(array('name'=>'from_date'));
+				$to_date = $this->ajax->param(array('name'=>'to_date'));
+
+				$dates = array('from_date'=>$from_date, 'to_date'=>$to_date);
+				//get data
+				//$filters = $this->plugin->get_job_filters();
+				$job_data = $this->get_jobs($filters, $dates);
+				$defaults = array(
+					'data'=>$job_data,
+					'fields'=>array(/*'move_type',*/
+									'created',
+									'c.last_name as last_name',
+									'lo.address as pick_up',
+									'ld.address as drop_off',									
+									'delivery_time'),
+					'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime'),
+					'inputs'=>false,
+					'table'=>'jobs',
+					'actions'=>array('Delete'),
+					'tpl_row'=>'<tr class="expand"></tr>'
+					);
+		};
+
+		if(is_array($defaults)){
+			$params = array_merge($defaults, $params);
+		} else {
+			$params = $defaults;
+		};
+
+		$rows = $this->dbui->table_rows($params);
+		if($rows===false){
+			$response = array('success'=>'false',
+								'msg'=>'could not run query',
+								'sql'=> $this->dbui->cdb->last_query);
+		} else {
+			if($rows===''){
+				$rows = '<tr><td colspan="5" class="empty-table">There are no '.$table.' in the database yet.</td></tr>';
+			};
+		};
+		return $rows;
 	}
 
 	public function save_record_callback(){
@@ -85,7 +663,20 @@ class TransitQuote_Premium_Admin {
 		}
 	}
 
+	public function delete_record_callback(){
+		$table = $this->ajax->param(array('name'=>'update'));
+		$id = $this->ajax->param(array('name'=>'id'));
+		if(self::delete_record(array('table'=>$table, 'id'=>$id))){
+			$this->ajax->respond(array('success'=>'true',
+										'msg'=>'Record Deleted'));
+		} else {
+			$this->ajax->respond(array('success'=>'false',
+								 		'msg'=>'Unable to delete record'));
+		}
+	}
 
+
+/*****
 	public function save($table, $idx = null, $defaults = null){
 		if(empty($table)){
 			return false;
@@ -107,7 +698,6 @@ class TransitQuote_Premium_Admin {
 		$record_data['id'] = $row_id;		
 		return $record_data;
 	}
-
 	public function save_record($table, $record_data){
 		//Save the main event record
 		//$this->ajax->pa($record_data);
@@ -123,7 +713,6 @@ class TransitQuote_Premium_Admin {
 
 		return $rec_id;
 	}
-
 	private function get_record_data($table, $idx = null){
 		//get params for records data from front end
 		//idx is a 0 based index for where more than one rec is passed
@@ -165,8 +754,6 @@ class TransitQuote_Premium_Admin {
 
 		return $record_data;
 	}
-
-
 	public function load_table_callback(){
 		$table = $this->ajax->param(array('name'=>'table'));
 		$html = self::load_table($table);
@@ -263,208 +850,6 @@ class TransitQuote_Premium_Admin {
 		return $data;
     }
 
-	/**
-	 * Register the administration menu for this plugin into the WordPress Dashboard menu.
-	 *
-	 * @since    1.0.0
-	 */
-	public function add_plugin_admin_menu() {
-
-		/*
-		 * Add a settings page for this plugin to the Settings menu.
-		 *
-		 * NOTE:  Alternative menu locations are available via WordPress administration menu functions.
-		 *
-		 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
-		 *
-		 * @TODO:
-		 *
-		 * - Change 'Page Title' to the title of your plugin admin page
-		 * - Change 'Menu Text' to the text for menu item for the plugin settings page
-		 * - Change 'manage_options' to the capability you see fit
-		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
-		 */
-		$this->plugin_screen_hook_suffix = add_menu_page(
-			__( 'TransitQuote Premium', $this->plugin_slug ),
-			__( 'TransitQuote Premium', $this->plugin_slug ),
-			'manage_options',
-			$this->plugin_slug,
-			array( $this, 'display_plugin_admin_page' )
-		);
-
-	}
-
-
-	/**
-	 * Render the settings page for this plugin.
-	 *
-	 * @since    1.0.0
-	 */
-	public function display_plugin_admin_page() {
-		include_once( 'partials/transitquote-premium-admin-display.php' );
-	}
-
-	public function settings_admin_init() {
-		$this->ajax = new TransitQuote_Premium\CT_AJAX();
-		$this->cdb = TransitQuote_Premium::get_custom_db();
-		$this->dbui = new TransitQuote_Premium\CT_DBUI(array('cdb'=>$this->cdb));
-		self::register_tab_1_settings();
-		self::register_tab_2_settings();
-		self::register_tab_3_settings();
-		// self::register_tab_4_settings();
-		// self::register_tab_5_settings();
-	}
-
-
-	function register_tab_1_settings(){
-		// Define name displayed on tab
-		$this->plugin_settings_tabs[$this->tab_1_settings_key] = 'Customers';
-		// Register settings for tab with the settings API
-		register_setting( $this->tab_1_settings_key, $this->tab_1_settings_key ); 
-		// Add settings section for this tab including a callback function to display tab content
-	    add_settings_section( 'ct_customers', 'Customers',  array( $this, 'customers_callbacks' ), $this->tab_1_settings_key);
-	}
-	function customers_callbacks(){
-		//get the no of customers to determine whether to show empty message or loading message
-		$this->customer_count = $this->cdb->get_count('ct_customers');
-		if($this->customer_count == 0){
-			$this->empty_message = 'There are no customers in the database yet.';
-		} else {
-			$this->empty_message = 'Loading customers...';
-		};
-		$help = '<p>All customers who have registered are listed here.</p>';
-		echo $help;
-	}
-
-
-	function register_tab_2_settings(){
-		// Define name displayed on tab
-		$this->plugin_settings_tabs[$this->tab_2_settings_key] = 'Products';
-		// Register settings for tab with the settings API
-		register_setting( $this->tab_2_settings_key, $this->tab_2_settings_key ); 
-		// Add settings section for this tab including a callback function to display tab content
-	    add_settings_section( 'ct_products', 'Products',  array( $this, 'products_callback' ), $this->tab_2_settings_key);
-	}
-
-	function products_callback(){
-		//get the no of customers to determine whether to show empty message or loading message
-		$this->product_count = $this->cdb->get_count('ct_products');
-		if($this->product_count == 0){
-			$this->empty_message = 'There is no product in the database yet.';
-		} else {
-			$this->empty_message = 'Loading products...';
-		};
-		$help = '<p>Products will be listed here.</p>';
-		echo $help;
-	}
-
-	function register_tab_3_settings(){
-		// Define name displayed on tab
-		$this->plugin_settings_tabs[$this->tab_3_settings_key] = 'Sales';
-		// Register settings for tab with the settings API
-		register_setting( $this->tab_3_settings_key, $this->tab_3_settings_key ); 
-		// Add settings section for this tab including a callback function to display tab content
-	    add_settings_section( 'ct_customers_products', 'Sales',  array( $this, 'customers_product_callback' ), $this->tab_3_settings_key);
-	}
-	function customers_product_callback(){
-		//get the no of customers to determine whether to show empty message or loading message
-		$this->customer_count = $this->cdb->get_count('ct_customers_products');
-		if($this->customer_count == 0){
-			$this->empty_message = 'There is no sale in the database yet.';
-		} else {
-			$this->empty_message = 'Loading Sales...';
-		};
-		$help = '<p>All sales will be listed here.</p>';
-		echo $help;
-	}
-
-
-	/**
-	 * NOTE:     Actions are points in the execution of a page or process
-	 *           lifecycle that WordPress fires.
-	 *
-	 *           Actions:    http://codex.wordpress.org/Plugin_API#Actions
-	 *           Reference:  http://codex.wordpress.org/Plugin_API/Action_Reference
-	 *
-	 * @since    1.0.0
-	 */
-
-	public function plugin_options_tabs() {
-    	//Called from the admin.php view to display WordPress standard tabs
-
-    	 //set current or default tab
-         $this->current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $this->tab_1_settings_key;
-
-         //if url is not pointing to a tab, set to default
-         if(!array_key_exists($this->current_tab, $this->plugin_settings_tabs)){
-			$this->current_tab = $this->tab_4_settings_key;
-         };
-
-         screen_icon();
-         echo '<h2 class="nav-tab-wrapper">';
-         foreach ( $this->plugin_settings_tabs as $tab_key => $tab_caption ) {
-             $active = $this->current_tab == $tab_key ? 'nav-tab-active' : '';
-             echo '<a class="nav-tab ' . $active . '" href="?page=' . $this->plugin_slug . '&tab=' . $tab_key . '">' . $tab_caption . '</a>';
-         }
-         echo '<div class="spinner"></div></h2>';
-    }
-
-	/**
-	 * Register the stylesheets for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_styles() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in TransitQuote_Premium_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The TransitQuote_Premium_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
-			return;
-		}
-
-		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-balance-voucher-admin.css', array(), $this->version, 'all' );
-		}
-	}
-
-	/**
-	 * Register the JavaScript for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_scripts() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in TransitQuote_Premium_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The TransitQuote_Premium_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
-			return;
-		}
-
-		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_script( $this->plugin_name.'jqui', 'http://code.jquery.com/ui/1.11.3/jquery-ui.min.js', '', 1.11, True );
-			wp_enqueue_script( $this->plugin_name.'_TransitQuote_Premium_admin_main', plugin_dir_url( __FILE__ ) . 'js/TransitQuote_Premium_admin_main.js', array( 'jquery' ), $this->version, true );
-			wp_enqueue_script( $this->plugin_name.'_wp-balance-voucher-admin', plugin_dir_url( __FILE__ ) . 'js/wp-balance-voucher-admin.js', array( $this->plugin_name.'_TransitQuote_Premium_admin_main' ), $this->version, true );
-		}
-	}
+*******/
 
 }

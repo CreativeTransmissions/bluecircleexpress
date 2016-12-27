@@ -26,7 +26,7 @@ class DB_Config {
 	}
 
 
-private function config_tp_customers(){
+private function config_customers(){
  return array (
   'name' => 'customers',
   'defaults' => 
@@ -113,7 +113,7 @@ private function config_tp_customers(){
 
 }
 
-private function config_tp_quotes(){
+private function config_quotes(){
  return array (
   'name' => 'quotes',
   'defaults' => 
@@ -209,7 +209,7 @@ private function config_tp_quotes(){
 
 }
 
-private function config_tp_vehicle_types(){
+private function config_vehicle_types(){
  return array (
   'name' => 'vehicle_types',
   'defaults' => 
@@ -278,7 +278,7 @@ private function config_tp_vehicle_types(){
 
 }
 
-private function config_tp_payment_types(){
+private function config_payment_types(){
  return array (
   'name' => 'payment_types',
   'defaults' => 
@@ -338,7 +338,7 @@ private function config_tp_payment_types(){
 
 }
 
-private function config_tp_payment_status_types(){
+private function config_payment_status_types(){
  return array (
   'name' => 'payment_status_types',
   'defaults' => 
@@ -407,7 +407,7 @@ private function config_tp_payment_status_types(){
 
 }
 
-private function config_tp_status_types(){
+private function config_status_types(){
  return array (
   'name' => 'status_types',
   'defaults' => 
@@ -467,7 +467,7 @@ private function config_tp_status_types(){
 
 }
 
-private function config_tp_jobs(){
+private function config_jobs(){
  return array (
   'name' => 'jobs',
   'defaults' => 
@@ -617,7 +617,7 @@ private function config_tp_jobs(){
 
 }
 
-private function config_tp_locations(){
+private function config_locations(){
  return array (
   'name' => 'locations',
   'defaults' => 
@@ -749,7 +749,7 @@ private function config_tp_locations(){
 
 }
 
-private function config_tp_surcharges(){
+private function config_surcharges(){
  return array (
   'name' => 'surcharges',
   'defaults' => 
@@ -818,7 +818,7 @@ private function config_tp_surcharges(){
 
 }
 
-private function config_tp_quote_surcharges(){
+private function config_quote_surcharges(){
  return array (
   'name' => 'quote_surcharges',
   'defaults' => 
@@ -896,7 +896,7 @@ private function config_tp_quote_surcharges(){
 
 }
 
-private function config_tp_journeys(){
+private function config_journeys(){
  return array (
   'name' => 'journeys',
   'defaults' => 
@@ -992,7 +992,7 @@ private function config_tp_journeys(){
 
 }
 
-private function config_tp_rates(){
+private function config_rates(){
  return array (
   'name' => 'rates',
   'defaults' => 
@@ -1087,7 +1087,7 @@ private function config_tp_rates(){
 );
 
 }
-private function config_tp_event_logs(){
+private function config_event_logs(){
  return array (
   'name' => 'event_logs',
   'defaults' => 
@@ -1138,7 +1138,7 @@ private function config_tp_event_logs(){
 
 }
 
-private function config_tp_event_data(){
+private function config_event_data(){
  return array (
   'name' => 'event_data',
   'defaults' => 
