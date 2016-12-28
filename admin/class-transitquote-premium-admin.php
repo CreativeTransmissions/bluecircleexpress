@@ -33,8 +33,8 @@ class TransitQuote_Premium_Admin {
 	private $plugin_slug;
 	protected $plugin_screen_hook_suffix = null;
 
-    private $tab_1_settings_key = 'rates';
-	private $tab_2_settings_key = 'pro_quote_options';
+    private $tab_1_settings_key = 'premium_rates';
+	private $tab_2_settings_key = 'premium_quote_options';
 	private $tab_3_settings_key = 'customers';
 	private $tab_4_settings_key = 'transportation_requests';
 	private $tab_5_settings_key = 'email_options';
@@ -128,6 +128,7 @@ class TransitQuote_Premium_Admin {
 		self::register_tab_3_settings();
 		self::register_tab_4_settings();
 		self::register_tab_5_settings();
+		$this->plugin->load_settings();
 	}
 
 	/**
@@ -151,21 +152,14 @@ class TransitQuote_Premium_Admin {
          }
          echo '<div class="spinner"></div></h2>';
     }
-	public function get_setting($tab, $name, $default = ''){
-		//get and escape setting
-		if(empty($this->{$tab}[$name])){
-			return $default;
-		} else {
-			return esc_attr($this->{$tab}[$name]);
-		}
-	}
+
 	function register_tab_1_settings(){
 		$this->plugin_settings_tabs[$this->tab_1_settings_key] = 'Rates'; //Tab name
 		register_setting( $this->tab_1_settings_key, $this->tab_1_settings_key ); //register settings for tab
-	    add_settings_section( 'rates', 'Rates',  array( $this, 'rates_callback' ), $this->tab_1_settings_key);
+	    add_settings_section( 'premium_rates', 'Rates',  array( $this, 'rates_callback' ), $this->tab_1_settings_key);
 	}
 	function rates_callback(){
-		$this->distance_unit = $this->plugin->get_setting('pro_quote_options', 'distance_unit', 'Kilometer');
+		$this->distance_unit = $this->plugin->get_setting('premium_quote_options', 'distance_unit', 'Kilometer');
 		$help = '<p>Rates are either a set price up to a maximum driving distance, a price per mile or km travelled, a price per each hour of travel time or a combination of both.</p>'.
 				'<p>Prices will be used for distances up to the Max Distance entered below.</p>'.
 				'<p>You can set multiple rates depending on the Max Distance, for example $2 per mile for up to Max Distance 20 miles and then $4 per mile for up to Max Distance 40 miles.</p>'.
@@ -177,25 +171,25 @@ class TransitQuote_Premium_Admin {
 	function register_tab_2_settings(){
 		$this->plugin_settings_tabs[$this->tab_2_settings_key] = 'Quote Options'; //Tab name
 		register_setting( $this->tab_2_settings_key, $this->tab_2_settings_key ); //register settings for tab
-	    add_settings_section( 'pro_quote_options', 'Quote Options',  array( $this, 'pro_quote_options_callback' ), $this->tab_2_settings_key);
-   	    add_settings_field( 'success_message', 'Success Message',  array( $this, 'success_message_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
-   	    add_settings_field( 'min_notice', 'Minimum Notice Period',  array( $this, 'min_notice_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
-   	    add_settings_field( 'min_notice_charge', 'Minimum Notice Charge',  array( $this, 'min_notice_charge_callback' ), $this->tab_2_settings_key, 'pro_quote_options');   	    
-   	    add_settings_field( 'currency', 'Currency Symbol',  array( $this, 'currency_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
-   	    add_settings_field( 'quote_element', 'Quote Display Element',  array( $this, 'quote_element_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
-   	    add_settings_field( 'distance_unit', 'Distance Unit',  array( $this, 'distance_unit_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
-   	    add_settings_field( 'layout', 'Layout',  array( $this, 'layout_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
-   	    add_settings_field( 'start_location', 'Start Location',  array( $this, 'start_location_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
-   	    add_settings_field( 'geolocate', 'Geolocation',  array( $this, 'geolocate_callback' ), $this->tab_2_settings_key, 'pro_quote_options');
-   	    add_settings_field( 'api_key', 'API Key',  array( $this, 'api_key_callback' ), $this->tab_2_settings_key, 'pro_quote_options' );
+	    add_settings_section( 'premium_quote_options', 'Quote Options',  array( $this, 'premium_quote_options_callback' ), $this->tab_2_settings_key);
+   	    add_settings_field( 'success_message', 'Success Message',  array( $this, 'success_message_callback' ), $this->tab_2_settings_key, 'premium_quote_options');
+   	    add_settings_field( 'min_notice', 'Minimum Notice Period',  array( $this, 'min_notice_callback' ), $this->tab_2_settings_key, 'premium_quote_options');
+   	    add_settings_field( 'min_notice_charge', 'Minimum Notice Charge',  array( $this, 'min_notice_charge_callback' ), $this->tab_2_settings_key, 'premium_quote_options');   	    
+   	    add_settings_field( 'currency', 'Currency Symbol',  array( $this, 'currency_callback' ), $this->tab_2_settings_key, 'premium_quote_options');
+   	    add_settings_field( 'quote_element', 'Quote Display Element',  array( $this, 'quote_element_callback' ), $this->tab_2_settings_key, 'premium_quote_options');
+   	    add_settings_field( 'distance_unit', 'Distance Unit',  array( $this, 'distance_unit_callback' ), $this->tab_2_settings_key, 'premium_quote_options');
+   	    add_settings_field( 'layout', 'Layout',  array( $this, 'layout_callback' ), $this->tab_2_settings_key, 'premium_quote_options');
+   	    add_settings_field( 'start_location', 'Start Location',  array( $this, 'start_location_callback' ), $this->tab_2_settings_key, 'premium_quote_options');
+   	    add_settings_field( 'geolocate', 'Geolocation',  array( $this, 'geolocate_callback' ), $this->tab_2_settings_key, 'premium_quote_options');
+   	    add_settings_field( 'api_key', 'API Key',  array( $this, 'api_key_callback' ), $this->tab_2_settings_key, 'premium_quote_options' );
 	}
 	function min_notice_callback(){
-		$value = $this->plugin->get_setting('pro_quote_options', 'min_notice', '24:00');
+		$value = $this->plugin->get_setting('premium_quote_options', 'min_notice', '24:00');
 		echo '<input type="text" name="'.$this->tab_2_settings_key.'[min_notice]" value="'.$value.'"/>';
 		echo "<p>Please enter minimum notice period before which an additional charge is incurred.</p>";
 	}
 	function min_notice_charge_callback(){
-		$value = $this->plugin->get_setting('pro_quote_options', 'min_notice_charge', '200');
+		$value = $this->plugin->get_setting('premium_quote_options', 'min_notice_charge', '200');
 		echo '<input type="text" name="'.$this->tab_2_settings_key.'[min_notice_charge]" value="'.$value.'"/>';
 		echo "<p>Please enter the additional charge in dollars for jobs booked within 24 hours..</p>";
 	}
@@ -205,7 +199,7 @@ class TransitQuote_Premium_Admin {
 		echo "<p>Please enter the currency symbol or text to display. For example: £, $, GBP, USD etc..</p>";
 	}
 	function quote_element_callback(){
-		$value = $this->plugin->get_setting('pro_quote_options', 'quote_element', 'quote');
+		$value = $this->plugin->get_setting('premium_quote_options', 'quote_element', 'quote');
 		echo '<input type="text" name="'.$this->tab_2_settings_key.'[quote_element]" value="'.$value.'"/>';
 		echo "<p>Please enter the class or id of the html element in which to display the final quote.</p>".
 			"<p>Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.</p>";
@@ -252,7 +246,7 @@ class TransitQuote_Premium_Admin {
 	    $html .= "<p>Please select which format you want to display for map.</p>";	     
 	    echo $html;	 
 	}
-	function pro_quote_options_callback(){
+	function premium_quote_options_callback(){
 	}
 	function register_tab_3_settings(){
 
@@ -390,36 +384,35 @@ class TransitQuote_Premium_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-
-			$this->start_place_name = $this->plugin->get_setting('pro_quote_options', 'start_place_name', 'Glasgow');
-			$this->start_lat = $this->plugin->get_setting('pro_quote_options', 'start_lat','55.870853');
-			$this->start_lng = $this->plugin->get_setting('pro_quote_options', 'start_lng', '-4.252036');
-			$this->min_notice = $this->plugin->get_setting('pro_quote_options', 'min_notice', '24:00');
-			$this->min_notice_charge = $this->plugin->get_setting('pro_quote_options', 'min_notice_charge', '200');
+			$this->api_key = $this->plugin->get_api_key();
+			$this->start_place_name = $this->plugin->get_setting('premium_quote_options', 'start_place_name', 'Glasgow');
+			$this->start_lat = $this->plugin->get_setting('premium_quote_options', 'start_lat','55.870853');
+			$this->start_lng = $this->plugin->get_setting('premium_quote_options', 'start_lng', '-4.252036');
+			$this->min_notice = $this->plugin->get_setting('premium_quote_options', 'min_notice', '24:00');
+			$this->min_notice_charge = $this->plugin->get_setting('premium_quote_options', 'min_notice_charge', '200');
 			$this->oldest_job_date = $this->plugin->get_oldest_job_date();
 			$this->api_string = $this->plugin->get_api_string();
-
+			
 			$tq_settings = array('startLat'=>$this->start_lat,
 								'startLng'=>$this->start_lng,
 								'startPlaceName'=>$this->start_place_name,
 								'oldestJobDate'=>$this->oldest_job_date
 							);
-
+			
 			if(!empty($this->api_key)){
 				$tq_settings['apiKey'] = $this->api_key;
 			};
-
-			
+echo plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) );
 			wp_enqueue_script( $this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
 			wp_enqueue_script( $this->plugin_slug.'-jqui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.min.js', '', 1.10, True );
-			wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( '../public/assets/js/jquery.ui.map.js', __FILE__ ), array( 'jquery','jqui'), '', True );
-			wp_enqueue_script( $this->plugin_slug.'-place-selector',plugin_dir_url( __FILE__ ). 'assets/js/place-selector.js', array( 'jquery' ), '', True );
+			wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) ), array( 'jquery',$this->plugin_slug.'-jqui'), '', True );
+			wp_enqueue_script( $this->plugin_slug.'-place-selector',plugins_url( '/js/place-selector.js', __FILE__ ) , array( 'jquery' ), '', True );
 
-			wp_enqueue_script( $this->plugin_slug.'-admin-js', plugin_dir_url( __FILE__ ) . 'js/transitquote-premium-admin.js', array( $this->plugin_slug.'jquery' ), $this->version, true );
-			wp_enqueue_script( $this->plugin_slug.'-admin-script', plugins_url( __FILE__ ).'assets/js/transitquote-premium-admin-main.js', array( $this->plugin_slug.'-admin-js' ), '', True );
+			wp_enqueue_script( $this->plugin_slug.'-admin-js', plugin_dir_url( __FILE__ ) . 'js/transitquote-premium-admin.js', array( 'jquery' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_slug.'-admin-mainscript', plugin_dir_url( __FILE__ ). 'js/transitquote-premium-admin-main.js', array( $this->plugin_slug.'-admin-js' ), $this->version, True );
 
 
-			wp_localize_script( $this->plugin_slug . '-admin-js', 'TransitQuotePremiumSettings', $tq_settings);
+			wp_localize_script( $this->plugin_slug . '-admin-mainscript', 'TransitQuotePremiumSettings', $tq_settings);
 
 
 		}

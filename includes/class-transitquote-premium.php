@@ -38,7 +38,7 @@ class TransitQuote_Premium {
 	 * @var      TransitQuote_Premium_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
-
+	const VERSION = '1.0.0';
 	/**
 	 * The unique identifier of this plugin.
 	 *

@@ -29,7 +29,7 @@
 				initTab: function(){
 
 					switch(this.tab){
-						case 'pro_quote_options':
+						case 'premium_quote_options':
 							this.initQuoteTabEvents();
 						break;
 						case 'surcharges':

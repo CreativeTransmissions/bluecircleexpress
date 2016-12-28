@@ -32,8 +32,8 @@ class TransitQuote_Premium_Public {
 	private $plugin_name;
 	private $plugin_slug;
 	private $vendor_id;
-    private $tab_1_settings_key = 'rates';
-	private $tab_2_settings_key = 'pro_quote_options';
+    private $tab_1_settings_key = 'premium_rates';
+	private $tab_2_settings_key = 'premium_quote_options';
 	private $tab_5_settings_key = 'email_options';
 	/**
 	 * The version of this plugin.
@@ -60,13 +60,10 @@ class TransitQuote_Premium_Public {
 		$this->vendor_id = 10759;
 	}
 
-	public function load_settings() {
-	/*	
+	public function load_settings() {		
 	 	$this->{$this->tab_1_settings_key} = (array) get_option( $this->tab_1_settings_key);
 	   	$this->{$this->tab_2_settings_key} = (array) get_option( $this->tab_2_settings_key);
 	   	$this->{$this->tab_5_settings_key} = (array) get_option( $this->tab_5_settings_key);
-	*/
-	   	
 	}
     public function get_rates_list(){
     	$plugin = new TransitQuote_Premium();
@@ -431,7 +428,33 @@ class TransitQuote_Premium_Public {
 
 		return $api_string;
 	}
-
+	public function get_api_key(){
+		//get google maps api key
+		$this->api_key = self::get_setting($this->tab_2_settings_key, 'api_key', 'default');
+		if(empty($this->api_key)){
+			return false;
+		};
+		return $this->api_key;
+	}
+	public function get_customer_subject(){
+        return self::get_setting($this->tab_5_settings_key, 'customer_subject', 'Your Quote Is Enclosed.');
+    }
+	public function get_geolocate(){
+        return self::get_setting($this->tab_2_settings_key, 'geolocate');
+    }	
+	public function get_distance_unit(){
+        return self::get_setting($this->tab_2_settings_key, 'distance_unit', 'Kilometer');
+    }
+    public function get_success_message(){
+        return self::get_setting($this->tab_2_settings_key, 'success_message', 
+        						'Thank you for your enquiry, a member of our staff will be in touch as soon as possible.');
+    }
+    public function get_customer_message(){
+        return self::get_setting($this->tab_5_settings_key, 'customer_message', 'Thank you for your request.');
+    }
+    public function get_currency(){
+        return self::get_setting($this->tab_2_settings_key, 'currency', '$');
+    }	
 	public function get_oldest_job_date(){
 		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
