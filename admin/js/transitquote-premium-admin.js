@@ -27,26 +27,26 @@
 				},
 
 				initTab: function(){
-
+					
 					switch(this.tab){
 						case 'premium_quote_options':
 							this.initQuoteTabEvents();
 						break;
-						case 'surcharges':
+						case 'surcharges': //not using
 							//this.initCustomerTabUI();						
 							this.initSurchargeTabEvents();
-							this.initEditTableEvents('service_types_surcharges');
+							this.initEditTableEvents('tp_service_types_surcharges');
 						break;	
-						case 'customers':
+						case 'premium_customers':
 							this.initCustomersTabUI();						
 							this.initCustomersTabEvents();
-							this.initEditTableEvents('customers');
+							this.initEditTableEvents('tp_customers');
 						break;	
-						case 'transportation_requests':
+						case 'premium_transportation_requests':
 						default:
 							this.initJobsTabUI();
 							this.initJobsTabEvents();
-							this.initEditTableEvents('jobs');
+							this.initEditTableEvents('tp_jobs');
 						break;
 					}
 				},
@@ -88,7 +88,7 @@
 						that.loadTable({
 							from_date: $('#from_date_alt').val(),
 							to_date: $('#to_date_alt').val(),
-							table: 'jobs'
+							table: 'tp_jobs'
 						});
 					});
 
@@ -98,7 +98,7 @@
 						that.loadTable({
 							from_date: $('#from_date_alt').val(),
 							to_date: $('#to_date_alt').val(),
-							table: 'jobs'
+							table: 'tp_jobs'
 						});
 					});
 				},
@@ -148,7 +148,7 @@
 					this.loadTable({
 						from_date: $('#from_date_alt').val(),
 						to_date: $('#to_date_alt').val(),
-						table: 'jobs'
+						table: 'tp_jobs'
 					});
 							
 				},
@@ -157,7 +157,7 @@
 					var that = this;
 
 					this.loadTable({
-						table: 'customers'
+						table: 'tp_customers'
 					});
 							
 				},
@@ -691,9 +691,9 @@
 					$('#'+tableName+' tbody').empty();
 
 					var data = $.extend({
-							 	action: 'load_table',
+							 	action: 'premium_load_table',
 							 }, options );
-
+					console.log(data)
 					$.post(this.settings.ajaxUrl, data, function(response) {
 						if(response.success){
 							$('#'+tableName+' tbody').append(response.html);

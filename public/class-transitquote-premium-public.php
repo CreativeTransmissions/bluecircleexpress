@@ -34,7 +34,7 @@ class TransitQuote_Premium_Public {
 	private $vendor_id;
     private $tab_1_settings_key = 'premium_rates';
 	private $tab_2_settings_key = 'premium_quote_options';
-	private $tab_5_settings_key = 'email_options';
+	private $tab_5_settings_key = 'premium_email_options';
 	/**
 	 * The version of this plugin.
 	 *
@@ -70,14 +70,14 @@ class TransitQuote_Premium_Public {
 		$this->cdb = $plugin->get_custom_db();
     	$sql = "select distinct * 
     				from (select distinct * 
-								from wp_premium_rates
+								from wp_premium_tp_rates
 								where distance <> 0
 							order by service_type_id, distance
 							) r
 					union
 				select distinct * from (
 					select distinct * 
-						from wp_premium_rates
+						from wp_premium_tp_rates
 					where distance = 0) r2;";
 
 		$data = $this->cdb->query($sql);
@@ -249,7 +249,7 @@ class TransitQuote_Premium_Public {
 			return false;
 		};
 		//load customer by email
-		$customer = $this->cdb->get_row('ct_customers', $email, 'email');
+		$customer = $this->cdb->get_row('tp_customers', $email, 'email');
 		return $customer;
 	}	
 
@@ -260,7 +260,7 @@ class TransitQuote_Premium_Public {
 			return false;
 		};
 		//load customer by email
-		$customer = $this->cdb->get_row('ct_customers', $id, 'id');
+		$customer = $this->cdb->get_row('tp_customers', $id, 'id');
 		return $customer;
 	}
 
@@ -328,11 +328,11 @@ class TransitQuote_Premium_Public {
 		$existing_customer = self::get_customer_by_email($email);
 		if($existing_customer===false){
 			//save new customer as we have a new email address
-			$this->customer = self::save('ct_customers');
+			$this->customer = self::save('tp_customers');
 		} else{
 			//save against an existing customer email
 			//we can pass id and it will not be overwritten as it is not in the post data
-			$this->customer = self::save('ct_customers',null, array('id'=>$existing_customer['id']));
+			$this->customer = self::save('tp_customers',null, array('id'=>$existing_customer['id']));
 		};
 
 		//default message
@@ -458,7 +458,7 @@ class TransitQuote_Premium_Public {
 	public function get_oldest_job_date(){
 		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
-		$jobs = $this->cdb->get_rows('jobs', array(), array('id', 'created'), null);
+		$jobs = $this->cdb->get_rows('tp_jobs', array(), array('id', 'created'), null);
 		if(empty($jobs)){
 			return 'no jobs';
 		};

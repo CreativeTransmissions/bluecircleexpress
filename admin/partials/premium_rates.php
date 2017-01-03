@@ -1,5 +1,5 @@
-<?php settings_fields( 'rates' ); ?>
-<?php do_settings_sections( 'rates' ); ?>
+<?php settings_fields( 'premium_rates' ); ?>
+<?php do_settings_sections( 'premium_rates' ); ?>
 <form class="admin-form box-form round" id="edit_rate_form" method="post" autocomplete="false">
 	<fieldset>
 		<legend>Add a new rate by entering the details below:</legend>
@@ -36,17 +36,18 @@
 	<div class="clear"></div>
 </form>
 <form id="table-form" class="admin-form" method="post" action="options.php" autocomplete="false">
-	<table id="rates_table" class="settings-table">
+	<table id="tp_rates_table" class="settings-table">
 		<thead>
 			<tr><th>Max Distance</th><th>Set Price</th><th>Price Per <?php echo $this->distance_unit; ?></th><th>Price Per Hour</th><th class="actions"><div class="spinner"></div></tr>
 		</thead>
 		<tbody>
 		<?php
 			$rates_data = $this->plugin->get_rates_list();
+			
 			//$this->plugin->debug($rates_data);
 			echo $this->dbui->table_rows(array(
 						'data'=>$rates_data,
-						'table'=>'rates',
+						'table'=>'tp_rates',
 						'fields'=>array('id', 'distance','amount','unit','hour'),
 						'inputs'=>false,
 						'actions'=>array('Edit','Delete')

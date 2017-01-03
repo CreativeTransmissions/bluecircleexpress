@@ -30,9 +30,9 @@
 	<div class="clear"></div>
 </form>
 <form id="table-form" class="admin-form" method="post" action="options.php" autocomplete="false">
-	<?php settings_fields( 'customers' ); ?>
-	<?php do_settings_sections( 'customers' ); ?>
-	<table id="customers_table" class="settings-table">
+	<?php settings_fields( 'premium_customers' ); ?>
+	<?php do_settings_sections( 'premium_customers' ); ?>
+	<table id="tp_customers_table" class="settings-table">
 		<thead>
 			<tr><th>Last Name</th><th>First Name</th><th>Email</th><th>Phone</th><th class="actions"><div class="spinner"></div></tr>
 		</thead>

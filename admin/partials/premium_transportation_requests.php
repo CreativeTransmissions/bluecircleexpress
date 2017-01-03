@@ -14,7 +14,7 @@
 		</div>	
  	</fieldset>
 
-	<table id="jobs_table" class="settings-table">
+	<table id="tp_jobs_table" class="settings-table">
 		<thead>
 			<tr><th>Request Recieved</th><th>Customer Name</th><th>Customer Location</th><th>Customer Destination</th><th>Pick Up Date and Time</th></tr>
 		</thead>

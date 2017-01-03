@@ -229,7 +229,7 @@ class TransitQuote_Premium {
 		$this->loader->add_action( 'wp_ajax_save_record', $plugin_admin, 'save_record_callback' );
 		$this->loader->add_action( 'wp_ajax_delete_record', $plugin_admin, 'delete_record_callback' );
 		$this->loader->add_action( 'wp_ajax_select_options', $plugin_admin, 'select_options_callback' );
-		$this->loader->add_action( 'wp_ajax_load_table', $plugin_admin, 'load_table_callback' );
+		$this->loader->add_action( 'wp_ajax_premium_load_table', $plugin_admin, 'load_table_callback' );
 		$this->loader->add_action( 'wp_ajax_load_job_details', $plugin_admin, 'load_job_details_callback' );
 	}
 
@@ -345,7 +345,11 @@ class TransitQuote_Premium {
 		$modified = $created;
 		// if($cdb->get_count('tablename')==0){ //can insert some default data here by replacing the table name and fields
 		// 	$cdb->update_row('ct_products', array('name'=>'TransitQuote Lite', 'description' => 'TransitQuote Lite', 'paddleid'=> '500997', 'created'=>$created, 'modified'=>$modified ));			
-		// };	
+		// };
+		if($cdb->get_count('tp_rates')==0){
+			$cdb->update_row('tp_rates', array('service_type_id'=>1, 'distance' => '30', 'amount'=> '600', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('tp_rates', array('service_type_id'=>1, 'distance' => '0', 'unit'=> '12', 'created'=>$created, 'modified'=>$modified ));
+		};	
 		return;
 	}
 	

@@ -35,9 +35,9 @@ class TransitQuote_Premium_Admin {
 
     private $tab_1_settings_key = 'premium_rates';
 	private $tab_2_settings_key = 'premium_quote_options';
-	private $tab_3_settings_key = 'customers';
-	private $tab_4_settings_key = 'transportation_requests';
-	private $tab_5_settings_key = 'email_options';
+	private $tab_3_settings_key = 'premium_customers';
+	private $tab_4_settings_key = 'premium_transportation_requests';
+	private $tab_5_settings_key = 'premium_email_options';
 	
 	/**
 	 * The version of this plugin.
@@ -257,11 +257,11 @@ class TransitQuote_Premium_Admin {
 		register_setting( $this->tab_3_settings_key, $this->tab_3_settings_key ); 
 
 		// Add settings section for this tab including a callback function to display tab content
-	    add_settings_section( 'customers', 'Customers',  array( $this, 'customers_callback' ), $this->tab_3_settings_key);
+	    add_settings_section( 'premium_customers', 'Customers',  array( $this, 'customers_callback' ), $this->tab_3_settings_key);
 	}
 	function customers_callback(){
 		//get the no of customers to determine whether to show empty message or loading message
-		$this->customer_count = $this->cdb->get_count('customers');
+		$this->customer_count = $this->cdb->get_count('tp_customers');
 		if($this->customer_count == 0){
 			$this->empty_message = 'There are no customers in the database yet.';
 		} else {
@@ -273,10 +273,10 @@ class TransitQuote_Premium_Admin {
 	function register_tab_4_settings(){
 		$this->plugin_settings_tabs[$this->tab_4_settings_key] = 'Jobs'; //Tab name
 		register_setting( $this->tab_4_settings_key, $this->tab_4_settings_key ); //register settings for tab
-	    add_settings_section( 'jobs', 'Jobs',  array( $this, 'jobs_callback' ), $this->tab_4_settings_key);
+	    add_settings_section( 'premium_jobs', 'Jobs',  array( $this, 'jobs_callback' ), $this->tab_4_settings_key);
 	}
 	function jobs_callback(){
-		$this->jobs_count = $this->cdb->get_count('jobs');
+		$this->jobs_count = $this->cdb->get_count('tp_jobs');
 		if($this->jobs_count == 0){
 			$this->empty_message = 'There are no jobs in the database yet.';
 		} else {
@@ -289,14 +289,14 @@ class TransitQuote_Premium_Admin {
 
 		$this->plugin_settings_tabs[$this->tab_5_settings_key] = 'Email Options'; //Tab name
 		register_setting( $this->tab_5_settings_key, $this->tab_5_settings_key ); //register settings for tab
-	    add_settings_section( 'email_options', 'Emails Options',  array( $this, 'email_options_callback' ), $this->tab_5_settings_key);
+	    add_settings_section( 'premium_email_options', 'Emails Options',  array( $this, 'email_options_callback' ), $this->tab_5_settings_key);
 
- 		add_settings_field( 'notify', 'Send New Job Emails To',  array( $this, 'notify_callback' ), $this->tab_5_settings_key, 'email_options');
-	   	add_settings_field( 'notify', 'Send New Job Emails To',  array( $this, 'notify_callback' ), $this->tab_5_settings_key, 'email_options');
-	   	add_settings_field( 'from_address', 'Reply Address for Customer Quote Emails',  array( $this, 'from_address_callback' ), $this->tab_5_settings_key, 'email_options');
-	   	add_settings_field( 'from_name', 'Contact Name for Customer Quote Emails',  array( $this, 'from_name_callback' ), $this->tab_5_settings_key, 'email_options');
-	   	add_settings_field( 'customer_subject', 'Customer Quote Email Subject',  array( $this, 'customer_subject_callback' ), $this->tab_5_settings_key, 'email_options');
-	   	add_settings_field( 'customer_message', 'Customer Quote Email Message',  array( $this, 'customer_message_callback' ), $this->tab_5_settings_key, 'email_options');
+ 		add_settings_field( 'notify', 'Send New Job Emails To',  array( $this, 'notify_callback' ), $this->tab_5_settings_key, 'premium_email_options');
+	   	add_settings_field( 'notify', 'Send New Job Emails To',  array( $this, 'notify_callback' ), $this->tab_5_settings_key, 'premium_email_options');
+	   	add_settings_field( 'from_address', 'Reply Address for Customer Quote Emails',  array( $this, 'from_address_callback' ), $this->tab_5_settings_key, 'premium_email_options');
+	   	add_settings_field( 'from_name', 'Contact Name for Customer Quote Emails',  array( $this, 'from_name_callback' ), $this->tab_5_settings_key, 'premium_email_options');
+	   	add_settings_field( 'customer_subject', 'Customer Quote Email Subject',  array( $this, 'customer_subject_callback' ), $this->tab_5_settings_key, 'premium_email_options');
+	   	add_settings_field( 'customer_message', 'Customer Quote Email Message',  array( $this, 'customer_message_callback' ), $this->tab_5_settings_key, 'premium_email_options');
    	}
 	function email_options_callback(){
 	}
@@ -402,7 +402,6 @@ class TransitQuote_Premium_Admin {
 			if(!empty($this->api_key)){
 				$tq_settings['apiKey'] = $this->api_key;
 			};
-echo plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) );
 			wp_enqueue_script( $this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
 			wp_enqueue_script( $this->plugin_slug.'-jqui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.min.js', '', 1.10, True );
 			wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) ), array( 'jquery',$this->plugin_slug.'-jqui'), '', True );
@@ -443,7 +442,7 @@ echo plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) );
 			return $this->job;
     	};
 		//a job id has been passed so get the job record from the database
-		return $this->cdb->get_row('jobs',$job_id);
+		return $this->cdb->get_row('tp_jobs',$job_id);
     }
 
 	function get_jobs($filters = null, $dates = null){
@@ -469,40 +468,40 @@ echo plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) );
     	};*/
 
     	if(!empty($dates)){
-	    	$filter_sql .= " where date(wp_premium_jobs.created) <= '".$dates['to_date']."' and date(wp_premium_jobs.created) >= '".$dates['from_date']."'"; 
+	    	$filter_sql .= " where date(wp_premium_tp_jobs.created) <= '".$dates['to_date']."' and date(wp_premium_tp_jobs.created) >= '".$dates['from_date']."'"; 
     	};    	
 
-    	$sql = "SELECT	wp_premium_jobs.id,
-						wp_premium_jobs.delivery_contact_name,
-						-- wp_premium_jobs.service_type_id,
+    	$sql = "SELECT	wp_premium_tp_jobs.id,
+						wp_premium_tp_jobs.delivery_contact_name,
+						-- wp_premium_tp_jobs.service_type_id,
 						-- CASE service_type_id WHEN 1 THEN 'Commercial' ELSE 'Domestic' END as move_type,
-						wp_premium_jobs.delivery_time,
-						wp_premium_jobs.description,
-						wp_premium_jobs.customer_id,
-						wp_premium_jobs.accepted_quote_id,
-						wp_premium_jobs.vehicle_type_id,
-						wp_premium_jobs.created,
-						wp_premium_jobs.modified,
+						wp_premium_tp_jobs.delivery_time,
+						wp_premium_tp_jobs.description,
+						wp_premium_tp_jobs.customer_id,
+						wp_premium_tp_jobs.accepted_quote_id,
+						wp_premium_tp_jobs.vehicle_type_id,
+						wp_premium_tp_jobs.created,
+						wp_premium_tp_jobs.modified,
 						trim(concat(c.first_name,' ',c.last_name)) as last_name,
 						lo.address as pick_up,
 						ld.address as drop_off,
 						v.name as vehicle_type,
 						q.total as quote 
-					FROM wp_premium_jobs 
-						left join wp_tq_journeys j 
-							on j.job_id = wp_premium_jobs.id 
-						left join wp_tq_locations lo 
+					FROM wp_premium_tp_jobs 
+						left join wp_premium_tp_journeys j 
+							on j.job_id = wp_premium_tp_jobs.id 
+						left join wp_premium_tp_locations lo 
 							on lo.id = j.origin_location_id 
-						left join wp_tq_locations ld 
+						left join wp_premium_tp_locations ld 
 							on ld.id = j.dest_location_id 
-						left join wp_tq_customers c 
-							on c.id = wp_premium_jobs.customer_id 
-						left join wp_tq_vehicle_types v 
-							on v.id = wp_premium_jobs.vehicle_type_id 
-						left join wp_tq_quotes q 
-							on q.id = wp_premium_jobs.accepted_quote_id
+						left join wp_premium_tp_customers c 
+							on c.id = wp_premium_tp_jobs.customer_id 
+						left join wp_premium_tp_vehicle_types v 
+							on v.id = wp_premium_tp_jobs.vehicle_type_id 
+						left join wp_premium_tp_quotes q 
+							on q.id = wp_premium_tp_jobs.accepted_quote_id
 			".$filter_sql." 
-			order by wp_premium_jobs.id desc;";
+			order by wp_premium_tp_jobs.id desc;";
 
 		$data = $this->cdb->query($sql);
 		return $data;
@@ -558,11 +557,11 @@ echo plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) );
 			return false;
 		};
 		switch ($table) {
-			case 'rates':
+			case 'tp_rates':
 				if(isset($params['query'])){
 					//use standard options for table_rows to allow for only returning a single row to ui after an update
 					$defaults = array(
-							'table'=>'rates',
+							'table'=>'tp_rates',
 							'fields'=>array('id', 'distance','amount','unit','hour'),
 							'inputs'=>false,
 							'actions'=>array('Edit', 'Delete')
@@ -573,21 +572,21 @@ echo plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) );
 
 					$defaults = array(
 								'data'=>$rates_data, //supply data instead of running a query
-								'table'=>'rates',
+								'table'=>'tp_rates',
 								'fields'=>array('id', 'distance','amount','unit','hour'),
 								'inputs'=>false,
 								'actions'=>array('Edit', 'Delete')
 								);
 				};
 			break;
-			case 'customers':
+			case 'tp_customers':
 				$defaults = array(
-					'table'=>'customers',
+					'table'=>'tp_customers',
 					'fields'=>array('id','last_name', 'first_name','email','phone'),
 					'inputs'=>false
 				);
 			break;
-			case 'jobs':
+			case 'tp_jobs':
 				$from_date = $this->ajax->param(array('name'=>'from_date'));
 				$to_date = $this->ajax->param(array('name'=>'to_date'));
 
@@ -603,9 +602,12 @@ echo plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) );
 									'lo.address as pick_up',
 									'ld.address as drop_off',									
 									'delivery_time'),
+					'joins'=>array( 
+							array('tp_customers c','id','customer_id', '', 'left'),
+						),
 					'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime'),
 					'inputs'=>false,
-					'table'=>'jobs',
+					'table'=>'tp_jobs',
 					'actions'=>array('Delete'),
 					'tpl_row'=>'<tr class="expand"></tr>'
 					);
@@ -616,8 +618,9 @@ echo plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) );
 		} else {
 			$params = $defaults;
 		};
-
+		
 		$rows = $this->dbui->table_rows($params);
+		
 		if($rows===false){
 			$response = array('success'=>'false',
 								'msg'=>'could not run query',
