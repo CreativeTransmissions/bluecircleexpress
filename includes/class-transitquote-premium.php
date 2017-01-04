@@ -48,6 +48,8 @@ class TransitQuote_Premium {
 	 */
 	protected $plugin_name;
 	protected $plugin_slug;	
+	protected $debug;	
+	protected $log_requests;	
 
 	/**
 	 * The current version of the plugin.
@@ -79,7 +81,8 @@ class TransitQuote_Premium {
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 		$this->api_hooks();
-		
+		$this->debug = true;
+		$this->log_requests = false;
 	}
 
 	/**
@@ -101,7 +104,7 @@ class TransitQuote_Premium {
 	public function api_routes(){	
 		register_rest_route( $this->plugin_slug.'/v1', '/paddle/', array(
 			'methods' => 'GET',
-			'callback' => array($this, 'paddle_response'),
+			'callback' => array($this, 'custom_api_response'),
 		));
 	}
 
@@ -111,7 +114,7 @@ class TransitQuote_Premium {
 	 * @since    1.0.0
 	 * @access   public
 	 */
-	public function paddle_response( $data ) {
+	public function custom_api_response( $data ) {
 		$data = array('test'=>'test','test2'=>'test2');
 		return new WP_REST_Response( $data, 200 );
 	}
@@ -242,14 +245,19 @@ class TransitQuote_Premium {
 	 */
 	private function define_public_hooks() {
 		$plugin_public = new TransitQuote_Premium_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
-		add_shortcode( 'ctwpvouchers', array( $plugin_public, 'display_TransitQuote_Premium' ) );
+		add_shortcode( 'transitquote_premium', array( $plugin_public, 'display_TransitQuote_Premium' ) );
+		//add_filter( 'widget_text', 'do_shortcode', 11); //we will add later
+
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_scripts');	
-		$this->loader->add_action( 'wp_ajax_save_customer', $plugin_public, 'save_customer');		
-		$this->loader->add_action( 'wp_ajax_nopriv_save_customer', $plugin_public, 'save_customer');	
 
+		$this->loader->add_action( 'wp_ajax_premium_save_job', $plugin_public, 'premium_save_job_callback');	
+		$this->loader->add_action( 'wp_ajax_nopriv_premium_save_job', $plugin_public, 'premium_save_job_callback');	
+
+		/*$this->loader->add_action( 'wp_ajax_save_customer', $plugin_public, 'save_customer');		
+		$this->loader->add_action( 'wp_ajax_nopriv_save_customer', $plugin_public, 'save_customer');	
 		$this->loader->add_action( 'wp_ajax_save_sale', $plugin_public, 'save_sale');
-		$this->loader->add_action( 'wp_ajax_nopriv_save_sale', $plugin_public, 'save_sale');
+		$this->loader->add_action( 'wp_ajax_nopriv_save_sale', $plugin_public, 'save_sale');*/
 	}
 
 	/**

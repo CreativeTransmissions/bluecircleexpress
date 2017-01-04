@@ -56,8 +56,23 @@ class TransitQuote_Premium_Public {
 		$this->plugin_slug = $plugin_slug;
 		$this->version = $version;
 		$this->debug = true;
-		$this->log_requests = true;
-		$this->vendor_id = 10759;
+		$this->log_requests = true;		
+	}
+
+	public function debug($error){
+		if($this->debug==true){		
+			$plugin = new TransitQuote_Premium();	
+			$this->cdb = $plugin->get_custom_db();
+			$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+			$this->ajax->error_log_request($error, 'log');
+			if(is_array($error)){
+				echo '<pre>';
+				print_r($error);
+				echo '</pre>';				
+			} else {
+				echo '<br/>'.$error;
+			}
+		}
 	}
 
 	public function load_settings() {		
@@ -83,63 +98,38 @@ class TransitQuote_Premium_Public {
 		$data = $this->cdb->query($sql);
 		return $data;
     }
-	private static function register_tables(){
-		//define and register tables
-		$this->cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'tq_pre'));
-		$db_config = new TransitQuote_Premium\DB_Config();
-
-		//Define tables from the configs in the DB_Config class
-		$this->cdb->define_table($db_config->get_config('customers'));
-		$this->define_table($db_config->get_config('products'));
-		$this->define_table($db_config->get_config('customers_products'));
-		$this->define_table($db_config->get_config('event_logs')); 
-		$this->define_table($db_config->get_config('event_data'));
-	}
 
 	/**
 	 * Register the shortcode and display the form.
 	 *
 	 * @since    1.0.0
 	 */
-
 	public function display_TransitQuote_Premium($atts) {
-		global $add_my_script_flag;
-		$args = array( 'post_type' => 'product', 'posts_per_page' => 5,'tax_query' => array(
-			array(
-				'taxonomy' => 'product_cat',
-				'terms' => $atts,
-				'operator' => 'IN',
-			)
-        ), 'orderby' => 'rand' );
-        $this->voucher_list = new WP_Query( $args );
-		$add_my_script_flag = true; //to load the script if shortcode called
+		global $add_my_script;
+		$add_my_script = true;
+		// added layout option if given and inline then form will  be inline map else admin setting
 		$attributes = shortcode_atts( array(
-	        'product_id' => '',
+	        'layout' => '',
 	    ), $atts );
-	    $this->pd_product 	= $attributes['product_id'];
-	    $ct_product 		= self::get_product_by_paddleid($this->pd_product);
-		$this->ct_product 	= $ct_product['id'];
-     	$this->view 		= 'partials/wp-balance-voucher-public-display.php';
+		
+	    if ($attributes['layout'] == 'inline'){
+	    	$layout = 1;
+	    }elseif($attributes['layout'] == 'popup'){
+	    	$layout = 2;
+	    }else{
+	    	$layout = $this->currency = self::get_layout();
+	    }
+		$this->currency = self::get_currency();
+		$this->distance_unit = self::get_distance_unit();
+		if($layout==1){ //Inline Map public
+			$this->view = 'partials/transitquote-premium-popup-display.php';
+		}else{ //business_qoute
+			$this->view = 'partials/transitquote-premium-inline-display.php';
+		}		
 		ob_start();
 	   	include $this->view;
 	   	return ob_get_clean();
-	}
-
-	public function get_product_by_paddleid($paddle_id){
-		$plugin = new TransitQuote_Premium();
-		$this->cdb = $plugin->get_custom_db();
-		if(empty($paddle_id)){
-			return false;
-		};
-		$ct_product = $this->cdb->get_row('ct_products', $paddle_id, 'paddleid');
-		return $ct_product;
-	}
-	 /**
-	 * Register the stylesheets for the public-facing side of the site.
-	 *
-	 * @since    1.0.0
-	 */
-	
+	}	
 	public function enqueue_styles() {
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -157,9 +147,7 @@ class TransitQuote_Premium_Public {
 			return;
 		wp_enqueue_style( $this->plugin_slug."-parsley", plugin_dir_url( __FILE__ ) . 'css/parsley.css', array(), '', 'all' );
 		wp_enqueue_style( $this->plugin_slug.'-public', plugin_dir_url( __FILE__ ) . 'css/wp-balance-voucher-public.css', array(), $this->version, 'all' );
-
 	}
-
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
 	 *
@@ -186,10 +174,92 @@ class TransitQuote_Premium_Public {
 		wp_enqueue_script( $this->plugin_slug.'-public', plugin_dir_url( __FILE__ ) . 'js/wp-balance-voucher-public.js', array( 'jquery' ), $this->version, false );
 		wp_localize_script( $this->plugin_slug.'-public', 'WpSellSoftwareSettings', array('ajaxUrl' => admin_url( 'admin-ajax.php' ), 'vendorId'=>$this->vendor_id));
 		wp_enqueue_script( $this->plugin_slug.'-paddle', 'https://cdn.paddle.com/paddle/paddle.js', array( $this->plugin_slug.'-public' ), '', false );
-
 	}
 
 	/*** Front end ajax methods ***/
+	public function premium_save_job_callback(){		
+		$plugin = new TransitQuote_Premium();	
+		$this->cdb = $plugin->get_custom_db();
+		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		
+		// save job request from customer facing form
+		if($this->log_requests == true){
+			$this->ajax->log_requests();
+		}
+		//get email for notification
+		$email = $this->ajax->param(array('name'=>'email'));
+
+
+		$existing_customer = self::get_customer_by_email($email);
+		if($existing_customer===false){
+			//save new customer as we have a new email address
+			$this->customer = self::save('customers');
+		} else{
+			//save against an existing customer email
+			//we can pass id and it will not be overwritten as it is not in the post data
+			$this->customer = self::save('customers',null, array('id'=>$existing_customer['id']));
+		};
+
+		//get from location from map address_0 field
+		$record_data = self::get_record_data('locations', 0);
+		$address_0_location_id = self::get_location_by_address($record_data);
+		if(empty($address_0_location_id)){
+			//no match, create new location
+			$this->location_0 = self::save('locations',0);
+		} else {
+			//existing location
+			$this->location_0 = $this->cdb->get_row('locations', $address_0_location_id);
+		};
+
+		if(empty($this->location_0)){
+			return false;
+		};
+
+		//get from location from map address_1 field
+		$record_data = self::get_record_data('locations', 1);
+		//search for a match lat lng address in db
+		$address_1_location_id = self::get_location_by_address($record_data);
+		if(empty($address_1_location_id)){
+			//no match, create new location
+			$this->location_1 = self::save('locations',1);
+		} else {
+			//existing location id passed in params
+			$this->location_1 = $this->cdb->get_row('locations', $address_1_location_id);
+		};
+
+		if(empty($this->location_1)){
+			return false;
+		};
+
+		//$this->quote = self::save('quotes');
+		//$this->quote_surcharge_ids = self::save_surcharges($this->quote['id']);
+
+		//To do: create a many to many address relationship with job with an order index
+		//save job, passing id values not included in post data
+		$this->job = self::save('jobs',null, array('customer_id'=>$this->customer['id']));
+
+		//a job could potentially have multiple journeys so save job id against table
+		$this->journey = self::save('journeys',null,array('job_id'=>$this->job['id'],
+												'origin_location_id'=>$this->location_0['id'],
+												'dest_location_id'=>$this->location_1['id']));
+		
+		//default message
+		$message ='Request booked successfully';
+		
+
+		$this->job = self::get_job_details();
+
+		$email = self::email_dispatch('New Removal Request: '.$this->customer['first_name']." ".$this->customer['last_name']);
+		$customer_email = self::email_customer();
+
+		$response = array('success'=>'true',
+							 'msg'=>$message,
+							 'data'=>array('customer_id'=>$this->customer['id'],
+							 				'job_id'=>$this->job['id']));
+		
+
+		$this->ajax->respond($response);
+	}
 	private function get_record_data($table, $idx = null){
 		//get params for records data from front end
 		//idx is a 0 based index for where more than one rec is passed
@@ -240,30 +310,165 @@ class TransitQuote_Premium_Public {
 		return $record_data;
 	}
 
-	
-
-
-	public function get_customer_by_email($email){
-		//check for the email address to see if this is a previous customer
-		if(empty($email)){
-			return false;
+	public function job_details_list($header, $data){
+		//return job details info in list for text email
+		$text = $header."\r\n\r\n";
+		$rows = array();
+		foreach ($data as $field) {
+			if(empty($field['label'])){
+				$rows[] = $field['value'];
+			} else {
+				$rows[] = $field['label'].': '.$field['value'];
+			}
+			
 		};
-		//load customer by email
-		$customer = $this->cdb->get_row('tp_customers', $email, 'email');
-		return $customer;
-	}	
-
-
-	public function get_customer_by_id($id){
-		//check for the email address to see if this is a previous customer
-		if(empty($id)){
-			return false;
-		};
-		//load customer by email
-		$customer = $this->cdb->get_row('tp_customers', $id, 'id');
-		return $customer;
+		$text .= implode("\r\n", $rows);
+		echo $text."\r\n\r\n";
 	}
+	public function job_details_table($header, $data){
+		
+		$rows = array();
+		foreach ($data as $field) {
+			if(empty($field['label'])){
+				$row = '<td>'.$field['value'].'</td>';
+				$html = '<table><tr><th colspan="1">'.$header.'</th></tr><tr>';
+			} else {
+				$row = '<td>'.$field['label'].'</td><td>'.$field['value'].'</td>';
+				$html = '<table><tr><th colspan="2">'.$header.'</th></tr><tr>';
+			}
+			
+			$rows[] = $row;
+		};
 
+		if(count($rows)===0){
+			echo '<table><tr><th colspan="1">'.$header.'</th></tr><tr><tr><td>No information available.</td></tr>';
+		};
+		$html .= implode('</tr><tr>', $rows);
+		$html .= '</tr></table>';
+		echo $html;
+	}
+	private function get_location_by_address($record_data){
+		//check for an existing location by its address and lat lng coordinates
+		if(empty($record_data['lat'])){
+			return false;
+		};
+		if(empty($record_data['lng'])){
+			return false;
+		};
+
+		$lat = round($record_data['lat'] / 10, 7) * 10;
+		$lng = round($record_data['lng'] / 10, 7) * 10;
+		$query = array( 'address'=>$record_data['address'],
+											'lat'=>$lat,
+											'lng'=>$lng);
+		$location = $this->cdb->get_rows('locations',$query,
+									array('id'));
+
+		if(empty($location)){
+			return false;
+		};
+		
+		return $location[0]['id'];
+	}
+	public function get_job_details($job = null){
+
+		//add the details to a job record
+		if(empty($job)){
+    		$job = $this->job;
+    	}; 
+
+    	if(empty($job)){
+    		//no job to add details to
+			self::debug(array('name'=>'No job to add details to.'));     		
+    		return false;
+    	};
+
+		if(!isset($this->customer)){
+			$this->customer = $this->cdb->get_row('customers', $job['customer_id']);
+			if($this->customer===false){
+				self::debug(array('name'=>'Could not load customer',
+	                            'value'=>'job_id: '.$job['id']));
+			};
+		};
+		$job['customer'] = $this->customer;
+
+
+		if(!isset($this->journey)){
+			$this->journey = $this->cdb->get_row('journeys', $job['id'], 'job_id');
+			if($this->journey===false){
+				self::debug(array('name'=>'Could not load journey',
+	                            'value'=>'job_id: '.$job['id']));
+			};
+		};
+		$job['journey'] = $this->journey;
+
+		if(!isset($this->location_0)){
+			$this->location_0 = $this->cdb->get_row('locations',$this->journey['origin_location_id']);
+			if($this->location_0===false){
+				self::debug(array('name'=>'Could not load origin',
+	                            'value'=>'job_id: '.$job['id']));
+			};
+		};
+		$job['location_0'] = $this->location_0;
+
+		if(!isset($this->location_1)){
+			$this->location_1 = $this->cdb->get_row('locations',$this->journey['dest_location_id']);
+			if($this->location_1===false){
+				self::debug(array('name'=>'Could not load destination',
+	                            'value'=>'job_id: '.$job['id']));
+			};
+			
+		};
+		$job['location_1'] = $this->location_1;		
+		if(!isset($this->quote)){
+			if(!empty($job['accepted_quote_id'])) {
+				$this->quote = $this->cdb->get_row('quotes',$job['accepted_quote_id']);
+				if($this->quote===false){
+					self::debug(array('name'=>'Could not load quote',
+		                            'value'=>'job_id: '.$job['id']));
+				};
+			}
+		};
+		$job['quote'] = $this->quote;
+		$job['job_date'] = self::get_job_date($job);
+
+		return $job;
+	}
+	public function get_job_date($job = null){
+		//get date and time for job in separate  array elements
+		if(empty($job)){
+    		$job = $this->job;
+    	};
+
+    	if(empty($job)){
+    		//no job passed
+			self::debug(array('name'=>'No job to get move day.'));     		
+    		return false;
+    	};
+
+    	$job_date = array();
+
+    	//get date
+		$dateparts = explode(' ', $job['delivery_time']);
+		$job_datetime = $dateparts[0];
+
+		//get time
+		$time_parts = explode(':', $dateparts[1]);
+		$hours = $time_parts[0];
+		$mins = $time_parts[1];
+		
+    	$dt = new DateTime($job_datetime);
+
+		$date = $dt->format('d/m/Y');
+
+		$job_date[0]=array('label'=>'Pick Up Date',
+								'value'=> $date);
+
+		/*$job_date[1] = array('label'=>'Pick Up Time',
+							'value'=>$hours.':'.$mins);
+		*/
+		return $job_date;
+	}
 	public function save($table, $idx = null, $defaults = null){
 		if(empty($table)){
 			return false;
@@ -294,59 +499,26 @@ class TransitQuote_Premium_Public {
 		return $rec_id;
 	}	
 
-	public function save_sale(){
-		$plugin = new TransitQuote_Premium();
-		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
-
-		$this->sale = self::save('ct_customers_products');
-		$message ='Product purchased successfully';
-		$this->customer = self::get_customer_by_id(1);
-		$email = self::email_dispatch('New Sale: '.$this->customer['first_name']." ".$this->customer['last_name']);
-		// $customer_email = self::email_customer();
-
-		$response = array('success'=>'true',
-							 'msg'=>$message,
-							 'data'=>array('customer'=>$this->customer));	
-
-		$this->ajax->respond($response);
-	}
-
-	public function save_customer(){
-		$plugin = new TransitQuote_Premium();
-		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
-		
-		// // save job request from customer facing form
-		if($this->log_requests == true){
-			$this->ajax->log_requests();
-		}
-		//get email for notification
-		$email = $this->ajax->param(array('name'=>'email'));
-
-
-		$existing_customer = self::get_customer_by_email($email);
-		if($existing_customer===false){
-			//save new customer as we have a new email address
-			$this->customer = self::save('tp_customers');
-		} else{
-			//save against an existing customer email
-			//we can pass id and it will not be overwritten as it is not in the post data
-			$this->customer = self::save('tp_customers',null, array('id'=>$existing_customer['id']));
+    public function get_layout(){
+        return self::get_setting($this->tab_2_settings_key, 'layout');
+    }
+	public function get_customer_by_email($email){
+		//check for the email address to see if this is a previous customer
+		if(empty($email)){
+			return false;
 		};
-
-		//default message
-		$message ='Customer registered successfully';
-		
-		$email = self::email_dispatch('New Customer Registered: '.$this->customer['first_name']." ".$this->customer['last_name']);
-		// $customer_email = self::email_customer();
-
-		$response = array('success'=>'true',
-							 'msg'=>$message,
-							 'data'=>array('customer'=>$this->customer));	
-
-		$this->ajax->respond($response);
-
+		//load customer by email
+		$customer = $this->cdb->get_row('tp_customers', $email, 'email');
+		return $customer;
+	}
+	public function get_customer_by_id($id){
+		//check for the email address to see if this is a previous customer
+		if(empty($id)){
+			return false;
+		};
+		//load customer by email
+		$customer = $this->cdb->get_row('tp_customers', $id, 'id');
+		return $customer;
 	}
 	private function email_customer(){
 		//send email to customer
@@ -376,7 +548,6 @@ class TransitQuote_Premium_Public {
 
 		return $html_email;
 	}
-
 	private function email_dispatch($subject){
 
 		//get email addresses to send notifications to 
@@ -486,21 +657,8 @@ class TransitQuote_Premium_Public {
         return 'Custom Google Map Tools';
         // return self::get_setting($this->tab_5_settings_key, 'from_name', 'Medical Rescue');
     }
-	public function job_details_list($header, $data){
-		//return job details info in list for text email
-		$text = $header."\r\n\r\n";
-		$rows = array();
-		foreach ($data as $field) {
-			if(empty($field['label'])){
-				$rows[] = $field['value'];
-			} else {
-				$rows[] = $field['label'].': '.$field['value'];
-			}
-			
-		};
-		$text .= implode("\r\n", $rows);
-		echo $text."\r\n\r\n";
-	}
+
+
     public function format_customer($customer){
 
 		//format for display in job details view
@@ -536,6 +694,215 @@ class TransitQuote_Premium_Public {
 			
 		};
 		return $out;
+	}
+	public function format_table($data){
+		//format for display in job details view
+		$out = array();
+		foreach ($data as $key => $value) {
+			//init new field
+			$field = array();
+			//include only label, value and template_id set to text incase needed for output
+			switch ($key) {
+				case 'id':
+				case 'created':
+				case 'modified':
+					break;
+					default:
+					$field['label'] = $key;
+					$field['value'] = $value;
+					$out[] = $field;
+			};			
+		};
+		return $out;
+	}
+	public function format_job($job){
+		$commerical_move_sizes = array();
+		$commerical_move_sizes[1] = 'Factory';
+		$commerical_move_sizes[2] = 'Warehouse';
+		$commerical_move_sizes[3] = 'Small Office 1-10 employees';
+		$commerical_move_sizes[4] = 'Medium Office 1-100 employees';
+		$commerical_move_sizes[5] = 'Large Office - 100 + employees';
 
+		$domestic_move_sizes = array();
+		$domestic_move_sizes[1] = 'Less than 1 Bed House';
+		$domestic_move_sizes[2] = '1 Bed House';
+		$domestic_move_sizes[3] = '2 Bed House';
+		$domestic_move_sizes[4] = '3 Bed House';
+		$domestic_move_sizes[5] = '4 Bed House';
+		$domestic_move_sizes[6] = '5 + Bed House';
+
+		//format for display in job details view
+		$out = array();
+		foreach ($job as $key => $value) {
+			//init new field
+			$field = array();
+			//include only label, value and template_id set to text incase needed for output
+			switch ($key) {
+				case 'description':
+					$field['label'] = 'Information';
+					$field['value'] = $value;
+					$out[] = $field;
+					break;
+				case 'move_size_id':
+					$field['label'] = 'Move Size';
+					$field['value'] = '';
+					switch ($job['service_type_id']) {
+						case 1:
+							if(isset($commerical_move_sizes[$value])){
+								$field['value'] .= $commerical_move_sizes[$value];
+							} else {
+								$field['value'] .= $value;
+							};
+							break;
+						case 2:
+							if(isset($domestic_move_sizes[$value])){
+								$field['value'] .= $domestic_move_sizes[$value];
+							} else {
+								$field['value'] .= $value;
+							};
+							break;
+					};
+					$out[] = $field;
+					break;					
+				case 'service_type_id':
+					$field['label'] = 'Move Type';
+					$field['value'] = '';
+					switch ($job['service_type_id']) {
+						case 1:
+							$field['value'] .= 'Commercial';
+							break;
+						case 2:
+							$field['value'] .= 'Domestic';
+							break;
+					};
+					$out[] = $field;
+					break;								
+				default:
+					break;
+			};			
+		};
+		return $out;
+	}
+	public function format_journey($journey){
+		$distance_unit = self::get_distance_unit();
+		//format for display in job details view
+		$out = array();
+		foreach ($journey as $key => $value) {
+			//init new field
+			$field = array();
+			//include only label, value and template_id set to text incase needed for output
+			switch ($key) {
+				case 'distance':
+					$field['label'] = 'Distance ('.$distance_unit.'s)';
+					$field['value'] = $value;
+					$out[] = $field;
+					break;
+				case 'time':
+					$field['label'] = 'Estimated Travel Time (Hours)';
+					$field['value'] = number_format((float)$value, 2, '.', '');
+					$out[] = $field;
+					break;
+			};			
+		};
+		return $out;
+	}
+	public function format_location($loc){
+		//format for display in customise forms
+		$out = array();
+		foreach ($loc as $key => $value) {
+			//skip empty fields
+			if(empty($value)){
+				continue;
+			};
+			//init new field
+			$field = array();
+
+			//include only label, value and template_id set to text incase needed for output
+			switch ($key) {
+				case 'address':
+					$field['label'] = 'Address';
+					$field['value'] = $value;
+					$out[] = $field;
+					break;
+				case 'appartment_no':
+					$field['label'] = 'Appartment Number';
+					$field['value'] = $value;
+					$out[] = $field;
+					break;					
+				case 'street_number':
+					$field['label'] = 'Building Number';
+					$field['value'] = $value;
+					$out[] = $field;
+					break;
+				case 'route':
+					$field['label'] = 'Route';
+					$field['value'] = $value;
+					$out[] = $field;
+					break;
+				case 'postal_town':
+					$field['label'] = 'Post Town';
+					$field['value'] = $value;
+					$out[] = $field;
+					break;
+				case 'administrative_area_level_2':
+					$field['label'] = 'Area';
+					$field['value'] = $value;
+					$out[] = $field;
+					break;
+				case 'administrative_area_level_1':
+					$field['label'] = 'Area';
+					$field['value'] = $value;
+					$out[] = $field;
+					break;
+				case 'country':
+					$field['label'] = 'Country';
+					$field['value'] = $value;
+					$out[] = $field;
+					break;
+				case 'postal_code':
+					$field['label'] = 'Post Code';
+					$field['value'] = $value;
+					$out[] = $field;
+					break;
+			};
+			
+		};
+		return $out;
+	}
+	public function format_quote($quote = null){
+		//format for display in job details view
+		if(empty($quote)){
+			return false;
+		};		
+		$currency = self::get_currency();
+		$out = array();
+		foreach ($quote as $key => $value) {
+			//init new field
+			$field = array();
+			//include only label, value and template_id set to text incase needed for output
+			switch ($key) {
+				case 'total':
+					$field['label'] = 'Total';
+					$field['value'] = $currency.$value;
+					$out[] = $field;
+					break;
+				case 'rate_per_unit':
+					break;
+				case 'distance_cost':
+					$field['label'] = 'Distance Cost';
+					$field['value'] =$currency.$value;
+					$out[] = $field;
+					break;
+				case 'notice_cost':
+					if($value!=0){
+						$field['label'] = 'Short Notice Cost';
+						$field['value'] = $currency.$value;
+						$out[] = $field;					
+					}
+					break;
+			};
+			
+		};
+		return $out;
 	}
 }
