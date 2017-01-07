@@ -368,6 +368,7 @@ class TransitQuote_Premium_Admin {
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
 			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/transitquote-premium-admin.css', array(), $this->version, 'all' );
+			wp_enqueue_style( 'wp-jquery-ui-dialog' );
 		}
 	}
 

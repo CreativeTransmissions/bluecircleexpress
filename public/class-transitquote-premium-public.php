@@ -80,6 +80,13 @@ class TransitQuote_Premium_Public {
 	   	$this->{$this->tab_2_settings_key} = (array) get_option( $this->tab_2_settings_key);
 	   	$this->{$this->tab_5_settings_key} = (array) get_option( $this->tab_5_settings_key);
 	}
+	private function get_rates(){
+	   	$plugin = new TransitQuote_Premium();
+		$this->cdb = $plugin->get_custom_db();
+    	$rates = $this->cdb->get_rows('tp_rates');
+		return $rates;
+    }
+
     public function get_rates_list(){
     	$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
@@ -98,15 +105,20 @@ class TransitQuote_Premium_Public {
 		$data = $this->cdb->query($sql);
 		return $data;
     }
-
+	public function init_plugin(){
+		// Load plugin text domain	
+		// $this->cdb = self::get_custom_db();
+		// $this->ajax = new TransitQuotePro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));		
+		self::load_settings();
+	}
 	/**
 	 * Register the shortcode and display the form.
 	 *
 	 * @since    1.0.0
 	 */
 	public function display_TransitQuote_Premium($atts) {
-		global $add_my_script;
-		$add_my_script = true;
+		global $add_my_script_flag;
+		$add_my_script_flag = true;
 		// added layout option if given and inline then form will  be inline map else admin setting
 		$attributes = shortcode_atts( array(
 	        'layout' => '',
@@ -122,14 +134,15 @@ class TransitQuote_Premium_Public {
 		$this->currency = self::get_currency();
 		$this->distance_unit = self::get_distance_unit();
 		if($layout==1){ //Inline Map public
-			$this->view = 'partials/transitquote-premium-popup-display.php';
-		}else{ //business_qoute
 			$this->view = 'partials/transitquote-premium-inline-display.php';
+		}else{ //business_qoute
+			$this->view = 'partials/transitquote-premium-popup-display.php';
 		}		
 		ob_start();
 	   	include $this->view;
 	   	return ob_get_clean();
 	}	
+
 	public function enqueue_styles() {
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -145,36 +158,81 @@ class TransitQuote_Premium_Public {
 		global $add_my_script_flag;
 		if ( ! $add_my_script_flag )
 			return;
-		wp_enqueue_style( $this->plugin_slug."-parsley", plugin_dir_url( __FILE__ ) . 'css/parsley.css', array(), '', 'all' );
-		wp_enqueue_style( $this->plugin_slug.'-public', plugin_dir_url( __FILE__ ) . 'css/wp-balance-voucher-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_slug . '-calc-styles', plugins_url( 'js/js-transitquote/css/map-quote-calculator.css', __FILE__ ), array(), $this->version );
+		wp_enqueue_style( $this->plugin_slug . '-jqueryui-styles', plugins_url( 'css/jquery-ui.css', __FILE__ ), array(), $this->version );
+		wp_enqueue_style( $this->plugin_slug . '-timepicker-styles', plugins_url( 'css/jquery-ui-timepicker-addon.css', __FILE__ ), array(), $this->version );
+		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugin_dir_url( __FILE__ ) . 'css/transitquote-premium-public.css', array(), $this->version );
+		wp_enqueue_style( $this->plugin_slug . '-parsley-styles', plugin_dir_url( __FILE__ ) . 'css/parsley.css', array(), $this->version );
+		wp_enqueue_style( $this->plugin_slug . '-popup-styles', plugins_url( 'css/magnific-popup.css', __FILE__ ), array(), $this->version );
 	}
+
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in TransitQuote_Premium_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The TransitQuote_Premium_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+	public function enqueue_scripts() {
 		global $add_my_script_flag;
 		if ( ! $add_my_script_flag )
 			return;
-		wp_enqueue_script( $this->plugin_slug.'-parsley-script', plugin_dir_url( __FILE__ ) . 'js/parsley.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( $this->plugin_slug.'-public-main', plugin_dir_url( __FILE__ ) . 'js/public-main.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( $this->plugin_slug.'-public', plugin_dir_url( __FILE__ ) . 'js/wp-balance-voucher-public.js', array( 'jquery' ), $this->version, false );
-		wp_localize_script( $this->plugin_slug.'-public', 'WpSellSoftwareSettings', array('ajaxUrl' => admin_url( 'admin-ajax.php' ), 'vendorId'=>$this->vendor_id));
-		wp_enqueue_script( $this->plugin_slug.'-paddle', 'https://cdn.paddle.com/paddle/paddle.js', array( $this->plugin_slug.'-public' ), '', false );
+		//get varibles to pass to JS
+		// $holidays = self::get_holidays();
+		$rates = self::get_rates();
+	
+		// $surcharges = self::get_service_surcharges();
+
+		$this->start_lat = $this->get_setting('premium_quote_options', 'start_lat','55.870853');
+		$this->start_lng = $this->get_setting('premium_quote_options', 'start_lng', '-4.252036');
+		$this->start_place_name = $this->get_setting('premium_quote_options', 'start_place_name', 'Glasgow');
+		$this->currency = self::get_currency();
+		$this->distance_unit = self::get_distance_unit();
+		$this->min_notice = $this->get_setting('premium_quote_options', 'min_notice', '24:00');
+		$this->min_notice_charge = $this->get_setting('premium_quote_options', 'min_notice_charge', '200');
+		$this->quote_element = $this->get_setting('premium_quote_options', 'quote_element', 'quote');
+		$this->api_key = self::get_api_key();
+		$this->api_string = self::get_api_string();
+		$geolocate = self::get_geolocate();
+		if($geolocate==1){
+			$this->geolocate = 'true';		
+		} else {
+			$this->geolocate = 'false';	
+		};
+
+		$tq_settings = array('ajaxurl' => admin_url( 'admin-ajax.php' ),
+							'geolocate'=>$this->geolocate,
+							'imgurl'=> plugins_url( 'assets/images/', __FILE__ ),
+							'distance_unit'=>$this->distance_unit,
+							'startLat'=>$this->start_lat,
+							'startLng'=>$this->start_lng,
+							'startPlaceName'=>$this->start_place_name,
+							'rates'=>$rates,
+							'min_notice'=>$this->min_notice,
+							'min_notice_charge'=>$this->min_notice_charge,
+							'quote_element'=>$this->quote_element
+							);
+
+		if(!empty($this->api_key)){
+			$tq_settings['apiKey'] = $this->api_key;
+		};
+
+
+		//include dependancies
+		wp_enqueue_script($this->plugin_slug.'-magnific-popup', plugins_url( 'js/jquery-magnific-popup.js', __FILE__ ), '', 1.1, True );
+		wp_enqueue_script($this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
+		wp_enqueue_script($this->plugin_slug.'-jqui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.js', '', 1.10, True );
+		wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'js/jquery.ui.map.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True ); //was commented
+		wp_enqueue_script( $this->plugin_slug.'-jqui-timepicker', plugins_url( 'js/jquery-ui-timepicker-addon.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True );
+		wp_enqueue_script( $this->plugin_slug.'-map-quote-calculator', plugins_url( 'js/js-transitquote/js/map-quote-calculator.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
+		wp_enqueue_script($this->plugin_slug . '-transitquote-premium', plugins_url('js/transitquote-premium-public.js', __FILE__ ), array($this->plugin_slug.'-map-quote-calculator'), $this->version, true);
+
+		wp_enqueue_script( $this->plugin_slug . '-parsley-script', plugins_url( 'js/parsley.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );	
+		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public-main.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );
+ 		wp_localize_script( $this->plugin_slug . '-plugin-script', 'TransitQuotePremiumSettings', $tq_settings);
+ 		
 	}
+
+
 
 	/*** Front end ajax methods ***/
 	public function premium_save_job_callback(){		
@@ -193,22 +251,22 @@ class TransitQuote_Premium_Public {
 		$existing_customer = self::get_customer_by_email($email);
 		if($existing_customer===false){
 			//save new customer as we have a new email address
-			$this->customer = self::save('customers');
+			$this->customer = self::save('tp_customers');
 		} else{
 			//save against an existing customer email
 			//we can pass id and it will not be overwritten as it is not in the post data
-			$this->customer = self::save('customers',null, array('id'=>$existing_customer['id']));
+			$this->customer = self::save('tp_customers',null, array('id'=>$existing_customer['id']));
 		};
 
 		//get from location from map address_0 field
-		$record_data = self::get_record_data('locations', 0);
+		$record_data = self::get_record_data('tp_locations', 0);
 		$address_0_location_id = self::get_location_by_address($record_data);
 		if(empty($address_0_location_id)){
 			//no match, create new location
-			$this->location_0 = self::save('locations',0);
+			$this->location_0 = self::save('tp_locations',0);
 		} else {
 			//existing location
-			$this->location_0 = $this->cdb->get_row('locations', $address_0_location_id);
+			$this->location_0 = $this->cdb->get_row('tp_locations', $address_0_location_id);
 		};
 
 		if(empty($this->location_0)){
@@ -216,15 +274,15 @@ class TransitQuote_Premium_Public {
 		};
 
 		//get from location from map address_1 field
-		$record_data = self::get_record_data('locations', 1);
+		$record_data = self::get_record_data('tp_locations', 1);
 		//search for a match lat lng address in db
 		$address_1_location_id = self::get_location_by_address($record_data);
 		if(empty($address_1_location_id)){
 			//no match, create new location
-			$this->location_1 = self::save('locations',1);
+			$this->location_1 = self::save('tp_locations',1);
 		} else {
 			//existing location id passed in params
-			$this->location_1 = $this->cdb->get_row('locations', $address_1_location_id);
+			$this->location_1 = $this->cdb->get_row('tp_locations', $address_1_location_id);
 		};
 
 		if(empty($this->location_1)){
@@ -236,10 +294,10 @@ class TransitQuote_Premium_Public {
 
 		//To do: create a many to many address relationship with job with an order index
 		//save job, passing id values not included in post data
-		$this->job = self::save('jobs',null, array('customer_id'=>$this->customer['id']));
+		$this->job = self::save('tp_jobs',null, array('customer_id'=>$this->customer['id']));
 
 		//a job could potentially have multiple journeys so save job id against table
-		$this->journey = self::save('journeys',null,array('job_id'=>$this->job['id'],
+		$this->journey = self::save('tp_journeys',null,array('job_id'=>$this->job['id'],
 												'origin_location_id'=>$this->location_0['id'],
 												'dest_location_id'=>$this->location_1['id']));
 		
@@ -361,7 +419,7 @@ class TransitQuote_Premium_Public {
 		$query = array( 'address'=>$record_data['address'],
 											'lat'=>$lat,
 											'lng'=>$lng);
-		$location = $this->cdb->get_rows('locations',$query,
+		$location = $this->cdb->get_rows('tp_locations',$query,
 									array('id'));
 
 		if(empty($location)){
@@ -384,7 +442,7 @@ class TransitQuote_Premium_Public {
     	};
 
 		if(!isset($this->customer)){
-			$this->customer = $this->cdb->get_row('customers', $job['customer_id']);
+			$this->customer = $this->cdb->get_row('tp_customers', $job['customer_id']);
 			if($this->customer===false){
 				self::debug(array('name'=>'Could not load customer',
 	                            'value'=>'job_id: '.$job['id']));
@@ -394,7 +452,7 @@ class TransitQuote_Premium_Public {
 
 
 		if(!isset($this->journey)){
-			$this->journey = $this->cdb->get_row('journeys', $job['id'], 'job_id');
+			$this->journey = $this->cdb->get_row('tp_journeys', $job['id'], 'job_id');
 			if($this->journey===false){
 				self::debug(array('name'=>'Could not load journey',
 	                            'value'=>'job_id: '.$job['id']));
@@ -403,7 +461,7 @@ class TransitQuote_Premium_Public {
 		$job['journey'] = $this->journey;
 
 		if(!isset($this->location_0)){
-			$this->location_0 = $this->cdb->get_row('locations',$this->journey['origin_location_id']);
+			$this->location_0 = $this->cdb->get_row('tp_locations',$this->journey['origin_location_id']);
 			if($this->location_0===false){
 				self::debug(array('name'=>'Could not load origin',
 	                            'value'=>'job_id: '.$job['id']));
@@ -412,7 +470,7 @@ class TransitQuote_Premium_Public {
 		$job['location_0'] = $this->location_0;
 
 		if(!isset($this->location_1)){
-			$this->location_1 = $this->cdb->get_row('locations',$this->journey['dest_location_id']);
+			$this->location_1 = $this->cdb->get_row('tp_locations',$this->journey['dest_location_id']);
 			if($this->location_1===false){
 				self::debug(array('name'=>'Could not load destination',
 	                            'value'=>'job_id: '.$job['id']));
@@ -422,7 +480,7 @@ class TransitQuote_Premium_Public {
 		$job['location_1'] = $this->location_1;		
 		if(!isset($this->quote)){
 			if(!empty($job['accepted_quote_id'])) {
-				$this->quote = $this->cdb->get_row('quotes',$job['accepted_quote_id']);
+				$this->quote = $this->cdb->get_row('tp_quotes',$job['accepted_quote_id']);
 				if($this->quote===false){
 					self::debug(array('name'=>'Could not load quote',
 		                            'value'=>'job_id: '.$job['id']));
@@ -591,7 +649,6 @@ class TransitQuote_Premium_Public {
 	}
 	public function get_api_string(){
 		$api_string = '';
-
 		$this->api_key = self::get_setting($this->tab_2_settings_key, 'api_key');
 		if(!empty($this->api_key)){
 			$api_string = '&key='.$this->api_key;

@@ -2,7 +2,7 @@
 	"use strict";
 
 	$(function () {
-		$('#wpbody-content').wpSellSoftwareAdmin({
+		$('#wpbody-content').transitQuotePremiumAdmin({
 			ajaxUrl:ajaxurl,
 			data: TransitQuotePremiumSettings
 		});

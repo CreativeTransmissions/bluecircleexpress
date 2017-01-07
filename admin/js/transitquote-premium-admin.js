@@ -1,7 +1,7 @@
 ;(function ( $, window, document, undefined ) {
 
 		// Create the defaults once
-		var pluginName = "wpSellSoftwareAdmin",
+		var pluginName = "transitQuotePremiumAdmin",
 				defaults = {
 				feedback_header_el: '.admin-form h2',
 				feedback_msg_el: '.feedback'

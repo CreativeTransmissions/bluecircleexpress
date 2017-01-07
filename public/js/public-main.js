@@ -3,9 +3,9 @@
 	// Code by AS
 	$(function () {
 		if($('#quote-form').length>0){
-			$('#quote-form').wpSellSoftwareCustomer({
-				ajaxUrl: WpSellSoftwareSettings.ajaxurl,
-				data: WpSellSoftwareSettings,
+			$('#quote-form').TransitQuotePremium({
+				ajaxUrl: TransitQuotePremiumSettings.ajaxurl,
+				data: TransitQuotePremiumSettings,
 			});
 		}
 

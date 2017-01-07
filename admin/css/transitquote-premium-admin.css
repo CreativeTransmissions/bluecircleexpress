@@ -35,11 +35,6 @@ input.wide {
 	display: block;
 	margin-top: 1em;
 }
-
-.admin-form .textareafield-margin {
-	    margin: 15px 0;
-}
-
 .admin-form .inline-field {
 	padding-right: 1em;
 }
@@ -78,7 +73,6 @@ input.wide {
 .admin-form  p.submit input {
   padding: 1em;
   line-height: 0em;
-  margin: 15px 0;
 }
 
 .admin-form .inline-field {
@@ -639,4 +633,3 @@ td.email input{
 .ui-icon-grip-solid-horizontal { background-position: -48px -224px; }
 .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
 .ui-icon-grip-diagonal-se { background-position: -80px -224px; }
-

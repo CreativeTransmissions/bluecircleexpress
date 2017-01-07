@@ -54,5 +54,5 @@
 		<div class="clear"></div>
 	</div>
 </div>
-<input type="hidden" name="action" value="save_job"/>
+<input type="hidden" name="action" value="premium_save_job"/>
 <input type="hidden" id="delivery_date" name="delivery_date" value=""/>
