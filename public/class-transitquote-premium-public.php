@@ -306,7 +306,6 @@ class TransitQuote_Premium_Public {
 		
 
 		$this->job = self::get_job_details();
-
 		$email = self::email_dispatch('New Removal Request: '.$this->customer['first_name']." ".$this->customer['last_name']);
 		$customer_email = self::email_customer();
 
@@ -578,6 +577,10 @@ class TransitQuote_Premium_Public {
 		$customer = $this->cdb->get_row('tp_customers', $id, 'id');
 		return $customer;
 	}
+	public function get_customer_email(){
+        return $this->customer['email'];
+    }
+
 	private function email_customer(){
 		//send email to customer
 
