@@ -26,22 +26,18 @@
 					this.spinner(false);
 				},
 
-				initTab: function(){
-					
+				initTab: function(){					
 					switch(this.tab){
 						case 'premium_quote_options':
 							this.initQuoteTabEvents();
-						break;
-						case 'surcharges': //not using
-							//this.initCustomerTabUI();						
-							this.initSurchargeTabEvents();
-							this.initEditTableEvents('tp_service_types_surcharges');
 						break;	
 						case 'premium_customers':
 							this.initCustomersTabUI();						
 							this.initCustomersTabEvents();
 							this.initEditTableEvents('tp_customers');
 						break;	
+						case 'premium_rates':						
+							this.initRatesTabEvents();
 						case 'premium_transportation_requests':
 						default:
 							this.initJobsTabUI();
@@ -74,10 +70,10 @@
 				initJobsTabEvents: function(){
 					var that = this;
 
-					this.editTable = $('#jobs_table')[0];
+					this.editTable = $('#tp_jobs_table')[0];
 
 					//expand details row on click 
-					$('#jobs_table').on('click', 'tr', function(e){
+					$('#tp_jobs_table').on('click', 'tr', function(e){
 						var dataId = $(this).attr('data-id');
 						that.clickJobRow(dataId);
 					});
@@ -121,7 +117,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_customer_form')[0];
-					this.editTable = $('#customers_table')[0];
+					this.editTableObj = $('#tp_customers_table')[0];
 
 					this.editRecordMessage = 'Editing Customer Details';
 					this.newRecordMessage = 'Enter New Customer Details'
@@ -201,7 +197,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_rate_form')[0];
-					this.editTable = $('#rates_table')[0];
+					this.editTableObj = $('#tp_rates_table')[0];
 
 					this.editRecordMessage = 'Editing Rate';
 					this.newRecordMessage = 'Enter New Rate'
@@ -214,7 +210,8 @@
 					});
 
 					//Save Plaza
-					$(this.editForm).on('submit',function(e) {
+					$(this.editForm).on('submit',function(e) {						
+						// return false;
 					    e.preventDefault();
 					    that.spinner(true);
 					    that.saveRecord(this);
@@ -226,7 +223,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_service_types_surcharges_form')[0];
-					this.editTable = $('#service_types_surcharges_table')[0];
+					this.editTableObj = $('#service_types_surcharges_table')[0];
 
 					this.editRecordMessage = 'Editing Surcharge';
 					this.newRecordMessage = 'Enter New Surcharge'
@@ -251,7 +248,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_status_type_form')[0];
-					this.editTable = $('#status_types_table')[0];
+					this.editTableObj = $('#status_types_table')[0];
 
 					this.editRecordMessage = 'Editing Status Type';
 					this.newRecordMessage = 'Enter New Status Type'
@@ -276,7 +273,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_vehicle_form')[0];
-					this.editTable = $('#vehicles_table')[0];
+					this.editTableObj = $('#vehicles_table')[0];
 
 					this.editRecordMessage = 'Editing Vehicle Details';
 					this.newRecordMessage = 'Enter New Vehicle'
@@ -301,7 +298,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_service_types_vehicle_types_form')[0];
-					this.editTable = $('#service_types_vehicle_types_table')[0];
+					this.editTableObj = $('#service_types_vehicle_types_table')[0];
 
 					this.editRecordMessage = 'Editing Vehicle Rate';
 					this.newRecordMessage = 'Enter New Vehicle Rate'
@@ -441,7 +438,7 @@
 					var that = this;
 
 					//get the row for the data id
-					var jobRow = this.getRow('jobs_table', dataId);
+					var jobRow = this.getRow('tp_jobs_table', dataId);
 					if(!jobRow){
 						return false;
 					};
@@ -470,7 +467,7 @@
 					var that = this;
 
 					//get the row for the data id
-					var jobRow = this.getRow('jobs_table', dataId);
+					var jobRow = this.getRow('tp_jobs_table', dataId);
 					if(!jobRow){
 						return false;
 					};
@@ -499,7 +496,7 @@
 						this.getJobDetails(dataId,  function(jobDetailsHtml){
 							if(jobDetailsHtml){
 								$(nextRow).html('<td colspan="100">'+jobDetailsHtml+'</td>');
-								$('#jobs_table').trigger('jobdetailscomplete');
+								$('#tp_jobs_table').trigger('jobdetailscomplete');
 							} else {
 								$(nextRow).html('<td colspan="100">Could not load details.</td>');
 							}
@@ -608,7 +605,6 @@
 
 				getJobDetails: function(jobId, callback){
 					var that = this;
-
 					if(!jobId){
 						return false;
 					};
@@ -693,7 +689,6 @@
 					var data = $.extend({
 							 	action: 'premium_load_table',
 							 }, options );
-					console.log(data)
 					$.post(this.settings.ajaxUrl, data, function(response) {
 						if(response.success){
 							$('#'+tableName+' tbody').append(response.html);
@@ -833,27 +828,27 @@
 				saveRecord: function(form){
 					var that = this;
 					this.spinner(true);
-					var data = $(form).serialize();
+					var data = $(form).serialize();						
 					$.post(ajaxurl, data, function(response) {
 						if(response.success=='true'){
 							//display message
 							var msg = 'Saved Successfully.';
 
 							//clear the form
-							that.clearForm(that.editForm);
-							that.updateLegend(that.editForm, that.newRecordMessage);
+							that.clearForm(that.editTableObj);
+							that.updateLegend(that.editTableObj, that.newRecordMessage);
 							if(response.id){
 								//update row
-								if(that.editTable){
-									var row = $(that.editTable).find('tr[data-id="'+response.id+'"]');
+								if(that.editTableObj){
+									var row = $(that.editTableObj).find('tr[data-id="'+response.id+'"]');
 									$(row).replaceWith(response.html);								
 								}
 
 							} else {
 								if(response.html){
 									//refresh table
-									$('tbody', that.editTable).empty();
-									$('tbody', that.editTable).append(response.html);		
+									$('tbody', that.editTableObj).empty();
+									$('tbody', that.editTableObj).append(response.html);		
 								}						
 							};
 							that.spinner(false);

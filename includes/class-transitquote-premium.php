@@ -200,11 +200,8 @@ class TransitQuote_Premium {
 	 * @access   private
 	 */
 	private function set_locale() {
-
 		$plugin_i18n = new TransitQuote_Premium_i18n();
-
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
 	}
 
 	/**
@@ -219,13 +216,10 @@ class TransitQuote_Premium {
 		$plugin_admin = new TransitQuote_Premium_Admin( $this->get_plugin_name(),  $this->get_version(), $this->get_plugin_slug());
 
 		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . $this->get_plugin_slug() . '.php' );
-
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'settings_admin_init' );
-		// $this->loader->add_action( 'wp_ajax_ct_load_table', $plugin_admin, 'load_table_callback' );
-		// $this->loader->add_action( 'wp_ajax_ct_save_record', $plugin_admin, 'save_record_callback' );
 		$this->loader->add_filter( 'plugin_action_links_'.$plugin_basename, $plugin_admin, 'add_action_links' );
 
 

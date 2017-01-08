@@ -673,7 +673,7 @@ class TransitQuote_Premium_Admin {
 	}
 
 
-/*****
+
 	public function save($table, $idx = null, $defaults = null){
 		if(empty($table)){
 			return false;
@@ -696,9 +696,6 @@ class TransitQuote_Premium_Admin {
 		return $record_data;
 	}
 	public function save_record($table, $record_data){
-		//Save the main event record
-		//$this->ajax->pa($record_data);
-
 		//save or update
 		$rec_id = $this->cdb->update_row($table, $record_data);
 
@@ -751,102 +748,6 @@ class TransitQuote_Premium_Admin {
 
 		return $record_data;
 	}
-	public function load_table_callback(){
-		$table = $this->ajax->param(array('name'=>'table'));
-		$html = self::load_table($table);
-		$response = array('success'=>'true',
-								'html'=>$html);
-		$this->ajax->respond($response);
-	}
-	private function load_table($table, $params = array()){
-		if(empty($table)){
-			return false;
-		};
-		switch ($table) {
-			case 'ct_customers':
-				$defaults = array(
-					'table'=>'ct_customers',
-					'fields'=>array('id','last_name', 'first_name','email','phone'),
-					'inputs'=>false,
-					'actions'=>array('Edit')
-				);
-			break;
-			case 'ct_products':
-				$defaults = array(
-					'table'=>'ct_products',
-					'fields'=>array('id','paddleid', 'name', 'description'),
-					'inputs'=>false,
-					'actions'=>array('Edit')
-				);
-			break;
-
-			case 'ct_customers_products':
-				$from_date 	= $this->ajax->param(array('name'=>'from_date'));
-				$to_date 	= $this->ajax->param(array('name'=>'to_date'));
-
-				$dates = array('from_date'=>$from_date, 'to_date'=>$to_date);
-				//$filters = $this->plugin->get_job_filters();
-				$sales_data = $this->get_sales($dates);
-				$defaults = array(
-					'data'=>$sales_data,
-					'fields'=>array(
-									'customer_name',
-									'product_name',
-									'purchase_date'),
-					'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime'),
-					'inputs'=>false,
-					'table'=>'ct_customers_products',
-					'tpl_row'=>'<tr class="expand"></tr>'
-					);
-			break;
-		};
-
-		if(is_array($defaults)){
-			$params = array_merge($defaults, $params);
-		} else {
-			$params = $defaults;
-		};
-
-		$rows = $this->dbui->table_rows($params);
-		if($rows===false){
-			$response = array('success'=>'false',
-								'msg'=>'could not run query',
-								'sql'=> $this->dbui->cdb->last_query);
-		} else {
-			if($rows===''){
-				$rows = '<tr><td colspan="5" class="empty-table">There is no record in the database yet.</td></tr>';
-			};
-		};
-		return $rows;
-	}
-	function get_sales($dates = null){
-		global $wpdb;
-    	//current and future only
-    	$wpdb->prefix;
-    	$clauses = array();
-    	$filter_sql ='';    	
-    	if(!empty($dates)){
-	    	$filter_sql .= " where date(cp.purchase_date) <= '".$dates['to_date']."' and date(cp.purchase_date) >= '".$dates['from_date']."'"; 
-    	};    	
-
-    	$sql = "SELECT	cp.id,
-				cp.product_id,
-				cp.customer_id,						
-				p.name as product_name,
-				cp.purchase_date,
-				trim(concat(c.first_name,' ',c.last_name)) as customer_name
-				FROM ".$wpdb->prefix."sell_ct_customers_products cp 
-				left join ".$wpdb->prefix."sell_ct_customers c 
-				on cp.customer_id = c.id 
-				left join ".$wpdb->prefix."sell_ct_products p
-				on cp.product_id = p.id 				
-				".$filter_sql." 
-				order by cp.purchase_date desc;";
-
-		$data = $this->cdb->query($sql);
-		return $data;
-    }
-
-*******/
+	
 
 }

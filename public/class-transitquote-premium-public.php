@@ -318,7 +318,7 @@ class TransitQuote_Premium_Public {
 
 		$this->ajax->respond($response);
 	}
-	private function get_record_data($table, $idx = null){
+	public function get_record_data($table, $idx = null){
 		//get params for records data from front end
 		//idx is a 0 based index for where more than one rec is passed
 		//get the field names to save
@@ -429,7 +429,8 @@ class TransitQuote_Premium_Public {
 		return $location[0]['id'];
 	}
 	public function get_job_details($job = null){
-
+		$plugin = new TransitQuote_Premium();	
+		$this->cdb = $plugin->get_custom_db();
 		//add the details to a job record
 		if(empty($job)){
     		$job = $this->job;
@@ -489,7 +490,6 @@ class TransitQuote_Premium_Public {
 		};
 		$job['quote'] = $this->quote;
 		$job['job_date'] = self::get_job_date($job);
-
 		return $job;
 	}
 	public function get_job_date($job = null){
