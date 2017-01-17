@@ -38,6 +38,7 @@ class TransitQuote_Premium_Admin {
 	private $tab_3_settings_key = 'premium_customers';
 	private $tab_4_settings_key = 'premium_transportation_requests';
 	private $tab_5_settings_key = 'premium_email_options';
+	private $tab_6_settings_key = 'premium_paypal_options';
 	
 	/**
 	 * The version of this plugin.
@@ -292,7 +293,6 @@ class TransitQuote_Premium_Admin {
 	    add_settings_section( 'premium_email_options', 'Emails Options',  array( $this, 'email_options_callback' ), $this->tab_5_settings_key);
 
  		add_settings_field( 'notify', 'Send New Job Emails To',  array( $this, 'notify_callback' ), $this->tab_5_settings_key, 'premium_email_options');
-	   	add_settings_field( 'notify', 'Send New Job Emails To',  array( $this, 'notify_callback' ), $this->tab_5_settings_key, 'premium_email_options');
 	   	add_settings_field( 'from_address', 'Reply Address for Customer Quote Emails',  array( $this, 'from_address_callback' ), $this->tab_5_settings_key, 'premium_email_options');
 	   	add_settings_field( 'from_name', 'Contact Name for Customer Quote Emails',  array( $this, 'from_name_callback' ), $this->tab_5_settings_key, 'premium_email_options');
 	   	add_settings_field( 'customer_subject', 'Customer Quote Email Subject',  array( $this, 'customer_subject_callback' ), $this->tab_5_settings_key, 'premium_email_options');
@@ -327,21 +327,38 @@ class TransitQuote_Premium_Admin {
 	}
 
 
+	function register_tab_6_settings(){
 
+		$this->plugin_settings_tabs[$this->tab_6_settings_key] = 'PayPal Options'; //Tab name
+		register_setting( $this->tab_6_settings_key, $this->tab_6_settings_key ); //register settings for tab
+	    add_settings_section( 'premium_paypal_options', 'PayPal Options',  array( $this, 'paypal_options_callback' ), $this->tab_6_settings_key);
 
+ 		add_settings_field( 'sandbox', 'Use Sandbox/Testing Mode',  array( $this, 'sandbox_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
+	   	add_settings_field( 'endpoint', 'Live API Endpoint',  array( $this, 'endpoint_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
+	   	add_settings_field( 'sandbox_endpoint', 'Sandbox API Endpoint',  array( $this, 'sandbox_endpoint_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
+	   	add_settings_field( 'business_email', 'PayPal Registered Email Address',  array( $this, 'business_email_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
+	   	add_settings_field( 'item_name', 'Item Name (For listing transactions in PayPal)',  array( $this, 'item_name_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
+   	}
 
+	function paypal_options_callback(){
 
+	}
 
+	function endpoint_callback(){
 
+	}
 
+	function sandbox_endpoint_callback(){
 
+	}
 
+	function business_email_callback(){
 
+	}
 
+	function item_name_callback(){
 
-
-
-
+	}
 
 	/**
 	 * Register the stylesheets for the admin area.
