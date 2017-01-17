@@ -263,7 +263,7 @@ class TransitQuote_Premium_Admin {
 	}
 	function customers_callback(){
 		//get the no of customers to determine whether to show empty message or loading message
-		$this->customer_count = $this->cdb->get_count('tp_customers');
+		$this->customer_count = $this->cdb->get_count('customers');
 		if($this->customer_count == 0){
 			$this->empty_message = 'There are no customers in the database yet.';
 		} else {
@@ -278,7 +278,7 @@ class TransitQuote_Premium_Admin {
 	    add_settings_section( 'premium_jobs', 'Jobs',  array( $this, 'jobs_callback' ), $this->tab_4_settings_key);
 	}
 	function jobs_callback(){
-		$this->jobs_count = $this->cdb->get_count('tp_jobs');
+		$this->jobs_count = $this->cdb->get_count('jobs');
 		if($this->jobs_count == 0){
 			$this->empty_message = 'There are no jobs in the database yet.';
 		} else {
@@ -482,19 +482,19 @@ class TransitQuote_Premium_Admin {
 			return $this->job;
     	};
 		//a job id has been passed so get the job record from the database
-		return $this->cdb->get_row('tp_jobs',$job_id);
+		return $this->cdb->get_row('jobs',$job_id);
     }
 
 	function get_jobs($filters = null, $dates = null){
 
     	//current and future only
-    	$clauses = array();/*"date(wp_premium_jobs.delivery_date) >= CURDATE() ",*/
+    	$clauses = array();/*"date(jobs.delivery_date) >= CURDATE() ",*/
     	$filter_sql = '';
     	/*if(!empty($filters)){
 			foreach ($filters as $name => $values) {
 	     		if(strpos($name, '.')==-1){
 	     			//no table specified so filter jobs table
-	    			$clauses[] = 'wp_premium_jobs.'.$name.' IN('.implode(',',$values).')';
+	    			$clauses[] = 'jobs.'.$name.' IN('.implode(',',$values).')';
 	    		} else {
 	    			if(is_array($values)){
 	    				$clauses[] = $name.' IN('.implode(',',$values).')';
@@ -508,40 +508,48 @@ class TransitQuote_Premium_Admin {
     	};*/
 
     	if(!empty($dates)){
-	    	$filter_sql .= " where date(wp_premium_tp_jobs.created) <= '".$dates['to_date']."' and date(wp_premium_tp_jobs.created) >= '".$dates['from_date']."'"; 
+	    	$filter_sql .= " where date(jobs.created) <= '".$dates['to_date']."' and date(jobs.created) >= '".$dates['from_date']."'"; 
     	};    	
 
-    	$sql = "SELECT	wp_premium_tp_jobs.id,
-						wp_premium_tp_jobs.delivery_contact_name,
-						-- wp_premium_tp_jobs.service_type_id,
+    	$sql = "SELECT	jobs.id,
+						jobs.delivery_contact_name,
+						-- jobs.service_type_id,
 						-- CASE service_type_id WHEN 1 THEN 'Commercial' ELSE 'Domestic' END as move_type,
-						wp_premium_tp_jobs.delivery_time,
-						wp_premium_tp_jobs.description,
-						wp_premium_tp_jobs.customer_id,
-						wp_premium_tp_jobs.accepted_quote_id,
-						wp_premium_tp_jobs.vehicle_type_id,
-						wp_premium_tp_jobs.created,
-						wp_premium_tp_jobs.modified,
+						jobs.delivery_time,
+						jobs.description,
+						jobs.customer_id,
+						jobs.accepted_quote_id,
+						jobs.vehicle_type_id,
+						jobs.payment_type_id,
+						jobs.payment_status_id,
+						jobs.created,
+						jobs.modified,
 						trim(concat(c.first_name,' ',c.last_name)) as last_name,
-						lo.address as pick_up,
-						ld.address as drop_off,
+						ifnull(lo.address, '') as pick_up,
+						ifnull(ld.address,'') as drop_off,
 						v.name as vehicle_type,
-						q.total as quote 
-					FROM wp_premium_tp_jobs 
+						q.total as quote,
+						pt.name as payment_type,
+						pst.description as payment_status
+					FROM wp_premium_tp_jobs jobs
 						left join wp_premium_tp_journeys j 
-							on j.job_id = wp_premium_tp_jobs.id 
+							on jobs.id = j.job_id 
 						left join wp_premium_tp_locations lo 
-							on lo.id = j.origin_location_id 
+							on j.origin_location_id = lo.id 
 						left join wp_premium_tp_locations ld 
-							on ld.id = j.dest_location_id 
+							on j.dest_location_id = ld.id
 						left join wp_premium_tp_customers c 
-							on c.id = wp_premium_tp_jobs.customer_id 
+							on c.id = jobs.customer_id 
 						left join wp_premium_tp_vehicle_types v 
-							on v.id = wp_premium_tp_jobs.vehicle_type_id 
+							on v.id = jobs.vehicle_type_id 
 						left join wp_premium_tp_quotes q 
-							on q.id = wp_premium_tp_jobs.accepted_quote_id
+							on q.id = jobs.accepted_quote_id
+						left join wp_premium_tp_payment_types pt 
+							on jobs.payment_type_id = pt.id
+						left join wp_premium_tp_payment_status_types pst 
+							on jobs.payment_status_id = pst.id 
 			".$filter_sql." 
-			order by wp_premium_tp_jobs.id desc;";
+			order by jobs.id desc;";
 
 		$data = $this->cdb->query($sql);
 		return $data;
@@ -597,11 +605,11 @@ class TransitQuote_Premium_Admin {
 			return false;
 		};
 		switch ($table) {
-			case 'tp_rates':
+			case 'rates':
 				if(isset($params['query'])){
 					//use standard options for table_rows to allow for only returning a single row to ui after an update
 					$defaults = array(
-							'table'=>'tp_rates',
+							'table'=>'rates',
 							'fields'=>array('id', 'distance','amount','unit','hour'),
 							'inputs'=>false,
 							'actions'=>array('Edit', 'Delete')
@@ -612,23 +620,23 @@ class TransitQuote_Premium_Admin {
 
 					$defaults = array(
 								'data'=>$rates_data, //supply data instead of running a query
-								'table'=>'tp_rates',
+								'table'=>'rates',
 								'fields'=>array('id', 'distance','amount','unit','hour'),
 								'inputs'=>false,
 								'actions'=>array('Edit', 'Delete')
 								);
 				};
 			break;
-			case 'tp_customers':
+			case 'customers':
 				$empty_colspan = 4;
 				$defaults = array(
-					'table'=>'tp_customers',
+					'table'=>'customers',
 					'fields'=>array('id','last_name', 'first_name','email','phone'),
 					'inputs'=>false
 				);
 			break;
-			case 'tp_jobs':
-				$empty_colspan = 5;
+			case 'jobs':
+				$empty_colspan = 6;
 				$from_date = $this->ajax->param(array('name'=>'from_date'));
 				$to_date = $this->ajax->param(array('name'=>'to_date'));
 
@@ -645,33 +653,38 @@ class TransitQuote_Premium_Admin {
 									'ld.address as drop_off',									
 									'delivery_time'),
 					'joins'=>array( 
-							array('tp_customers c','id','customer_id', '', 'left'),
+							array('customers c','id','customer_id', '', 'left'),
 						),
 					'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime'),
 					'inputs'=>false,
-					'table'=>'tp_jobs',
+					'table'=>'jobs',
 					'actions'=>array('Delete'),
 					'tpl_row'=>'<tr class="expand"></tr>'
 					);
 		};
 
-		if(is_array($defaults)){
-			$params = array_merge($defaults, $params);
+		if(isset($job_data)){
+			$rows = $job_data;
 		} else {
-			$params = $defaults;
+			if(is_array($defaults)){
+				$params = array_merge($defaults, $params);
+			} else {
+				$params = $defaults;
+			};
+			
+			$rows = $this->dbui->table_rows($params);
 		};
-		
-		$rows = $this->dbui->table_rows($params);
 		
 		if($rows===false){
 			$response = array('success'=>'false',
 								'msg'=>'could not run query',
 								'sql'=> $this->dbui->cdb->last_query);
-		} else {
-			if($rows===''){
-				$rows = '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no '.str_replace('tp_', '', $table).' in the database yet.</td></tr>';
-			};
 		};
+
+		if(empty($rows)){
+			$rows = '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no '.$table.' in the database yet.</td></tr>';
+		};
+
 		return $rows;
 	}
 

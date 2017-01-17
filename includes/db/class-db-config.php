@@ -28,7 +28,7 @@ class DB_Config {
 
 private function config_customers(){
  return array (
-  'name' => 'tp_customers',
+  'name' => 'customers',
   'defaults' => 
   array (
     'fields' => 
@@ -115,7 +115,7 @@ private function config_customers(){
 
 private function config_quotes(){
  return array (
-  'name' => 'tp_quotes',
+  'name' => 'quotes',
   'defaults' => 
   array (
     'fields' => 
@@ -211,7 +211,7 @@ private function config_quotes(){
 
 private function config_vehicle_types(){
  return array (
-  'name' => 'tp_vehicle_types',
+  'name' => 'vehicle_types',
   'defaults' => 
   array (
     'fields' => 
@@ -280,7 +280,7 @@ private function config_vehicle_types(){
 
 private function config_payment_types(){
  return array (
-  'name' => 'tp_payment_types',
+  'name' => 'payment_types',
   'defaults' => 
   array (
     'fields' => 
@@ -340,7 +340,7 @@ private function config_payment_types(){
 
 private function config_payment_status_types(){
  return array (
-  'name' => 'tp_payment_status_types',
+  'name' => 'payment_status_types',
   'defaults' => 
   array (
     'fields' => 
@@ -360,8 +360,8 @@ private function config_payment_status_types(){
     array (
       'name' => 'id',
       'type' => 'int',
-      'null' => 'null',
-      'auto' => '',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
       'default' => '',
       'format' => '%d',
     ),
@@ -409,7 +409,7 @@ private function config_payment_status_types(){
 
 private function config_status_types(){
  return array (
-  'name' => 'tp_status_types',
+  'name' => 'status_types',
   'defaults' => 
   array (
     'fields' => 
@@ -469,7 +469,7 @@ private function config_status_types(){
 
 private function config_jobs(){
  return array (
-  'name' => 'tp_jobs',
+  'name' => 'jobs',
   'defaults' => 
   array (
     'fields' => 
@@ -619,7 +619,7 @@ private function config_jobs(){
 
 private function config_locations(){
  return array (
-  'name' => 'tp_locations',
+  'name' => 'locations',
   'defaults' => 
   array (
     'fields' => 
@@ -751,7 +751,7 @@ private function config_locations(){
 
 private function config_surcharges(){
  return array (
-  'name' => 'tp_surcharges',
+  'name' => 'surcharges',
   'defaults' => 
   array (
     'fields' => 
@@ -820,7 +820,7 @@ private function config_surcharges(){
 
 private function config_quote_surcharges(){
  return array (
-  'name' => 'tp_quote_surcharges',
+  'name' => 'quote_surcharges',
   'defaults' => 
   array (
     'fields' => 
@@ -898,7 +898,7 @@ private function config_quote_surcharges(){
 
 private function config_journeys(){
  return array (
-  'name' => 'tp_journeys',
+  'name' => 'journeys',
   'defaults' => 
   array (
     'fields' => 
@@ -994,7 +994,7 @@ private function config_journeys(){
 
 private function config_rates(){
  return array (
-  'name' => 'tp_rates',
+  'name' => 'rates',
   'defaults' => 
   array (
     'fields' => 
@@ -1089,7 +1089,7 @@ private function config_rates(){
 }
 private function config_event_logs(){
  return array (
-  'name' => 'tp_event_logs',
+  'name' => 'event_logs',
   'defaults' => 
   array (
     'fields' => 
@@ -1140,7 +1140,7 @@ private function config_event_logs(){
 
 private function config_event_data(){
  return array (
-  'name' => 'tp_event_data',
+  'name' => 'event_data',
   'defaults' => 
   array (
     'fields' => 

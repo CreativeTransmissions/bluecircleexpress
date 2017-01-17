@@ -311,7 +311,7 @@ class TransitQuote_Premium {
 
 	public static function get_custom_db(){
 		//define and register tables
-		$cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'premium'));
+		$cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'premium_tp'));
 		$db_config = new TransitQuote_Premium\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
@@ -344,10 +344,24 @@ class TransitQuote_Premium {
 		// if($cdb->get_count('tablename')==0){ //can insert some default data here by replacing the table name and fields
 		// 	$cdb->update_row('ct_products', array('name'=>'TransitQuote Lite', 'description' => 'TransitQuote Lite', 'paddleid'=> '500997', 'created'=>$created, 'modified'=>$modified ));			
 		// };
-		if($cdb->get_count('tp_rates')==0){
-			$cdb->update_row('tp_rates', array('service_type_id'=>1, 'distance' => '30', 'amount'=> '600', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('tp_rates', array('service_type_id'=>1, 'distance' => '0', 'unit'=> '12', 'created'=>$created, 'modified'=>$modified ));
-		};	
+		if($cdb->get_count('rates')==0){
+			$cdb->update_row('rates', array('service_type_id'=>1, 'distance' => '30', 'amount'=> '600', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('rates', array('service_type_id'=>1, 'distance' => '0', 'unit'=> '12', 'created'=>$created, 'modified'=>$modified ));
+		};
+
+		if($cdb->get_count('payment_types')==0){
+			$cdb->update_row('payment_types', array('name' => 'cash', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_types', array('name' => 'paypal', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_types', array('name' => 'stripe', 'created'=>$created, 'modified'=>$modified ));
+		};
+
+		if($cdb->get_count('payment_status_types')==0){
+
+			$cdb->update_row('payment_status_types', array('name' => 'wating', 'description'=> 'Awaiting Payment', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_status_types', array('name' => 'recieved', 'description'=> 'Payment Recieved', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_status_types', array('name' => 'failed', 'description'=> 'Payment Failed', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_status_types', array('name' => 'cash', 'description'=> 'On Delivery', 'created'=>$created, 'modified'=>$modified ));					
+		};
 		return;
 	}
 	

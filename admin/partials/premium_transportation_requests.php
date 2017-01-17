@@ -14,12 +14,11 @@
 		</div>	
  	</fieldset>
 
-	<table id="tp_jobs_table" class="settings-table">
+	<table id="jobs_table" class="settings-table">
 		<thead>
-			<tr><th>Request Recieved</th><th>Customer Name</th><th>Customer Location</th><th>Customer Destination</th><th>Pick Up Date and Time</th></tr>
+			<tr><th>Request Recieved</th><th>Customer Name</th><th>Customer Location</th><th>Customer Destination</th><th>Pick Up Date and Time</th><th>Payment Status</th></tr>
 		</thead>
 		<tbody>
-			<tr><td colspan="5" class="empty-table"><div class="spinner"></div><?php echo $this->empty_message; ?></td></tr>
 		</tbody>
 	</table>
 </form>

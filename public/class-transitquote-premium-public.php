@@ -429,6 +429,23 @@ class TransitQuote_Premium_Public {
 		
 		return $location[0]['id'];
 	}
+
+ 	private function get_job($job_id = null){
+    	//get job record from property or database
+    	if(empty($job_id)){
+    		// if no job passed, get the job currently being processed from the job property
+    		if(empty($this->job)){
+    			// if the job property is not set return false
+    			return false;
+    		} else {
+    			// return the job property
+    			return $this->job;
+    		}
+    	};
+		//if we do have a passed job id, get the job from the table
+		return $this->cdb->get_row('jobs',$job_id);
+    }
+
 	public function get_job_details($job = null){
 		$plugin = new TransitQuote_Premium();	
 		$this->cdb = $plugin->get_custom_db();
@@ -691,7 +708,7 @@ class TransitQuote_Premium_Public {
 	public function get_oldest_job_date(){
 		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
-		$jobs = $this->cdb->get_rows('tp_jobs', array(), array('id', 'created'), null);
+		$jobs = $this->cdb->get_rows('jobs', array(), array('id', 'created'), null);
 		if(empty($jobs)){
 			return 'no jobs';
 		};
@@ -967,4 +984,24 @@ class TransitQuote_Premium_Public {
 		};
 		return $out;
 	}
+
+	/**
+	 * Update Payment Status Column in jobs 
+	 *	 
+	 * @since    1.0.0
+	 */	
+	private function update_payment_status($job_id, $payment_status_type_id){
+		if(empty($job_id)){
+			return false;
+		};
+
+		if(empty($payment_status_type_id)){
+			return false;
+		};
+
+		$job = self::get_job($job_id);
+
+		$job['payment_status_type_id'] = $payment_status_type_id;
+		return self::save_record('jobs', $job);
+	}	
 }

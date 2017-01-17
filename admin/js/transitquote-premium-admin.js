@@ -34,7 +34,7 @@
 						case 'premium_customers':
 							this.initCustomersTabUI();						
 							this.initCustomersTabEvents();
-							this.initEditTableEvents('tp_customers');
+							this.initEditTableEvents('customers');
 						break;	
 						case 'premium_rates':						
 							this.initRatesTabEvents();
@@ -42,7 +42,7 @@
 						default:
 							this.initJobsTabUI();
 							this.initJobsTabEvents();
-							this.initEditTableEvents('tp_jobs');
+							this.initEditTableEvents('jobs');
 						break;
 					}
 				},
@@ -70,10 +70,10 @@
 				initJobsTabEvents: function(){
 					var that = this;
 
-					this.editTable = $('#tp_jobs_table')[0];
+					this.editTable = $('#jobs_table')[0];
 
 					//expand details row on click 
-					$('#tp_jobs_table').on('click', 'tr', function(e){
+					$('#jobs_table').on('click', 'tr', function(e){
 						var dataId = $(this).attr('data-id');
 						that.clickJobRow(dataId);
 					});
@@ -84,7 +84,7 @@
 						that.loadTable({
 							from_date: $('#from_date_alt').val(),
 							to_date: $('#to_date_alt').val(),
-							table: 'tp_jobs'
+							table: 'jobs'
 						});
 					});
 
@@ -94,7 +94,7 @@
 						that.loadTable({
 							from_date: $('#from_date_alt').val(),
 							to_date: $('#to_date_alt').val(),
-							table: 'tp_jobs'
+							table: 'jobs'
 						});
 					});
 				},
@@ -117,7 +117,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_customer_form')[0];
-					this.editTableObj = $('#tp_customers_table')[0];
+					this.editTableObj = $('#customers_table')[0];
 
 					this.editRecordMessage = 'Editing Customer Details';
 					this.newRecordMessage = 'Enter New Customer Details'
@@ -144,7 +144,7 @@
 					this.loadTable({
 						from_date: $('#from_date_alt').val(),
 						to_date: $('#to_date_alt').val(),
-						table: 'tp_jobs'
+						table: 'jobs'
 					});
 							
 				},
@@ -153,7 +153,7 @@
 					var that = this;
 
 					this.loadTable({
-						table: 'tp_customers'
+						table: 'customers'
 					});
 							
 				},
@@ -197,7 +197,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_rate_form')[0];
-					this.editTableObj = $('#tp_rates_table')[0];
+					this.editTableObj = $('#rates_table')[0];
 
 					this.editRecordMessage = 'Editing Rate';
 					this.newRecordMessage = 'Enter New Rate'
@@ -438,7 +438,7 @@
 					var that = this;
 
 					//get the row for the data id
-					var jobRow = this.getRow('tp_jobs_table', dataId);
+					var jobRow = this.getRow('jobs_table', dataId);
 					if(!jobRow){
 						return false;
 					};
@@ -467,7 +467,7 @@
 					var that = this;
 
 					//get the row for the data id
-					var jobRow = this.getRow('tp_jobs_table', dataId);
+					var jobRow = this.getRow('jobs_table', dataId);
 					if(!jobRow){
 						return false;
 					};
@@ -496,7 +496,7 @@
 						this.getJobDetails(dataId,  function(jobDetailsHtml){
 							if(jobDetailsHtml){
 								$(nextRow).html('<td colspan="100">'+jobDetailsHtml+'</td>');
-								$('#tp_jobs_table').trigger('jobdetailscomplete');
+								$('#jobs_table').trigger('jobdetailscomplete');
 							} else {
 								$(nextRow).html('<td colspan="100">Could not load details.</td>');
 							}
