@@ -33,7 +33,7 @@
                         </div>
                     </div>
 
-                    <input type="hidden" name="action" value="save_job"/>
+                    <input type="hidden" name="action" value="premium_save_job"/>
                 </div>
 
             </div>
