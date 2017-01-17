@@ -347,7 +347,7 @@ class TransitQuote_Premium_Admin {
 	}
 
 	function endpoint_callback(){
-		$value = $this->plugin->get_setting('premium_paypal_options', 'endpoint');
+		$value = $this->plugin->get_setting('premium_paypal_options', 'endpoint', 'https://www.paypal.com/uk/cgi-bin/webscr');
 		echo '<input class="wide" type="text" name="'.$this->tab_6_settings_key.'[endpoint]" value="'.$value.'"/>';
 		echo "<p>This is the PayPal URL  that live payment information is sent to. Changing this is not recommended.</p>";
 	}
@@ -359,7 +359,7 @@ class TransitQuote_Premium_Admin {
 	}
 
 	function sandbox_endpoint_callback(){
-		$value = $this->plugin->get_setting('premium_paypal_options', 'sandbox_endpoint');
+		$value = $this->plugin->get_setting('premium_paypal_options', 'sandbox_endpoint', 'https://www.sandbox.paypal.com/uk/cgi-bin/webscr');
 		echo '<input class="wide" type="text" name="'.$this->tab_6_settings_key.'[sandbox_endpoint]" value="'.$value.'"/>';
 		echo "<p>This is the PayPal URL that test payment information is sent to. Changing this is not recommended.</p>";
 	}
@@ -377,7 +377,7 @@ class TransitQuote_Premium_Admin {
 	}
 
 	function item_name_callback(){
-		$value = $this->plugin->get_setting('premium_paypal_options', 'item_name');
+		$value = $this->plugin->get_setting('premium_paypal_options', 'item_name', 'TransitQuote Payment');
 		echo '<input class="wide" type="text" name="'.$this->tab_6_settings_key.'[item_name]" value="'.$value.'"/>';
 		echo "<p>This is the item name that will be displayed in your PayPal account when a customer purchases one of your products.</p>";
 	}
