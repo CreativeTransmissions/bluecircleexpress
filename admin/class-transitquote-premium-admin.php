@@ -628,7 +628,7 @@ class TransitQuote_Premium_Admin {
 								'sql'=> $this->dbui->cdb->last_query);
 		} else {
 			if($rows===''){
-				$rows = '<tr><td colspan="5" class="empty-table">There are no '.str_replace('tp_', '', $table).' in the database yet.</td></tr>';
+				$rows = '<tr><td colspan="4" class="empty-table">There are no '.str_replace('tp_', '', $table).' in the database yet.</td></tr>';
 			};
 		};
 		return $rows;
