@@ -129,6 +129,7 @@ class TransitQuote_Premium_Admin {
 		self::register_tab_2_settings();
 		self::register_tab_3_settings();
 		self::register_tab_5_settings();
+		self::register_tab_6_settings();
 		$this->plugin->load_settings();
 	}
 
@@ -333,11 +334,12 @@ class TransitQuote_Premium_Admin {
 		register_setting( $this->tab_6_settings_key, $this->tab_6_settings_key ); //register settings for tab
 	    add_settings_section( 'premium_paypal_options', 'PayPal Options',  array( $this, 'paypal_options_callback' ), $this->tab_6_settings_key);
 
+		add_settings_field( 'business_email', 'PayPal Email Address',  array( $this, 'business_email_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');	
+		add_settings_field( 'item_name', 'Item Name',  array( $this, 'item_name_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
+		add_settings_field( 'endpoint', 'Live API Endpoint',  array( $this, 'endpoint_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
  		add_settings_field( 'sandbox', 'Use Sandbox/Testing Mode',  array( $this, 'sandbox_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
-	   	add_settings_field( 'endpoint', 'Live API Endpoint',  array( $this, 'endpoint_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
+	   	add_settings_field( 'test_business_email', 'PayPal Test Email Address',  array( $this, 'test_business_email_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
 	   	add_settings_field( 'sandbox_endpoint', 'Sandbox API Endpoint',  array( $this, 'sandbox_endpoint_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
-	   	add_settings_field( 'business_email', 'PayPal Registered Email Address',  array( $this, 'business_email_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
-	   	add_settings_field( 'item_name', 'Item Name (For listing transactions in PayPal)',  array( $this, 'item_name_callback' ), $this->tab_6_settings_key, 'premium_paypal_options');
    	}
 
 	function paypal_options_callback(){
@@ -345,19 +347,39 @@ class TransitQuote_Premium_Admin {
 	}
 
 	function endpoint_callback(){
+		$value = $this->plugin->get_setting('premium_paypal_options', 'endpoint');
+		echo '<input class="wide" type="text" name="'.$this->tab_6_settings_key.'[endpoint]" value="'.$value.'"/>';
+		echo "<p>This is the PayPal URL  that live payment information is sent to. Changing this is not recommended.</p>";
+	}
 
+	function sandbox_callback(){
+		$value = $this->plugin->get_setting('premium_paypal_options', 'sandbox');
+	    echo '<input type="checkbox" name="'.$this->tab_6_settings_key.'[sandbox]" value="1" '.checked(1,$value,false).'/>Enable Sandbox/Test Mode.<br/>';
+	    echo "<p>When this box is ticked all payments will be simulated using the PayPal sandbox website.</p>";
 	}
 
 	function sandbox_endpoint_callback(){
-
+		$value = $this->plugin->get_setting('premium_paypal_options', 'sandbox_endpoint');
+		echo '<input class="wide" type="text" name="'.$this->tab_6_settings_key.'[sandbox_endpoint]" value="'.$value.'"/>';
+		echo "<p>This is the PayPal URL that test payment information is sent to. Changing this is not recommended.</p>";
 	}
 
 	function business_email_callback(){
+		$value = $this->plugin->get_setting('premium_paypal_options', 'business_email');
+		echo '<input class="wide" type="text" name="'.$this->tab_6_settings_key.'[business_email]" value="'.$value.'"/>';
+		echo "<p>This is the email address that you use to login to PayPal and accept payments.</p>";
+	}
 
+	function test_business_email_callback(){
+		$value = $this->plugin->get_setting('premium_paypal_options', 'test_business_email');
+		echo '<input class="wide" type="text" name="'.$this->tab_6_settings_key.'[test_business_email]" value="'.$value.'"/>';
+		echo "<p>This is the email address that will be used to test payments in sandbox mode. This should be set up in your PayPal developer account if you would like a dummy PayPal account for testing payments. </p>";
 	}
 
 	function item_name_callback(){
-
+		$value = $this->plugin->get_setting('premium_paypal_options', 'item_name');
+		echo '<input class="wide" type="text" name="'.$this->tab_6_settings_key.'[item_name]" value="'.$value.'"/>';
+		echo "<p>This is the item name that will be displayed in your PayPal account when a customer purchases one of your products.</p>";
 	}
 
 	/**

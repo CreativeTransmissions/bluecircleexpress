@@ -35,6 +35,7 @@ class TransitQuote_Premium_Public {
     private $tab_1_settings_key = 'premium_rates';
 	private $tab_2_settings_key = 'premium_quote_options';
 	private $tab_5_settings_key = 'premium_email_options';
+	private $tab_6_settings_key = 'premium_paypal_options';
 	/**
 	 * The version of this plugin.
 	 *
@@ -79,6 +80,7 @@ class TransitQuote_Premium_Public {
 	 	$this->{$this->tab_1_settings_key} = (array) get_option( $this->tab_1_settings_key);
 	   	$this->{$this->tab_2_settings_key} = (array) get_option( $this->tab_2_settings_key);
 	   	$this->{$this->tab_5_settings_key} = (array) get_option( $this->tab_5_settings_key);
+	   	$this->{$this->tab_6_settings_key} = (array) get_option( $this->tab_6_settings_key);
 	}
 	private function get_rates(){
 	   	$plugin = new TransitQuote_Premium();
