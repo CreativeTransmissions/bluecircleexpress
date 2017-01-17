@@ -7,3 +7,6 @@
 [submodule "public/js/js-transitquote"]
 	path = public/js/js-transitquote
 	url = git@github.com:CreativeTransmissions/jq-transitquote.git
+[submodule "includes/tqp-paypal"]
+	path = includes/tqp-paypal
+	url = git@github.com:CreativeTransmissions/ct-paypal.git
