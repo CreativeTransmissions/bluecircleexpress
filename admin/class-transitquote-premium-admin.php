@@ -123,10 +123,10 @@ class TransitQuote_Premium_Admin {
 		$this->ajax = new TransitQuote_Premium\CT_AJAX();
 		$this->cdb = TransitQuote_Premium::get_custom_db();
 		$this->dbui = new TransitQuote_Premium\CT_DBUI(array('cdb'=>$this->cdb));
+		self::register_tab_4_settings();		
 		self::register_tab_1_settings();
 		self::register_tab_2_settings();
 		self::register_tab_3_settings();
-		self::register_tab_4_settings();
 		self::register_tab_5_settings();
 		$this->plugin->load_settings();
 	}
@@ -581,6 +581,7 @@ class TransitQuote_Premium_Admin {
 				};
 			break;
 			case 'tp_customers':
+				$empty_colspan = 4;
 				$defaults = array(
 					'table'=>'tp_customers',
 					'fields'=>array('id','last_name', 'first_name','email','phone'),
@@ -588,6 +589,7 @@ class TransitQuote_Premium_Admin {
 				);
 			break;
 			case 'tp_jobs':
+				$empty_colspan = 5;
 				$from_date = $this->ajax->param(array('name'=>'from_date'));
 				$to_date = $this->ajax->param(array('name'=>'to_date'));
 
@@ -628,7 +630,7 @@ class TransitQuote_Premium_Admin {
 								'sql'=> $this->dbui->cdb->last_query);
 		} else {
 			if($rows===''){
-				$rows = '<tr><td colspan="4" class="empty-table">There are no '.str_replace('tp_', '', $table).' in the database yet.</td></tr>';
+				$rows = '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no '.str_replace('tp_', '', $table).' in the database yet.</td></tr>';
 			};
 		};
 		return $rows;
