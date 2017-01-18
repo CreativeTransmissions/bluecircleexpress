@@ -545,7 +545,7 @@ private function config_jobs(){
       'type' => 'int',
       'null' => 'null',
       'auto' => '',
-      'default' => '',
+      'default' => '1',
       'format' => '%d'
     ),
     'payment_status_id' => 
@@ -554,7 +554,7 @@ private function config_jobs(){
       'type' => 'int',
       'null' => 'null',
       'auto' => '',
-      'default' => '',
+      'default' => '1',
       'format' => '%d'
     ),
     'status_type_id' => 
@@ -572,7 +572,7 @@ private function config_jobs(){
       'type' => 'int',
       'null' => 'null',
       'auto' => '',
-      'default' => '',
+      'default' => '1',
       'format' => '%d'
     ),
     'service_type_id' =>
@@ -581,7 +581,7 @@ private function config_jobs(){
       'type' => 'int',
       'null' => 'null',
       'auto' => '',
-      'default' => '',
+      'default' => '1',
       'format' => '%d'
     ),
     'move_size_id' => 
