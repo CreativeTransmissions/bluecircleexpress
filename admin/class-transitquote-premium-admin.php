@@ -511,7 +511,7 @@ class TransitQuote_Premium_Admin {
 	    	$filter_sql .= " where date(jobs.created) <= '".$dates['to_date']."' and date(jobs.created) >= '".$dates['from_date']."'"; 
     	};    	
 
-    	$sql = "SELECT	jobs.id,
+    	$sql = "SELECT	distinct jobs.id,
 						jobs.delivery_contact_name,
 						-- jobs.service_type_id,
 						-- CASE service_type_id WHEN 1 THEN 'Commercial' ELSE 'Domestic' END as move_type,
@@ -659,7 +659,9 @@ class TransitQuote_Premium_Admin {
 													'c.last_name as last_name',
 													'lo.address as pick_up',
 													'ld.address as drop_off',									
-													'delivery_time'),
+													'delivery_time',
+													'payment_type',
+													'payment_status'),
 									'joins'=>array( 
 											array('customers c','id','customer_id', '', 'left'),
 										),
@@ -676,7 +678,7 @@ class TransitQuote_Premium_Admin {
 		} else {
 			$params = $defaults;
 		};
-		
+
 		$rows = $this->dbui->table_rows($params);
 
 		if($rows===false){
@@ -691,7 +693,7 @@ class TransitQuote_Premium_Admin {
 	private function render_empty_table($table){
 		switch ($table) {
 			case 'jobs':
-				$empty_colspan = 6;
+				$empty_colspan = 8;
 				break;
 			case 'customers':
 				$empty_colspan = 4;

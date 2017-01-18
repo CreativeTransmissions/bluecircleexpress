@@ -350,9 +350,9 @@ class TransitQuote_Premium {
 		};
 
 		if($cdb->get_count('payment_types')==0){
-			$cdb->update_row('payment_types', array('name' => 'cash', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_types', array('name' => 'paypal', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_types', array('name' => 'stripe', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_types', array('name' => 'On Delivery', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_types', array('name' => 'PayPal', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_types', array('name' => 'Stripe', 'created'=>$created, 'modified'=>$modified ));
 		};
 
 		if($cdb->get_count('payment_status_types')==0){

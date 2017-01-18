@@ -16,7 +16,7 @@
 
 	<table id="jobs_table" class="settings-table">
 		<thead>
-			<tr><th>Request Recieved</th><th>Customer Name</th><th>Customer Location</th><th>Customer Destination</th><th>Pick Up Date and Time</th><th>Payment Status</th></tr>
+			<tr><th>Request Recieved</th><th>Customer Name</th><th>Customer Location</th><th>Customer Destination</th><th>Pick Up Date and Time</th><th>Payment Method</th><th>Payment Status</th></tr>
 		</thead>
 		<tbody>
 		</tbody>
