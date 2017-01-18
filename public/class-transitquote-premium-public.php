@@ -695,9 +695,34 @@ class TransitQuote_Premium_Public {
 	public function get_distance_unit(){
         return self::get_setting($this->tab_2_settings_key, 'distance_unit', 'Kilometer');
     }
+
+    public function get_payment_buttons(){
+    	$plugin = new TransitQuote_Premium();
+    	$this->cdb = $plugin->get_custom_db();
+    	$methods = $this->cdb->get_rows('payment_types', array('available'=>1), array('id', 'name'), null);
+    	if(count($methods)===0){
+    		// no payment methods available. Perhaps for quote only.
+    		return '';
+    	};
+
+    	//build array of buttons based on payment methods available in the payment_types table
+		$button_html ='';
+    	$buttons = array();
+    	foreach ($methods as $key => $payment_method) {
+    		$button_html = '<button id="pay_mentod_'.$payment_method['id'].'" class="form-submit-button form-submit-button-simple_black" type="submit" name="submit" value="pay_mentod_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
+			array_push($buttons, $button_html);
+    	};
+
+    	$button_panel = '<div class="buttons">';
+    	$button_panel .= implode('', $buttons);
+    	$button_panel .= '</div>';
+
+    	return $button_panel;
+
+    }
     public function get_success_message(){
         return self::get_setting($this->tab_2_settings_key, 'success_message', 
-        						'Thank you for your enquiry, a member of our staff will be in touch as soon as possible.');
+        						'Thank you for your enquiry, we accept credit card payments online via PayPal (no login required) or on delivery.');
     }
     public function get_customer_message(){
         return self::get_setting($this->tab_5_settings_key, 'customer_message', 'Thank you for your request.');

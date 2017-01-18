@@ -314,6 +314,15 @@ private function config_payment_types(){
       'default' => '',
       'format' => '%s',
     ),
+    'available' => 
+    array (
+      'name' => 'available',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '1',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',

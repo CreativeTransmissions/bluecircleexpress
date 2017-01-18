@@ -75,7 +75,7 @@
     <div class="tq-address-container">
         <div class="tq-row success" style="display:none;">
                 <fieldset class="quote-fields">
-                    <legend>Esitmated Removal Cost</legend>
+                    <legend>Transportation Cost</legend>
                     <div class="field">
                         <label class="" for="distance">Distance (<?php echo $this->distance_unit; ?>s):</label>
                         <span class="sub-total" id="distance"></span>
