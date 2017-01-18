@@ -253,11 +253,11 @@ class TransitQuote_Premium_Public {
 		$existing_customer = self::get_customer_by_email($email);
 		if($existing_customer===false){
 			//save new customer as we have a new email address
-			$this->customer = self::save('tp_customers');
+			$this->customer = self::save('customers');
 		} else{
 			//save against an existing customer email
 			//we can pass id and it will not be overwritten as it is not in the post data
-			$this->customer = self::save('tp_customers',null, array('id'=>$existing_customer['id']));
+			$this->customer = self::save('customers',null, array('id'=>$existing_customer['id']));
 		};
 
 		//get from location from map address_0 field
@@ -265,7 +265,7 @@ class TransitQuote_Premium_Public {
 		$address_0_location_id = self::get_location_by_address($record_data);
 		if(empty($address_0_location_id)){
 			//no match, create new location
-			$this->location_0 = self::save('tp_locations',0);
+			$this->location_0 = self::save('locations',0);
 		} else {
 			//existing location
 			$this->location_0 = $this->cdb->get_row('locations', $address_0_location_id);
@@ -281,7 +281,7 @@ class TransitQuote_Premium_Public {
 		$address_1_location_id = self::get_location_by_address($record_data);
 		if(empty($address_1_location_id)){
 			//no match, create new location
-			$this->location_1 = self::save('tp_locations',1);
+			$this->location_1 = self::save('locations',1);
 		} else {
 			//existing location id passed in params
 			$this->location_1 = $this->cdb->get_row('locations', $address_1_location_id);
@@ -296,10 +296,10 @@ class TransitQuote_Premium_Public {
 
 		//To do: create a many to many address relationship with job with an order index
 		//save job, passing id values not included in post data
-		$this->job = self::save('tp_jobs',null, array('customer_id'=>$this->customer['id']));
+		$this->job = self::save('jobs',null, array('customer_id'=>$this->customer['id']));
 
 		//a job could potentially have multiple journeys so save job id against table
-		$this->journey = self::save('tp_journeys',null,array('job_id'=>$this->job['id'],
+		$this->journey = self::save('journeys',null,array('job_id'=>$this->job['id'],
 												'origin_location_id'=>$this->location_0['id'],
 												'dest_location_id'=>$this->location_1['id']));
 		
