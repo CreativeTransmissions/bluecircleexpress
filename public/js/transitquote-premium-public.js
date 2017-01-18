@@ -14,7 +14,7 @@
 		defaults = {
 			ajaxUrl: '',
 			customer: false,
-			debug: false,
+			debug: true,
 			quoteResult: 'quote',
 			timepickerSelector: 'collection_time',
 			datepickerSelector: 'collection_date'
@@ -32,11 +32,14 @@
 		Plugin.prototype = {
 			/* initialization code */
 			init: function () {	
+				console.log('TransitQuotePremium: init');
 				this.initRequestForms();				
 				if(!this.initData()){
+					console.log('initData: false');
 					return false;
 				};
 				if(!this.initUI()){
+					console.log('initUI: false');
 					return false
 				};
 
@@ -252,6 +255,7 @@
 
 			initDatePicker: function(){
 				var that = this;
+				console.log('initDatePicker');
 				$('#'+this.settings.datepickerSelector).datepicker({
 					dateFormat: 'dd / mm / yy',
 					altField:'#delivery_date',

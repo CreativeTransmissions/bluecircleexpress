@@ -85,7 +85,7 @@ class TransitQuote_Premium_Public {
 	private function get_rates(){
 	   	$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
-    	$rates = $this->cdb->get_rows('tp_rates');
+    	$rates = $this->cdb->get_rows('rates');
 		return $rates;
     }
 
@@ -261,14 +261,14 @@ class TransitQuote_Premium_Public {
 		};
 
 		//get from location from map address_0 field
-		$record_data = self::get_record_data('tp_locations', 0);
+		$record_data = self::get_record_data('locations', 0);
 		$address_0_location_id = self::get_location_by_address($record_data);
 		if(empty($address_0_location_id)){
 			//no match, create new location
 			$this->location_0 = self::save('tp_locations',0);
 		} else {
 			//existing location
-			$this->location_0 = $this->cdb->get_row('tp_locations', $address_0_location_id);
+			$this->location_0 = $this->cdb->get_row('locations', $address_0_location_id);
 		};
 
 		if(empty($this->location_0)){
@@ -276,7 +276,7 @@ class TransitQuote_Premium_Public {
 		};
 
 		//get from location from map address_1 field
-		$record_data = self::get_record_data('tp_locations', 1);
+		$record_data = self::get_record_data('locations', 1);
 		//search for a match lat lng address in db
 		$address_1_location_id = self::get_location_by_address($record_data);
 		if(empty($address_1_location_id)){
@@ -284,7 +284,7 @@ class TransitQuote_Premium_Public {
 			$this->location_1 = self::save('tp_locations',1);
 		} else {
 			//existing location id passed in params
-			$this->location_1 = $this->cdb->get_row('tp_locations', $address_1_location_id);
+			$this->location_1 = $this->cdb->get_row('locations', $address_1_location_id);
 		};
 
 		if(empty($this->location_1)){
@@ -461,7 +461,7 @@ class TransitQuote_Premium_Public {
     	};
 
 		if(!isset($this->customer)){
-			$this->customer = $this->cdb->get_row('tp_customers', $job['customer_id']);
+			$this->customer = $this->cdb->get_row('customers', $job['customer_id']);
 			if($this->customer===false){
 				self::debug(array('name'=>'Could not load customer',
 	                            'value'=>'job_id: '.$job['id']));
@@ -471,7 +471,7 @@ class TransitQuote_Premium_Public {
 
 
 		if(!isset($this->journey)){
-			$this->journey = $this->cdb->get_row('tp_journeys', $job['id'], 'job_id');
+			$this->journey = $this->cdb->get_row('journeys', $job['id'], 'job_id');
 			if($this->journey===false){
 				self::debug(array('name'=>'Could not load journey',
 	                            'value'=>'job_id: '.$job['id']));
@@ -480,7 +480,7 @@ class TransitQuote_Premium_Public {
 		$job['journey'] = $this->journey;
 
 		if(!isset($this->location_0)){
-			$this->location_0 = $this->cdb->get_row('tp_locations',$this->journey['origin_location_id']);
+			$this->location_0 = $this->cdb->get_row('locations',$this->journey['origin_location_id']);
 			if($this->location_0===false){
 				self::debug(array('name'=>'Could not load origin',
 	                            'value'=>'job_id: '.$job['id']));
@@ -489,7 +489,7 @@ class TransitQuote_Premium_Public {
 		$job['location_0'] = $this->location_0;
 
 		if(!isset($this->location_1)){
-			$this->location_1 = $this->cdb->get_row('tp_locations',$this->journey['dest_location_id']);
+			$this->location_1 = $this->cdb->get_row('locations',$this->journey['dest_location_id']);
 			if($this->location_1===false){
 				self::debug(array('name'=>'Could not load destination',
 	                            'value'=>'job_id: '.$job['id']));
@@ -499,7 +499,7 @@ class TransitQuote_Premium_Public {
 		$job['location_1'] = $this->location_1;		
 		if(!isset($this->quote)){
 			if(!empty($job['accepted_quote_id'])) {
-				$this->quote = $this->cdb->get_row('tp_quotes',$job['accepted_quote_id']);
+				$this->quote = $this->cdb->get_row('quotes',$job['accepted_quote_id']);
 				if($this->quote===false){
 					self::debug(array('name'=>'Could not load quote',
 		                            'value'=>'job_id: '.$job['id']));
@@ -584,7 +584,7 @@ class TransitQuote_Premium_Public {
 			return false;
 		};
 		//load customer by email
-		$customer = $this->cdb->get_row('tp_customers', $email, 'email');
+		$customer = $this->cdb->get_row('customers', $email, 'email');
 		return $customer;
 	}
 	public function get_customer_by_id($id){
@@ -593,7 +593,7 @@ class TransitQuote_Premium_Public {
 			return false;
 		};
 		//load customer by email
-		$customer = $this->cdb->get_row('tp_customers', $id, 'id');
+		$customer = $this->cdb->get_row('customers', $id, 'id');
 		return $customer;
 	}
 	public function get_customer_email(){

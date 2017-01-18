@@ -23,7 +23,7 @@
 	<input type="hidden" name="id" value=""/>
 	<input type="hidden" name="service_type_id" value="1"/>
 	<input type="hidden" name="action" value="save_record"/>
-	<input type="hidden" name="update" value="tp_rates"/>
+	<input type="hidden" name="update" value="rates"/>
 	<div class="inline-field">
 		<?php submit_button('Save Rates', 'primary', 'save_rate', true, array('class'=>'submit')); ?>
 	</div>
@@ -47,7 +47,7 @@
 			//$this->plugin->debug($rates_data);
 			echo $this->dbui->table_rows(array(
 						'data'=>$rates_data,
-						'table'=>'tp_rates',
+						'table'=>'rates',
 						'fields'=>array('id', 'distance','amount','unit','hour'),
 						'inputs'=>false,
 						'actions'=>array('Edit','Delete')
