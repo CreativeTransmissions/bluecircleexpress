@@ -604,6 +604,15 @@ class TransitQuote_Premium_Admin {
 		if(empty($table)){
 			return false;
 		};
+
+		//check if table has data
+		$no_rows = $this->cdb->get_count($table);
+		if($no_rows==0){
+			// if not data return empty message
+			return self::render_empty_table($table);
+		};
+
+		//get table data
 		switch ($table) {
 			case 'rates':
 				if(isset($params['query'])){
@@ -628,7 +637,6 @@ class TransitQuote_Premium_Admin {
 				};
 			break;
 			case 'customers':
-				$empty_colspan = 4;
 				$defaults = array(
 					'table'=>'customers',
 					'fields'=>array('id','last_name', 'first_name','email','phone'),
@@ -636,56 +644,66 @@ class TransitQuote_Premium_Admin {
 				);
 			break;
 			case 'jobs':
-				$empty_colspan = 6;
-				$from_date = $this->ajax->param(array('name'=>'from_date'));
-				$to_date = $this->ajax->param(array('name'=>'to_date'));
+					$from_date = $this->ajax->param(array('name'=>'from_date'));
+					$to_date = $this->ajax->param(array('name'=>'to_date'));
 
-				$dates = array('from_date'=>$from_date, 'to_date'=>$to_date);
-				//get data
-				//$filters = $this->plugin->get_job_filters();
-				$job_data = $this->get_jobs($filters, $dates);
-				$defaults = array(
-					'data'=>$job_data,
-					'fields'=>array(/*'move_type',*/
-									'created',
-									'c.last_name as last_name',
-									'lo.address as pick_up',
-									'ld.address as drop_off',									
-									'delivery_time'),
-					'joins'=>array( 
-							array('customers c','id','customer_id', '', 'left'),
-						),
-					'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime'),
-					'inputs'=>false,
-					'table'=>'jobs',
-					'actions'=>array('Delete'),
-					'tpl_row'=>'<tr class="expand"></tr>'
-					);
+					$dates = array('from_date'=>$from_date, 'to_date'=>$to_date);
+					//get data
+					//$filters = $this->plugin->get_job_filters();
+
+					$job_data = $this->get_jobs($filters, $dates);
+					$defaults = array(
+									'data'=>$job_data,
+									'fields'=>array(/*'move_type',*/
+													'created',
+													'c.last_name as last_name',
+													'lo.address as pick_up',
+													'ld.address as drop_off',									
+													'delivery_time'),
+									'joins'=>array( 
+											array('customers c','id','customer_id', '', 'left'),
+										),
+									'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime'),
+									'inputs'=>false,
+									'table'=>'jobs',
+									'actions'=>array('Delete'),
+									'tpl_row'=>'<tr class="expand"></tr>'
+								);
 		};
 
-		if(isset($job_data)){
-			$rows = $job_data;
+		if(is_array($defaults)){
+			$params = array_merge($defaults, $params);
 		} else {
-			if(is_array($defaults)){
-				$params = array_merge($defaults, $params);
-			} else {
-				$params = $defaults;
-			};
-			
-			$rows = $this->dbui->table_rows($params);
+			$params = $defaults;
 		};
 		
+		$rows = $this->dbui->table_rows($params);
+
 		if($rows===false){
 			$response = array('success'=>'false',
 								'msg'=>'could not run query',
 								'sql'=> $this->dbui->cdb->last_query);
 		};
 
-		if(empty($rows)){
-			$rows = '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no '.$table.' in the database yet.</td></tr>';
-		};
-
 		return $rows;
+	}
+
+	private function render_empty_table($table){
+		switch ($table) {
+			case 'jobs':
+				$empty_colspan = 6;
+				break;
+			case 'customers':
+				$empty_colspan = 4;
+				break;
+			case 'rates':
+				$empty_colspan = 6;
+				break;
+			default:
+				$empty_colspan = 999;
+				break;
+		}
+		return '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no '.$table.' in the database yet.</td></tr>';
 	}
 
 	public function save_record_callback(){
