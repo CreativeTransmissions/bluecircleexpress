@@ -13,7 +13,7 @@
 <div class="requestform">
 <div class="spinner-div"> </div>
 <!-- <form id="quote-form" class="calc-form quote-form tq-form" autocomplete="false" data-parsley-errors-messages-disabled> -->
-<form id="quote-form" class="request-calc-form" autocomplete="off" data-parsley-errors-messages-disabled>
+<form id="quote-form" class="request-calc-form tq-form" autocomplete="off" data-parsley-errors-messages-disabled>
     <?php include_once 'job-fields.php'; ?>
     <div class="tq-address-container">
         <fieldset class="map-ctr">

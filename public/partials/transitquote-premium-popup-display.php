@@ -1,7 +1,7 @@
 <div class="requestform"> 
     <div class="spinner-div"> </div>
     <div class="request-contact-form">  
-        <form id="quote-form" class="request-calc-form" autocomplete="off" data-parsley-errors-messages-disabled>
+        <form id="quote-form" class="request-calc-form tq-form" autocomplete="off" data-parsley-errors-messages-disabled>
             <!-- <h2>Request a Quote</h2> <div class="subtext">Want a quick quote for move. Fill this quick form</div> -->
             <div class="request-form"> 
                 <input type="hidden" name="service_type_id" value="2">

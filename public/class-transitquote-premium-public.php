@@ -709,11 +709,11 @@ class TransitQuote_Premium_Public {
 		$button_html ='';
     	$buttons = array();
     	foreach ($methods as $key => $payment_method) {
-    		$button_html = '<button id="pay_mentod_'.$payment_method['id'].'" class="form-submit-button form-submit-button-simple_black" type="submit" name="submit" value="pay_mentod_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
+    		$button_html = '<button id="pay_mentod_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_mentod_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
 			array_push($buttons, $button_html);
     	};
 
-    	$button_panel = '<div class="buttons">';
+    	$button_panel = '<div class="tq-payment-buttons">';
     	$button_panel .= implode('', $buttons);
     	$button_panel .= '</div>';
 

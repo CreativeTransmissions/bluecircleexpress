@@ -158,13 +158,12 @@ fieldset.map-ctr{
 	display: block;
 	clear: both;
 }
-.buttons {
+.tq-form .buttons {
 	clear: both;
-	padding-top: 2em;
 	text-align: center;
 }
 
-.buttons span {
+.tq-form .buttons span {
 	font-weight: bold;
 	padding: 2em;
 }
@@ -264,7 +263,7 @@ form.tq-form .ideal-check.checked.focus {
 .tq-form textarea,
 .tq-form input,
 .tq-form select {
-	padding: 0.5em !important;
+	padding: 0.5em;
 	border: 1px solid #cccccc;
 	width: 100%;
 	min-height: 25px;
@@ -289,15 +288,19 @@ form.tq-form .ideal-check.checked.focus {
 	color: #06a602 !important;
 	font-weight: bold;
 }
-.tq-button{
+.tq-form .tq-payment-buttons {
+	text-align: center;
+}
+.tq-form .tq-button, .tq-payment-buttons button.tq-button{
 	max-width: 300px;
 	background: rgba(6,166,2,1) !important;
 	color: #ffffff;
-	font-size: 20px !important;
 	text-transform: uppercase;
-	border-radius: 5px !important;
-	margin-top: 15px;
+	border-radius: 5px;
 	transition: background .3s;
+	margin: 1em;
+	padding: 1em 0.75em;
+    width: 7.5em;
 }
 .tq-button:hover{
 
