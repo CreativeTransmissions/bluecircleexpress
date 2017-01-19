@@ -222,9 +222,6 @@ form.tq-form .ideal-check.checked.focus {
 	background-position: -40px 0px;
 }
 /* New Style by AS */
-.tq-form{
-	margin-top: 25px;
-}
 .tq-row{
 	display: block;
 	width: 100%;
@@ -237,18 +234,20 @@ form.tq-form .ideal-check.checked.focus {
 .clear{
 	clear: both;
 }
-.tq-form{
+.requestform{
 	max-width: 800px;
 	position: relative;
 	z-index: 5;
 	background: #efefef;
-	padding: 1em 2.5em 0em 1.5em;
+	padding: 1em 2.5em 1em 1.5em;
 	margin:0 auto; 
 	border: 1px solid #cccccc;
 	border-bottom: 1px solid #efefef;
 	border-radius: 10px 10px 0 0;
-	
-	
+}
+.requestform #paypal {
+	text-align: center;
+    padding: 1em;
 }
 .tq-form label{
 	font-size: 16px;
@@ -274,7 +273,7 @@ form.tq-form .ideal-check.checked.focus {
 .tq-form textarea{
 	resize: vertical;
 }
-.tq-address-container{
+.tq-address-container {
 	background: #dddddd;
 	padding: 25px;
 }

@@ -86,9 +86,10 @@
     <input type="hidden" name="distance" value=""/>
     <input class="hours" type="hidden" name="time" value=""/>
     <input class="noticeCost" type="hidden" name="notice_cost" value=""/>
-    <!-- <input class="totalCost" type="hidden" name="total" value=""/> -->
+    <input class="totalCost" type="hidden" name="total" value=""/>
     <input class="basicCost" type="hidden" name="distance_cost" value=""/>
 
 </form>
+<div id="paypal" style="display: none;"></div>
     
 </div>

@@ -380,12 +380,14 @@
 				$.post(this.settings.ajaxUrl, data, function(response) {
 					if(response.success==='true'){
 						$('.failure, .progress, .spinner-div').hide();
-						if(response.data.success_message){
-							$('.success').html(response.data.success_message);
-						};
+						if(response.paypal_html){
+							$('.success').hide();
+							$('#paypal').html(response.paypal_html).show();
+						} else {
+							$('input[name="job_id"]').val(response.data.job_id);						
+							$('.success').show();
+						}
 
-						$('input[name="job_id"]').val(response.data.job_id);						
-						$('.success').show();
 						//$('#quote-form')[0].reset();
 					} else {
 						console.log(response);

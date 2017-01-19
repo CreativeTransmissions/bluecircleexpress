@@ -404,7 +404,7 @@ class TransitQuote_Premium_Public {
 		$paypal_config = array('cdb'=>$this->cdb,
 								'amount' => $this->quote['total'],
 								'business'=> self::get_setting('premium_paypal_options', 'business_email'),
-								'currency'=> self::get_currency(),
+								'currency'=> self::get_currency_code(),
 								'item_name'=> self::get_setting('premium_paypal_options', 'item_name', 'TransitQuote Payment'),
 								'item_number'=>$this->job['id'],
 								'transaction_id'=>$this->job['id'],
@@ -414,7 +414,7 @@ class TransitQuote_Premium_Public {
 
 		$this->paypal = new CT_PayPal($paypal_config);
 		$paypal_form = $this->paypal->get_paypal_form();
-		$paypal_html = '<h2>Please click below to make your payment and book this delivery</h2>'.
+		$paypal_html = '<h3>Please click below to make your payment and book this delivery</h3>'.
 							$paypal_form;
 
 		return array('success'=>'true',
@@ -423,7 +423,7 @@ class TransitQuote_Premium_Public {
 					 				'job_id'=>$this->job['id'],
 					 				'quote_id'=>$this->quote['id'],
 					 				'email'=>$this->customer['email']),
-					 'success_message'=>$paypal_html);
+					 'paypal_html'=>$paypal_html);
 
 	}
 
@@ -848,9 +848,28 @@ class TransitQuote_Premium_Public {
     public function get_customer_message(){
         return self::get_setting($this->tab_5_settings_key, 'customer_message', 'Thank you for your request.');
     }
+
     public function get_currency(){
-        return self::get_setting($this->tab_2_settings_key, 'currency', '$');
-    }	
+    	$currency = self::get_setting($this->tab_2_settings_key, 'currency');
+        return $currency;
+    }
+
+    public function get_currency_code(){
+    	$currency_symbol = self::get_setting($this->tab_2_settings_key, 'currency', '$');
+    	switch ($currency_symbol) {
+    		case '$':
+    			$currency = 'USD';
+    			break;
+    		case '£':
+    			$currency = 'GBP';
+    			break;
+    		default:
+    			$currency = 'USD';
+    			break;
+    	}
+        return $currency;
+    }
+
 	public function get_oldest_job_date(){
 		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
