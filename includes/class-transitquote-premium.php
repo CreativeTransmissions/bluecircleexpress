@@ -185,6 +185,11 @@ class TransitQuote_Premium {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/ct-utils/class-ct-ajax.php';
 		
+		/**
+		 * The class responsible for PayPal methods
+		 * for the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/tqp-paypal/class-ct-paypal.php';		
 
 		$this->loader = new TransitQuote_Premium_Loader();
 

@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ALL); ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
  *
@@ -238,8 +238,8 @@ class TransitQuote_Premium_Public {
 
 	/*** Front end ajax methods ***/
 	public function premium_save_job_callback(){		
-		$plugin = new TransitQuote_Premium();	
-		$this->cdb = $plugin->get_custom_db();
+		$this->plugin = new TransitQuote_Premium();	
+		$this->cdb = $this->plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 		
 		// save job request from customer facing form
@@ -247,8 +247,51 @@ class TransitQuote_Premium_Public {
 			$this->ajax->log_requests();
 		}
 
-		$submit_type = $this->ajax->param(array('name'=>'submit_type'));
-		
+		// get the submit type for the submitted qutoe form
+		$submit_type = $this->ajax->param(array('name'=>'submit_type', 'optional'=>true));
+
+		//get the job id in submitted form, unless it is a quote request submission
+		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
+		switch ($submit_type) {
+			case 'pay_method_1':
+				// On delivery
+				$response = self::request_payment_on_delivery($job_id);
+				break;
+			case 'pay_method_2':
+				// PayPal
+				$response = self::request_payment_paypal($job_id);
+				break;
+			case 'pay_method_3':
+				// Stripe
+				$response = self::request_payment_stripe($job_id);
+				break;				
+			default:
+				//get estimate
+				$response = self::get_quote();
+				break;
+		}
+
+		if($response === false){
+			$response = array('success'=>false, 
+								'msg'=>'Sorry, an error occured and we are unable to process this request.');
+		};
+
+		$this->ajax->respond($response);		
+	}
+
+	public function get_job_id(){
+		//return curernt job id
+		if(!isset($this->job)){
+			return false;
+		};
+
+		if(empty($this->job['id'])){
+			return false;
+		};		
+		return $this->job['id'];
+	}
+
+	public function get_quote(){
 		//get email for notification
 		$email = $this->ajax->param(array('name'=>'email'));
 
@@ -294,12 +337,13 @@ class TransitQuote_Premium_Public {
 			return false;
 		};
 
-		//$this->quote = self::save('quotes');
+		$this->quote = self::save('quotes');
 		//$this->quote_surcharge_ids = self::save_surcharges($this->quote['id']);
 
 		//To do: create a many to many address relationship with job with an order index
 		//save job, passing id values not included in post data
-		$this->job = self::save('jobs',null, array('customer_id'=>$this->customer['id']));
+		$this->job = self::save('jobs',null, array('customer_id'=>$this->customer['id'],
+													'accepted_quote_id'=>$this->quote['id']));
 
 		//a job could potentially have multiple journeys so save job id against table
 		$this->journey = self::save('journeys',null,array('job_id'=>$this->job['id'],
@@ -314,14 +358,87 @@ class TransitQuote_Premium_Public {
 		$email = self::email_dispatch('New Removal Request: '.$this->customer['first_name']." ".$this->customer['last_name']);
 		$customer_email = self::email_customer();
 
-		$response = array('success'=>'true',
+		return array('success'=>'true',
 							 'msg'=>$message,
 							 'data'=>array('customer_id'=>$this->customer['id'],
 							 				'job_id'=>$this->job['id']));
 		
 
-		$this->ajax->respond($response);
 	}
+
+	/*
+		Payment Methods After Recieving Quote 
+	*/
+	private function request_payment_on_delivery($job_id = null){
+		if(empty($job_id)){
+			return array('success'=>'false',
+							 'msg'=>'No job_id for payment on delivery');
+		};
+
+		if(!self::update_payment_status($job_id, 1)){
+			return array('success'=>'false',
+							 'msg'=>'Unable to update job '.$job_id.' to payment on delivery');
+		};
+
+		return array('success'=>'true',
+						'success_message'=>'<h2>Thank You.</h2><p>Your job has now been booked with payment due on delivery. Your reference number is: '.$job_id.'</p>');
+
+	}
+
+	private function request_payment_paypal($job_id = null){
+		if(empty($job_id)){
+			return array('success'=>'false',
+							 'msg'=>'No job_id for payment by PayPal');
+		};
+
+		if(!self::update_payment_status($job_id, 2)){
+			return array('success'=>'false',
+							 'msg'=>'Unable to update job '.$job_id.' to payment by paypal');
+		};
+
+		//get job from job_id
+		$this->job = self::get_job($job_id);
+		// get related job data
+		$this->job = self::get_job_details($this->job);
+
+		$paypal_config = array('cdb'=>$this->cdb,
+								'amount' => $this->quote['total'],
+								'business'=> self::get_setting('premium_paypal_options', 'business_email'),
+								'currency'=> self::get_currency(),
+								'item_name'=> self::get_setting('premium_paypal_options', 'item_name', 'TransitQuote Payment'),
+								'item_number'=>$this->job['id'],
+								'transaction_id'=>$this->job['id'],
+								'sandbox'=> self::get_setting('premium_paypal_options', 'sandbox')
+						);
+
+
+		$this->paypal = new CT_PayPal($paypal_config);
+		$paypal_form = $this->paypal->get_paypal_form();
+		$paypal_html = '<h2>Please click below to make your payment and book this delivery</h2>'.
+							$paypal_form;
+
+		return array('success'=>'true',
+					 'msg'=>'Job booked successfully',
+					 'data'=>array('customer_id'=>$this->customer['id'],
+					 				'job_id'=>$this->job['id'],
+					 				'quote_id'=>$this->quote['id'],
+					 				'email'=>$this->customer['email']),
+					 'success_message'=>$paypal_html);
+
+	}
+
+	private function request_payment_stripe($job_id = null){
+		if(empty($job_id)){
+			return array('success'=>'false',
+							 'msg'=>'No job_id for payment by stripe');
+		};
+
+		if(!self::update_payment_status($job_id, 3)){
+			return array('success'=>'false',
+							 'msg'=>'Unable to update job '.$job_id.' to payment by stripe');
+		};
+	}
+
 	public function get_record_data($table, $idx = null){
 		//get params for records data from front end
 		//idx is a 0 based index for where more than one rec is passed
@@ -513,6 +630,7 @@ class TransitQuote_Premium_Public {
 		$job['job_date'] = self::get_job_date($job);
 		return $job;
 	}
+
 	public function get_job_date($job = null){
 		//get date and time for job in separate  array elements
 		if(empty($job)){
@@ -712,7 +830,7 @@ class TransitQuote_Premium_Public {
 		$button_html ='';
     	$buttons = array();
     	foreach ($methods as $key => $payment_method) {
-    		$button_html = '<button id="pay_mentod_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_mentod_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
+    		$button_html = '<button id="pay_method_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_method_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
 			array_push($buttons, $button_html);
     	};
 
@@ -1020,16 +1138,21 @@ class TransitQuote_Premium_Public {
 	 */	
 	private function update_payment_status($job_id, $payment_status_type_id){
 		if(empty($job_id)){
+			self::log('update_payment_status: No job_id');
 			return false;
 		};
 
 		if(empty($payment_status_type_id)){
+			self::log('update_payment_status: No payment_status_type_id');
 			return false;
 		};
 
-		$job = self::get_job($job_id);
+		// update the payment status to the selected type in the db and update the job object
+		$this->job = $this->cdb->update_field('jobs','payment_status_type_id', $payment_status_type_id, $job_id);
+		if($this->job===false){
+			return false;
+		};
+		return true;
 
-		$job['payment_status_type_id'] = $payment_status_type_id;
-		return self::save_record('jobs', $job);
 	}	
 }

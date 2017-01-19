@@ -557,9 +557,9 @@ private function config_jobs(){
       'default' => '1',
       'format' => '%d'
     ),
-    'payment_status_id' => 
+    'payment_status_type_id' => 
     array (
-      'name' => 'payment_status_id',
+      'name' => 'payment_status_type_id',
       'type' => 'int',
       'null' => 'null',
       'auto' => '',

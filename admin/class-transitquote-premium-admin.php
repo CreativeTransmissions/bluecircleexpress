@@ -521,7 +521,7 @@ class TransitQuote_Premium_Admin {
 						jobs.accepted_quote_id,
 						jobs.vehicle_type_id,
 						jobs.payment_type_id,
-						jobs.payment_status_id,
+						jobs.payment_status_type_id,
 						jobs.created,
 						jobs.modified,
 						trim(concat(c.first_name,' ',c.last_name)) as last_name,
@@ -547,7 +547,7 @@ class TransitQuote_Premium_Admin {
 						left join wp_premium_tp_payment_types pt 
 							on jobs.payment_type_id = pt.id
 						left join wp_premium_tp_payment_status_types pst 
-							on jobs.payment_status_id = pst.id 
+							on jobs.payment_status_type_id = pst.id 
 			".$filter_sql." 
 			order by jobs.id desc;";
 
