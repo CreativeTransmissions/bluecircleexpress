@@ -12,7 +12,6 @@
 <div id="feedback"></div>
 <div class="requestform">
 <div class="spinner-div"> </div>
-<!-- <form id="quote-form" class="calc-form quote-form tq-form" autocomplete="false" data-parsley-errors-messages-disabled> -->
 <form id="quote-form" class="request-calc-form tq-form" autocomplete="off" data-parsley-errors-messages-disabled>
     <?php include_once 'job-fields.php'; ?>
     <div class="tq-address-container">
@@ -55,16 +54,35 @@
                 <input  tabindex="12" id="form-submit" type="submit" value="Get Estimate" class="tq-button">
             </div>
         </div>
-<!--         <div class="tq-row progress" style="display:none;">
-            <p>Please wait a moment...</p>
-        </div>
-        <div class="tq-row success" style="display:none;">
-            <h2>Thank You</h2>
-            <p><?php echo self::get_success_message(); ?></p>
-        </div> -->
-        
-        <div class="clear"></div>
     </div>
+    <div class="tq-row success" style="display:none;">
+            <fieldset class="quote-fields">
+                <legend>Transportation Cost</legend>
+                <div class="field">
+                    <label class="" for="distance">Distance (<?php echo $this->distance_unit; ?>s):</label>
+                    <span class="sub-total" id="distance"></span>
+                    
+                </div>
+                <div class="field">
+                    <label class="" for="hours">Estimated Travel Time:</label>
+                    <span class="sub-total" id="hours"></span>
+                </div>
+                <div class="field notice-field">
+                    <label class="" for="notice">Short Notice Cost:</label>
+                    <span class="sub-total"><?php echo $this->currency; ?></span>
+                    <span class="sub-total noticeCost"></span>
+                    
+                </div>
+                <div class="field">
+                    <label class="" for="totalCost"><b>Estimated</b> Cost:</label>
+                    <span class="sub-total"><?php echo $this->currency; ?></span>
+                    <span class="sub-total quote" id="totalCost"></span>
+                </div>      
+            </fieldset>
+    </div>
+    <?php include 'form-messages.php';?>
+            
+    <div class="clear"></div>    
     <input type="hidden" name="distance" value=""/>
     <input class="hours" type="hidden" name="time" value=""/>
     <input class="noticeCost" type="hidden" name="notice_cost" value=""/>
@@ -72,32 +90,5 @@
     <input class="basicCost" type="hidden" name="distance_cost" value=""/>
 
 </form>
-    <div class="tq-address-container">
-        <div class="tq-row success" style="display:none;">
-                <fieldset class="quote-fields">
-                    <legend>Transportation Cost</legend>
-                    <div class="field">
-                        <label class="" for="distance">Distance (<?php echo $this->distance_unit; ?>s):</label>
-                        <span class="sub-total" id="distance"></span>
-                        
-                    </div>
-                    <div class="field">
-                        <label class="" for="hours">Estimated Travel Time:</label>
-                        <span class="sub-total" id="hours"></span>
-                    </div>
-                    <div class="field notice-field">
-                        <label class="" for="notice">Short Notice Cost:</label>
-                        <span class="sub-total"><?php echo $this->currency; ?></span>
-                        <span class="sub-total noticeCost"></span>
-                        
-                    </div>
-                    <div class="field">
-                        <label class="" for="totalCost"><b>Estimated</b> Cost:</label>
-                        <span class="sub-total"><?php echo $this->currency; ?></span>
-                        <span class="sub-total quote" id="totalCost"></span>
-                    </div>      
-                </fieldset>
-        </div>
-        <?php include 'form-messages.php';?>
-    </div>
+    
 </div>

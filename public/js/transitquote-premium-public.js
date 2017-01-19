@@ -317,10 +317,17 @@
 
 				$(this.element).on('click','input:submit', function(e){
 					e.preventDefault();
+					var btn = e.target;
 					if($(that.element).parsley().validate()){
-						that.submitForm()
+						that.submitForm(btn)
 					};
 					
+				});
+
+				$(this.element).on('click','button:submit', function(e){
+					e.preventDefault();
+					var btn = e.target;
+					that.submitForm(btn)					
 				});
 
 				$.listen('parsley:field:error', function(parsleyField) {
@@ -336,13 +343,14 @@
 			
 			},
 
-			submitForm: function(invalid, idealForm, e){
+			submitForm: function(btn){
+				var that = this;
+				var submitType = $(btn).val();
+
 				$('.spinner-div').css({
 				    height: $('.spinner-div').parent().height(), 
 				    width: $('.spinner-div').parent().width()
 				});
-				
-				var that = this;
 
 				//check for total cost element
 				var totalEl = $('input[name="total"]');
@@ -354,12 +362,9 @@
 					};
 				};
 
-				if(invalid){
-					$(this.element).tq-form('focusFirstInvalid');
-					return false;
-				};
+			
 				$('.progress, .success, failure').hide();
-				this.updateProgressMessage('Sending your move request to our staff, please wait a moment...');
+				this.updateProgressMessage('Sending your request to our staff, please wait a moment...');
 				$('.buttons').hide();
 				$('.spinner-div').css({
 					    height: $('#quote-form').height(), 
@@ -367,21 +372,22 @@
 				});	
 				$('.spinner-div').show();
 
+				//serialize form
 				var data = $(this.element).serialize();
+					//add button value to determine if request is for a quote or payment
+					data += '&submitType='+submitType;
+
 				$.post(this.settings.ajaxUrl, data, function(response) {
-					console.log(response)
-					console.log(response.success)
 					if(response.success==='true'){
 						$('.failure, .progress, .spinner-div').hide();
 						if(response.data.success_message){
 							$('.success').html(response.data.success_message);
 						};
 						$('.success').show();
-						$('#quote-form')[0].reset();
-						$('#quote-form').hide();
-
-
+						//$('#quote-form')[0].reset();
 					} else {
+						console.log(response)
+						console.log(response.success)
 						$('.failure, .progress, .spinner-div').hide();
 						$('.failure .msg').html(response);
 						$('.failure, .buttons').show();

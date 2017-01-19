@@ -38,7 +38,6 @@
 
             </div>
             <?php include 'moving-map.php'; ?>
-        </form>
             <div class="tq-address-container">
                 <div class="tq-row success" style="display:none;">
                         <fieldset class="quote-fields">
@@ -67,6 +66,7 @@
                 </div>
                 <?php include 'form-messages.php';?>
             </div>
+        </form>            
     </div>
 </div>
 

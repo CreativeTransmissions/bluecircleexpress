@@ -246,6 +246,9 @@ class TransitQuote_Premium_Public {
 		if($this->log_requests == true){
 			$this->ajax->log_requests();
 		}
+
+		$submit_type = $this->ajax->param(array('name'=>'submit_type'));
+		
 		//get email for notification
 		$email = $this->ajax->param(array('name'=>'email'));
 
