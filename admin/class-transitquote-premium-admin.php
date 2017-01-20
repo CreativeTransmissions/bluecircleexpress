@@ -365,7 +365,7 @@ class TransitQuote_Premium_Admin {
 	}
 
 	function business_email_callback(){
-		$value = $this->plugin->get_setting('premium_paypal_options', 'business_email');
+		$value = $this->plugin->get_setting($this->tab_6_settings_key, 'business_email');
 		echo '<input class="wide" type="text" name="'.$this->tab_6_settings_key.'[business_email]" value="'.$value.'"/>';
 		echo "<p>This is the email address that you use to login to PayPal and accept payments.</p>";
 	}

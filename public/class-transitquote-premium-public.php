@@ -57,9 +57,35 @@ class TransitQuote_Premium_Public {
 		$this->plugin_slug = $plugin_slug;
 		$this->version = $version;
 		$this->debug = true;
-		$this->log_requests = true;		
+		$this->log_requests = true;
 	}
 
+	public function check_payment_config($payment_type_id = null){
+		// Check we have all required paypal config values
+		if(empty($payment_type_id)){
+			self::debug('check_payment_config: no payment_type_id');
+			return false;
+		};
+
+		switch ($payment_type_id) {
+			case 1: // payment on delivery
+				break;
+			case 2: // payment by paypal
+				$this->business_email = self::get_setting('premium_paypal_options', 'business_email');
+				if(empty($this->business_email)){
+					self::debug('no business_email set');
+					return false;
+				};
+
+				$this->currency_code = self::get_currency_code();
+				if(empty($this->currency_code)){
+					self::debug('no currency_code set');
+					return false;
+				};
+				break;
+		};
+		return true;
+	}
 	public function debug($error){
 		if($this->debug==true){		
 			$plugin = new TransitQuote_Premium();	
@@ -135,6 +161,7 @@ class TransitQuote_Premium_Public {
 	    }
 		$this->currency = self::get_currency();
 		$this->distance_unit = self::get_distance_unit();
+
 		if($layout==1){ //Inline Map public
 			$this->view = 'partials/transitquote-premium-inline-display.php';
 		}else{ //business_qoute
@@ -408,9 +435,8 @@ class TransitQuote_Premium_Public {
 								'item_name'=> self::get_setting('premium_paypal_options', 'item_name', 'TransitQuote Payment'),
 								'item_number'=>$this->job['id'],
 								'transaction_id'=>$this->job['id'],
-								'sandbox'=> self::get_setting('premium_paypal_options', 'sandbox')
+								'sandbox'=> self::get_setting('premium_paypal_options', 'sandbox', 1)
 						);
-
 
 		$this->paypal = new CT_PayPal($paypal_config);
 		$paypal_form = $this->paypal->get_paypal_form();
@@ -830,8 +856,10 @@ class TransitQuote_Premium_Public {
 		$button_html ='';
     	$buttons = array();
     	foreach ($methods as $key => $payment_method) {
-    		$button_html = '<button id="pay_method_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_method_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
-			array_push($buttons, $button_html);
+    		if(self::check_payment_config($payment_method['id'])){
+	    		$button_html = '<button id="pay_method_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_method_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
+				array_push($buttons, $button_html);
+			};
     	};
 
     	$button_panel = '<div class="tq-payment-buttons">';
