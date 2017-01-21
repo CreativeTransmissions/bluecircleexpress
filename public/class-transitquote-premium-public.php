@@ -67,13 +67,16 @@ class TransitQuote_Premium_Public {
 			return false;
 		};
 
+		self::load_settings();
+		
 		switch ($payment_type_id) {
 			case 1: // payment on delivery
 				break;
 			case 2: // payment by paypal
-				$this->business_email = self::get_setting('premium_paypal_options', 'business_email');
+				$this->business_email = self::get_setting($this->tab_6_settings_key, 'business_email');
 				if(empty($this->business_email)){
 					self::debug('no business_email set');
+					print_r($this->{$this->tab_6_settings_key});
 					return false;
 				};
 
@@ -134,9 +137,9 @@ class TransitQuote_Premium_Public {
 		return $data;
     }
 	public function init_plugin(){
-		// Load plugin text domain	
-		// $this->cdb = self::get_custom_db();
-		// $this->ajax = new TransitQuotePro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));		
+		$plugin = new TransitQuote_Premium();
+		$this->cdb = $plugin->get_custom_db();
+		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));	
 		self::load_settings();
 	}
 	/**
@@ -147,31 +150,101 @@ class TransitQuote_Premium_Public {
 	public function display_TransitQuote_Premium($atts) {
 		global $add_my_script_flag;
 		$add_my_script_flag = true;
-		// added layout option if given and inline then form will  be inline map else admin setting
-		$attributes = shortcode_atts( array(
-	        'layout' => '',
-	    ), $atts );
-		
-	    if ($attributes['layout'] == 'inline'){
-	    	$layout = 1;
-	    }elseif($attributes['layout'] == 'popup'){
-	    	$layout = 2;
-	    }else{
-	    	$layout = $this->currency = self::get_layout();
-	    }
-		$this->currency = self::get_currency();
-		$this->distance_unit = self::get_distance_unit();
 
-		if($layout==1){ //Inline Map public
-			$this->view = 'partials/transitquote-premium-inline-display.php';
-		}else{ //business_qoute
-			$this->view = 'partials/transitquote-premium-popup-display.php';
-		}		
+		$plugin = new TransitQuote_Premium();
+		$this->cdb = $plugin->get_custom_db();
+		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));	
+
+		// added layout option if given and inline then form will  be inline map else admin setting
+
+		//get paths for includes
+		self::get_paths_for_includes();
+
+		//get action from form or querystring
+		$this->action = $this->ajax->param(array('name'=>'action', 'optional'=>true));
+
+		// Change view if returning from paypal
+		echo 'Action: '.$this->action;
+		echo 'Payment config: '.self::check_payment_config(2);
+		if(($this->action=='paypal') && (self::check_payment_config(2))){
+			// only perform paypal actions when we have the options set
+			if(!self::process_paypal_request()){
+				self::log('Unable to process PayPal request');
+				return false;
+			};
+		} else {
+			// display the plugin form
+			$attributes = shortcode_atts( array(
+		        'layout' => '',
+		    ), $atts );
+			
+		    if ($attributes['layout'] == 'inline'){
+		    	$layout = 1;
+		    }elseif($attributes['layout'] == 'popup'){
+		    	$layout = 2;
+		    }else{
+		    	$layout = $this->currency = self::get_layout();
+		    }
+			$this->currency = self::get_currency();
+			$this->distance_unit = self::get_distance_unit();
+
+			if($layout==1){ //Inline Map public
+				$this->view = 'partials/transitquote-premium-inline-display.php';
+			}else{ //business_qoute
+				$this->view = 'partials/transitquote-premium-popup-display.php';
+			};
+		};
+
 		ob_start();
 	   	include $this->view;
 	   	return ob_get_clean();
 	}	
 
+	function process_paypal_request(){
+		// page is being requested after paypal redirects customer back to the website
+		$this->paypal = new CT_PayPal(array('cdb'=>$this->cdb,
+											'sandbox'=>self::get_setting('premium_paypal_options', 'sandbox', 1)));
+		$this->payment_status_type_id = $this->paypal->process_paypal_return();
+		$this->job_id = $this->paypal->get_transaction_id();
+		if(!self::update_payment_status($this->job_id, $this->payment_status_type_id)){
+			self::debug('could not update payment_status');
+			return false;
+		};
+
+		$this->job = self::get_job($this->job_id);
+		if($this->job===false){
+			$this->ajax->log_error(array('name'=>'Could not load job to update',
+                'value'=>'job_id: '.$job['id']));
+            return false;				
+		};	
+
+		switch ($this->payment_status_type_id) {
+			case 1:				
+			case 2:
+				self::get_job_details();
+				$payment_status = $this->paypal->get_payment_status($this->job);
+				self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status);
+				$this->view = $this->paypal_partials_dir.'payment_success.php';
+				break;
+			case 3:
+				if($this->job===false){
+					$this->view = 'views/paypal_invalid_job.php';
+				} else {
+					$this->view = $this->paypal_partials_dir.'payment_failure.php';	
+					self::get_job_details();
+					$payment_status = $this->paypal->get_payment_status($this->job);
+					self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status);
+				}
+				break;
+			case 4:
+				self::get_job_details();
+				$payment_status = $this->paypal->get_payment_status($this->job);
+				self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status);
+				$this->view = $this->paypal_partials_dir.'payment_pending.php';
+			break;
+		};
+		return true;
+	}
 	public function enqueue_styles() {
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -261,10 +334,14 @@ class TransitQuote_Premium_Public {
  		
 	}
 
-
+	function get_paths_for_includes(){
+		$file = dirname(dirname(__FILE__)) . '/transitquote-premium.php';
+		$this->plugin_root_dir = plugin_dir_path($file);
+		$this->paypal_partials_dir = $this->plugin_root_dir.'includes/tqp-paypal/partials/';
+	}
 
 	/*** Front end ajax methods ***/
-	public function premium_save_job_callback(){		
+	public function premium_save_job_callback(){
 		$this->plugin = new TransitQuote_Premium();	
 		$this->cdb = $this->plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
@@ -304,6 +381,10 @@ class TransitQuote_Premium_Public {
 		};
 
 		$this->ajax->respond($response);		
+	}
+
+	public function premium_ipn_callback(){
+		// handles incoming ipn messages from paypal
 	}
 
 	public function get_job_id(){
@@ -418,6 +499,8 @@ class TransitQuote_Premium_Public {
 							 'msg'=>'No job_id for payment by PayPal');
 		};
 
+		$paypal_return_url = $this->ajax->param(array('name'=>'return_url'));
+
 		if(!self::update_payment_status($job_id, 2)){
 			return array('success'=>'false',
 							 'msg'=>'Unable to update job '.$job_id.' to payment by paypal');
@@ -435,9 +518,11 @@ class TransitQuote_Premium_Public {
 								'item_name'=> self::get_setting('premium_paypal_options', 'item_name', 'TransitQuote Payment'),
 								'item_number'=>$this->job['id'],
 								'transaction_id'=>$this->job['id'],
-								'sandbox'=> self::get_setting('premium_paypal_options', 'sandbox', 1)
+								'sandbox'=> self::get_setting('premium_paypal_options', 'sandbox', 1),
+								'return'=> $paypal_return_url
 						);
 
+		//print_r($paypal_config);
 		$this->paypal = new CT_PayPal($paypal_config);
 		$paypal_form = $this->paypal->get_paypal_form();
 		$paypal_html = '<h3>Please click below to make your payment and book this delivery</h3>'.
@@ -869,6 +954,18 @@ class TransitQuote_Premium_Public {
     	return $button_panel;
 
     }
+
+ 	private function get_return(){
+        // get return address, note this only works when included not when called via ajax
+        $url = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        if(strpos($url, '?')>-1){
+        	$glue = '&';
+        } else {
+        	$glue = '?';
+        };
+        return 'http://'.$url.$glue.'action=paypal';
+    }
+
     public function get_success_message(){
         return self::get_setting($this->tab_2_settings_key, 'success_message', 
         						'Thank you for your enquiry, we accept credit card payments online via PayPal (no login required) or on delivery.');

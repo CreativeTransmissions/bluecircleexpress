@@ -253,6 +253,9 @@ class TransitQuote_Premium {
 		$this->loader->add_action( 'wp_ajax_premium_save_job', $plugin_public, 'premium_save_job_callback');	
 		$this->loader->add_action( 'wp_ajax_nopriv_premium_save_job', $plugin_public, 'premium_save_job_callback');	
 
+		$this->loader->add_action( 'wp_ajax_premium_ipn', $plugin_public, 'premium_ipn_callback');	
+		$this->loader->add_action( 'wp_ajax_nopriv_premium_ipn', $plugin_public, 'premium_ipn_callback');	
+
 	}
 
 	/**
