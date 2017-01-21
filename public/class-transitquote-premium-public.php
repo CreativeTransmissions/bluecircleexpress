@@ -164,8 +164,6 @@ class TransitQuote_Premium_Public {
 		$this->action = $this->ajax->param(array('name'=>'action', 'optional'=>true));
 
 		// Change view if returning from paypal
-		echo 'Action: '.$this->action;
-		echo 'Payment config: '.self::check_payment_config(2);
 		if(($this->action=='paypal') && (self::check_payment_config(2))){
 			// only perform paypal actions when we have the options set
 			if(!self::process_paypal_request()){
@@ -218,33 +216,83 @@ class TransitQuote_Premium_Public {
             return false;				
 		};	
 
-		switch ($this->payment_status_type_id) {
-			case 1:				
-			case 2:
-				self::get_job_details();
-				$payment_status = $this->paypal->get_payment_status($this->job);
-				self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status);
-				$this->view = $this->paypal_partials_dir.'payment_success.php';
-				break;
-			case 3:
-				if($this->job===false){
-					$this->view = 'views/paypal_invalid_job.php';
-				} else {
-					$this->view = $this->paypal_partials_dir.'payment_failure.php';	
-					self::get_job_details();
-					$payment_status = $this->paypal->get_payment_status($this->job);
-					self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status);
-				}
-				break;
-			case 4:
-				self::get_job_details();
-				$payment_status = $this->paypal->get_payment_status($this->job);
-				self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status);
-				$this->view = $this->paypal_partials_dir.'payment_pending.php';
-			break;
-		};
+		self::get_job_details();
+		$payment_status = $this->paypal->get_payment_status($this->job);
+
+		self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status);
+
+		$this->view = $this->paypal_partials_dir.'payment_result.php';
 		return true;
 	}
+
+	private function check_payment_status_type_id($payment_status_type_id){
+		if(empty($payment_status_type_id)){
+			$payment_status_type_id = $this->payment_status_type_id;
+		};
+		if(empty($payment_status_type_id)){
+			return false;
+		};
+		return $payment_status_type_id;
+	}
+
+	private function get_result_class($payment_status_type_id = null){
+		$payment_status_type_id = self::check_payment_status_type_id($payment_status_type_id);
+
+		switch ($payment_status_type_id) {
+			case 2:
+				$result_class = 'success';
+				break;
+			case 3:
+				$result_class = 'failed';
+				break;
+			case 4:
+				$result_class = 'pending';
+				break;
+			default:
+				$result_class = 'error';
+				break;
+		};
+		return $result_class;
+	}
+
+	private function get_result_title($payment_status_type_id = null){
+		$payment_status_type_id = self::check_payment_status_type_id($payment_status_type_id);
+		switch ($payment_status_type_id) {
+			case 2:
+				$result_title = 'Thank You. Your Payment Has Been Recieved Successfully.';
+				break;
+			case 3:
+				$result_title = 'Sorry, there was a problem processing your payment.';
+				break;
+			case 4:
+				$result_title = 'Thank You. PayPal is Processing Your Payment .';
+				break;
+			default:
+				$result_title = 'Sorry, there was a problem processing your payment.';
+				break;
+		};
+		return $result_title;
+	}
+
+	private function get_result_message($payment_status_type_id = null){
+		$payment_status_type_id = self::check_payment_status_type_id($payment_status_type_id);
+		switch ($payment_status_type_id) {
+			case 2:
+				$result_message = 'Your job has now been booked.';
+				break;
+			case 3:
+				$result_message = 'Please check your PayPal account for more information.';
+				break;
+			case 4:
+				$result_message = 'Your job will be booked as soon as PayPal notifies us of the completed payment.';
+				break;
+			default:
+				$result_message = 'Please contact support for assistance.';
+				break;
+		};
+		return $result_message;
+	}
+
 	public function enqueue_styles() {
 		/**
 		 * This function is provided for demonstration purposes only.
