@@ -441,7 +441,34 @@ class TransitQuote_Premium_Public {
 	}
 
 	public function premium_ipn_callback(){
-		// handles incoming ipn messages from paypal
+		//get job id from paypal ipn message
+		$this->job_id = $this->paypal->get_transaction_id();
+		if(empty($this->job_id)){
+			$this->ajax->log_error(array('name'=>'Paypal return error','value'=>'No job id returned from PayPal'));
+			return false;
+		};
+		//get payment status from paypal ipn message
+		$this->payment_status_type_id = $this->paypal->ipn();
+		if($this->payment_status_type_id===false){
+			$this->ajax->log_error(array('name'=>'Could not get payment status from ipn',
+                            			'value'=>'job_id: '.$job['id'].' payment_status_type_id: '.$this->payment_status_type_id));
+			return false;
+		};
+
+		//update job with new status
+		if(!self::update_payment_status($this->job_id, $this->payment_status_type_id)){
+			$this->ajax->log_error(array('name'=>'Could not update payment status',
+				                            'value'=>'job_id: '.$job['id'].' payment_status_type_id: '.$this->payment_status_type_id));	
+
+			return false;
+		};
+		$this->job = self::get_job($this->job_id);
+		
+		//get text payment status message
+		$payment_status = $this->paypal->get_payment_status($this->job);
+
+		self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status);
+
 	}
 
 	public function get_job_id(){
@@ -531,37 +558,6 @@ class TransitQuote_Premium_Public {
 
 	}
 
-	public function ipn(){
-		//get job id from paypal ipn message
-		$this->job_id = $this->paypal->get_transaction_id();
-		if(empty($this->job_id)){
-			$this->ajax->log_error(array('name'=>'Paypal return error','value'=>'No job id returned from PayPal'));
-			return false;
-		};
-		//get payment status from paypal ipn message
-		$this->payment_status_type_id = $this->paypal->ipn();
-		if($this->payment_status_type_id===false){
-			$this->ajax->log_error(array('name'=>'Could not get payment status from ipn',
-                            			'value'=>'job_id: '.$job['id'].' payment_status_type_id: '.$this->payment_status_type_id));
-			return false;
-		};
-
-		//update job with new status
-		if(!self::update_payment_status($this->job_id, $this->payment_status_type_id)){
-			$this->ajax->log_error(array('name'=>'Could not update payment status',
-				                            'value'=>'job_id: '.$job['id'].' payment_status_type_id: '.$this->payment_status_type_id));	
-
-			return false;
-		};
-		$this->job = self::get_job($this->job_id);
-		
-		//get text payment status message
-		$payment_status = $this->paypal->get_payment_status($this->job);
-
-		self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status);
-
-	}
-
 	/*
 		Payment Methods After Recieving Quote 
 	*/
@@ -571,6 +567,12 @@ class TransitQuote_Premium_Public {
 							 'msg'=>'No job_id for payment on delivery');
 		};
 
+		if(!self::update_payment_type_id($job_id, 1)){
+			self::debug('could not update payment_type');
+			return false;
+		};
+
+		//set payment status to 1 = Awaiting Payment
 		if(!self::update_payment_status($job_id, 1)){
 			return array('success'=>'false',
 							 'msg'=>'Unable to update job '.$job_id.' to payment on delivery');
@@ -587,9 +589,15 @@ class TransitQuote_Premium_Public {
 							 'msg'=>'No job_id for payment by PayPal');
 		};
 
+		if(!self::update_payment_type_id($job_id, 2)){
+			self::debug('could not update payment_type');
+			return false;
+		};
+
 		$paypal_return_url = $this->ajax->param(array('name'=>'return_url'));
 
-		if(!self::update_payment_status($job_id, 2)){
+		//set payment status to 1 = Awaiting Payment
+		if(!self::update_payment_status($job_id, 1)){
 			return array('success'=>'false',
 							 'msg'=>'Unable to update job '.$job_id.' to payment by paypal');
 		};
@@ -632,7 +640,13 @@ class TransitQuote_Premium_Public {
 							 'msg'=>'No job_id for payment by stripe');
 		};
 
-		if(!self::update_payment_status($job_id, 3)){
+		if(!self::update_payment_type_id($job_id, 3)){
+			self::debug('could not update payment_type');
+			return false;
+		};
+
+		//set payment status to 1 = Awaiting Payment
+		if(!self::update_payment_status($job_id, 1)){
 			return array('success'=>'false',
 							 'msg'=>'Unable to update job '.$job_id.' to payment by stripe');
 		};
@@ -1381,6 +1395,31 @@ class TransitQuote_Premium_Public {
 
 		// update the payment status to the selected type in the db and update the job object
 		$this->job = $this->cdb->update_field('jobs','payment_status_type_id', $payment_status_type_id, $job_id);
+		if($this->job===false){
+			return false;
+		};
+		return true;
+
+	}
+
+	/**
+	 * Update Payment Type Column in jobs 
+	 *	 
+	 * @since    1.0.0
+	 */	
+	private function update_payment_type_id($job_id, $payment_type_id){
+		if(empty($job_id)){
+			self::log('update_payment_type_id: No job_id');
+			return false;
+		};
+
+		if(empty($payment_type_id)){
+			self::log('update_payment_type_id: No update_payment_type_id');
+			return false;
+		};
+
+		// update the payment status to the selected type in the db and update the job object
+		$this->job = $this->cdb->update_field('jobs','payment_type_id', $payment_type_id, $job_id);
 		if($this->job===false){
 			return false;
 		};

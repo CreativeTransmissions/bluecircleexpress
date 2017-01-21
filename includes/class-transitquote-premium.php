@@ -368,7 +368,7 @@ class TransitQuote_Premium {
 			$cdb->update_row('payment_status_types', array('name' => 'wating', 'description'=> 'Awaiting Payment', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_status_types', array('name' => 'recieved', 'description'=> 'Payment Recieved', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_status_types', array('name' => 'failed', 'description'=> 'Payment Failed', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_status_types', array('name' => 'cash', 'description'=> 'On Delivery', 'created'=>$created, 'modified'=>$modified ));					
+			$cdb->update_row('payment_status_types', array('name' => 'pending', 'description'=> 'Payment Pending', 'created'=>$created, 'modified'=>$modified ));					
 		};
 		return;
 	}
