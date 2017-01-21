@@ -204,6 +204,11 @@ class TransitQuote_Premium_Public {
 											'sandbox'=>self::get_setting('premium_paypal_options', 'sandbox', 1)));
 		$this->payment_status_type_id = $this->paypal->process_paypal_return();
 		$this->job_id = $this->paypal->get_transaction_id();
+		if(empty($this->job_id)){
+			$this->ajax->log_error(array('name'=>'Paypal return error','value'=>'No job id returned from PayPal'));
+			return false;
+		};
+
 		if(!self::update_payment_status($this->job_id, $this->payment_status_type_id)){
 			self::debug('could not update payment_status');
 			return false;
@@ -217,9 +222,13 @@ class TransitQuote_Premium_Public {
 		};	
 
 		self::get_job_details();
+		//get text payment status message
 		$payment_status = $this->paypal->get_payment_status($this->job);
 
-		self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status);
+		if(!self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status)){
+			$this->ajax->log_error(array('name'=>'Unable to email dispatch',
+                'value'=>'job_id: '.$job['id']));
+		};
 
 		$this->view = $this->paypal_partials_dir.'payment_result.php';
 		return true;
@@ -519,6 +528,37 @@ class TransitQuote_Premium_Public {
 							 'data'=>array('customer_id'=>$this->customer['id'],
 							 				'job_id'=>$this->job['id']));
 		
+
+	}
+
+	public function ipn(){
+		//get job id from paypal ipn message
+		$this->job_id = $this->paypal->get_transaction_id();
+		if(empty($this->job_id)){
+			$this->ajax->log_error(array('name'=>'Paypal return error','value'=>'No job id returned from PayPal'));
+			return false;
+		};
+		//get payment status from paypal ipn message
+		$this->payment_status_type_id = $this->paypal->ipn();
+		if($this->payment_status_type_id===false){
+			$this->ajax->log_error(array('name'=>'Could not get payment status from ipn',
+                            			'value'=>'job_id: '.$job['id'].' payment_status_type_id: '.$this->payment_status_type_id));
+			return false;
+		};
+
+		//update job with new status
+		if(!self::update_payment_status($this->job_id, $this->payment_status_type_id)){
+			$this->ajax->log_error(array('name'=>'Could not update payment status',
+				                            'value'=>'job_id: '.$job['id'].' payment_status_type_id: '.$this->payment_status_type_id));	
+
+			return false;
+		};
+		$this->job = self::get_job($this->job_id);
+		
+		//get text payment status message
+		$payment_status = $this->paypal->get_payment_status($this->job);
+
+		self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status);
 
 	}
 
@@ -947,7 +987,7 @@ class TransitQuote_Premium_Public {
 
 		//remove_filter( 'wp_mail_content_type', 'set_html_content_type' );
 
-		return $html_email;
+		return $email;
 	}
 	public function get_api_string(){
 		$api_string = '';
