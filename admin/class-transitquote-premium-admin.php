@@ -36,7 +36,7 @@ class TransitQuote_Premium_Admin {
     private $tab_1_settings_key = 'premium_rates';
 	private $tab_2_settings_key = 'premium_quote_options';
 	private $tab_3_settings_key = 'premium_customers';
-	private $tab_4_settings_key = 'premium_transportation_requests';
+	private $tab_4_settings_key = 'premium_job_requests';
 	private $tab_5_settings_key = 'premium_email_options';
 	private $tab_6_settings_key = 'premium_paypal_options';
 	
@@ -111,9 +111,24 @@ class TransitQuote_Premium_Admin {
 	 */
 
 	public function display_plugin_admin_page() {
-		include_once( 'partials/transitquote-premium-admin-display.php' );
+		$this->current_tab_key = isset( $_GET['tab'] ) ? $_GET['tab'] : 'premium_job_requests';
+
+		//if url is not pointing to a tab, set to default
+		if(!array_key_exists($this->current_tab_key, $this->tabs_config)){
+			$this->current_tab_key = 'premium_job_requests';
+		};
+		$this->current_tab = $this->tabs[$this->current_tab_key];
+
+		screen_icon();
+
+		$this->render_settings_page_title();
+		$this->render_admin_tabs_nav();
+		$this->current_tab->render();
 	}
 
+	public function render_settings_page_title(){
+		echo '<h2>'.esc_html( get_admin_page_title()).'</h2>';
+	}
 
 	/**
 	 * Initialize plugin settings.
@@ -123,16 +138,90 @@ class TransitQuote_Premium_Admin {
 	public function settings_admin_init() {
 		$this->ajax = new TransitQuote_Premium\CT_AJAX();
 		$this->cdb = TransitQuote_Premium::get_custom_db();
-		$this->dbui = new TransitQuote_Premium\CT_DBUI(array('cdb'=>$this->cdb));
-		self::register_tab_4_settings();		
-		self::register_tab_1_settings();
-		self::register_tab_2_settings();
-		self::register_tab_3_settings();
-		self::register_tab_5_settings();
-		self::register_tab_6_settings();
+		$this->tabs_config = $this->define_tab_config();
+		$this->tabs = $this->create_tabs();
 		$this->plugin->load_settings();
+
 	}
 
+	public function define_tab_config(){
+		return array(	'premium_job_requests'=>array(	'key'=>'premium_job_requests',
+														'title'=>'Jobs',
+														'sections'=>array()
+														),
+
+						'premium_customers'=>array('key'=>'premium_customers',
+														'title'=>'Customers',
+														'sections'=>array()
+														),
+
+						'premium_rates'=>array('key'=>'premium_rates',
+														'title'=>'Rates',
+														'sections'=>array()
+														),
+
+						'premium_vehicles'=>array('key'=>'premium_vehicles',
+														'title'=>'Vehicles',
+														'sections'=>array()
+														),
+
+						'premium_services'=>array('key'=>'premium_services',
+														'title'=>'Services',
+														'sections'=>array()
+														),
+
+						'premium_quote_options'=>array('key'=>'premium_quote_options',
+														'title'=>'Quote Options',
+														'sections'=>array()
+														),
+
+						'premium_email_options'=>array('key'=>'premium_email_options',
+														'title'=>'Email Options',
+														'sections'=>array()
+														),
+
+						'premium_paypal_options'=>array('key'=>'premium_paypal_options',
+														'title'=>'PayPal Options',
+														'sections'=>array()
+														),
+
+						'premium_paypal_transactions'=>array('key'=>'premium_paypal_transactions',
+														'title'=>'PayPal Transactions',
+														'sections'=>array()
+														)
+		);
+	}
+
+
+	public function create_tabs(){
+		$tabs = array();
+		 foreach ( $this->tabs_config as $tab_key => $tab_config) {
+		 	// include plugin_slug for use in tab name
+		 	$tab_config['plugin_slug'] = $this->plugin_slug;
+		 	$tab_config['partials_path'] =  'partials/';
+
+		 	// instanciate tab
+			$tabs[$tab_key] = new TransitQuote_Premium_Tab($tab_config);
+
+			// register tab with 
+			$tabs[$tab_key]->register_tab();
+         };
+
+         return $tabs;
+	}
+
+    function render_admin_tabs_nav(){
+
+    	 echo '<h2 class="nav-tab-wrapper">';
+         foreach ( $this->tabs as $tab) {
+         	// pass class name for active tab
+            $active = $this->current_tab_key == $tab->key ? 'nav-tab-active' : '';
+            // render nav link
+            $tab->render_nav($active);
+         };
+         echo '<div class="spinner"></div></h2>';
+    }
+    
 	/**
 	 * NOTE:     Actions are points in the execution of a page or process
 	 *           lifecycle that WordPress fires.
@@ -140,25 +229,12 @@ class TransitQuote_Premium_Admin {
 	 * @since    1.0.0
 	 */
 
-	public function plugin_options_tabs() {
-         $this->current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $this->tab_1_settings_key;
-         //if url is not pointing to a tab, set to default
-         if(!array_key_exists($this->current_tab, $this->plugin_settings_tabs)){
-			$this->current_tab = $this->tab_4_settings_key;
-         };
-         screen_icon();
-         echo '<h2 class="nav-tab-wrapper">';
-         foreach ( $this->plugin_settings_tabs as $tab_key => $tab_caption ) {
-             $active = $this->current_tab == $tab_key ? 'nav-tab-active' : '';
-             echo '<a class="nav-tab ' . $active . '" href="?page=' . $this->plugin_slug . '&tab=' . $tab_key . '">' . $tab_caption . '</a>';
-         }
-         echo '<div class="spinner"></div></h2>';
-    }
+
+
 
 	function register_tab_1_settings(){
 		$this->plugin_settings_tabs[$this->tab_1_settings_key] = 'Rates'; //Tab name
-		register_setting( $this->tab_1_settings_key, $this->tab_1_settings_key ); //register settings for tab
-	    add_settings_section( 'premium_rates', 'Rates',  array( $this, 'rates_callback' ), $this->tab_1_settings_key);
+		
 	}
 	function rates_callback(){
 		$this->distance_unit = $this->plugin->get_setting('premium_quote_options', 'distance_unit', 'Kilometer');

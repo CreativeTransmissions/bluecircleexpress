@@ -38,7 +38,7 @@
 						break;	
 						case 'premium_rates':						
 							this.initRatesTabEvents();
-						case 'premium_transportation_requests':
+						case 'premium_job_requests':
 						default:
 							this.initJobsTabUI();
 							this.initJobsTabEvents();

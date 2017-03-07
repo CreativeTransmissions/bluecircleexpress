@@ -209,6 +209,75 @@ private function config_quotes(){
 
 }
 
+private function config_service_types(){
+ return array (
+  'name' => 'service_types',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'asc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'name' => 
+    array (
+      'name' => 'name',
+      'type' => 'varchar(45)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'amount' => 
+    array (
+      'name' => 'amount',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
+
 private function config_vehicle_types(){
  return array (
   'name' => 'vehicle_types',
