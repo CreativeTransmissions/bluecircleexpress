@@ -4,7 +4,7 @@
 	<fieldset>
 		<legend>Add a new rate by entering the details below:</legend>
 		<div class="inline-field">
-			<label for="group">Max Distance (<?php echo $this->distance_unit; ?>s)</label>
+			<label for="group">Max Distance (<?php echo $this->config['data']['distance_unit']; ?>s)</label>
 			<input class="input-long" type="text" name="distance" />
 		</div>
 		<div class="inline-field">
@@ -12,7 +12,7 @@
 			<input class="input-long" type="text" name="amount" />
 		</div>
 		<div class="inline-field">
-			<label for="group">Price Per <?php echo $this->distance_unit; ?></label>
+			<label for="group">Price Per <?php echo $this->config['data']['distance_unit']; ?></label>
 			<input class="input-long" type="text" name="unit" />
 		</div>
 		<div class="inline-field">
@@ -36,23 +36,11 @@
 	<div class="clear"></div>
 </form>
 <form id="table-form" class="admin-form" method="post" action="options.php" autocomplete="false">
-	<table id="tp_rates_table" class="settings-table">
+	<table id="rates_table" class="settings-table">
 		<thead>
-			<tr><th>Max Distance</th><th>Set Price</th><th>Price Per <?php echo $this->distance_unit; ?></th><th>Price Per Hour</th><th class="actions"><div class="spinner"></div></tr>
+			<tr><th>Max Distance</th><th>Set Price</th><th>Price Per <?php echo $this->config['data']['distance_unit']; ?></th><th>Price Per Hour</th><th class="actions"><div class="spinner"></div></tr>
 		</thead>
 		<tbody>
-		<?php
-			$rates_data = $this->plugin->get_rates_list();
-			
-			//$this->plugin->debug($rates_data);
-			echo $this->dbui->table_rows(array(
-						'data'=>$rates_data,
-						'table'=>'rates',
-						'fields'=>array('id', 'distance','amount','unit','hour'),
-						'inputs'=>false,
-						'actions'=>array('Edit','Delete')
-			));
-		?>	
 		</tbody>
 	</table>
 </form>

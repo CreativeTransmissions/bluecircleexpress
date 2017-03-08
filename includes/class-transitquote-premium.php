@@ -324,13 +324,14 @@ class TransitQuote_Premium {
 
 	public static function get_custom_db(){
 		//define and register tables
-		$cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'premium_tp'));
+		$cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'tq_prm'));
 		$db_config = new TransitQuote_Premium\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
 		$cdb->define_table($db_config->get_config('customers'));
 		$cdb->define_table($db_config->get_config('quotes'));
-		$cdb->define_table($db_config->get_config('vehicle_types'));
+		$cdb->define_table($db_config->get_config('services'));
+		$cdb->define_table($db_config->get_config('vehicles'));
 		$cdb->define_table($db_config->get_config('payment_types'));
 		$cdb->define_table($db_config->get_config('payment_status_types'));
 		$cdb->define_table($db_config->get_config('status_types'));
@@ -339,6 +340,7 @@ class TransitQuote_Premium {
 		$cdb->define_table($db_config->get_config('surcharges'));
 		$cdb->define_table($db_config->get_config('quote_surcharges'));
 		$cdb->define_table($db_config->get_config('journeys'));
+		$cdb->define_table($db_config->get_config('journeys_locations'));
 		$cdb->define_table($db_config->get_config('rates'));
 		$cdb->define_table($db_config->get_config('event_logs')); 
 		$cdb->define_table($db_config->get_config('event_data'));

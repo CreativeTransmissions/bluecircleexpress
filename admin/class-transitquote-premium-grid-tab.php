@@ -43,10 +43,16 @@ class TransitQuote_Premium_Tab {
     	foreach ($this->config['sections'] as $key => $section) {
     		add_settings_section(	$this->config['key'],
     								$section['title'],
-    								array( $this, 'render' ),
+    								array( $this->config->admin, $this->config['key'].'_callback' ),
     								$this->config['key']);
     	}
 	    
+    }
+
+    public function render(){
+    	echo '<div class="wrap">';
+    	include_once $this->config['partials_path'].$this->key.'.php';
+    	echo '</div>';
     }
 
     public function render_nav($active = ''){
@@ -54,10 +60,8 @@ class TransitQuote_Premium_Tab {
    		echo '<a class="nav-tab ' . $active . '" href="?page=' . $this->config['plugin_slug'] . '&tab=' . $this->key . '">' . $this->config['title'] . '</a>';
     }
 
-    public function render(){
-    	echo '<div class="wrap">';
-        include_once $this->config['partials_path'].$this->key.'.php';
-        echo '</div>';
+    public function tab_callback(){
+    	echo 'This is the tab callback for: '.$this->config['key'];
     }
 
     public function get_empty_message(){
@@ -66,7 +70,7 @@ class TransitQuote_Premium_Tab {
 
     	if(isset($this->config['table'])){
     		$table_count = $this->get_table_count();
-			if($table_count == 0){
+			if($table_count === 0){
 				$empty_message = 'There are no '.$this->config['table'].' in the database yet.';
 			} else {
 				$empty_message = 'Loading '.$this->config['table'].'...';

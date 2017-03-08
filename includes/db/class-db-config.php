@@ -3,7 +3,7 @@
 /**
  * Define the database structure
  *
- * @link       http://example.com
+ * @link       http://customgooglemaptools.com
  * @since      1.0.0
  * @package    TransitQuote_Premium
  * @subpackage TransitQuote_Premium/includes
@@ -14,16 +14,16 @@
 namespace TransitQuote_Premium;
 class DB_Config {
 
-	public function __construct() {
-		$this->debugging = true;
-	}
+  public function __construct() {
+    $this->debugging = true;
+  }
 
-	public function get_config($table){
+  public function get_config($table){
 
-		$method = 'config_'.$table;
-		return self::$method();
+    $method = 'config_'.$table;
+    return self::$method();
 
-	}
+  }
 
 
 private function config_customers(){
@@ -80,7 +80,25 @@ private function config_customers(){
       'default' => '',
       'format' => '%s'
     ),
-    'phone' => 
+   'company_name' => 
+    array (
+      'name' => 'company_name',
+      'type' => 'varchar(128)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+     'company_address' => 
+    array (
+      'name' => 'company_address',
+      'type' => 'text',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+  /*  'phone' => 
     array (
       'name' => 'phone',
       'type' => 'varchar(45)',
@@ -88,7 +106,7 @@ private function config_customers(){
       'auto' => '',
       'default' => '',
       'format' => '%s'
-    ),
+    ),*/
     'created' => 
     array (
       'name' => 'created',
@@ -149,9 +167,27 @@ private function config_quotes(){
       'default' => '',
       'format' => '%f',
     ),
-    'rate_per_unit' => 
+    'rate_unit' => 
     array (
-      'name' => 'rate_per_unit',
+      'name' => 'rate_unit',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+  'rate_amount' => 
+    array (
+      'name' => 'rate_amount',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+  'rate_hour' => 
+    array (
+      'name' => 'rate_hour',
       'type' => 'decimal(10,2)',
       'null' => 'null',
       'auto' => '',
@@ -209,9 +245,9 @@ private function config_quotes(){
 
 }
 
-private function config_service_types(){
+private function config_vehicles(){
  return array (
-  'name' => 'service_types',
+  'name' => 'vehicles',
   'defaults' => 
   array (
     'fields' => 
@@ -245,75 +281,15 @@ private function config_service_types(){
       'default' => '',
       'format' => '%s',
     ),
-    'amount' => 
+    'description' => 
     array (
-      'name' => 'amount',
-      'type' => 'decimal(10,2)',
-      'null' => 'null',
-      'auto' => '',
-      'default' => '',
-      'format' => '%f',
-    ),
-    'created' => 
-    array (
-      'name' => 'created',
-      'type' => 'timestamp',
+      'name' => 'description',
+      'type' => 'text',
       'null' => 'null',
       'auto' => '',
       'default' => '',
       'format' => '%s',
-    ),
-    'modified' => 
-    array (
-      'name' => 'modified',
-      'type' => 'timestamp',
-      'null' => 'null',
-      'auto' => '',
-      'default' => '',
-      'format' => '%s',
-    )
-  ),
-  'pk' => 'id',
-);
-
-}
-
-private function config_vehicle_types(){
- return array (
-  'name' => 'vehicle_types',
-  'defaults' => 
-  array (
-    'fields' => 
-    array (
-    ),
-    'orderby' => 'id',
-    'order' => 'asc',
-    'user_id' => false,
-    'since' => false,
-    'until' => false,
-    'number' => -1,
-    'offset' => 0,
-  ),
-  'cols' => 
-  array (
-    'id' => 
-    array (
-      'name' => 'id',
-      'type' => 'int',
-      'null' => 'not null',
-      'auto' => 'auto_increment',
-      'default' => '',
-      'format' => '%d',
-    ),
-    'name' => 
-    array (
-      'name' => 'name',
-      'type' => 'varchar(45)',
-      'null' => 'null',
-      'auto' => '',
-      'default' => '',
-      'format' => '%s',
-    ),
+    ),    
     'amount' => 
     array (
       'name' => 'amount',
@@ -383,14 +359,83 @@ private function config_payment_types(){
       'default' => '',
       'format' => '%s',
     ),
-    'available' => 
+    'created' => 
     array (
-      'name' => 'available',
+      'name' => 'created',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
+
+private function config_services(){
+ return array (
+  'name' => 'services',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'asc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
       'type' => 'int',
       'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'name' => 
+    array (
+      'name' => 'name',
+      'type' => 'varchar(45)',
+      'null' => 'null',
       'auto' => '',
-      'default' => '1',
-      'format' => '%d'
+      'default' => '',
+      'format' => '%s',
+    ),
+   'description' => 
+    array (
+      'name' => 'description',
+      'type' => 'text',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'amount' => 
+    array (
+      'name' => 'amount',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
     ),
     'created' => 
     array (
@@ -404,7 +449,7 @@ private function config_payment_types(){
     'modified' => 
     array (
       'name' => 'modified',
-      'type' => 'datetime',
+      'type' => 'timestamp',
       'null' => 'null',
       'auto' => '',
       'default' => '',
@@ -415,6 +460,7 @@ private function config_payment_types(){
 );
 
 }
+
 
 private function config_payment_status_types(){
  return array (
@@ -581,7 +627,7 @@ private function config_jobs(){
       'default' => '',
       'format' => '%s'
     ),
-    'delivery_time' => 
+  /*  'delivery_time' => 
     array (
       'name' => 'delivery_time',
       'type' => 'datetime',
@@ -589,10 +635,19 @@ private function config_jobs(){
       'auto' => '',
       'default' => '',
       'format' => '%s'
-    ),
+    ),*/
     'description' => 
     array (
       'name' => 'description',
+      'type' => 'text',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'dimensions' => 
+    array (
+      'name' => 'dimensions',
       'type' => 'text',
       'null' => 'null',
       'auto' => '',
@@ -623,16 +678,16 @@ private function config_jobs(){
       'type' => 'int',
       'null' => 'null',
       'auto' => '',
-      'default' => '1',
+      'default' => '',
       'format' => '%d'
     ),
-    'payment_status_type_id' => 
+    'payment_status_id' => 
     array (
-      'name' => 'payment_status_type_id',
+      'name' => 'payment_status_id',
       'type' => 'int',
       'null' => 'null',
       'auto' => '',
-      'default' => '1',
+      'default' => '',
       'format' => '%d'
     ),
     'status_type_id' => 
@@ -644,22 +699,22 @@ private function config_jobs(){
       'default' => '1',
       'format' => '%d'
     ),
-    'vehicle_type_id' => 
+    'vehicle_id' => 
     array (
-      'name' => 'vehicle_type_id',
+      'name' => 'vehicle_id',
       'type' => 'int',
       'null' => 'null',
       'auto' => '',
-      'default' => '1',
+      'default' => '',
       'format' => '%d'
     ),
-    'service_type_id' =>
+    'service_id' =>
     array (
-      'name' => 'service_type_id',
+      'name' => 'service_id',
       'type' => 'int',
       'null' => 'null',
       'auto' => '',
-      'default' => '1',
+      'default' => '',
       'format' => '%d'
     ),
     'move_size_id' => 
@@ -802,6 +857,24 @@ private function config_locations(){
       'auto' => '',
       'default' => '',
       'format' => '%s',
+    ),
+    'lat' => 
+    array (
+      'name' => 'lat',
+      'type' => 'decimal(10,6)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'lng' => 
+    array (
+      'name' => 'lng',
+      'type' => 'decimal(10,6)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d',
     ),
     'created' => 
     array (
@@ -1010,24 +1083,6 @@ private function config_journeys(){
       'default' => '',
       'format' => '%d',
     ),
-    'origin_location_id' => 
-    array (
-      'name' => 'origin_location_id',
-      'type' => 'int',
-      'null' => 'null',
-      'auto' => '',
-      'default' => '',
-      'format' => '%d',
-    ),
-    'dest_location_id' => 
-    array (
-      'name' => 'dest_location_id',
-      'type' => 'int',
-      'null' => 'null',
-      'auto' => '',
-      'default' => '',
-      'format' => '%d',
-    ),
     'distance' => 
     array (
       'name' => 'distance',
@@ -1045,6 +1100,93 @@ private function config_journeys(){
       'auto' => '',
       'default' => '',
       'format' => '%f',
+    ),
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
+
+private function config_journeys_locations(){
+ return array (
+  'name' => 'journeys_locations',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'asc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'journey_id' => 
+    array (
+      'name' => 'journey_id',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'location_id' => 
+    array (
+      'name' => 'location_id',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'journey_order' => 
+    array (
+      'name' => 'journey_order',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'note' => 
+    array (
+      'name' => 'note',
+      'type' => 'text',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
     ),
     'created' => 
     array (
@@ -1097,9 +1239,18 @@ private function config_rates(){
       'default' => '',
       'format' => '%d',
     ),
-    'service_type_id' => 
+    'service_id' => 
     array (
-      'name' => 'service_type_id',
+      'name' => 'service_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '1',
+      'format' => '%d',
+    ),
+    'vehicle_id' => 
+    array (
+      'name' => 'vehicle_id',
       'type' => 'int',
       'null' => 'not null',
       'auto' => '',

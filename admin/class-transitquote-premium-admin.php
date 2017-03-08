@@ -138,6 +138,7 @@ class TransitQuote_Premium_Admin {
 	public function settings_admin_init() {
 		$this->ajax = new TransitQuote_Premium\CT_AJAX();
 		$this->cdb = TransitQuote_Premium::get_custom_db();
+		$this->dbui = new TransitQuote_Premium\CT_DBUI(array('cdb'=>$this->cdb));
 		$this->tabs_config = $this->define_tab_config();
 		$this->tabs = $this->create_tabs();
 		$this->plugin->load_settings();
@@ -147,26 +148,32 @@ class TransitQuote_Premium_Admin {
 	public function define_tab_config(){
 		return array(	'premium_job_requests'=>array(	'key'=>'premium_job_requests',
 														'title'=>'Jobs',
+														'table'=>'jobs',
 														'sections'=>array()
 														),
 
 						'premium_customers'=>array('key'=>'premium_customers',
 														'title'=>'Customers',
+														'table'=>'customers',
 														'sections'=>array()
 														),
 
 						'premium_rates'=>array('key'=>'premium_rates',
 														'title'=>'Rates',
-														'sections'=>array()
+														'table'=>'rates',
+														'sections'=>array(),
+														'data'=>array('distance_unit' => $this->plugin->get_setting('premium_rates', 'distance_unit', 'Kilometer'))
 														),
 
 						'premium_vehicles'=>array('key'=>'premium_vehicles',
 														'title'=>'Vehicles',
+														'table'=>'vehicles',
 														'sections'=>array()
 														),
 
 						'premium_services'=>array('key'=>'premium_services',
 														'title'=>'Services',
+														'table'=>'services',
 														'sections'=>array()
 														),
 
@@ -197,6 +204,7 @@ class TransitQuote_Premium_Admin {
 		$tabs = array();
 		 foreach ( $this->tabs_config as $tab_key => $tab_config) {
 		 	// include plugin_slug for use in tab name
+		 	$tab_config['admin'] =  $this;
 		 	$tab_config['plugin_slug'] = $this->plugin_slug;
 		 	$tab_config['partials_path'] =  'partials/';
 
@@ -221,7 +229,7 @@ class TransitQuote_Premium_Admin {
          };
          echo '<div class="spinner"></div></h2>';
     }
-    
+
 	/**
 	 * NOTE:     Actions are points in the execution of a page or process
 	 *           lifecycle that WordPress fires.
@@ -337,7 +345,7 @@ class TransitQuote_Premium_Admin {
 		// Add settings section for this tab including a callback function to display tab content
 	    add_settings_section( 'premium_customers', 'Customers',  array( $this, 'customers_callback' ), $this->tab_3_settings_key);
 	}
-	function customers_callback(){
+	function premium_customers_callback(){
 		//get the no of customers to determine whether to show empty message or loading message
 		$this->customer_count = $this->cdb->get_count('customers');
 		if($this->customer_count == 0){
@@ -353,7 +361,7 @@ class TransitQuote_Premium_Admin {
 		register_setting( $this->tab_4_settings_key, $this->tab_4_settings_key ); //register settings for tab
 	    add_settings_section( 'premium_jobs', 'Jobs',  array( $this, 'jobs_callback' ), $this->tab_4_settings_key);
 	}
-	function jobs_callback(){
+	function premium_job_requests_callback(){
 		$this->jobs_count = $this->cdb->get_count('jobs');
 		if($this->jobs_count == 0){
 			$this->empty_message = 'There are no jobs in the database yet.';
@@ -587,45 +595,35 @@ class TransitQuote_Premium_Admin {
 	    	$filter_sql .= " where date(jobs.created) <= '".$dates['to_date']."' and date(jobs.created) >= '".$dates['from_date']."'"; 
     	};    	
 
-    	$sql = "SELECT	distinct jobs.id,
-						jobs.delivery_contact_name,
-						-- jobs.service_type_id,
-						-- CASE service_type_id WHEN 1 THEN 'Commercial' ELSE 'Domestic' END as move_type,
-						jobs.delivery_time,
-						jobs.description,
-						jobs.customer_id,
-						jobs.accepted_quote_id,
-						jobs.vehicle_type_id,
-						jobs.payment_type_id,
-						jobs.payment_status_type_id,
-						jobs.created,
-						jobs.modified,
-						trim(concat(c.first_name,' ',c.last_name)) as last_name,
-						ifnull(lo.address, '') as pick_up,
-						ifnull(ld.address,'') as drop_off,
-						v.name as vehicle_type,
-						q.total as quote,
-						pt.name as payment_type,
-						pst.description as payment_status
-					FROM wp_premium_tp_jobs jobs
-						left join wp_premium_tp_journeys j 
-							on jobs.id = j.job_id 
-						left join wp_premium_tp_locations lo 
-							on j.origin_location_id = lo.id 
-						left join wp_premium_tp_locations ld 
-							on j.dest_location_id = ld.id
-						left join wp_premium_tp_customers c 
-							on c.id = jobs.customer_id 
-						left join wp_premium_tp_vehicle_types v 
-							on v.id = jobs.vehicle_type_id 
-						left join wp_premium_tp_quotes q 
-							on q.id = jobs.accepted_quote_id
-						left join wp_premium_tp_payment_types pt 
-							on jobs.payment_type_id = pt.id
-						left join wp_premium_tp_payment_status_types pst 
-							on jobs.payment_status_type_id = pst.id 
+    	$sql = "SELECT distinct	wp_premium_tp_jobs.id,
+								c.company_name,
+								l.address as collection_address,
+								wp_premium_tp_jobs.customer_id,
+								wp_premium_tp_jobs.created,
+								wp_premium_tp_jobs.modified,
+								trim(concat(c.first_name,' ',c.last_name)) as last_name,
+								v.name as vehicle_type,
+								q.total as quote 
+							FROM wp_premium_tp_jobs 
+								left join wp_premium_tp_journeys j 
+									on j.job_id = wp_premium_tp_jobs.id 
+								left join wp_premium_tp_journeys_locations jl 
+									on j.id = jl.journey_id and
+										jl.journey_order = 0
+								left join wp_premium_tp_locations l 
+									on jl.location_id = l.id and 
+										jl.journey_order = 0
+								left join wp_premium_tp_customers c 
+									on c.id = wp_premium_tp_jobs.customer_id 
+								left join wp_premium_tp_vehicles v 
+									on v.id = wp_premium_tp_jobs.vehicle_id 
+								left join wp_premium_tp_services s 
+									on v.id = wp_premium_tp_jobs.service_id 
+								left join wp_premium_tp_quotes q 
+									on q.id = wp_premium_tp_jobs.accepted_quote_id
 			".$filter_sql." 
-			order by jobs.id desc;";
+			order by wp_premium_tp_jobs.id desc;";
+
 
 		$data = $this->cdb->query($sql);
 		return $data;
@@ -725,9 +723,9 @@ class TransitQuote_Premium_Admin {
 
 					$dates = array('from_date'=>$from_date, 'to_date'=>$to_date);
 					//get data
-					//$filters = $this->plugin->get_job_filters();
+					//$filters = $this->plugin->get_job_filters(); // status filters
 
-					$job_data = $this->get_jobs($filters, $dates);
+					$job_data = $this->get_jobs(array(), $dates);
 					$defaults = array(
 									'data'=>$job_data,
 									'fields'=>array(/*'move_type',*/

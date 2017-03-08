@@ -36,13 +36,14 @@
 							this.initCustomersTabEvents();
 							this.initEditTableEvents('customers');
 						break;	
-						case 'premium_rates':						
+						case 'premium_rates':	
+							this.initRatesTabUI();					
 							this.initRatesTabEvents();
-						case 'premium_job_requests':
+						break;
 						default:
 							this.initJobsTabUI();
 							this.initJobsTabEvents();
-							this.initEditTableEvents('jobs');
+							this.initEditTableEvents('jobs');						
 						break;
 					}
 				},
@@ -191,6 +192,15 @@
 					};
 
 					$('#place-selector').placeSelector(settings);
+				},
+
+				initRatesTabUI: function(){
+					var that = this;
+
+					this.loadTable({
+						table: 'rates'
+					});
+							
 				},
 
 				initRatesTabEvents: function(){
@@ -685,7 +695,7 @@
 					this.spinner(true);
 
 					$('#'+tableName+' tbody').empty();
-
+					console.log('append to '+tableName);
 					var data = $.extend({
 							 	action: 'premium_load_table',
 							 }, options );

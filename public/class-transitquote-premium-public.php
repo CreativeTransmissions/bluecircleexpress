@@ -123,14 +123,14 @@ class TransitQuote_Premium_Public {
 		$this->cdb = $plugin->get_custom_db();
     	$sql = "select distinct * 
     				from (select distinct * 
-								from wp_premium_tp_rates
+								from wp_tq_prm_rates
 								where distance <> 0
-							order by service_type_id, distance
+							order by service_id, distance
 							) r
 					union
 				select distinct * from (
 					select distinct * 
-						from wp_premium_tp_rates
+						from wp_tq_prm_rates
 					where distance = 0) r2;";
 
 		$data = $this->cdb->query($sql);
