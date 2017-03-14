@@ -179,7 +179,10 @@ class TransitQuote_Premium_Admin {
 
 						'premium_quote_options'=>array('key'=>'premium_quote_options',
 														'title'=>'Quote Options',
-														'sections'=>array()
+														'sections'=>array('prem_settings_quote_options'=>array(
+																			'id'=>'prem_settings_quote_options',
+																			'title'=>'Quote Options')
+																			)
 														),
 
 						'premium_email_options'=>array('key'=>'premium_email_options',
@@ -207,6 +210,7 @@ class TransitQuote_Premium_Admin {
 		 	$tab_config['admin'] =  $this;
 		 	$tab_config['plugin_slug'] = $this->plugin_slug;
 		 	$tab_config['partials_path'] =  'partials/';
+		 	$tab_config['tab_key'] = $tab_key;
 
 		 	// instanciate tab
 			$tabs[$tab_key] = new TransitQuote_Premium_Tab($tab_config);
@@ -223,7 +227,7 @@ class TransitQuote_Premium_Admin {
     	 echo '<h2 class="nav-tab-wrapper">';
          foreach ( $this->tabs as $tab) {
          	// pass class name for active tab
-            $active = $this->current_tab_key == $tab->key ? 'nav-tab-active' : '';
+            $active = $this->current_tab_key == $tab->tab_key ? 'nav-tab-active' : '';
             // render nav link
             $tab->render_nav($active);
          };

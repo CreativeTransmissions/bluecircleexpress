@@ -26,9 +26,10 @@ class TransitQuote_Premium_Tab {
 
 	public function __construct($config = null) {
 		$this->config = $config;
-		$this->key = $this->config['key'];
+		$this->tab_key = $this->config['tab_key'];
 		$this->admin = $this->config['admin'];
 		$this->cdb = $this->admin->cdb;
+        $this->sections = array();
 	}
 
 	public function register_tab(){
@@ -37,26 +38,27 @@ class TransitQuote_Premium_Tab {
     		return false;
     	};
     	//register settings tab
-    	register_setting($this->config['key'], $this->config['key']); 
+    	register_setting($this->config['tab_key'], $this->config['tab_key']); 
+
 
     	//register settings for tab
-    	foreach ($this->config['sections'] as $key => $section) {
-    		add_settings_section(	$this->config['key'],
-    								$section['title'],
-    								array( $this, 'render' ),
-    								$this->config['key']);
+    	foreach ($this->config['sections'] as $key => $section_config) {
+            $section_config['page'] = $this->tab_key;
+            $section_config['admin'] = $this->admin;
+            $this->sections[$key] = new TransitQuote_Premium_Settings_Section($section_config);
+            $this->sections[$key]->add_section();
     	}
 	    
     }
 
     public function render_nav($active = ''){
     	// render links for nav
-   		echo '<a class="nav-tab ' . $active . '" href="?page=' . $this->config['plugin_slug'] . '&tab=' . $this->key . '">' . $this->config['title'] . '</a>';
+   		echo '<a class="nav-tab ' . $active . '" href="?page=' . $this->config['plugin_slug'] . '&tab=' . $this->tab_key . '">' . $this->config['title'] . '</a>';
     }
 
     public function render(){
     	echo '<div class="wrap">';
-        include_once $this->config['partials_path'].$this->key.'.php';
+        include_once $this->config['partials_path'].$this->tab_key.'.php';
         echo '</div>';
     }
 

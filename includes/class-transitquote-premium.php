@@ -151,6 +151,12 @@ class TransitQuote_Premium {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-transitquote-premium-i18n.php';
 
 		/**
+		 * The class responsible for defining all actions that occur in the public-facing
+		 * side of the site.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-transitquote-premium-public.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-premium-admin.php';
@@ -161,10 +167,29 @@ class TransitQuote_Premium {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-premium-tab.php';
 
 		/**
-		 * The class responsible for defining all actions that occur in the public-facing
-		 * side of the site.
+		 * The class responsible for defining a gred tab  in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-transitquote-premium-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-premium-grid-tab.php';
+
+		/**
+		 * The class responsible for defining all settings sections in the admin area.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-section.php';
+
+
+		/**
+		 * The base class responsible for defining a field in the admin area.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-field.php';
+
+		/**
+		 * The classes for different field types in the admin area
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-field-checkbox.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-field-input.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-field-radio.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-field-select.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-field-textarea.php';
 
 		/**
 		 * The class responsible for defining the database structure
