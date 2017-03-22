@@ -77,7 +77,9 @@ class TransitQuote_Premium_Settings_Section {
             
             if(!method_exists($field, 'add_field')){
                 echo 'no method: '.$key;
-            };
+            } else {
+                $field->add_field();
+            }
            
             
         }

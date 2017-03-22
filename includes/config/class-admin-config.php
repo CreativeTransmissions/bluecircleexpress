@@ -90,6 +90,7 @@ class Admin_Config {
                                                     'quote_element'=>array(
                                                       'id'=>'quote_element',
                                                       'label'=>'Quote Display Element',
+                                                      'help'=>'Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.',
                                                       'type'=>'input'),
                                                     'distance_unit'=>array(
                                                       'id'=>'distance_unit',

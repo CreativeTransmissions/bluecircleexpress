@@ -23,9 +23,13 @@
  */
 class TransitQuote_Premium_Settings_Field {
 
+    private $default_config = array('label'=>'',
+                                    'help'=>'',
+                                    'value'=>'');
 
 	public function __construct($config = null) {
-		$this->config = $config;
+        //merge config with defaults so all properties are present
+		$this->config = array_merge($this->default_config, $config);
 		$this->section_id = $this->config['section_id'];
 		$this->admin = $this->config['admin'];
 		$this->cdb = $this->admin->cdb;
@@ -34,11 +38,11 @@ class TransitQuote_Premium_Settings_Field {
 	}
 
 	public function add_field(){
-    	//register an admin tab from a config array
-    	if(empty($this->config)){
-    		return false;
-    	};
-    	add_settings_field( $this->config['id'],
+        //register an admin tab from a config array
+        if(empty($this->config)){
+            return false;
+        };
+        add_settings_field( $this->config['id'],
                             $this->config['label'], 
                             array( $this, 'render' ), 
                             $this->page,
@@ -48,6 +52,7 @@ class TransitQuote_Premium_Settings_Field {
             $this->register_fields();
         };
     }
+
 
     public function render(){
        
