@@ -51,28 +51,35 @@ class TransitQuote_Premium_Settings_Section {
     private function register_fields(){
 
         foreach ($this->config['fields'] as $key => $field_config) {
-            $field_config['page'] = $this->tab_key;
+            $field_config['page'] = $this->page;
             $field_config['admin'] = $this->admin;
             $field_config['section_id'] = $this->section_id;
             switch ($field_config['type']) {
+                case 'addresspicker':
+                    $field = new TransitQuote_Premium_Settings_Field_AddressPicker($field_config);
+                    break;
                 case 'checkbox':
-                    $this->fields[$key] = new TransitQuote_Premium_Settings_Field_Checkbox($field_config);
+                    $field = new TransitQuote_Premium_Settings_Field_Checkbox($field_config);
                     break;
                 case 'input':
-                    $this->fields[$key] = new TransitQuote_Premium_Settings_Field_Input($field_config);
+                    $field = new TransitQuote_Premium_Settings_Field_Input($field_config);
                     break;
                 case 'radio':
-                    $this->fields[$key] = new TransitQuote_Premium_Settings_Field_Radio($field_config);
+                    $field = new TransitQuote_Premium_Settings_Field_Radio($field_config);
                     break;
                 case 'select':
-                    $this->fields[$key] = new TransitQuote_Premium_Settings_Field_Select($field_config);
+                    $field = new TransitQuote_Premium_Settings_Field_Select($field_config);
                     break;
                 case 'textarea':
-                    $this->fields[$key] = new TransitQuote_Premium_Settings_Field_Textarea($field_config);
+                    $field = new TransitQuote_Premium_Settings_Field_Textarea($field_config);
                     break;
             };
             
-            $this->fields[$key]->add_field();
+            if(!method_exists($field, 'add_field')){
+                echo 'no method: '.$key;
+            };
+           
+            
         }
     }
 

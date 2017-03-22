@@ -190,6 +190,7 @@ class TransitQuote_Premium {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-field-radio.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-field-select.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-field-textarea.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-field-addresspicker.php';
 
 		/**
 		 * The config class responsible for defining the database structure

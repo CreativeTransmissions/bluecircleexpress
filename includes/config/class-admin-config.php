@@ -68,8 +68,53 @@ class Admin_Config {
                               'key'=>'premium_quote_options',
                               'title'=>'Quote Options',
                               'sections'=>array('prem_settings_quote_options'=>array(
-                                        'id'=>'prem_settings_quote_options',
-                                        'title'=>'Quote Options')
+                                                  'id'=>'prem_settings_quote_options',
+                                                  'title'=>'Quote Options',
+                                                  'fields'=>array(
+                                                    'success_message'=>array(
+                                                      'id'=>'success_message',
+                                                      'label'=>'Success Message',
+                                                      'type'=>'input'),
+                                                    'min_notice'=>array(
+                                                      'id'=>'min_notice',
+                                                      'label'=>'Minimum Notice Period',
+                                                      'type'=>'input'),
+                                                    'min_notice_charge'=>array(
+                                                      'id'=>'min_notice_charge',
+                                                      'label'=>'Minimum Notice Charge',
+                                                      'type'=>'input'),
+                                                    'currency'=>array(
+                                                      'id'=>'currency',
+                                                      'label'=>'Currency Symbol',
+                                                      'type'=>'select'),
+                                                    'quote_element'=>array(
+                                                      'id'=>'quote_element',
+                                                      'label'=>'Quote Display Element',
+                                                      'type'=>'input'),
+                                                    'distance_unit'=>array(
+                                                      'id'=>'distance_unit',
+                                                      'label'=>'Distance Unit',
+                                                      'type'=>'select'),
+                                                    'layout'=>array(
+                                                      'id'=>'layout',
+                                                      'label'=>'Layout',
+                                                      'type'=>'select'),
+                                                    'start_location'=>array(
+                                                      'id'=>'start_location',
+                                                      'label'=>'Start Location',
+                                                      'type'=>'addresspicker'),
+                                                    'geolocate'=>array(
+                                                      'id'=>'geolocate',
+                                                      'label'=>'Geolocation',
+                                                      'type'=>'checkbox'
+                                                      ),
+                                                    'api_key'=>array(
+                                                      'id'=>'api_key',
+                                                      'label'=>'Googl Maps API Key',
+                                                      'type'=>'input')
+                                                    )
+                                                )
+
                                         )
                               ),
 

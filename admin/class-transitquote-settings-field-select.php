@@ -21,7 +21,7 @@
  * @subpackage TransitQuote_Premium/admin
  * @author     Your Name <email@example.com>
  */
-class TransitQuote_Premium_Settings_Field_Select {
+class TransitQuote_Premium_Settings_Field_Select extends TransitQuote_Premium_Settings_Field{
 
 
 	public function __construct($config = null) {
