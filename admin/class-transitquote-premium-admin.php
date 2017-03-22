@@ -140,68 +140,20 @@ class TransitQuote_Premium_Admin {
 		$this->cdb = TransitQuote_Premium::get_custom_db();
 		$this->dbui = new TransitQuote_Premium\CT_DBUI(array('cdb'=>$this->cdb));
 		$this->tabs_config = $this->define_tab_config();
-		$this->tabs = $this->create_tabs();
 		$this->plugin->load_settings();
-
+		$this->update_config_defaults();
+		$this->tabs = $this->create_tabs();
 	}
 
 	public function define_tab_config(){
-		return array(	'premium_job_requests'=>array(	'key'=>'premium_job_requests',
-														'title'=>'Jobs',
-														'table'=>'jobs',
-														'sections'=>array()
-														),
-
-						'premium_customers'=>array('key'=>'premium_customers',
-														'title'=>'Customers',
-														'table'=>'customers',
-														'sections'=>array()
-														),
-
-						'premium_rates'=>array('key'=>'premium_rates',
-														'title'=>'Rates',
-														'table'=>'rates',
-														'sections'=>array(),
-														'data'=>array('distance_unit' => $this->plugin->get_setting('premium_rates', 'distance_unit', 'Kilometer'))
-														),
-
-						'premium_vehicles'=>array('key'=>'premium_vehicles',
-														'title'=>'Vehicles',
-														'table'=>'vehicles',
-														'sections'=>array()
-														),
-
-						'premium_services'=>array('key'=>'premium_services',
-														'title'=>'Services',
-														'table'=>'services',
-														'sections'=>array()
-														),
-
-						'premium_quote_options'=>array('key'=>'premium_quote_options',
-														'title'=>'Quote Options',
-														'sections'=>array('prem_settings_quote_options'=>array(
-																			'id'=>'prem_settings_quote_options',
-																			'title'=>'Quote Options')
-																			)
-														),
-
-						'premium_email_options'=>array('key'=>'premium_email_options',
-														'title'=>'Email Options',
-														'sections'=>array()
-														),
-
-						'premium_paypal_options'=>array('key'=>'premium_paypal_options',
-														'title'=>'PayPal Options',
-														'sections'=>array()
-														),
-
-						'premium_paypal_transactions'=>array('key'=>'premium_paypal_transactions',
-														'title'=>'PayPal Transactions',
-														'sections'=>array()
-														)
-		);
+		return TransitQuote_Premium\Admin_Config::get_config('tabs');
 	}
 
+	public function update_config_defaults(){
+		// update the conif with any saved settings
+		$distance_unit = $this->plugin->get_setting('premium_rates', 'distance_unit', 'Kilometer');
+		$this->tabs_config['premium_rates']['data']['distance_unit'] = $distance_unit;
+	}
 
 	public function create_tabs(){
 		$tabs = array();

@@ -192,10 +192,17 @@ class TransitQuote_Premium {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-settings-field-textarea.php';
 
 		/**
-		 * The class responsible for defining the database structure
+		 * The config class responsible for defining the database structure
 		 * for the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/db/class-db-config.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/config/class-db-config.php';
+
+		/**
+		 * The config class responsible for providing the admin tab structure
+		 * for the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/config/class-admin-config.php';
+
 
 		/**
 		 * The class responsible for defining data access methods
