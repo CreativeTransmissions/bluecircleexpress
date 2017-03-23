@@ -34,7 +34,9 @@ class TransitQuote_Premium_Settings_Field {
 		$this->admin = $this->config['admin'];
 		$this->cdb = $this->admin->cdb;
         $this->page = $this->config['page'];
-        $this->fields = array();
+        $this->value = $this->config['value'];
+        $this->help = $this->config['help'];
+        $this->field_name = $this->page.'['.$this->config['id'].']';
 	}
 
 	public function add_field(){
@@ -51,15 +53,6 @@ class TransitQuote_Premium_Settings_Field {
         if(isset($this->config['fields'])){
             $this->register_fields();
         };
-    }
-
-
-    public function render(){
-       
-        $field_name= $this->config['id'].'['.$this->config['id'].']';
-    	echo '<input type="text" name="'.$field_name.'" value="'.$value.'"/>';
-        echo "<p>Please enter the class or id of the html element in which to display the final quote.</p>".
-            "<p>Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.</p>";
     }
 
     private function get_value_if_exists(){

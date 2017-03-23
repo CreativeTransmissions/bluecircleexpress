@@ -64,6 +64,37 @@ class Admin_Config {
                               'sections'=>array()
                               ),
 
+              'premium_map_options'=>array(
+                              'key'=>'premium_map_options',
+                              'title'=>'Map Options',
+                              'sections'=>array('prem_settings_map_options'=>array(
+                                                  'id'=>'prem_settings_map_options',
+                                                  'title'=>'Map Options',
+                                                  'fields'=>array(
+                                                    'api_key'=>array(
+                                                      'id'=>'api_key',
+                                                      'label'=>'Googl Maps API Key',
+                                                      'type'=>'input'),
+                                                    'distance_unit'=>array(
+                                                      'id'=>'distance_unit',
+                                                      'label'=>'Distance Unit',
+                                                      'type'=>'select',
+                                                      'options'=>array('Kilometer', 'Mile')),
+                                                    'start_location'=>array(
+                                                      'id'=>'start_location',
+                                                      'label'=>'Start Location',
+                                                      'type'=>'addresspicker'),
+                                                    'geolocate'=>array(
+                                                      'id'=>'geolocate',
+                                                      'label'=>'Geolocation',
+                                                      'type'=>'checkbox'
+                                                      )
+                                                  )
+
+                                          )
+                                )
+                              ),
+
               'premium_quote_options'=>array(
                               'key'=>'premium_quote_options',
                               'title'=>'Quote Options',
@@ -71,6 +102,16 @@ class Admin_Config {
                                                   'id'=>'prem_settings_quote_options',
                                                   'title'=>'Quote Options',
                                                   'fields'=>array(
+                                                    
+                                                    'currency'=>array(
+                                                      'id'=>'currency',
+                                                      'label'=>'Currency Symbol',
+                                                      'type'=>'input'),
+                                                    'quote_element'=>array(
+                                                      'id'=>'quote_element',
+                                                      'label'=>'Quote Display Element',
+                                                      'help'=>'Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.',
+                                                      'type'=>'input'),
                                                     'success_message'=>array(
                                                       'id'=>'success_message',
                                                       'label'=>'Success Message',
@@ -83,19 +124,11 @@ class Admin_Config {
                                                       'id'=>'min_notice_charge',
                                                       'label'=>'Minimum Notice Charge',
                                                       'type'=>'input'),
-                                                    'currency'=>array(
-                                                      'id'=>'currency',
-                                                      'label'=>'Currency Symbol',
-                                                      'type'=>'select'),
-                                                    'quote_element'=>array(
-                                                      'id'=>'quote_element',
-                                                      'label'=>'Quote Display Element',
-                                                      'help'=>'Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.',
-                                                      'type'=>'input'),
                                                     'distance_unit'=>array(
                                                       'id'=>'distance_unit',
                                                       'label'=>'Distance Unit',
-                                                      'type'=>'select'),
+                                                      'type'=>'select',
+                                                      'options'=>array('Kilometer', 'Mile')),
                                                     'layout'=>array(
                                                       'id'=>'layout',
                                                       'label'=>'Layout',
