@@ -106,24 +106,29 @@ class Admin_Config {
                                                       'currency'=>array(
                                                         'id'=>'currency',
                                                         'label'=>'Currency Symbol',
-                                                        'type'=>'input'),
+                                                        'type'=>'input',
+                                                        'help'=>'Please enter the currency symbol or text to display. For example: £, $, GBP, USD etc..'),
                                                       'quote_element'=>array(
                                                         'id'=>'quote_element',
                                                         'label'=>'Quote Display Element',
-                                                        'help'=>'Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.',
+                                                        'help'=>'Please enter the class or id of the html element in which to display the final quote.<br/>Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.',
                                                         'type'=>'input'),
                                                       'success_message'=>array(
                                                         'id'=>'success_message',
                                                         'label'=>'Success Message',
-                                                        'type'=>'textarea'),
+                                                        'type'=>'textarea',
+                                                        'help'=>'Please enter the message that will be displayed to the customer after their quote has been saved and displayed on screen.
+This should explain any next steps they must take to confirm their booking.'),
                                                       'min_notice'=>array(
                                                         'id'=>'min_notice',
-                                                        'label'=>'Minimum Notice Period',
-                                                        'type'=>'input'),
+                                                        'label'=>'Minimum Notice Period (HH:MM)',
+                                                        'type'=>'input',
+                                                        'help'=>'Please enter minimum notice period before which an additional charge is incurred.'),
                                                       'min_notice_charge'=>array(
                                                         'id'=>'min_notice_charge',
                                                         'label'=>'Minimum Notice Charge',
-                                                        'type'=>'input')
+                                                        'type'=>'input',
+                                                        'help'=>'Please enter the additional charge for jobs booked within 24 hours..')
                                                     )
                                               )
 
@@ -132,7 +137,38 @@ class Admin_Config {
               'premium_email_options'=>array(
                               'key'=>'premium_email_options',
                               'title'=>'Email Options',
-                              'sections'=>array()
+                              'sections'=>array('prem_settings_email_options'=>array(
+                                                  'id'=>'prem_settings_email_options',
+                                                  'title'=>'Email Options',
+                                                  'fields'=>array(
+                                                    
+                                                      'notify'=>array(
+                                                        'id'=>'notify',
+                                                        'label'=>'Send New Job Emails To',
+                                                        'type'=>'input',
+                                                        'help'=>'Please enter the email addresses that will recieve new job requests. You can enter more than one by separating them with a comma.<br/>Example: <b>boss@mycompany.com, staff@mycompany.com</b>'),
+                                                      'from_address'=>array(
+                                                        'id'=>'from_address',
+                                                        'label'=>'Reply Address for Customer Quote Emails',
+                                                        'help'=>'Please enter the <em>From</em> email address that customers will recieve their quote emails from.<br/>Example: <b>customerservice@mycompany.com</b>',
+                                                        'type'=>'input'),
+                                                      'from_name'=>array(
+                                                        'id'=>'from_name',
+                                                        'label'=>'Contact Name for Customer Quote Emails',
+                                                        'type'=>'input',
+                                                        'help'=>'Please enter the <em>From</em> email address that customers will recieve their quote emails from.<br/>Example: <b>customerservice@mycompany.com</b>'),
+                                                      'customer_subject'=>array(
+                                                        'id'=>'customer_subject',
+                                                        'label'=>'Customer Quote Email Subject',
+                                                        'type'=>'input',
+                                                        'help'=>'Please enter the email subject for customer quote emails.<br/>Example: <b>Your Tranporation Quote</b>'),
+                                                      'customer_message'=>array(
+                                                        'id'=>'customer_message',
+                                                        'label'=>'Customer Quote Email Message',
+                                                        'type'=>'textarea',
+                                                        'help'=>'<p>Please enter the message to your customer that will appear above the journey details and quote.</p>')
+                                                    )
+                                              ))
                               ),
 
               'premium_paypal_options'=>array(
