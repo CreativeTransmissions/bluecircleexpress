@@ -24,10 +24,8 @@
 class TransitQuote_Premium_Settings_Field_AddressPicker extends TransitQuote_Premium_Settings_Field {
 
     public function render(){
-       
-        $field_name= $this->config['id'].'['.$this->config['id'].']';
-    	echo '<input type="text" name="'.$field_name.'" value="'.$this->config['value'].'"/>';
-        echo '<p>'.$this->config['help'].'</p>';
+    	echo '<input id="place_selector_address" type="text" class="addresspicker wide" name="'.$this->field_name.'" value="'.$this->value.'"/>';
+		echo '<div id="place-selector"></div>';
     }
 
 }

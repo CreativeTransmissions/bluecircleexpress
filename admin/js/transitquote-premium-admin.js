@@ -26,10 +26,10 @@
 					this.spinner(false);
 				},
 
-				initTab: function(){					
+				initTab: function(){
 					switch(this.tab){
-						case 'premium_quote_options':
-							this.initQuoteTabEvents();
+						case 'premium_map_options':
+							this.initMapTabEvents();
 						break;	
 						case 'premium_customers':
 							this.initCustomersTabUI();						
@@ -159,8 +159,8 @@
 							
 				},
 
-				initQuoteTabEvents: function(){
-					
+				initMapTabEvents: function(){
+					console.log('initQuoteTabEvents');
 					$(document).on('keyup keypress', 'form input[type="text"]', function(e) {
 					  if(e.keyCode == 13) {
 					    e.preventDefault();
@@ -695,7 +695,6 @@
 					this.spinner(true);
 
 					$('#'+tableName+' tbody').empty();
-					console.log('append to '+tableName);
 					var data = $.extend({
 							 	action: 'premium_load_table',
 							 }, options );
