@@ -49,18 +49,6 @@ class TransitQuote_Premium_Settings_Field {
                             array( $this, 'render' ), 
                             $this->page,
                             $this->section_id);
-
-        if(isset($this->config['fields'])){
-            $this->register_fields();
-        };
-    }
-
-    private function get_value_if_exists(){
-        $value = '';
-        if(isset($this->config['value'])){
-            $value = $this->config['value'];
-        };
-        return $value;
     }
 
 }

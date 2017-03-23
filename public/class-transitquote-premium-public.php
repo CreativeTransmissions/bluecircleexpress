@@ -105,12 +105,22 @@ class TransitQuote_Premium_Public {
 		}
 	}
 
-	public function load_settings() {		
-	 	$this->{$this->tab_1_settings_key} = (array) get_option( $this->tab_1_settings_key);
-	   	$this->{$this->tab_2_settings_key} = (array) get_option( $this->tab_2_settings_key);
-	   	$this->{$this->tab_5_settings_key} = (array) get_option( $this->tab_5_settings_key);
-	   	$this->{$this->tab_6_settings_key} = (array) get_option( $this->tab_6_settings_key);
+	public function define_tab_config(){
+		return TransitQuote_Premium\Admin_Config::get_config('tabs');
 	}
+
+	public function load_settings(){
+		$this->tabs_config = $this->define_tab_config();
+		$this->settings = array();
+		// update the conif with any saved settings
+		foreach ($this->tabs_config as $tab_key => $tab) {
+			$saved_options = (array) get_option($tab_key, array());
+			if(!empty($saved_options)){
+				$this->settings = array_merge($this->settings, $saved_options);
+			}
+		};
+	}
+
 	private function get_rates(){
 	   	$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
@@ -1111,7 +1121,7 @@ class TransitQuote_Premium_Public {
 	}
 	public function get_setting($tab, $name, $default = ''){
 		//get and escape setting
-		if(empty($this->{$tab}[$name])){
+		if(empty($this->settings[$name])){
 			return $default;
 		} else {
 			return esc_attr($this->{$tab}[$name]);

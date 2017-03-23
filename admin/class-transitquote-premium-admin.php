@@ -139,33 +139,67 @@ class TransitQuote_Premium_Admin {
 		$this->ajax = new TransitQuote_Premium\CT_AJAX();
 		$this->cdb = TransitQuote_Premium::get_custom_db();
 		$this->dbui = new TransitQuote_Premium\CT_DBUI(array('cdb'=>$this->cdb));
-		$this->tabs_config = $this->define_tab_config();
-		$this->plugin->load_settings();
+		$this->tabs_config = $this->plugin->define_tab_config();
 		$this->update_config_defaults();
 		$this->tabs = $this->create_tabs();
+
 	}
 
-	public function define_tab_config(){
-		return TransitQuote_Premium\Admin_Config::get_config('tabs');
-	}
-
+	
 	public function update_config_defaults(){
 		// update the conif with any saved settings
-		$distance_unit = $this->plugin->get_setting('premium_rates', 'distance_unit', 'Kilometer');
-		$this->tabs_config['premium_rates']['data']['distance_unit'] = $distance_unit;
+		foreach ($this->tabs_config as $tab_key => $tab) {
+			$tab = $this->add_tab_sections_if_not_set($tab);
+			$saved_options =  (array) get_option($tab_key);
+			foreach ($tab['sections'] as $section_key => $section) {
+				if(isset($section['fields'])){
+					foreach ($section['fields'] as $field_key => $field) {
+						// get save setting. if none exists use $field['value'] set in class-admin-config.php
+						$default_value = '';
+						if(isset($field['value'])){
+							$default_value = $field['value'];
+						};
+
+						if(isset($saved_options[$field_key])){
+							$field['value'] = $saved_options[$field_key];							
+						} else {
+							$field['value'] = $default_value;
+						};
+
+						//echo ' value: '.$field['value'];
+						$section['fields'][$field_key] = $field;
+					}
+					$tab['sections'][$section_key] = $section;
+				}
+				
+			};
+
+			$this->tab_config[$tab_key] = $tab;
+		};
+		
 	}
 
+	public function add_tab_sections_if_not_set($tab){
+		if(!isset($tab['sections'])){
+				$tab['sections'] = array();
+		};
+		return $tab;
+	}
 	public function create_tabs(){
 		$tabs = array();
-		 foreach ( $this->tabs_config as $tab_key => $tab_config) {
+		foreach ( $this->tabs_config as $tab_key => $tab_config) {
+			
+			$config = $this->tab_config[$tab_key];
+
 		 	// include plugin_slug for use in tab name
-		 	$tab_config['admin'] =  $this;
-		 	$tab_config['plugin_slug'] = $this->plugin_slug;
-		 	$tab_config['partials_path'] =  'partials/';
-		 	$tab_config['tab_key'] = $tab_key;
+		 	$config['admin'] =  $this;
+		 	$config['plugin_slug'] = $this->plugin_slug;
+		 	$config['partials_path'] =  'partials/';
+		 	$config['tab_key'] = $tab_key;
 
 		 	// instanciate tab
-			$tabs[$tab_key] = new TransitQuote_Premium_Tab($tab_config);
+
+			$tabs[$tab_key] = new TransitQuote_Premium_Tab($config);
 
 			// register tab with 
 			$tabs[$tab_key]->register_tab();

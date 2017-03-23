@@ -38,6 +38,7 @@ class TransitQuote_Premium_Settings_Section {
     	if(empty($this->config)){
     		return false;
     	};
+          //          print_r($this->config);
     	add_settings_section($this->section_id,
                              $this->config['title'],
                              array( $this, 'render' ),

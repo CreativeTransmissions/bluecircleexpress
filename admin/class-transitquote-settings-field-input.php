@@ -24,10 +24,11 @@
 class TransitQuote_Premium_Settings_Field_Input extends TransitQuote_Premium_Settings_Field {
 
     public function render(){
-        
+
         $label = $this->config['label'];
         $help = $this->config['help'];
-    	echo '<input type="text" name="'.$this->field_name.'" value="'.$this->config['value'].'"/>';
+        $value = $this->config['value'];
+    	echo '<input type="text" name="'.$this->field_name.'" value="'.$value.'"/>';
         echo '<p>'.$this->config['help'].'</p>';
     }
 
