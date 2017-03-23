@@ -166,7 +166,7 @@ This should explain any next steps they must take to confirm their booking.'),
                                                         'id'=>'customer_message',
                                                         'label'=>'Customer Quote Email Message',
                                                         'type'=>'textarea',
-                                                        'help'=>'<p>Please enter the message to your customer that will appear above the journey details and quote.</p>')
+                                                        'help'=>'Please enter the message to your customer that will appear above the journey details and quote.')
                                                     )
                                               ))
                               ),
@@ -174,14 +174,56 @@ This should explain any next steps they must take to confirm their booking.'),
               'premium_paypal_options'=>array(
                               'key'=>'premium_paypal_options',
                               'title'=>'PayPal Options',
-                              'sections'=>array()
+                              'sections'=>array('prem_settings_paypal_options'=>array(
+                                                  'id'=>'prem_settings_paypal_options',
+                                                  'title'=>'PayPal Options',
+                                                  'fields'=>array(
+                                                    'business_email'=>array(
+                                                        'id'=>'business_email',
+                                                        'label'=>'PayPal Email Address',
+                                                        'type'=>'input',
+                                                        'help'=>'This is the email address that you use to login to PayPal and accept payments.'
+                                                     ),
+                                                    'item_name'=>array(
+                                                        'id'=>'item_name',
+                                                        'label'=>'PayPal Item Name',
+                                                        'type'=>'input',
+                                                        'help'=>'This is the item name that will be be listed against the payment in your customers PayPal account.'
+                                                     ),
+                                                    'endpoint'=>array(
+                                                        'id'=>'endpoint',
+                                                        'label'=>'Live API Endpoint',
+                                                        'type'=>'input',
+                                                        'help'=>'This is the PayPal URL  that live payment information is sent to. Changing this is not recommended.'
+                                                     ),
+                                                    'sandbox'=>array(
+                                                        'id'=>'sandbox',
+                                                        'label'=>'Use Sandbox/Testing Mode',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'When this box is ticked all payments will be simulated using the PayPal sandbox website.'
+                                                     ),
+                                                    'test_business_email'=>array(
+                                                        'id'=>'test_business_email',
+                                                        'label'=>'PayPal Sandbox Email Address',
+                                                        'type'=>'input',
+                                                        'help'=>'This is the email address that will recieve test payments in sandbox mode. This is a a dummy PayPal account which should be set up in your PayPal developer account for testing payments.'
+                                                     ),
+                                                    'sandbox_endpoint'=>array(
+                                                        'id'=>'sandbox_endpoint',
+                                                        'label'=>'Sandbox API Endpoint',
+                                                        'type'=>'input',
+                                                        'help'=>'This is the PayPal URL that test payment information is sent to. Changing this is not recommended.')
+                                                     ),
+                                                  )
+                                          )
                               ),
 
               'premium_paypal_transactions'=>array(
                               'key'=>'premium_paypal_transactions',
                               'title'=>'PayPal Transactions',
                               'sections'=>array()
-                              )
+                             )
+
       );
   }
 
