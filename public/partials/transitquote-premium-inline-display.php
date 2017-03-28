@@ -23,29 +23,20 @@
             <legend>Enter Addresses</legend>
             <div class="field bt-flabels__wrapper">
                 <label for="pick_up">Customer Location</label>
+                <a href="#" class="no-address no-address-0">I can't find my address</a>
                 <input tabindex="8" class="text addresspicker" required type="text" name="address_0" id="address_0" value="" autocomplete="false"/>
                 <span class="bt-flabels__error-desc">Required: Customer Location</span>
-                <a href="#" class="no-address no-address-0">I can't find my address</a>
+                <input class="small inline-block" type="text" id="address_0_appartment_no" name="address_0_appartment_no" placeholder="Unit" value=""/>
+                <input class="small inline-block postcode right" type="text" id="address_0_postal_code" name="address_0_postal_code" placeholder="Postcode" value=""/>
             </div>
-<!--             <div class="tq-row">
-                <div class="tq-col48">
-                    <div class="field bt-flabels__wrapper">
-                        <label for="pick_up">Appartment No</label>
-                        <input tabindex="9" class="text" type="text" name="appartment_no_0" id="address_0_appartment_no" value="" autocomplete="false"/>
-                    </div>
-                </div>
-                <div class="tq-col48 right">
-                    <div class="field bt-flabels__wrapper">
-                        <label for="pick_up">Postal Code</label>
-                        <input tabindex="10" class="text" type="text" name="address_0_postal_code" id="address_0_postal_code" value="" autocomplete="false"/>
-                    </div>
-                </div>
-            </div> -->
+
             <div class="field bt-flabels__wrapper">
                 <label for="drop_off">Customer Destination</label>
-                <input  tabindex="11" class="text addresspicker" required type="text" name="address_1" id="address_1" value="" autocomplete="false"/>
-                <span class="bt-flabels__error-desc">Required: Destination Address</span>
                 <a href="#" class="no-address no-address-1">I can't find my address</a>
+                <span class="bt-flabels__error-desc">Required: Destination Address</span>
+                <input  tabindex="11" class="text addresspicker" required type="text" name="address_1" id="address_1" value="" autocomplete="false"/>
+                <input class="small inline-block" type="text" id="address_1_appartment_no" name="address_1_appartment_no" placeholder="Unit" value=""/>
+                <input class="small inline-block postcode right" type="text" id="address_1_postal_code" name="address_1_postal_code" placeholder="Postcode" value=""/>
             </div>
         </fieldset>
 

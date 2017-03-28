@@ -233,7 +233,9 @@ class TransitQuote_Premium_Public {
             return false;				
 		};	
 
-		self::get_job_details();
+		if(self::job_is_available()){
+			self::get_job_details();
+		};
 		//get text payment status message
 		$payment_status = $this->paypal->get_payment_status($this->job);
 
@@ -510,37 +512,6 @@ class TransitQuote_Premium_Public {
 			$this->customer = self::save('customers',null, array('id'=>$existing_customer['id']));
 		};
 
-		//get from location from map address_0 field
-		$record_data = self::get_record_data('locations', 0);
-		$address_0_location_id = self::get_location_by_address($record_data);
-		if(empty($address_0_location_id)){
-			//no match, create new location
-			$this->location_0 = self::save('locations',0);
-		} else {
-			//existing location
-			$this->location_0 = $this->cdb->get_row('locations', $address_0_location_id);
-		};
-
-		if(empty($this->location_0)){
-			return false;
-		};
-
-		//get from location from map address_1 field
-		$record_data = self::get_record_data('locations', 1);
-		//search for a match lat lng address in db
-		$address_1_location_id = self::get_location_by_address($record_data);
-		if(empty($address_1_location_id)){
-			//no match, create new location
-			$this->location_1 = self::save('locations',1);
-		} else {
-			//existing location id passed in params
-			$this->location_1 = $this->cdb->get_row('locations', $address_1_location_id);
-		};
-
-		if(empty($this->location_1)){
-			return false;
-		};
-
 		$this->quote = self::save('quotes');
 		//$this->quote_surcharge_ids = self::save_surcharges($this->quote['id']);
 
@@ -549,16 +520,21 @@ class TransitQuote_Premium_Public {
 		$this->job = self::save('jobs',null, array('customer_id'=>$this->customer['id'],
 													'accepted_quote_id'=>$this->quote['id']));
 
-		//a job could potentially have multiple journeys so save job id against table
-		$this->journey = self::save('journeys',null,array('job_id'=>$this->job['id'],
-												'origin_location_id'=>$this->location_0['id'],
-												'dest_location_id'=>$this->location_1['id']));
-		
+		$this->save_journey();
+		$this->journey_order = $this->get_journey_order_from_post_data();
+		$this->save_locations();
+		if(!$this->save_journeys_locations()){
+			$message = 'Unable to save route information';
+		};
+
 		//default message
 		$message ='Request booked successfully';
 		
+		if(self::job_is_available()){
+			$this->job = self::get_job_details();
+		};
 
-		$this->job = self::get_job_details();
+		
 		$email = self::email_dispatch('New Removal Request: '.$this->customer['first_name']." ".$this->customer['last_name']);
 		$customer_email = self::email_customer();
 
@@ -570,6 +546,146 @@ class TransitQuote_Premium_Public {
 
 	}
 
+	private function save_journey(){
+		//a job could potentially have multiple journeys so save job id against table
+		$this->journey = self::save('journeys',null,array('job_id'=>$this->job['id']));
+	}
+
+	function get_journey_order_from_post_data(){
+		// build array of address post field indexes in order of journey_order
+		$journey_order = array();
+		foreach($_POST as $key => $value) {
+	    	if(strpos($key, 'journey_order')) {
+	    		// key example: address_1_journey_order
+	    		$key_array = explode('_', $key);
+	    		$address_index = $key_array[1];
+		        $journey_order[$value] = $address_index;
+	    	}
+		};
+		return $journey_order;
+	}
+
+	private function save_locations(){
+		// save all locations in journey
+		$this->locations_in_journey_order = array();
+		foreach ($this->journey_order as $key => $address_index) {
+			$location = $this->save_location($address_index);
+			if($location === false){
+				self::debug('Unable to save location: '.$address_index);
+				return false;
+			};
+			// store ids in array ready for save
+			$this->locations_in_journey_order[$key] = array('journey_id' => $this->journey['id'],
+															'location_id'=> $location['id'],
+															'journey_order'=>$key,
+															'created'=>date('Y-m-d G:i:s'),
+															'modified'=>date('Y-m-d G:i:s'));
+		};
+
+	}
+
+	private function save_location($address_index){
+
+		$record_data = self::get_location_record_data('locations', $address_index);
+		$location_id = self::get_location_by_address($record_data);
+		if(empty($location_id)){
+			//no match, create new location in database
+			$location_id = self::save_record('locations', $record_data);
+			if($location_id===false){
+				return false;
+			};
+			// add new id to array of location details
+			$location['id'] = $location_id;
+		} else {
+
+			//existing location
+			$location = $this->cdb->get_row('locations', $location_id);
+		};
+
+		if(empty($location)){
+			return false;
+		};
+
+		return $location;
+	}
+
+ 	private function get_location_record_data($table, $idx = null){
+		//get params for records data from front end
+		//idx is a 0 based index for where more than one rec is passed
+		//get the field names to save
+		$fields = $this->cdb->get_table_col_names($table);
+		if($fields === false){
+			$this->ajax->respond(array('success' => 'false',
+                                    'msg'=>'Invalid table for update '.$table));
+		};
+
+		//append string to param name for instances of more than 1 rec
+		$idx_str = '';
+		if(is_numeric($idx)){
+			$idx_str = '_'.$idx;
+		};
+
+		//init the record array
+		$record_data = array();
+
+		//get parameters
+		foreach ($fields as $key => $field) {
+			switch($field){
+				case 'created':
+				case 'modified':
+					$record_data[$field] = date('Y-m-d G:i:s');
+					break;
+				default:
+					$param_name = 'address'.$idx_str.'_'.$field;
+					$val = $this->ajax->param(array('name'=>$param_name, 'optional'=>true));
+					if(!empty($val)){
+						$record_data[$field] = sanitize_text_field($val);
+					};
+					if(strrpos($field, '_date')>-1){
+						$record_data[$field] = $this->cdb->mysql_date($record_data[$field]);
+					};				
+			};
+		};
+
+		return $record_data;
+	}
+
+	private function get_location_by_address($record_data){
+		//check for an existing location by its address and lat lng coordinates
+		if(empty($record_data['lat'])){
+			return false;
+		};
+		if(empty($record_data['lng'])){
+			return false;
+		};
+
+		$lat = round($record_data['lat'] / 10, 7) * 10;
+		$lng = round($record_data['lng'] / 10, 7) * 10;
+		$query = array( 'address'=>$record_data['address'],
+											'lat'=>$lat,
+											'lng'=>$lng);
+		$location = $this->cdb->get_rows('locations',$query,
+									array('id'));
+
+		if(empty($location)){
+			return false;
+		};
+		
+		return $location[0]['id'];
+		
+	}
+
+	private function save_journeys_locations(){
+		// save all locations in journey
+		foreach ($this->locations_in_journey_order as $key => $step) {
+			$row_id = self::save_record('journeys_locations', $step);
+			if($row_id===false){
+				self::debug(array('msg'=>'Unable to save journeys_locations: '.$key,
+									'data'=>$step));
+				return false;
+			}
+		}				
+	}
 	/*
 		Payment Methods After Recieving Quote 
 	*/
@@ -617,8 +733,9 @@ class TransitQuote_Premium_Public {
 		//get job from job_id
 		$this->job = self::get_job($job_id);
 		// get related job data
-		$this->job = self::get_job_details($this->job);
-
+		if(self::job_is_available()){
+			$this->job = self::get_job_details($this->job);
+		};
 		$paypal_config = array('cdb'=>$this->cdb,
 								'amount' => $this->quote['total'],
 								'business'=> self::get_setting('premium_paypal_options', 'business_email'),
@@ -751,29 +868,6 @@ class TransitQuote_Premium_Public {
 		$html .= '</tr></table>';
 		echo $html;
 	}
-	private function get_location_by_address($record_data){
-		//check for an existing location by its address and lat lng coordinates
-		if(empty($record_data['lat'])){
-			return false;
-		};
-		if(empty($record_data['lng'])){
-			return false;
-		};
-
-		$lat = round($record_data['lat'] / 10, 7) * 10;
-		$lng = round($record_data['lng'] / 10, 7) * 10;
-		$query = array( 'address'=>$record_data['address'],
-											'lat'=>$lat,
-											'lng'=>$lng);
-		$location = $this->cdb->get_rows('locations',$query,
-									array('id'));
-
-		if(empty($location)){
-			return false;
-		};
-		
-		return $location[0]['id'];
-	}
 
  	private function get_job($job_id = null){
     	//get job record from property or database
@@ -791,20 +885,21 @@ class TransitQuote_Premium_Public {
 		return $this->cdb->get_row('jobs',$job_id);
     }
 
+    function job_is_available($job = null){
+    	if(empty($job)){
+    		$job = $this->job;
+    	}; 
+
+    	if(empty($job)){	
+    		return false;
+    	};
+    	return true;
+    }
+
 	public function get_job_details($job = null){
 		$plugin = new TransitQuote_Premium();	
 		$this->cdb = $plugin->get_custom_db();
 		//add the details to a job record
-		if(empty($job)){
-    		$job = $this->job;
-    	}; 
-
-    	if(empty($job)){
-    		//no job to add details to
-			self::debug(array('name'=>'No job to add details to.'));     		
-    		return false;
-    	};
-
 		if(!isset($this->customer)){
 			$this->customer = $this->cdb->get_row('customers', $job['customer_id']);
 			if($this->customer===false){
