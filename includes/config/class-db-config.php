@@ -359,6 +359,15 @@ private function config_payment_types(){
       'default' => '',
       'format' => '%s',
     ),
+    'available' => 
+    array (
+      'name' => 'available',
+      'type' => 'tinyint',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d',
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -627,7 +636,7 @@ private function config_jobs(){
       'default' => '',
       'format' => '%s'
     ),
-  /*  'delivery_time' => 
+  'delivery_time' => 
     array (
       'name' => 'delivery_time',
       'type' => 'datetime',
@@ -635,7 +644,7 @@ private function config_jobs(){
       'auto' => '',
       'default' => '',
       'format' => '%s'
-    ),*/
+    ),
     'description' => 
     array (
       'name' => 'description',

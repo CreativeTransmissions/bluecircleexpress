@@ -98,10 +98,12 @@ class TransitQuote_Premium_Public {
 			if(is_array($error)){
 				echo '<pre>';
 				print_r($error);
-				echo '</pre>';				
+				echo '</pre>';
+				$error = print_r($error, true);
 			} else {
 				echo '<br/>'.$error;
 			}
+			trigger_error($error, E_USER_WARNING);
 		}
 	}
 
@@ -763,7 +765,7 @@ class TransitQuote_Premium_Public {
 		$query = array( 'address'=>$record_data['address'],
 											'lat'=>$lat,
 											'lng'=>$lng);
-		$location = $this->cdb->get_rows('tp_locations',$query,
+		$location = $this->cdb->get_rows('locations',$query,
 									array('id'));
 
 		if(empty($location)){
@@ -866,6 +868,11 @@ class TransitQuote_Premium_Public {
     		return false;
     	};
 
+    	if(empty($job['delivery_time'])){
+    		self::debug('No delivery_time');
+    		var_dump($job);
+    		return '';
+    	};
     	$job_date = array();
 
     	//get date
@@ -1124,7 +1131,7 @@ class TransitQuote_Premium_Public {
 		if(empty($this->settings[$name])){
 			return $default;
 		} else {
-			return esc_attr($this->{$tab}[$name]);
+			return esc_attr($this->settings[$name]);
 		}
 	}
 	public function get_notification_emails(){
