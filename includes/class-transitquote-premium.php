@@ -361,6 +361,8 @@ class TransitQuote_Premium {
 		$db_config = new TransitQuote_Premium\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
+		$cdb->define_table($db_config->get_config('companies'));
+		$cdb->define_table($db_config->get_config('contacts'));
 		$cdb->define_table($db_config->get_config('customers'));
 		$cdb->define_table($db_config->get_config('quotes'));
 		$cdb->define_table($db_config->get_config('services'));

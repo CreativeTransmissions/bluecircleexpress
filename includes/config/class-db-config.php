@@ -26,6 +26,164 @@ class DB_Config {
   }
 
 
+/* holds list of companies */
+private function config_companies(){
+ return array (
+  'name' => 'companies',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'desc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d'
+    ),
+    'name' => 
+    array (
+      'name' => 'name',
+      'type' => 'varchar(45)',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'datetime',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'datetime',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
+
+/* contacts at the pick up and drop off locations */
+private function config_contacts(){
+ return array (
+  'name' => 'contacts',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'desc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'company_id' => 
+    array (
+      'name' => 'company_id',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'first_name' => 
+    array (
+      'name' => 'first_name',
+      'type' => 'varchar(45)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'last_name' => 
+    array (
+      'name' => 'last_name',
+      'type' => 'varchar(45)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'email' => 
+    array (
+      'name' => 'email',
+      'type' => 'varchar(128)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'phone' => 
+    array (
+      'name' => 'phone',
+      'type' => 'varchar(45)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'datetime',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'datetime',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+  ),
+  'pk' => 'id',
+);
+
+}
+
 private function config_customers(){
  return array (
   'name' => 'customers',
@@ -80,25 +238,7 @@ private function config_customers(){
       'default' => '',
       'format' => '%s'
     ),
-   'company_name' => 
-    array (
-      'name' => 'company_name',
-      'type' => 'varchar(128)',
-      'null' => 'null',
-      'auto' => '',
-      'default' => '',
-      'format' => '%s'
-    ),
-     'company_address' => 
-    array (
-      'name' => 'company_address',
-      'type' => 'text',
-      'null' => 'null',
-      'auto' => '',
-      'default' => '',
-      'format' => '%s'
-    ),
-  /*  'phone' => 
+    'phone' => 
     array (
       'name' => 'phone',
       'type' => 'varchar(45)',
@@ -106,7 +246,7 @@ private function config_customers(){
       'auto' => '',
       'default' => '',
       'format' => '%s'
-    ),*/
+    ),
     'created' => 
     array (
       'name' => 'created',

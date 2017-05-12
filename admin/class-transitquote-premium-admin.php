@@ -357,34 +357,51 @@ class TransitQuote_Premium_Admin {
 	    	$filter_sql .= " where date(jobs.created) <= '".$dates['to_date']."' and date(jobs.created) >= '".$dates['from_date']."'"; 
     	};    	
 
-    	$sql = "SELECT distinct	wp_premium_tp_jobs.id,
-								c.company_name,
-								l.address as collection_address,
-								wp_premium_tp_jobs.customer_id,
-								wp_premium_tp_jobs.created,
-								wp_premium_tp_jobs.modified,
+    	$sql = "SELECT distinct	jobs.id,
+								l.address as pick_up,
+								ld.address as drop_off,
+								jobs.customer_id,
+								jobs.created,
+								jobs.modified,
 								trim(concat(c.first_name,' ',c.last_name)) as last_name,
 								v.name as vehicle_type,
-								q.total as quote 
-							FROM wp_premium_tp_jobs 
-								left join wp_premium_tp_journeys j 
-									on j.job_id = wp_premium_tp_jobs.id 
-								left join wp_premium_tp_journeys_locations jl 
+								q.total as quote,
+								pt.name as payment_type,
+								pst.name as payment_status
+							FROM wp_tq_prm_jobs jobs
+								left join wp_tq_prm_journeys j 
+									on j.job_id = jobs.id 
+
+								left join wp_tq_prm_journeys_locations jl 
 									on j.id = jl.journey_id and
 										jl.journey_order = 0
-								left join wp_premium_tp_locations l 
+								left join wp_tq_prm_locations l 
 									on jl.location_id = l.id and 
 										jl.journey_order = 0
-								left join wp_premium_tp_customers c 
-									on c.id = wp_premium_tp_jobs.customer_id 
-								left join wp_premium_tp_vehicles v 
-									on v.id = wp_premium_tp_jobs.vehicle_id 
-								left join wp_premium_tp_services s 
-									on v.id = wp_premium_tp_jobs.service_id 
-								left join wp_premium_tp_quotes q 
-									on q.id = wp_premium_tp_jobs.accepted_quote_id
+
+								left join wp_tq_prm_journeys_locations jld 
+									on j.id = jld.journey_id and
+										jld.journey_order = 1
+								left join wp_tq_prm_locations ld 
+									on jl.location_id = ld.id and 
+										jl.journey_order = 1
+
+								left join wp_tq_prm_customers c 
+									on c.id = jobs.customer_id 
+								left join wp_tq_prm_vehicles v 
+									on v.id = jobs.vehicle_id 
+								left join wp_tq_prm_services s 
+									on v.id = jobs.service_id 
+								left join wp_tq_prm_quotes q 
+									on q.id = jobs.accepted_quote_id
+
+								left join wp_tq_prm_payment_types pt 
+									on pt.id = jobs.payment_type_id
+
+								left join wp_tq_prm_status_types pst 
+									on pst.id = jobs.payment_status_id
 			".$filter_sql." 
-			order by wp_premium_tp_jobs.id desc;";
+			order by jobs.id desc;";
 
 
 		$data = $this->cdb->query($sql);
@@ -495,14 +512,11 @@ class TransitQuote_Premium_Admin {
 									'fields'=>array(/*'move_type',*/
 													'created',
 													'c.last_name as last_name',
-													'lo.address as pick_up',
+													'l.address as pick_up',
 													'ld.address as drop_off',									
 													'delivery_time',
 													'payment_type',
 													'payment_status'),
-									'joins'=>array( 
-											array('customers c','id','customer_id', '', 'left'),
-										),
 									'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime'),
 									'inputs'=>false,
 									'table'=>'jobs',
