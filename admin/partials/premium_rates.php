@@ -7,13 +7,13 @@
 			<div class="inline-field">
 				<label for="group">Select Service</label>
 				<select name="service_id" class="inline">
-					<?php $this->admin->render_service_options(); ?>
+					<?php $this->admin->plugin->render_service_options(); ?>
 				</select>
 			</div>
 			<div class="inline-field">
 				<label for="group">Select Vehicle</label>
 				<select name="vehicle_id" class="inline">
-					<?php $this->admin->render_vehicle_options(); ?>
+					<?php $this->admin->plugin->render_vehicle_options(); ?>
 				</select>
 			</div>
 		</div>
@@ -56,13 +56,13 @@
 		<div class="inline-field">
 			<label for="group">Select Service</label>
 			<select name="service_id" class="inline">
-				<?php $this->admin->render_service_options(); ?>
+				<?php $this->admin->plugin->render_service_options(); ?>
 			</select>
 		</div>
 		<div class="inline-field">
 			<label for="group">Select Vehicle</label>
 			<select name="vehicle_id" class="inline">
-				<?php $this->admin->render_vehicle_options(); ?>
+				<?php $this->admin->plugin->render_vehicle_options(); ?>
 			</select>
 		</div>
  	</fieldset>

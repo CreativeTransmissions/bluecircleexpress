@@ -251,7 +251,7 @@ class TransitQuote_Premium_Public {
 		$data = $this->cdb->query($sql);
 		return $data;
     }
-    
+
 	public function init_plugin(){
 		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
@@ -1609,6 +1609,62 @@ class TransitQuote_Premium_Public {
 			
 		};
 		return $out;
+	}
+public function render_service_options($selected_id = 1){
+		// get list of services from db
+		$services = $this->get_services();
+		return $this->render_select_options($services, $selected_id);
+	}
+
+	public function render_service_options_with_rates($selected_id = 1){
+		// get list of services from db
+		$services = $this->get_services_with_rates();
+		return $this->render_select_options($services, $selected_id);
+	}
+
+	public function render_vehicle_options($selected_id = 1){
+		// get list of vehicles from db
+		$vehicles = $this->get_vehicles();
+		return $this->render_select_options($vehicles, $selected_id);
+	}
+
+	public function render_vehicle_options_with_rates($selected_id = 1){
+		// get list of vehicles from db
+		$vehicles = $this->get_vehicles_with_rates();
+		return $this->render_select_options($vehicles, $selected_id);
+	}
+
+	public function render_select_options($options = null, $selected_id = null){
+		if(empty($options)){
+			return false;
+		};
+
+		if(!is_array($options)){
+			return false;
+		};
+
+		// loop through list
+		foreach ($options as $key => $option) {
+			// set selected attribute if item is selected
+			$selected = ($option['id']==$selected_id) ? 'selected="selected" ' : '';
+			echo '<option value="'.$option['id'].'" '.$selected.'>'.$option['name'].'</option>';
+		}
+	}
+
+	public function render_vehicle_descriptions(){
+		// render all vehicle descriptions so they can be hidden or shown as option changes
+
+		$descriptions_html = '';
+		$style_attribute = '';
+		$vehicles = $this->cdb->get_rows('vehicles');
+		foreach ($vehicles as $key => $vehicle) {
+			if($key>0){
+				$style_attribute = ' style="display: none;" ';
+			};
+			$descriptions_html .= '<p class="select-desc v-desc-'.$vehicle['id'].'" '.$style_attribute.'>'.$vehicle['description'].'</p>';
+		}
+
+		echo $descriptions_html;
 	}
 
 	/**

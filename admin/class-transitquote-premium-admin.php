@@ -228,47 +228,6 @@ class TransitQuote_Premium_Admin {
          echo '<div class="spinner"></div></h2>';
     }
 
-	public function render_service_options($selected_id = 1){
-		// get list of services from db
-		$services = $this->plugin->get_services();
-		return $this->render_select_options($services, $selected_id);
-	}
-
-	public function render_service_options_with_rates($selected_id = 1){
-		// get list of services from db
-		$services = $this->plugin->get_services_with_rates();
-		return $this->render_select_options($services, $selected_id);
-	}
-
-	public function render_vehicle_options($selected_id = 1){
-		// get list of vehicles from db
-		$vehicles = $this->plugin->get_vehicles();
-		return $this->render_select_options($vehicles, $selected_id);
-	}
-
-	public function render_vehicle_options_with_rates($selected_id = 1){
-		// get list of vehicles from db
-		$vehicles = $this->plugin->get_vehicles_with_rates();
-		return $this->render_select_options($vehicles, $selected_id);
-	}
-
-	public function render_select_options($options = null, $selected_id = null){
-		if(empty($options)){
-			return false;
-		};
-
-		if(!is_array($options)){
-			return false;
-		};
-
-		// loop through list
-		foreach ($options as $key => $option) {
-			// set selected attribute if item is selected
-			$selected = ($option['id']==$selected_id) ? 'selected="selected" ' : '';
-			echo '<option value="'.$option['id'].'" '.$selected.'>'.$option['name'].'</option>';
-		}
-	}
-
 	/**
 	 * NOTE:     Actions are points in the execution of a page or process
 	 *           lifecycle that WordPress fires.

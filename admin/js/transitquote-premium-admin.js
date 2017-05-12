@@ -40,8 +40,8 @@
 							this.initRatesTabEvents();
 						break;
 						case 'premium_services':
-							this.initServiceTabUI();						
-							this.initServiceTabEvents();
+							this.initServiceTabUI();
+							this.initServiceTabEvents();					
 							this.initEditTableEvents('services');
 						break;							
 						case 'premium_vehicles':
@@ -293,6 +293,33 @@
 					});
 							
 				},
+
+				initServiceTabEvents: function(){
+					var that = this;
+
+					//set form to read/populate
+					this.editForm = $('#edit_service_form')[0];
+					this.editTable = $('#service_table')[0];
+
+					// set form status message
+					this.editRecordMessage = 'Editing Service';
+					this.newRecordMessage = 'Enter New Service'
+
+					//Clear / New Service
+					$('#clear_service').on('click', function(e){
+						e.preventDefault();
+						that.clearForm(this);
+						that.updateLegend(that.editForm, that.newRecordMessage);
+					});
+
+					//Save Service
+					$(this.editForm).on('submit',function(e) {
+					    e.preventDefault();
+					    that.spinner(true);
+					    that.saveRecord(this);
+					});					
+				},
+
 				
 				initVehicleTabUI: function(){
 
@@ -910,6 +937,20 @@
 
 				},
 
+				setRatesTableFilters: function(){
+					// after saving rates, synch table filters so we can see the changes
+					console.log('this.selectedServiceId: '+ this.selectedServiceId);
+					console.log('this.selectedVehicleId: '+ this.selectedVehicleId);
+					this.serviceFilter.val(this.selectedServiceId);
+					this.vehicleFilter.val(this.selectedVehicleId);
+					this.selectedServiceFilterId = this.selectedServiceId;
+					this.selectedVehicleFilterId = this.selectedVehicleId;
+					this.loadTable({
+						service_id: this.selectedServiceFilterId,
+						vehicle_id: this.selectedVehicleFilterId,
+						table: 'rates'
+					});
+				},
 				saveRecord: function(form){
 					var that = this;
 					this.spinner(true);
