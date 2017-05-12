@@ -412,6 +412,15 @@ class TransitQuote_Premium {
 			$cdb->update_row('payment_status_types', array('name' => 'failed', 'description'=> 'Payment Failed', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_status_types', array('name' => 'pending', 'description'=> 'Payment Pending', 'created'=>$created, 'modified'=>$modified ));					
 		};
+
+		if($cdb->get_count('services')==0){
+			$cdb->update_row('services', array('name'=>'Standard', 'description' =>'Standard rates and turnaround apply.', 'amount'=>0,' created'=>$created, 'modified'=>$modified ));
+		};
+
+		if($cdb->get_count('vehicles')==0){
+			$cdb->update_row('vehicles', array('name'=>'Van', 'description' =>'Standard delivery vehicle.', 'amount'=>0,' created'=>$created, 'modified'=>$modified ));
+		};
+
 		return;
 	}
 	

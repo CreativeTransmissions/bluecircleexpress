@@ -40,6 +40,16 @@
 							this.initRatesTabUI();					
 							this.initRatesTabEvents();
 						break;
+						case 'premium_services':
+							this.initServiceTabUI();						
+							this.initServiceTabEvents();
+							this.initEditTableEvents('services');
+						break;							
+						case 'premium_vehicles':
+							this.initVehicleTabUI();
+							this.initVehicleTabEvents();
+							this.initEditTableEvents('vehicles');
+						break;	
 						default:
 							this.initJobsTabUI();
 							this.initJobsTabEvents();
@@ -228,6 +238,27 @@
 					});
 					
 				},
+
+				initServiceTabUI: function(){
+
+					var that = this;
+
+					this.loadTable({
+						table: 'services'
+					});
+							
+				},
+				
+				initVehicleTabUI: function(){
+
+					var that = this;
+
+					this.loadTable({
+						table: 'vehicles'
+					});
+							
+				},
+				
 
 				initSurchargeTabEvents : function(){
 					var that = this;

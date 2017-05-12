@@ -531,6 +531,23 @@ class TransitQuote_Premium_Admin {
 									'actions'=>array('Delete'),
 									'tpl_row'=>'<tr class="expand"></tr>'
 								);
+			break;
+			case 'services':
+				$defaults = array(
+					'table'=>'services',
+					'fields'=>array('id','name', 'description'),
+					'inputs'=>false,
+					'actions'=>array('Edit','Delete')
+				);
+			break;
+			case 'vehicles':
+				$defaults = array(
+					'table'=>'vehicles',
+					'fields'=>array('id','name', 'description'),
+					'inputs'=>false,
+					'actions'=>array('Edit','Delete')
+				);
+			break;
 		};
 
 		if(is_array($defaults)){
