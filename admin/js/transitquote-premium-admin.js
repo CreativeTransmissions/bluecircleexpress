@@ -36,8 +36,7 @@
 							this.initCustomersTabEvents();
 							this.initEditTableEvents('customers');
 						break;	
-						case 'premium_rates':	
-							this.initRatesTabUI();					
+						case 'premium_rates':				
 							this.initRatesTabEvents();
 						break;
 						case 'premium_services':
@@ -204,34 +203,80 @@
 					$('#place-selector').placeSelector(settings);
 				},
 
-				initRatesTabUI: function(){
-					var that = this;
-
-					this.loadTable({
-						table: 'rates'
-					});
-							
-				},
-
 				initRatesTabEvents: function(){
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_rate_form')[0];
-					this.editTableObj = $('#rates_table')[0];
+					this.editTable = $('#rates_table')[0];
 
+					// set form status message
 					this.editRecordMessage = 'Editing Rate';
 					this.newRecordMessage = 'Enter New Rate'
 
-					//Clear / New Plaza
+					// store filter input references
+					this.serviceFilter = $('#table-form select[name="service_id"]');
+					this.vehicleFilter = $('#table-form select[name="vehicle_id"]');
+
+					// store form select element references
+					this.serviceSelectEl = $('select[name="service_id"]', this.editForm);
+					this.vehicleSelectEl = $('select[name="vehicle_id"]', this.editForm);
+
+					//default selected service type
+					this.selectedServiceId = this.serviceSelectEl.find("option:first-child").val(); 
+					this.selectedVehicleId = this.vehicleSelectEl.find("option:first-child").val(); 
+
+					that.selectedServiceFilterId = this.selectedServiceId;
+					that.selectedVehicleFilterId = this.selectedVehicleId
+
+					// when service is selected, store it as a property
+					$('select[name="service_id"]', this.editForm).on('change', function(){
+						that.selectedServiceId = $(this).val();
+						console.log('selectedServiceId: ' + that.selectedServiceId);
+						that.setRatesTableFilters();
+					});
+				
+					$('select[name="vehicle_id"]', this.editForm).on('change', function(){
+						that.selectedVehicleId = $(this).val();
+						console.log('selectedVehicleId: ' + that.selectedVehicleId);
+						that.setRatesTableFilters();
+					});
+
+					$(this.serviceFilter).on('change', function(){
+						that.selectedServiceFilterId = $(this).val();
+						console.log('selectedServiceFilterId: ' + that.selectedServiceFilterId);
+						
+						that.loadTable({
+							service_id: that.selectedServiceFilterId,
+							vehicle_id: that.selectedVehicleFilterId,
+							table: 'rates'
+						});
+					});
+
+					$(this.vehicleFilter).on('change', function(){
+						that.selectedVehicleFilterId = $(this).val();
+						console.log('selectedServiceFilterId: ' + that.selectedVehicleFilterId);
+						that.loadTable({
+							service_id: that.selectedServiceFilterId,
+							vehicle_id: that.selectedVehicleFilterId,
+							table: 'rates'
+						});
+					});
+
+					that.loadTable({
+							service_id: that.selectedServiceFilterId,
+							vehicle_id: that.selectedVehicleFilterId,
+							table: 'rates'
+						});
+
+					//Clear / New Rate
 					$('#clear_rate').on('click', function(e){
 						e.preventDefault();
 						that.clearForm(this);
 						that.updateLegend(that.editForm, that.newRecordMessage);
 					});
 
-					//Save Plaza
-					$(this.editForm).on('submit',function(e) {						
-						// return false;
+					//Save rates
+					$(this.editForm).on('submit',function(e) {
 					    e.preventDefault();
 					    that.spinner(true);
 					    that.saveRecord(this);

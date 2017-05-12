@@ -138,13 +138,19 @@ class TransitQuote_Premium_Admin {
 	public function settings_admin_init() {
 		$this->ajax = new TransitQuote_Premium\CT_AJAX();
 		$this->cdb = TransitQuote_Premium::get_custom_db();
+		$this->plugin->cdb = $this->cdb;
 		$this->dbui = new TransitQuote_Premium\CT_DBUI(array('cdb'=>$this->cdb));
 		$this->tabs_config = $this->plugin->define_tab_config();
 		$this->update_config_defaults();
+		$this->init_data();
 		$this->tabs = $this->create_tabs();
 
 	}
 
+	public function init_data(){
+		$this->currency = $this->plugin->get_currency();
+   		$this->distance_unit = $this->plugin->get_distance_unit();
+	}
 	
 	public function update_config_defaults(){
 		// update the conif with any saved settings
@@ -208,6 +214,8 @@ class TransitQuote_Premium_Admin {
          return $tabs;
 	}
 
+   	/*** Render methods ***/
+
     function render_admin_tabs_nav(){
 
     	 echo '<h2 class="nav-tab-wrapper">';
@@ -219,6 +227,47 @@ class TransitQuote_Premium_Admin {
          };
          echo '<div class="spinner"></div></h2>';
     }
+
+	public function render_service_options($selected_id = 1){
+		// get list of services from db
+		$services = $this->plugin->get_services();
+		return $this->render_select_options($services, $selected_id);
+	}
+
+	public function render_service_options_with_rates($selected_id = 1){
+		// get list of services from db
+		$services = $this->plugin->get_services_with_rates();
+		return $this->render_select_options($services, $selected_id);
+	}
+
+	public function render_vehicle_options($selected_id = 1){
+		// get list of vehicles from db
+		$vehicles = $this->plugin->get_vehicles();
+		return $this->render_select_options($vehicles, $selected_id);
+	}
+
+	public function render_vehicle_options_with_rates($selected_id = 1){
+		// get list of vehicles from db
+		$vehicles = $this->plugin->get_vehicles_with_rates();
+		return $this->render_select_options($vehicles, $selected_id);
+	}
+
+	public function render_select_options($options = null, $selected_id = null){
+		if(empty($options)){
+			return false;
+		};
+
+		if(!is_array($options)){
+			return false;
+		};
+
+		// loop through list
+		foreach ($options as $key => $option) {
+			// set selected attribute if item is selected
+			$selected = ($option['id']==$selected_id) ? 'selected="selected" ' : '';
+			echo '<option value="'.$option['id'].'" '.$selected.'>'.$option['name'].'</option>';
+		}
+	}
 
 	/**
 	 * NOTE:     Actions are points in the execution of a page or process
@@ -478,25 +527,21 @@ class TransitQuote_Premium_Admin {
 		//get table data
 		switch ($table) {
 			case 'rates':
-				if(isset($params['query'])){
-					//use standard options for table_rows to allow for only returning a single row to ui after an update
-					$defaults = array(
+				// by default use standard options for table_rows to allow for only returning a single row to ui after an update
+				$defaults = array(
 							'table'=>'rates',
 							'fields'=>array('id', 'distance','amount','unit','hour'),
 							'inputs'=>false,
 							'actions'=>array('Edit', 'Delete')
-							);
-				} else {
-					//returning whole table so get rates sorted for admin panel with 0 at the end
-					$rates_data = $this->plugin->get_rates_list();
+						);
 
-					$defaults = array(
-								'data'=>$rates_data, //supply data instead of running a query
-								'table'=>'rates',
-								'fields'=>array('id', 'distance','amount','unit','hour'),
-								'inputs'=>false,
-								'actions'=>array('Edit', 'Delete')
-								);
+				// if there is no query, ie not an update or is a delete then get the full list
+				if(!isset($params['query'])){
+					//returning whole table so get rates sorted for admin panel with 0 at the end
+
+					$filters = self::get_rates_filters();
+					$rates_data = $this->plugin->get_rates_list($filters);
+					$defaults['data'] = $rates_data; //supply data instead of running a query
 				};
 			break;
 			case 'customers':
@@ -565,6 +610,27 @@ class TransitQuote_Premium_Admin {
 		};
 
 		return $rows;
+	}
+
+	private function get_rates_filters(){
+		$filters = null;
+		// check for filter params
+		$service_id = $this->ajax->param(array('name'=>'service_id'));
+		$vehicle_id = $this->ajax->param(array('name'=>'vehicle_id'));
+		
+		// create array if there are either
+		if($service_id || $vehicle_id){
+			$filters = array();
+		};
+
+		if($service_id){
+			$filters['service_id'] = $service_id;
+		};
+		
+		if($vehicle_id){
+			$filters['vehicle_id'] = $vehicle_id;
+		};
+		return $filters;
 	}
 
 	private function render_empty_table($table){

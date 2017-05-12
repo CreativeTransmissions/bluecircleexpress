@@ -61,6 +61,94 @@ class TransitQuote_Premium_Public {
 		$this->log_requests = true;
 	}
 
+	public function enqueue_styles() {
+		/**
+		 * This function is provided for demonstration purposes only.
+		 *
+		 * An instance of this class should be passed to the run() function
+		 * defined in TransitQuote_Premium_Loader as all of the hooks are defined
+		 * in that particular class.
+		 *
+		 * The TransitQuote_Premium_Loader will then create the relationship
+		 * between the defined hooks and the functions defined in this
+		 * class.
+		 */
+		global $add_my_script_flag;
+		if ( ! $add_my_script_flag )
+			return;
+		wp_enqueue_style( $this->plugin_slug . '-calc-styles', plugins_url( 'js/js-transitquote/css/map-quote-calculator.css', __FILE__ ), array(), $this->version );
+		wp_enqueue_style( $this->plugin_slug . '-jqueryui-styles', plugins_url( 'css/jquery-ui.css', __FILE__ ), array(), $this->version );
+		wp_enqueue_style( $this->plugin_slug . '-timepicker-styles', plugins_url( 'css/jquery-ui-timepicker-addon.css', __FILE__ ), array(), $this->version );
+		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugin_dir_url( __FILE__ ) . 'css/transitquote-premium-public.css', array(), $this->version );
+		wp_enqueue_style( $this->plugin_slug . '-parsley-styles', plugin_dir_url( __FILE__ ) . 'css/parsley.css', array(), $this->version );
+		wp_enqueue_style( $this->plugin_slug . '-popup-styles', plugins_url( 'css/magnific-popup.css', __FILE__ ), array(), $this->version );
+	}
+
+	/**
+	 * Register the JavaScript for the public-facing side of the site.
+	 *
+	 * @since    1.0.0
+	 */
+
+	public function enqueue_scripts() {
+		global $add_my_script_flag;
+		if ( ! $add_my_script_flag )
+			return;
+		//get varibles to pass to JS
+		// $holidays = self::get_holidays();
+		$rates = self::get_rates();
+	
+		// $surcharges = self::get_service_surcharges();
+
+		$this->start_lat = $this->get_setting('premium_quote_options', 'start_lat','55.870853');
+		$this->start_lng = $this->get_setting('premium_quote_options', 'start_lng', '-4.252036');
+		$this->start_place_name = $this->get_setting('premium_quote_options', 'start_place_name', 'Glasgow');
+		$this->currency = self::get_currency();
+		$this->distance_unit = self::get_distance_unit();
+		$this->min_notice = $this->get_setting('premium_quote_options', 'min_notice', '24:00');
+		$this->min_notice_charge = $this->get_setting('premium_quote_options', 'min_notice_charge', '200');
+		$this->quote_element = $this->get_setting('premium_quote_options', 'quote_element', 'quote');
+		$this->api_key = self::get_api_key();
+		$this->api_string = self::get_api_string();
+		$geolocate = self::get_geolocate();
+		if($geolocate==1){
+			$this->geolocate = 'true';		
+		} else {
+			$this->geolocate = 'false';	
+		};
+
+		$tq_settings = array('ajaxurl' => admin_url( 'admin-ajax.php' ),
+							'geolocate'=>$this->geolocate,
+							'imgurl'=> plugins_url( 'assets/images/', __FILE__ ),
+							'distance_unit'=>$this->distance_unit,
+							'startLat'=>$this->start_lat,
+							'startLng'=>$this->start_lng,
+							'startPlaceName'=>$this->start_place_name,
+							'rates'=>$rates,
+							'min_notice'=>$this->min_notice,
+							'min_notice_charge'=>$this->min_notice_charge,
+							'quote_element'=>$this->quote_element
+							);
+
+		if(!empty($this->api_key)){
+			$tq_settings['apiKey'] = $this->api_key;
+		};
+
+
+		//include dependancies
+		wp_enqueue_script($this->plugin_slug.'-magnific-popup', plugins_url( 'js/jquery-magnific-popup.js', __FILE__ ), '', 1.1, True );
+		wp_enqueue_script($this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
+		wp_enqueue_script($this->plugin_slug.'-jqui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.js', '', 1.10, True );
+		wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'js/jquery.ui.map.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True ); //was commented
+		wp_enqueue_script( $this->plugin_slug.'-jqui-timepicker', plugins_url( 'js/jquery-ui-timepicker-addon.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True );
+		wp_enqueue_script( $this->plugin_slug.'-map-quote-calculator', plugins_url( 'js/js-transitquote/js/map-quote-calculator.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
+		wp_enqueue_script($this->plugin_slug . '-transitquote-premium', plugins_url('js/transitquote-premium-public.js', __FILE__ ), array($this->plugin_slug.'-map-quote-calculator'), $this->version, true);
+
+		wp_enqueue_script( $this->plugin_slug . '-parsley-script', plugins_url( 'js/parsley.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );	
+		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public-main.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );
+ 		wp_localize_script( $this->plugin_slug . '-plugin-script', 'TransitQuotePremiumSettings', $tq_settings);
+ 		
+	}
 	public function check_payment_config($payment_type_id = null){
 		// Check we have all required paypal config values
 		if(empty($payment_type_id)){
@@ -131,24 +219,39 @@ class TransitQuote_Premium_Public {
 		return $rates;
     }
 
-    public function get_rates_list(){
-    	$plugin = new TransitQuote_Premium();
-		$this->cdb = $plugin->get_custom_db();
+     public function get_rates_list($filters = null){
+    	$filter_clause = '';
+    	if(is_array($filters)){
+    		// start sql with and if there is at least one filter
+    		$filter_sql = ' and ';
+    		// array for the separate parts of the where statement
+    		$filter_clauses = array();
+    		foreach ($filters as $key => $value) {
+    			$filter_clauses[] = $key .' = ' .$value;
+    		};
+    		// concatenate individual filters with AND
+    		$filter_sql .= implode(' and ', $filter_clauses);
+    	};
+
+		// get ordered list of rates with distance 0 as the final record
     	$sql = "select distinct * 
     				from (select distinct * 
 								from wp_tq_prm_rates
 								where distance <> 0
-							order by service_id, distance
+								".$filter_sql."
+							order by service_id, vehicle_id, distance
 							) r
 					union
 				select distinct * from (
 					select distinct * 
 						from wp_tq_prm_rates
-					where distance = 0) r2;";
-
+					where distance = 0
+					".$filter_sql.") r2;";
+		//echo $sql;
 		$data = $this->cdb->query($sql);
 		return $data;
     }
+    
 	public function init_plugin(){
 		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
@@ -317,99 +420,113 @@ class TransitQuote_Premium_Public {
 		return $result_message;
 	}
 
-	public function enqueue_styles() {
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in TransitQuote_Premium_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The TransitQuote_Premium_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-		global $add_my_script_flag;
-		if ( ! $add_my_script_flag )
-			return;
-		wp_enqueue_style( $this->plugin_slug . '-calc-styles', plugins_url( 'js/js-transitquote/css/map-quote-calculator.css', __FILE__ ), array(), $this->version );
-		wp_enqueue_style( $this->plugin_slug . '-jqueryui-styles', plugins_url( 'css/jquery-ui.css', __FILE__ ), array(), $this->version );
-		wp_enqueue_style( $this->plugin_slug . '-timepicker-styles', plugins_url( 'css/jquery-ui-timepicker-addon.css', __FILE__ ), array(), $this->version );
-		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugin_dir_url( __FILE__ ) . 'css/transitquote-premium-public.css', array(), $this->version );
-		wp_enqueue_style( $this->plugin_slug . '-parsley-styles', plugin_dir_url( __FILE__ ) . 'css/parsley.css', array(), $this->version );
-		wp_enqueue_style( $this->plugin_slug . '-popup-styles', plugins_url( 'css/magnific-popup.css', __FILE__ ), array(), $this->version );
-	}
-
-	/**
-	 * Register the JavaScript for the public-facing side of the site.
-	 *
-	 * @since    1.0.0
-	 */
-
-	public function enqueue_scripts() {
-		global $add_my_script_flag;
-		if ( ! $add_my_script_flag )
-			return;
-		//get varibles to pass to JS
-		// $holidays = self::get_holidays();
-		$rates = self::get_rates();
-	
-		// $surcharges = self::get_service_surcharges();
-
-		$this->start_lat = $this->get_setting('premium_quote_options', 'start_lat','55.870853');
-		$this->start_lng = $this->get_setting('premium_quote_options', 'start_lng', '-4.252036');
-		$this->start_place_name = $this->get_setting('premium_quote_options', 'start_place_name', 'Glasgow');
-		$this->currency = self::get_currency();
-		$this->distance_unit = self::get_distance_unit();
-		$this->min_notice = $this->get_setting('premium_quote_options', 'min_notice', '24:00');
-		$this->min_notice_charge = $this->get_setting('premium_quote_options', 'min_notice_charge', '200');
-		$this->quote_element = $this->get_setting('premium_quote_options', 'quote_element', 'quote');
-		$this->api_key = self::get_api_key();
-		$this->api_string = self::get_api_string();
-		$geolocate = self::get_geolocate();
-		if($geolocate==1){
-			$this->geolocate = 'true';		
-		} else {
-			$this->geolocate = 'false';	
-		};
-
-		$tq_settings = array('ajaxurl' => admin_url( 'admin-ajax.php' ),
-							'geolocate'=>$this->geolocate,
-							'imgurl'=> plugins_url( 'assets/images/', __FILE__ ),
-							'distance_unit'=>$this->distance_unit,
-							'startLat'=>$this->start_lat,
-							'startLng'=>$this->start_lng,
-							'startPlaceName'=>$this->start_place_name,
-							'rates'=>$rates,
-							'min_notice'=>$this->min_notice,
-							'min_notice_charge'=>$this->min_notice_charge,
-							'quote_element'=>$this->quote_element
-							);
-
-		if(!empty($this->api_key)){
-			$tq_settings['apiKey'] = $this->api_key;
-		};
-
-
-		//include dependancies
-		wp_enqueue_script($this->plugin_slug.'-magnific-popup', plugins_url( 'js/jquery-magnific-popup.js', __FILE__ ), '', 1.1, True );
-		wp_enqueue_script($this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
-		wp_enqueue_script($this->plugin_slug.'-jqui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.js', '', 1.10, True );
-		wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'js/jquery.ui.map.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True ); //was commented
-		wp_enqueue_script( $this->plugin_slug.'-jqui-timepicker', plugins_url( 'js/jquery-ui-timepicker-addon.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True );
-		wp_enqueue_script( $this->plugin_slug.'-map-quote-calculator', plugins_url( 'js/js-transitquote/js/map-quote-calculator.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
-		wp_enqueue_script($this->plugin_slug . '-transitquote-premium', plugins_url('js/transitquote-premium-public.js', __FILE__ ), array($this->plugin_slug.'-map-quote-calculator'), $this->version, true);
-
-		wp_enqueue_script( $this->plugin_slug . '-parsley-script', plugins_url( 'js/parsley.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );	
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public-main.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );
- 		wp_localize_script( $this->plugin_slug . '-plugin-script', 'TransitQuotePremiumSettings', $tq_settings);
- 		
-	}
-
 	function get_paths_for_includes(){
 		$file = dirname(dirname(__FILE__)) . '/transitquote-premium.php';
 		$this->plugin_root_dir = plugin_dir_path($file);
 		$this->paypal_partials_dir = $this->plugin_root_dir.'includes/tqp-paypal/partials/';
+	}
+
+	public function get_service_name($service_id = null){
+		//get service name from id
+		if(empty($service_id)){
+			//return 'No service id for job';
+			return false;
+		};
+
+		if(!isset($this->services[$service_id])){
+			//return "no service_id: ".$service_id.print_r($this->services, true);
+			return false;
+		};
+
+		if(!isset($this->services[$service_id]['name'])){
+			//return "no name for service_id: ".$service_id.print_r($this->services, true);
+			return false;
+		};
+
+		return $this->services[$service_id]['name'];
+	}
+
+	public function get_services(){
+		//return services which have rates set
+		$services = $this->cdb->get_rows('services');
+		return $services;
+
+	}
+
+	public function get_services_with_rates(){
+		//return services which have rates set
+		$services = $this->cdb->get_rows('services',array(), 
+										array('id','name','description'),
+										array('rates'=>array('rates', 'service_id','id'))
+										);
+		return $services;
+
+	}
+
+	public function get_vehicle_name($vehicle_id = null){
+		//get service name from id
+		if(empty($vehicle_id)){
+			return false;
+		};
+
+		if(!isset($this->vehicles)){
+			return false;
+		};
+
+		if(empty($this->vehicles)){
+			return false;
+		};
+
+		if(!isset($this->vehicles[$vehicle_id])){
+			return false;
+		};
+
+		if(!isset($this->vehicles[$vehicle_id]['name'])){
+			return false;
+		};
+
+		return $this->vehicles[$vehicle_id]['name'];
+	}
+
+	public function get_vehicles(){
+		//return services which have rates set
+		$vehicles = $this->cdb->get_rows('vehicles');
+
+		return $vehicles;
+	}
+
+	public function get_vehicles_with_rates(){
+		//return services which have rates set
+		$vehicles = $this->cdb->get_rows('vehicles',array(), 
+										array('id','name','description'),
+										array('rates'=>array('rates', 'vehicle_id','id'))
+										);
+
+		return $vehicles;
+	}
+
+	public function has_services(){
+		// is there more than one service?
+
+		// is there more than one services in the services table?
+		if($this->cdb->get_count('services') > 1){
+			// do we have rates for more than one service in the rates table?
+			if($this->cdb->get_count_distinct('rates', 'service_id')>1){
+				return true;
+			};
+		};
+		return false;
+	}
+
+	public function has_vehicles(){
+		// is there more than one vehicle?
+		if($this->cdb->get_count('vehicles') > 1){
+			// do we have rates for more than one service in the rates table?
+			if($this->cdb->get_count_distinct('rates', 'vehicle_id')>1){
+				return true;
+			};
+		};
+		return false;
 	}
 
 	/*** Front end ajax methods ***/
