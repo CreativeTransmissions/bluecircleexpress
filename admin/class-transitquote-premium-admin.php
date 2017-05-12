@@ -367,10 +367,18 @@ class TransitQuote_Premium_Admin {
 								v.name as vehicle_type,
 								q.total as quote,
 								pt.name as payment_type,
-								pst.name as payment_status
+								pst.name as payment_status,
+								no_stops
 							FROM wp_tq_prm_jobs jobs
 								left join wp_tq_prm_journeys j 
 									on j.job_id = jobs.id 
+
+								inner join (SELECT jobs.id as job_id, count(j.id) as no_stops
+											FROM wp_tq_prm_jobs jobs
+												inner join wp_tq_prm_journeys j 
+													on j.job_id = jobs.id 
+											group by job_id) last_stop
+										on last_stop.job_id = jobs.id
 
 								left join wp_tq_prm_journeys_locations jl 
 									on j.id = jl.journey_id and
@@ -381,10 +389,10 @@ class TransitQuote_Premium_Admin {
 
 								left join wp_tq_prm_journeys_locations jld 
 									on j.id = jld.journey_id and
-										jld.journey_order = 1
+										jld.journey_order = no_stops
 								left join wp_tq_prm_locations ld 
 									on jl.location_id = ld.id and 
-										jl.journey_order = 1
+										jl.journey_order = no_stops
 
 								left join wp_tq_prm_customers c 
 									on c.id = jobs.customer_id 

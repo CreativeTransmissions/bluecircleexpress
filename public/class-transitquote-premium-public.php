@@ -1,5 +1,6 @@
 <?php
-error_reporting(E_ALL); ini_set('display_errors', 1);
+error_reporting(E_ERROR | E_PARSE);
+ ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
  *
@@ -885,6 +886,8 @@ class TransitQuote_Premium_Public {
 		return $this->cdb->get_row('jobs',$job_id);
     }
 
+    
+
     function job_is_available($job = null){
     	if(empty($job)){
     		$job = $this->job;
@@ -900,43 +903,11 @@ class TransitQuote_Premium_Public {
 		$plugin = new TransitQuote_Premium();	
 		$this->cdb = $plugin->get_custom_db();
 		//add the details to a job record
-		if(!isset($this->customer)){
-			$this->customer = $this->cdb->get_row('customers', $job['customer_id']);
-			if($this->customer===false){
-				self::debug(array('name'=>'Could not load customer',
-	                            'value'=>'job_id: '.$job['id']));
-			};
-		};
-		$job['customer'] = $this->customer;
+		
+		$job['customer'] = $this->customer = self::get_customer($job['customer_id']);
+		$job['journey'] = $this->journey = self::get_journey($job['id']);
+		$job['stops'] = self::get_journey_stops($this->journey['id']);
 
-
-		if(!isset($this->journey)){
-			$this->journey = $this->cdb->get_row('journeys', $job['id'], 'job_id');
-			if($this->journey===false){
-				self::debug(array('name'=>'Could not load journey',
-	                            'value'=>'job_id: '.$job['id']));
-			};
-		};
-		$job['journey'] = $this->journey;
-
-		if(!isset($this->location_0)){
-			$this->location_0 = $this->cdb->get_row('locations',$this->journey['origin_location_id']);
-			if($this->location_0===false){
-				self::debug(array('name'=>'Could not load origin',
-	                            'value'=>'job_id: '.$job['id']));
-			};
-		};
-		$job['location_0'] = $this->location_0;
-
-		if(!isset($this->location_1)){
-			$this->location_1 = $this->cdb->get_row('locations',$this->journey['dest_location_id']);
-			if($this->location_1===false){
-				self::debug(array('name'=>'Could not load destination',
-	                            'value'=>'job_id: '.$job['id']));
-			};
-			
-		};
-		$job['location_1'] = $this->location_1;		
 		if(!isset($this->quote)){
 			if(!empty($job['accepted_quote_id'])) {
 				$this->quote = $this->cdb->get_row('quotes',$job['accepted_quote_id']);
@@ -950,6 +921,48 @@ class TransitQuote_Premium_Public {
 		$job['job_date'] = self::get_job_date($job);
 		return $job;
 	}
+
+	public function get_customer($customer_id){
+		$customer = $this->cdb->get_row('customers', $customer_id);
+		if($customer===false){
+			self::debug(array('name'=>'Could not load customer',
+                            'value'=>'customer_id: '.$customer_id));
+		};
+		return $customer;
+	}
+
+	public function get_journey(){
+		$journey = $this->cdb->get_row('journeys', $job['id'], 'job_id');
+		if($journey===false){
+			self::debug(array('name'=>'Could not load journey',
+                            'value'=>'job_id: '.$job['id']));
+		};
+		return $journey;
+	}
+
+	function get_journey_stops($journey_id = null){
+    	return $this->cdb->get_rows('locations', 
+    								array(), 
+						    		array('id',
+										'address',
+										'appartment_no',
+										'street_number',
+										'postal_town',
+										'route',
+										'administrative_area_level_2',
+										'administrative_area_level_1',
+										'country',
+										'postal_code',
+										'lat',
+										'lng'),
+						    		array(
+					    				array('journeys_locations',
+					    					'location_id',
+					    					'id',
+					    					'journey_id = '.$journey_id,
+					    					'inner')
+						    			));
+    }
 
 	public function get_job_date($job = null){
 		//get date and time for job in separate  array elements
@@ -1033,15 +1046,7 @@ class TransitQuote_Premium_Public {
 		$customer = $this->cdb->get_row('customers', $email, 'email');
 		return $customer;
 	}
-	public function get_customer_by_id($id){
-		//check for the email address to see if this is a previous customer
-		if(empty($id)){
-			return false;
-		};
-		//load customer by email
-		$customer = $this->cdb->get_row('customers', $id, 'id');
-		return $customer;
-	}
+	
 	public function get_customer_email(){
         return $this->customer['email'];
     }
