@@ -349,7 +349,7 @@ class TransitQuote_Premium_Public {
 		};	
 
 		if(self::job_is_available()){
-			self::get_job_details();
+			self::get_job_details($this->job);
 		};
 		//get text payment status message
 		$payment_status = $this->paypal->get_payment_status($this->job);
@@ -646,6 +646,7 @@ class TransitQuote_Premium_Public {
 
 		//To do: create a many to many address relationship with job with an order index
 		//save job, passing id values not included in post data
+
 		$this->job = self::save('jobs',null, array('customer_id'=>$this->customer['id'],
 													'accepted_quote_id'=>$this->quote['id']));
 
@@ -660,7 +661,7 @@ class TransitQuote_Premium_Public {
 		$message ='Request booked successfully';
 		
 		if(self::job_is_available()){
-			$this->job = self::get_job_details();
+			$this->job = self::get_job_details($this->job);
 		};
 
 		
@@ -683,8 +684,10 @@ class TransitQuote_Premium_Public {
 	function get_journey_order_from_post_data(){
 		// build array of address post field indexes in order of journey_order
 		$journey_order = array();
+		echo 'get_journey_order_from_post_data';
 		foreach($_POST as $key => $value) {
 	    	if(strpos($key, 'journey_order')) {
+	    		echo '  key:'.$key.' journey_order '.$value;
 	    		// key example: address_1_journey_order
 	    		$key_array = explode('_', $key);
 	    		$address_index = $key_array[1];
@@ -703,6 +706,7 @@ class TransitQuote_Premium_Public {
 				self::debug('Unable to save location: '.$address_index);
 				return false;
 			};
+			echo "key:".$key;
 			// store ids in array ready for save
 			$this->locations_in_journey_order[$key] = array('journey_id' => $this->journey['id'],
 															'location_id'=> $location['id'],
@@ -710,6 +714,8 @@ class TransitQuote_Premium_Public {
 															'created'=>date('Y-m-d G:i:s'),
 															'modified'=>date('Y-m-d G:i:s'));
 		};
+		echo " locations_in_journey_order:";
+		print_r($this->locations_in_journey_order);
 
 	}
 
@@ -807,6 +813,8 @@ class TransitQuote_Premium_Public {
 	private function save_journeys_locations(){
 		// save all locations in journey
 		foreach ($this->locations_in_journey_order as $key => $step) {
+			echo "save_journeys_locations:";
+			print_r($step);
 			$row_id = self::save_record('journeys_locations', $step);
 			if($row_id===false){
 				self::debug(array('msg'=>'Unable to save journeys_locations: '.$key,
@@ -1031,9 +1039,9 @@ class TransitQuote_Premium_Public {
 		$plugin = new TransitQuote_Premium();	
 		$this->cdb = $plugin->get_custom_db();
 		//add the details to a job record
-		
+
 		$job['customer'] = $this->customer = self::get_customer($job['customer_id']);
-		$job['journey'] = $this->journey = self::get_journey($job['id']);
+		$job['journey'] = $this->journey = self::get_journey_by_job_id($job['id']);
 		$job['stops'] = self::get_journey_stops($this->journey['id']);
 
 		if(!isset($this->quote)){
@@ -1053,17 +1061,18 @@ class TransitQuote_Premium_Public {
 	public function get_customer($customer_id){
 		$customer = $this->cdb->get_row('customers', $customer_id);
 		if($customer===false){
-			self::debug(array('name'=>'Could not load customer',
+			self::debug(array('name'=>'get_customer:Could not load customer',
                             'value'=>'customer_id: '.$customer_id));
 		};
 		return $customer;
 	}
 
-	public function get_journey(){
-		$journey = $this->cdb->get_row('journeys', $job['id'], 'job_id');
+	public function get_journey_by_job_id($job_id){
+
+		$journey = $this->cdb->get_row('journeys', $job_id, 'job_id');
 		if($journey===false){
 			self::debug(array('name'=>'Could not load journey',
-                            'value'=>'job_id: '.$job['id']));
+                            'value'=>'job_id: '.$job_id));
 		};
 		return $journey;
 	}

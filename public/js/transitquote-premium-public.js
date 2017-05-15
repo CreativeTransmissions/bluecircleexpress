@@ -214,26 +214,7 @@
 					pickUpLng: 'address_0_lng',
 
 					dropOfLat: 'address_1_lat',
-					dropOfLng: 'address_1_lng',
-
-					addressTemplate: function(data){
-						if(!data.idx){
-							return false;
-						};
-
-						var idx = data.idx;
-
-						var html = '<input type="hidden" id="address_'+idx+'_street_number" name="street_number_'+idx+'" value=""/>';
-							html +='<input type="hidden" id="address_'+idx+'_route" name="route_'+idx+'" value=""/>';
-							html +='<input type="hidden" id="address_'+idx+'_postal_town" name="postal_town_'+idx+'" value=""/>';
-							html +='<input type="hidden" id="address_'+idx+'_administrative_area_level_2" name="administrative_area_level_2_'+idx+'" value=""/>';
-							html +='<input type="hidden" id="address_'+idx+'_administrative_area_level_1" name="administrative_area_level_1_'+idx+'" value=""/>';
-							html +='<input type="hidden" id="address_'+idx+'_country" name="country_'+idx+'" value=""/>';
-							html +='<input type="hidden" id="address_'+idx+'_lat" name="lat_'+idx+'" value=""/>';
-							html +='<input type="hidden" id="address_'+idx+'_lng" name="lng_'+idx+'" value=""/>';
-
-						return html;
-					}
+					dropOfLng: 'address_1_lng'
 
 				});
 			},
