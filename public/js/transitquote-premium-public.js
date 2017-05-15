@@ -74,8 +74,8 @@
 		        
 
 				var that = this;
-				$('input[name=service_type_id]').on('change', function() {
-					if($('input[name=service_type_id]:checked').val()==1){
+				$('input[name=service_id]').on('change', function() {
+					if($('input[name=service_id]:checked').val()==1){
 						$('#business-size').attr('required', true).show();
 						$('#business-size').removeAttr('disabled');
 
@@ -108,38 +108,26 @@
 			},
 
 			initDataRates: function(){
-				this.log('initDataRates');
-				var limits = [];
-				var rates = [];
-				var costPerUnit = []; //cost for additional miles
+					this.log('initDataRates');
+					var limits = [];
+					var rates = [];
+					var costPerUnit = []; //cost for additional miles
 
-				if(!this.settings.data.rates){
-					this.log('Warning: no Rates supplied');
-					return false;
-				
-				}
-				$.each(this.settings.data.rates, function(idx,r){
-					//key based on service type id
-					var ratesKey = 's_'+String(r.service_type_id);				
+					if(!this.settings.data.rates){
+						this.log('Warning: no Rates supplied');
+						return false;
+
+					} else {
+						this.rates = this.settings.data.rates;
+					}
 					
-					//only add limits once
-					limits.push(parseFloat(r.distance));
-
-					if(!rates[ratesKey]){
-						rates[ratesKey] = [];
-					};
-					//store the rates per distance unit, hour or set amount
-					rates[ratesKey].push(r);
-				});
-
-				this.rates = rates;
-				this.limits = limits;
-				
-				this.log('initDataRates');
-				this.log(this.limits);
-				this.log(this.rates);
-				return true;
-			},
+					this.limits = limits;
+					
+					this.log('initDataRates');
+					this.log(this.limits);
+					this.log(this.rates);
+					return true;
+				},
 
 			initDataMapSettings: function(){
 				//Initialize map settings

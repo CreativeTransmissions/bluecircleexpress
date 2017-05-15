@@ -94,12 +94,27 @@ class TransitQuote_Premium_Public {
 		global $add_my_script_flag;
 		if ( ! $add_my_script_flag )
 			return;
-		//get varibles to pass to JS
-		// $holidays = self::get_holidays();
-		$rates = self::get_rates();
-	
-		// $surcharges = self::get_service_surcharges();
+		
+		self::get_plugin_settings();
 
+		$tq_settings = self::get_settings_for_js();
+
+		//include dependancies
+		wp_enqueue_script($this->plugin_slug.'-magnific-popup', plugins_url( 'js/jquery-magnific-popup.js', __FILE__ ), '', 1.1, True );
+		wp_enqueue_script($this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
+		wp_enqueue_script($this->plugin_slug.'-jqui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.js', '', 1.10, True );
+		wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'js/jquery.ui.map.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True ); //was commented
+		wp_enqueue_script( $this->plugin_slug.'-jqui-timepicker', plugins_url( 'js/jquery-ui-timepicker-addon.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True );
+		wp_enqueue_script( $this->plugin_slug.'-map-quote-calculator', plugins_url( 'js/js-transitquote/js/map-quote-calculator.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
+		wp_enqueue_script($this->plugin_slug . '-transitquote-premium', plugins_url('js/transitquote-premium-public.js', __FILE__ ), array($this->plugin_slug.'-map-quote-calculator'), $this->version, true);
+
+		wp_enqueue_script( $this->plugin_slug . '-parsley-script', plugins_url( 'js/parsley.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );	
+		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public-main.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );
+ 		wp_localize_script( $this->plugin_slug . '-plugin-script', 'TransitQuotePremiumSettings', $tq_settings);
+ 		
+	}
+
+	public function get_plugin_settings(){
 		$this->start_lat = $this->get_setting('premium_quote_options', 'start_lat','55.870853');
 		$this->start_lng = $this->get_setting('premium_quote_options', 'start_lng', '-4.252036');
 		$this->start_place_name = $this->get_setting('premium_quote_options', 'start_place_name', 'Glasgow');
@@ -115,7 +130,15 @@ class TransitQuote_Premium_Public {
 			$this->geolocate = 'true';		
 		} else {
 			$this->geolocate = 'false';	
-		};
+		};		
+	}
+
+	public function get_settings_for_js(){
+		//get varibles to pass to JS
+		// $holidays = self::get_holidays();
+		$rates = self::get_rates();
+	
+		// $surcharges = self::get_service_surcharges();
 
 		$tq_settings = array('ajaxurl' => admin_url( 'admin-ajax.php' ),
 							'geolocate'=>$this->geolocate,
@@ -134,21 +157,9 @@ class TransitQuote_Premium_Public {
 			$tq_settings['apiKey'] = $this->api_key;
 		};
 
-
-		//include dependancies
-		wp_enqueue_script($this->plugin_slug.'-magnific-popup', plugins_url( 'js/jquery-magnific-popup.js', __FILE__ ), '', 1.1, True );
-		wp_enqueue_script($this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
-		wp_enqueue_script($this->plugin_slug.'-jqui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.js', '', 1.10, True );
-		wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'js/jquery.ui.map.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True ); //was commented
-		wp_enqueue_script( $this->plugin_slug.'-jqui-timepicker', plugins_url( 'js/jquery-ui-timepicker-addon.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True );
-		wp_enqueue_script( $this->plugin_slug.'-map-quote-calculator', plugins_url( 'js/js-transitquote/js/map-quote-calculator.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
-		wp_enqueue_script($this->plugin_slug . '-transitquote-premium', plugins_url('js/transitquote-premium-public.js', __FILE__ ), array($this->plugin_slug.'-map-quote-calculator'), $this->version, true);
-
-		wp_enqueue_script( $this->plugin_slug . '-parsley-script', plugins_url( 'js/parsley.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );	
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public-main.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );
- 		wp_localize_script( $this->plugin_slug . '-plugin-script', 'TransitQuotePremiumSettings', $tq_settings);
- 		
+		return $tq_settings;
 	}
+
 	public function check_payment_config($payment_type_id = null){
 		// Check we have all required paypal config values
 		if(empty($payment_type_id)){
@@ -270,7 +281,7 @@ class TransitQuote_Premium_Public {
 		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));	
-
+		$this->pick_start_address = 'true';
 		// added layout option if given and inline then form will  be inline map else admin setting
 
 		//get paths for includes
