@@ -94,20 +94,28 @@ input.wide {
 	vertical-align: top;
 
 }
+
 .settings-table td {
+	background-color: #fff;
+}
+
+.settings-table tr.expand td  {
+	background-color: #eee;
+}
+.settings-table tr.expand td .job-details td {
 	background-color: #fff;
 }
 
 .settings-table th {
 	background-color: #e0e0e0;
-	border: solid 1px #CCC;
+	border: solid 1px #bbb;
 	font-weight: bold;
 	padding: 0.5em;
 	text-align: right;
 }
 .wrap .settings-table td {
-	border-bottom: solid 1px #CCC;
-	border-right: solid 1px #CCC;
+	border-bottom: solid 1px #bbb;
+	border-right: solid 1px #bbb;
 	text-align: left;
 	padding: 0.5em;
 }
@@ -115,7 +123,7 @@ input.wide {
 	vertical-align: middle !important;
 }
 .settings-table td:first-child {
-    border-left: solid 1px #CCC;
+    border-left: solid 1px #bbb;
 }
 .settings-table td.actions,
 .settings-table th.actions {
@@ -147,11 +155,48 @@ input.wide {
 	text-align: left;
 }
 .settings-table th{
-	background-color: #eee;
+	background-color: #ccc;
 	text-align: left;
 }
 .settings-table th.actions {
 	background-color: inherit;
+}
+
+.job-details .half {
+	width: 49.9%;
+	float: left;
+}
+.job-details .third {
+	width: 33.3%;
+	float: left;
+}
+.job-details .third table {
+	margin: 0 auto;
+	margin-bottom: 1em;
+	width: 98%;
+}
+.job-details table h3 {
+	margin: 0;
+}
+.job-details .sixth {
+	width: 66%;
+	float: left;
+}
+.job-details .half table,
+.job-details .sixth table {
+	width: 100%;
+}
+.job-details .full {
+	width: 99.9%;
+	float: left;
+}
+.job-details .full table {
+	margin: 0 auto;
+	margin-bottom: 1em;
+	width: 100%;
+}
+.job-details .full table h3 {
+	margin: 0;
 }
 td.code input,
 td.first_name input,

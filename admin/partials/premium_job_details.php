@@ -14,12 +14,12 @@
 		</div>
 		<?php }; ?>
 		<?php if(isset($this->job['journey'])){ ?>
-		<div class="half job_details_journey">
+		<div class="third job_details_journey">
 			<?php $this->plugin->job_details_table('<h3>Distance and Travel Time</h3>',$this->plugin->format_journey($this->job['journey'])); ?>
 		</div>
 		<?php }; ?>
 		<?php if(isset($this->job['quote'])){ ?>
-		<div class="half job_details_quote">
+		<div class="third job_details_quote">
 			<?php $this->plugin->job_details_table('<h3>Quote</h3>',$this->plugin->format_quote($this->job['quote'])); ?>
 		</div>
 		<?php }; ?>
