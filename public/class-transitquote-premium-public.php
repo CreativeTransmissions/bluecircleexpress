@@ -1005,6 +1005,8 @@ class TransitQuote_Premium_Public {
 		$html .= '</tr></table>';
 		echo $html;
 	}
+	
+
 
  	private function get_job($job_id = null){
     	//get job record from property or database
@@ -1021,8 +1023,6 @@ class TransitQuote_Premium_Public {
 		//if we do have a passed job id, get the job from the table
 		return $this->cdb->get_row('jobs',$job_id);
     }
-
-    
 
     function job_is_available($job = null){
     	if(empty($job)){
@@ -1098,7 +1098,9 @@ class TransitQuote_Premium_Public {
 					    					'id',
 					    					'journey_id = '.$journey_id,
 					    					'inner')
-						    			));
+						    			),
+						    			array('journey_order'=>'asc')
+						    		);
     }
 
 	public function get_job_date($job = null){
@@ -1630,7 +1632,80 @@ class TransitQuote_Premium_Public {
 		};
 		return $out;
 	}
-public function render_service_options($selected_id = 1){
+
+	public function render_route_details($waypoints){
+		$route_row_data = array();
+		foreach ($waypoints as $key => $waypoint) {
+			$route_row_data[] = array('value'=>$this->format_waypoint($waypoint));
+		};
+
+		return $this->job_details_table('<h3>Route</h3>',$route_row_data);
+	}
+
+	public function route_details_list(){
+		$route_row_data = array();
+		foreach ($this->locations_in_journey_order as $key => $waypoint) {
+			switch ($waypoint['journey_order']) {
+				case '0':
+					$route_row_data[] = array('value'=>'Collect From:');
+					$route_row_data[] = array('value'=>$this->format_waypoint_list($waypoint['location']));
+					break;
+				default:
+					$route_row_data[] = array('value'=>'Drop Off:');
+					$route_row_data[] = array('value'=>$this->format_waypoint_list($waypoint['location']));
+					break;
+			}
+			
+		};
+
+		return $this->email_details_list('Route',$route_row_data);
+	}
+
+	public function email_details_list($header, $data){
+		//return job details info in list for text email
+		$text = $header."\r\n\r\n";
+		$rows = array();
+		foreach ($data as $field) {
+			if(!empty($field['value'])){
+				if(empty($field['label'])){
+					$rows[] = $field['value'];
+				} else {
+					$rows[] = $field['label'].': '.$field['value'];
+				}
+			}
+		};
+		$text .= implode("\r\n", $rows);
+		echo $text."\r\n";
+	}
+
+	private function format_waypoint($waypoint){
+		$html ='<ul>';
+		if(!empty($waypoint['appartment_no'])){
+			$html .='<li>Unit: '.$waypoint['appartment_no'].'</li>';
+		};
+		$html .='<li>Address: '.stripslashes($waypoint['address']).'</li>';
+		if(!empty($waypoint['postal_code'])){
+			$html .='<li>Postcode: '.$waypoint['postal_code'].'</li>';
+		};
+		$html .='</ul>';
+
+		return $html;
+	}
+
+	private function format_waypoint_list($waypoint){
+		$text ="";
+		if(!empty($waypoint['appartment_no'])){
+			$text .="Unit: ".$waypoint['appartment_no']."\r\n";
+		};
+		$text .="Address: ".stripslashes($waypoint['address'])."\r\n";
+		if(!empty($waypoint['postal_code'])){
+			$text .="Postcode: ".$waypoint['postal_code']."\r\n";
+		};
+
+		return $text;
+	}
+
+	public function render_service_options($selected_id = 1){
 		// get list of services from db
 		$services = $this->get_services();
 		return $this->render_select_options($services, $selected_id);

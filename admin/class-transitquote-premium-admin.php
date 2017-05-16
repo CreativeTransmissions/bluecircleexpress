@@ -444,10 +444,12 @@ class TransitQuote_Premium_Admin {
 		//get related data
 		if($this->plugin->job_is_available($this->job)){
 			$this->job = $this->plugin->get_job_details($this->job);
+		} else {
+			echo "job not available";
 		}
 
 		//output the view which will be returned via ajax and inserted into the hidden
-		include('partials/job_details.php'); 
+		include('partials/premium_job_details.php'); 
 		
 		die();
 	}
