@@ -372,20 +372,23 @@ class TransitQuote_Premium_Admin {
 								jobs.created,
 								jobs.modified,
 								trim(concat(c.first_name,' ',c.last_name)) as last_name,
+								jobs.delivery_time,
 								v.name as vehicle_type,
 								q.total as quote,
 								pt.name as payment_type,
-								pst.name as payment_status,
-								no_stops
+								pst.name as payment_status_id
 							FROM wp_tq_prm_jobs jobs
 								left join wp_tq_prm_journeys j 
 									on j.job_id = jobs.id 
 
-								inner join (SELECT jobs.id as job_id, count(j.id) as no_stops
-											FROM wp_tq_prm_jobs jobs
-												inner join wp_tq_prm_journeys j 
-													on j.job_id = jobs.id 
-											group by job_id) last_stop
+								inner join (SELECT j.job_id, o.location_id as last_loc_id
+												FROM wp_tq_prm_journeys_locations o                    
+												  LEFT JOIN wp_tq_prm_journeys_locations b           
+													  ON o.journey_id = b.journey_id AND o.journey_order < b.journey_order
+													  inner join wp_tq_prm_journeys j 
+														on o.journey_id = j.id	
+												WHERE b.journey_order is NULL     
+												order by j.job_id asc) last_stop
 										on last_stop.job_id = jobs.id
 
 								left join wp_tq_prm_journeys_locations jl 
@@ -395,12 +398,8 @@ class TransitQuote_Premium_Admin {
 									on jl.location_id = l.id and 
 										jl.journey_order = 0
 
-								left join wp_tq_prm_journeys_locations jld 
-									on j.id = jld.journey_id and
-										jld.journey_order = no_stops
 								left join wp_tq_prm_locations ld 
-									on jl.location_id = ld.id and 
-										jl.journey_order = no_stops
+									on ld.id = last_stop.last_loc_id
 
 								left join wp_tq_prm_customers c 
 									on c.id = jobs.customer_id 
@@ -521,6 +520,7 @@ class TransitQuote_Premium_Admin {
 					//$filters = $this->plugin->get_job_filters(); // status filters
 
 					$job_data = $this->get_jobs(array(), $dates);
+
 					$defaults = array(
 									'data'=>$job_data,
 									'fields'=>array(/*'move_type',*/

@@ -294,7 +294,7 @@ class TransitQuote_Premium_Public {
 		if(($this->action=='paypal') && (self::check_payment_config(2))){
 			// only perform paypal actions when we have the options set
 			if(!self::process_paypal_request()){
-				self::log('Unable to process PayPal request');
+				self::debug('Unable to process PayPal request');
 				return false;
 			};
 		} else {
@@ -1254,7 +1254,7 @@ class TransitQuote_Premium_Public {
 	}
 	public function get_api_string(){
 		$api_string = '';
-		$this->api_key = self::get_setting($this->tab_2_settings_key, 'api_key');
+		$this->api_key = self::get_api_key();
 		if(!empty($this->api_key)){
 			$api_string = '&key='.$this->api_key;
 		};
@@ -1263,7 +1263,7 @@ class TransitQuote_Premium_Public {
 	}
 	public function get_api_key(){
 		//get google maps api key
-		$this->api_key = self::get_setting($this->tab_2_settings_key, 'api_key', 'default');
+		$this->api_key = self::get_setting($this->tab_2_settings_key, 'api_key', '');
 		if(empty($this->api_key)){
 			return false;
 		};
@@ -1762,12 +1762,12 @@ class TransitQuote_Premium_Public {
 	 */	
 	private function update_payment_status($job_id, $payment_status_type_id){
 		if(empty($job_id)){
-			self::log('update_payment_status: No job_id');
+			self::debug('update_payment_status: No job_id');
 			return false;
 		};
 
 		if(empty($payment_status_type_id)){
-			self::log('update_payment_status: No payment_status_type_id');
+			self::debug('update_payment_status: No payment_status_type_id');
 			return false;
 		};
 
@@ -1787,12 +1787,12 @@ class TransitQuote_Premium_Public {
 	 */	
 	private function update_payment_type_id($job_id, $payment_type_id){
 		if(empty($job_id)){
-			self::log('update_payment_type_id: No job_id');
+			self::debug('update_payment_type_id: No job_id');
 			return false;
 		};
 
 		if(empty($payment_type_id)){
-			self::log('update_payment_type_id: No update_payment_type_id');
+			self::debug('update_payment_type_id: No update_payment_type_id');
 			return false;
 		};
 
