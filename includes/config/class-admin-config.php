@@ -178,6 +178,18 @@ This should explain any next steps they must take to confirm their booking.'),
                                                   'id'=>'prem_settings_paypal_options',
                                                   'title'=>'PayPal Options',
                                                   'fields'=>array(
+                                                    'application_client_id'=>array(
+                                                        'id'=>'application_client_id',
+                                                        'label'=>'PayPal Application Client ID',
+                                                        'type'=>'input',
+                                                        'help'=>'Log into PayPal and Create An App to Get This ID.'
+                                                     ),
+                                                    'application_client_secret'=>array(
+                                                        'id'=>'application_client_secret',
+                                                        'label'=>'PayPal Application Client Secret',
+                                                        'type'=>'input',
+                                                        'help'=>'Log into PayPal and Create An App to Get This Code.'
+                                                     ),
                                                     'business_email'=>array(
                                                         'id'=>'business_email',
                                                         'label'=>'PayPal Email Address',
