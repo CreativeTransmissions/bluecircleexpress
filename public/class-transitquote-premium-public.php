@@ -266,7 +266,9 @@ class TransitQuote_Premium_Public {
 	public function init_plugin(){
 		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));	
+		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->paypal = new CT_PayPal(array('application_client_id' => 'application_client_id',
+											'appliation_client_secret' => 'appliation_client_secret'));
 		self::load_settings();
 	}
 	/**
