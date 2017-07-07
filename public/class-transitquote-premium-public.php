@@ -273,20 +273,24 @@ class TransitQuote_Premium_Public {
 		self::get_paypal_config();
 		if(self::has_paypal_config()){
 			$this->paypal = new CT_PayPal(array('application_client_id' => $this->application_client_id,
-												'appliation_client_secret' => $this->appliation_client_secret));
-		}
+												'application_client_secret' => $this->application_client_secret));
+		};
+
+		$this->paypal->add_payment_item(array(	'name'=>'Delivery',
+												'currency'=> self::get_currency(),
+												'quantity'=>'1',
+												'order_no'=>'123',
+												'price'=>'12.9'
+												));
     }
 
 	private function get_paypal_config(){
 		$this->application_client_id = self::get_setting('premium_paypal_options','application_client_id');
-		echo $this->application_client_id;
-
-		$this->appliation_client_secret = self::get_setting('premium_paypal_options','appliation_client_secret');
-				echo $this->appliation_client_secret;
+		$this->application_client_secret = self::get_setting('premium_paypal_options','application_client_secret');
 	}
 
 	private function has_paypal_config(){
-		if((!empty($this->application_client_id))&&(!empty($this->appliation_client_secret))){
+		if((!empty($this->application_client_id))&&(!empty($this->application_client_secret))){
 			return true;
 		} else {
 			return false;
