@@ -265,12 +265,34 @@ class TransitQuote_Premium_Public {
 
 	public function init_plugin(){
 		$plugin = new TransitQuote_Premium();
+		self::load_settings();
+
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
-		$this->paypal = new CT_PayPal(array('application_client_id' => 'application_client_id',
-											'appliation_client_secret' => 'appliation_client_secret'));
-		self::load_settings();
+		
+		self::get_paypal_config();
+		if(self::has_paypal_config()){
+			$this->paypal = new CT_PayPal(array('application_client_id' => $this->application_client_id,
+												'appliation_client_secret' => $this->appliation_client_secret));
+		}
+    }
+
+	private function get_paypal_config(){
+		$this->application_client_id = self::get_setting('premium_paypal_options','application_client_id');
+		echo $this->application_client_id;
+
+		$this->appliation_client_secret = self::get_setting('premium_paypal_options','appliation_client_secret');
+				echo $this->appliation_client_secret;
 	}
+
+	private function has_paypal_config(){
+		if((!empty($this->application_client_id))&&(!empty($this->appliation_client_secret))){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * Register the shortcode and display the form.
 	 *
@@ -282,7 +304,11 @@ class TransitQuote_Premium_Public {
 
 		$plugin = new TransitQuote_Premium();
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));	
+		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+
+		
+		
+
 		$this->pick_start_address = 'true';
 		// added layout option if given and inline then form will  be inline map else admin setting
 
@@ -326,6 +352,8 @@ class TransitQuote_Premium_Public {
 	   	include $this->view;
 	   	return ob_get_clean();
 	}	
+
+
 
 	function process_paypal_request(){
 		// page is being requested after paypal redirects customer back to the website
