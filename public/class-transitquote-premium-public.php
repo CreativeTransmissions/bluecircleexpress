@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ERROR | E_PARSE | E_ALL);
  ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
@@ -92,6 +92,7 @@ class TransitQuote_Premium_Public {
 
 	public function enqueue_scripts() {
 		global $add_my_script_flag;
+				$add_my_script_flag = true;
 		if ( ! $add_my_script_flag )
 			return;
 		
@@ -103,6 +104,8 @@ class TransitQuote_Premium_Public {
 		wp_enqueue_script($this->plugin_slug.'-magnific-popup', plugins_url( 'js/jquery-magnific-popup.js', __FILE__ ), '', 1.1, True );
 		wp_enqueue_script($this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
 		wp_enqueue_script($this->plugin_slug.'-jqui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.js', '', 1.10, True );
+		wp_enqueue_script($this->plugin_slug.'-paypal', 'https://www.paypalobjects.com/api/checkout.js', '', $this->version, true );
+		
 		wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'js/jquery.ui.map.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True ); //was commented
 		wp_enqueue_script( $this->plugin_slug.'-jqui-timepicker', plugins_url( 'js/jquery-ui-timepicker-addon.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True );
 		wp_enqueue_script( $this->plugin_slug.'-map-quote-calculator', plugins_url( 'js/js-transitquote/js/map-quote-calculator.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
@@ -276,9 +279,13 @@ class TransitQuote_Premium_Public {
 												'application_client_secret' => $this->application_client_secret,
 												'payment_approved_url'=>$this->payment_approved_url,
 												'payment_cancelled_url'=>$this->payment_cancelled_url));
+			
 		};
 
-		$price = 100;
+    }
+
+    public function create_paypal_payment(){
+    	$price = 100;
 		$invoice_no = 567;
 
 		$this->paypal->add_payment_item(array(	'name'=>'Delivery',
@@ -293,9 +300,20 @@ class TransitQuote_Premium_Public {
 												'invoice_no'=>$invoice_no));
     }
 
+    public function execute_paypal_payment(){
+
+
+	}
+
 	private function get_paypal_config(){
 		$this->application_client_id = self::get_setting('premium_paypal_options','application_client_id');
 		$this->application_client_secret = self::get_setting('premium_paypal_options','application_client_secret');
+
+		$site_url = get_site_url();
+		$payment_approved_url = self::get_setting('premium_paypal_options','payment_approved_url','/payment-approved');
+		$payment_cancelled_url = self::get_setting('premium_paypal_options','payment_approved_url','/payment-cancelled');
+		$this->payment_approved_url = $site_url.$payment_approved_url; 
+		$this->payment_cancelled_url = $site_url.$payment_cancelled_url;
 	}
 
 	private function has_paypal_config(){

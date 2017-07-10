@@ -271,6 +271,7 @@ class TransitQuote_Premium {
 		$this->loader->add_action( 'wp_ajax_select_options', $plugin_admin, 'select_options_callback' );
 		$this->loader->add_action( 'wp_ajax_premium_load_table', $plugin_admin, 'load_table_callback' );
 		$this->loader->add_action( 'wp_ajax_load_job_details', $plugin_admin, 'load_job_details_callback' );
+
 	}
 
 	/**
@@ -292,8 +293,10 @@ class TransitQuote_Premium {
 		$this->loader->add_action( 'wp_ajax_nopriv_premium_save_job', $plugin_public, 'premium_save_job_callback');	
 
 		$this->loader->add_action( 'wp_ajax_premium_ipn', $plugin_public, 'premium_ipn_callback');	
-		$this->loader->add_action( 'wp_ajax_nopriv_premium_ipn', $plugin_public, 'premium_ipn_callback');	
+		$this->loader->add_action( 'wp_ajax_nopriv_premium_ipn', $plugin_public, 'premium_ipn_callback');
 
+		$this->loader->add_action( 'wp_ajax_nopriv_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
+		$this->loader->add_action( 'wp_ajax_nopriv_execute_paypal_payment', $plugin_public, 'execute_paypal_payment' );
 	}
 
 	/**
