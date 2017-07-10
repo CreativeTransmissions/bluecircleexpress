@@ -273,15 +273,24 @@ class TransitQuote_Premium_Public {
 		self::get_paypal_config();
 		if(self::has_paypal_config()){
 			$this->paypal = new CT_PayPal(array('application_client_id' => $this->application_client_id,
-												'application_client_secret' => $this->application_client_secret));
+												'application_client_secret' => $this->application_client_secret,
+												'payment_approved_url'=>$this->payment_approved_url,
+												'payment_cancelled_url'=>$this->payment_cancelled_url));
 		};
+
+		$price = 100;
+		$invoice_no = 567;
 
 		$this->paypal->add_payment_item(array(	'name'=>'Delivery',
 												'currency'=> self::get_currency(),
 												'quantity'=>'1',
 												'order_no'=>'123',
-												'price'=>'12.9'
+												'price'=>$price
 												));
+
+		$this->paypal->create_transaction(array('description'=>self::get_description(),
+												'total'=>$price,
+												'invoice_no'=>$invoice_no));
     }
 
 	private function get_paypal_config(){
@@ -295,6 +304,10 @@ class TransitQuote_Premium_Public {
 		} else {
 			return false;
 		}
+	}
+
+	public function get_description(){
+		return $this->sales_item_description = self::get_setting('premium_paypal_options','sales_item_description', 'Delivery');
 	}
 
 	/**
