@@ -142,8 +142,9 @@ class TransitQuote_Premium_Public {
 		$rates = self::get_rates();
 	
 		// $surcharges = self::get_service_surcharges();
+		$ajax_url = admin_url( 'admin-ajax.php' );
 
-		$tq_settings = array('ajaxurl' => admin_url( 'admin-ajax.php' ),
+		$tq_settings = array('ajaxurl' => $ajax_url,
 							'geolocate'=>$this->geolocate,
 							'imgurl'=> plugins_url( 'assets/images/', __FILE__ ),
 							'distance_unit'=>$this->distance_unit,
@@ -160,6 +161,13 @@ class TransitQuote_Premium_Public {
 			$tq_settings['apiKey'] = $this->api_key;
 		};
 
+		$paypal_settings = array();
+		$paypal_settings['createPaymentUrl'] = $ajax_url.'?action=create_paypal_payment';
+		$paypal_settings['executePaymentURL'] = $ajax_url.'?action=execute_paypal_payment';
+	
+		if(!empty($paypal_settings)){
+			$tq_settings['paypal'] = $paypal_settings;
+		};
 		return $tq_settings;
 	}
 
@@ -272,7 +280,7 @@ class TransitQuote_Premium_Public {
 
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
-		
+
 		self::get_paypal_config();
 		if(self::has_paypal_config()){
 			$this->paypal = new CT_PayPal(array('application_client_id' => $this->application_client_id,
@@ -281,10 +289,19 @@ class TransitQuote_Premium_Public {
 												'payment_cancelled_url'=>$this->payment_cancelled_url));
 			
 		};
-
     }
 
     public function create_paypal_payment(){
+    	self::get_paypal_config();
+		if(self::has_paypal_config()){
+			$this->paypal = new CT_PayPal(array('application_client_id' => $this->application_client_id,
+												'application_client_secret' => $this->application_client_secret,
+												'payment_approved_url'=>$this->payment_approved_url,
+												'payment_cancelled_url'=>$this->payment_cancelled_url));
+			
+		};
+
+		
     	$price = 100;
 		$invoice_no = 567;
 
@@ -298,6 +315,11 @@ class TransitQuote_Premium_Public {
 		$this->paypal->create_transaction(array('description'=>self::get_description(),
 												'total'=>$price,
 												'invoice_no'=>$invoice_no));
+		$payment_id = $this->paypal->get_payment_id();
+
+		$this->ajax->respond(array('success' => 'true',
+									'payment_id' => $payment_id,
+                                    'msg'=>''));
     }
 
     public function execute_paypal_payment(){

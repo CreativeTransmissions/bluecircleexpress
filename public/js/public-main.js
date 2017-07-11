@@ -42,12 +42,13 @@ paypal.Button.render({
     payment: function() {
 
         // Set up a url on your server to create the payment
-        var CREATE_URL = TransitQuotePremiumSettings.paypal.createPaymentURL;
+        var CREATE_URL = TransitQuotePremiumSettings.paypal.createPaymentUrl;
 
         // Make a call to your server to set up the payment
         return paypal.request.post(CREATE_URL)
             .then(function(res) {
-                return res.paymentID;
+                console.log(res);
+                return res.payment_id;
             });
     },
 
