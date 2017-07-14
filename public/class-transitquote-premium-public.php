@@ -292,17 +292,9 @@ class TransitQuote_Premium_Public {
     }
 
     public function create_paypal_payment(){
-    	self::get_paypal_config();
-		if(self::has_paypal_config()){
-			$this->paypal = new CT_PayPal(array('application_client_id' => $this->application_client_id,
-												'application_client_secret' => $this->application_client_secret,
-												'payment_approved_url'=>$this->payment_approved_url,
-												'payment_cancelled_url'=>$this->payment_cancelled_url));
-			
-		};
-
-		
-    	$price = 100;
+    	self::init_paypal();
+    	
+    	$price = 10;
 		$invoice_no = 567;
 
 		$this->paypal->add_payment_item(array(	'name'=>'Delivery',
@@ -322,9 +314,41 @@ class TransitQuote_Premium_Public {
                                     'msg'=>''));
     }
 
+    private function init_paypal(){
+    	self::get_paypal_config();
+		if(self::has_paypal_config()){
+			$this->paypal = new CT_PayPal(array('application_client_id' => $this->application_client_id,
+												'application_client_secret' => $this->application_client_secret,
+												'payment_approved_url'=>$this->payment_approved_url,
+												'payment_cancelled_url'=>$this->payment_cancelled_url));
+			
+		};
+    }
+
     public function execute_paypal_payment(){
 
+    	$plugin = new TransitQuote_Premium();
+		self::load_settings();
 
+		$this->cdb = $plugin->get_custom_db();
+		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+
+    	self::init_paypal();
+
+    	self::get_payment_authorization_response_data();
+    	$price = 10;
+
+    	$this->paypal->execute_payment(array('payment_id'=>$this->payment_id,
+    										'payer_id'=>$this->payer_id,
+    										'currency'=> self::get_currency(),
+											'price'=>$price,
+											));
+
+	}
+
+	private function get_payment_authorization_response_data(){
+	    $this->payment_id = $this->ajax->param(array('name'=>'paymentID', 'optional'=>false));
+    	$this->payer_id = $this->ajax->param(array('name'=>'payerID', 'optional'=>false));	
 	}
 
 	private function get_paypal_config(){

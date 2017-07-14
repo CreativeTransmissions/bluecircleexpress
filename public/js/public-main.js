@@ -47,13 +47,13 @@ paypal.Button.render({
         // Make a call to your server to set up the payment
         return paypal.request.post(CREATE_URL)
             .then(function(res) {
-                console.log(res);
                 return res.payment_id;
             });
     },
 
     // onAuthorize() is called when the buyer approves the payment
     onAuthorize: function(data, actions) {
+        console.log(data);
 
         // Set up a url on your server to execute the payment
         var EXECUTE_URL = TransitQuotePremiumSettings.paypal.executePaymentURL;
