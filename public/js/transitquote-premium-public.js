@@ -245,6 +245,47 @@
 			},
 
 			initPayPal: function(){
+				paypal.Button.render({
+
+				    env: 'sandbox', // sandbox | production
+
+				    // Show the buyer a 'Pay Now' button in the checkout flow
+				    commit: true,
+
+				    // payment() is called when the button is clicked
+				    payment: function() {
+
+				        // Set up a url on your server to create the payment
+				        var CREATE_URL = TransitQuotePremiumSettings.paypal.createPaymentUrl;
+
+				        // Make a call to your server to set up the payment
+				        return paypal.request.post(CREATE_URL)
+				            .then(function(res) {
+				                return res.payment_id;
+				            });
+				    },
+
+				    // onAuthorize() is called when the buyer approves the payment
+				    onAuthorize: function(data, actions) {
+				        console.log(data);
+
+				        // Set up a url on your server to execute the payment
+				        var EXECUTE_URL = TransitQuotePremiumSettings.paypal.executePaymentURL;
+
+				        // Set up the data you need to pass to your server
+				        var data = {
+				            paymentID: data.paymentID,
+				            payerID: data.payerID
+				        };
+
+				        // Make a call to your server to execute the payment
+				        return paypal.request.post(EXECUTE_URL, data)
+				            .then(function (res) {
+				                window.alert('Payment Complete!');
+				            });
+				    }
+
+				}, '#paypal-button-container');
 
 			},
 			
@@ -352,25 +393,82 @@
 
 				$.post(this.settings.ajaxUrl, data, function(response) {
 					if(response.success==='true'){
-						$('.failure, .progress, .spinner-div').hide();
-						if(response.paypal_html){
-							$('.success').hide();
-							$('#paypal').html(response.paypal_html).show();
-						} else {
-							$('input[name="job_id"]').val(response.data.job_id);						
-							$('.success').show();
-						}
-
-						//$('#quote-form')[0].reset();
+						that.submissionSuccess(response);
 					} else {
-						console.log(response);
-						console.log(response.success);
 						$('.failure, .progress, .spinner-div').hide();
 						$('.failure .msg').html(response);
 						$('.failure, .buttons').show();
 					};
-					
+					$('.spinner-div').hide();
 				}, 'json');
+			},
+
+			submissionSuccess: function(response){
+				this.hideStatusMessages();
+
+				if(this.hasValidPaymentMethod(response)){
+					var paymentMethod = this.getPaymentMethodFromResponse(response);
+					this.showPaymentButton(paymentMethod);
+				} else {
+					// just returning the quote
+					this.showSuccessMessage();
+					this.populateFormWithJobId(response);
+				}
+
+
+			},
+
+			hasValidPaymentMethod: function(response){
+				if(this.hasPaymentMethod(response)){
+					if(this.paymentMethodIsValid(response.payment_method)){
+						return true;
+					};
+				};
+
+				return false;
+			},
+
+			hasPaymentMethod: function(response){
+				if(typeof(response.payment_method)!=='undefined'){
+					return true;					
+				};
+				return false;
+			},
+
+			paymentMethodIsValid: function(paymentMethod){
+				if(isNaN(parseInt(paymentMethod))){
+					return false;
+				};
+				return true;
+			},
+
+			getPaymentMethodFromResponse: function(response){
+				var paymentMethod = parseInt(response.payment_method);
+				return paymentMethod;
+			},
+
+			hideStatusMessages: function(){
+				$('.failure, .progress, .spinner-div, .success').hide();
+			},
+
+			showSuccessMessage(){
+				$('.success').show();
+			},
+
+			populateFormWithJobId: function(response){
+				$('input[name="job_id"]').val(response.data.job_id);
+			},
+
+			showPaymentButton: function(paymentMethod){
+				switch(paymentMethod){
+					case 1:
+						$('.on-delivery').show();
+					break;
+					case 2:
+						$('#paypal').show();
+						this.initPayPal();
+					break;
+				}
 			},
 
 			log: function(data){

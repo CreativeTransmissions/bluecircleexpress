@@ -92,6 +92,15 @@
     <input class="basicCost" type="hidden" name="distance_cost" value=""/>
 
 </form>
-<div id="paypal" style="display: none;"></div>
+<div id="on-delivery" style="display: none;">
+<div class="on-delivery-msg-succcess" style="display: none;">Thank you! Your has been booked with payment due on delivery.</div>
+</div>
+<div id="paypal" style="display: none;">
+    <?php
+        if(self::check_payment_config(2)){  
+            include $this->paypal_partials_dir.'paypal-button.php';
+        };
+    ?>
+</div>
     
 </div>

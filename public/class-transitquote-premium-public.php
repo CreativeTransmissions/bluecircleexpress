@@ -281,21 +281,15 @@ class TransitQuote_Premium_Public {
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
-		self::get_paypal_config();
-		if(self::has_paypal_config()){
-			$this->paypal = new CT_PayPal(array('application_client_id' => $this->application_client_id,
-												'application_client_secret' => $this->application_client_secret,
-												'payment_approved_url'=>$this->payment_approved_url,
-												'payment_cancelled_url'=>$this->payment_cancelled_url));
-			
-		};
     }
 
     public function create_paypal_payment(){
     	self::init_paypal();
-    	
-    	$price = 10;
-		$invoice_no = 567;
+
+    	self::get_job_details_from_id($job_id);
+
+		$invoice_no = $this->job['id'];
+    	$price = $this->quote['total'];
 
 		$this->paypal->add_payment_item(array(	'name'=>'Delivery',
 												'currency'=> self::get_currency(),
@@ -332,11 +326,13 @@ class TransitQuote_Premium_Public {
 
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		self::get_job_details_from_id($job_id);
 
     	self::init_paypal();
 
     	self::get_payment_authorization_response_data();
-    	$price = 10;
+
+    	$price = $this->quote['total'];
 
     	$this->paypal->execute_payment(array('payment_id'=>$this->payment_id,
     										'payer_id'=>$this->payer_id,
@@ -545,7 +541,7 @@ class TransitQuote_Premium_Public {
 	function get_paths_for_includes(){
 		$file = dirname(dirname(__FILE__)) . '/transitquote-premium.php';
 		$this->plugin_root_dir = plugin_dir_path($file);
-		$this->paypal_partials_dir = $this->plugin_root_dir.'includes/tqp-paypal/partials/';
+		$this->paypal_partials_dir = $this->plugin_root_dir.'includes/ct-payment-pp/partials/';
 	}
 
 	public function get_service_name($service_id = null){
@@ -667,17 +663,21 @@ class TransitQuote_Premium_Public {
 
 		//get the job id in submitted form, unless it is a quote request submission
 		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
+
 		switch ($submit_type) {
 			case 'pay_method_1':
 				// On delivery
+				self::get_job_details_from_id($job_id);
 				$response = self::request_payment_on_delivery($job_id);
 				break;
 			case 'pay_method_2':
 				// PayPal
+				self::get_job_details_from_id($job_id);
 				$response = self::request_payment_paypal($job_id);
 				break;
 			case 'pay_method_3':
 				// Stripe
+				self::get_job_details_from_id($job_id);
 				$response = self::request_payment_stripe($job_id);
 				break;				
 			default:
@@ -692,6 +692,20 @@ class TransitQuote_Premium_Public {
 		};
 
 		$this->ajax->respond($response);		
+	}
+
+	public function get_job_details_from_id($job_id){
+
+		$this->job = self::get_job($job_id);
+		if($this->job===false){
+			$this->ajax->log_error(array('name'=>'Could not get job to update',
+                'value'=>'job_id: '.$this->job['id']));
+            return false;				
+		};	
+
+		if(self::job_is_available()){
+			self::get_job_details($this->job);
+		};		
 	}
 
 	public function premium_ipn_callback(){
@@ -947,8 +961,9 @@ class TransitQuote_Premium_Public {
 							 'msg'=>'Unable to update job '.$job_id.' to payment on delivery');
 		};
 
-		return array('success'=>'true',
-						'success_message'=>'<h2>Thank You.</h2><p>Your job has now been booked with payment due on delivery. Your reference number is: '.$job_id.'</p>');
+		return array(	'success'=>'true',
+						'success_message'=>'<h2>Thank You.</h2><p>Your job has now been booked with payment due on delivery. Your reference number is: '.$job_id.'</p>',
+					 	'payment_method'=>1);
 
 	}
 
@@ -971,36 +986,13 @@ class TransitQuote_Premium_Public {
 							 'msg'=>'Unable to update job '.$job_id.' to payment by paypal');
 		};
 
-		//get job from job_id
-		$this->job = self::get_job($job_id);
-		// get related job data
-		if(self::job_is_available()){
-			$this->job = self::get_job_details($this->job);
-		};
-		$paypal_config = array('cdb'=>$this->cdb,
-								'amount' => $this->quote['total'],
-								'business'=> self::get_setting('premium_paypal_options', 'business_email'),
-								'currency'=> self::get_currency_code(),
-								'item_name'=> self::get_setting('premium_paypal_options', 'item_name', 'TransitQuote Payment'),
-								'item_number'=>$this->job['id'],
-								'transaction_id'=>$this->job['id'],
-								'sandbox'=> self::get_setting('premium_paypal_options', 'sandbox', 1),
-								'return'=> $paypal_return_url
-						);
-
-		//print_r($paypal_config);
-		$this->paypal = new CT_PayPal($paypal_config);
-		$paypal_form = $this->paypal->get_paypal_form();
-		$paypal_html = '<h3>Please click below to make your payment and book this delivery</h3>'.
-							$paypal_form;
-
 		return array('success'=>'true',
 					 'msg'=>'Job booked successfully',
 					 'data'=>array('customer_id'=>$this->customer['id'],
 					 				'job_id'=>$this->job['id'],
 					 				'quote_id'=>$this->quote['id'],
 					 				'email'=>$this->customer['email']),
-					 'paypal_html'=>$paypal_html);
+					 'payment_method'=>2);
 
 	}
 
