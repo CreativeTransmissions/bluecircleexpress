@@ -376,7 +376,7 @@ class TransitQuote_Premium_Admin {
 								v.name as vehicle_type,
 								q.total as quote,
 								pt.name as payment_type,
-								pst.name as payment_status_id
+								pst.description as payment_status
 							FROM wp_tq_prm_jobs jobs
 								left join wp_tq_prm_journeys j 
 									on j.job_id = jobs.id 
@@ -413,8 +413,12 @@ class TransitQuote_Premium_Admin {
 								left join wp_tq_prm_payment_types pt 
 									on pt.id = jobs.payment_type_id
 
-								left join wp_tq_prm_status_types pst 
+
+								left join wp_tq_prm_payment_status_types pst 
 									on pst.id = jobs.payment_status_id
+
+								left join wp_tq_prm_status_types st 
+									on pst.id = jobs.status_type_id
 			".$filter_sql." 
 			order by jobs.id desc;";
 

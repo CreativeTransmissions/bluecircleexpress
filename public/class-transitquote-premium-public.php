@@ -447,7 +447,7 @@ class TransitQuote_Premium_Public {
 			return false;
 		};
 
-		if(!self::update_payment_status($this->job_id, $this->payment_status_type_id)){
+		if(!self::update_payment_status_id($this->job_id, $this->payment_status_type_id)){
 			self::debug('could not update payment_status');
 			return false;
 		};
@@ -710,7 +710,7 @@ class TransitQuote_Premium_Public {
 		};
 
 		//update job with new status
-		if(!self::update_payment_status($this->job_id, $this->payment_status_type_id)){
+		if(!self::update_payment_status_id($this->job_id, $this->payment_status_type_id)){
 			$this->ajax->log_error(array('name'=>'Could not update payment status',
 				                            'value'=>'job_id: '.$job['id'].' payment_status_type_id: '.$this->payment_status_type_id));	
 
@@ -942,7 +942,7 @@ class TransitQuote_Premium_Public {
 		};
 
 		//set payment status to 1 = Awaiting Payment
-		if(!self::update_payment_status($job_id, 1)){
+		if(!self::update_payment_status_id($job_id, 1)){
 			return array('success'=>'false',
 							 'msg'=>'Unable to update job '.$job_id.' to payment on delivery');
 		};
@@ -966,7 +966,7 @@ class TransitQuote_Premium_Public {
 		$paypal_return_url = $this->ajax->param(array('name'=>'return_url'));
 
 		//set payment status to 1 = Awaiting Payment
-		if(!self::update_payment_status($job_id, 1)){
+		if(!self::update_payment_status_id($job_id, 1)){
 			return array('success'=>'false',
 							 'msg'=>'Unable to update job '.$job_id.' to payment by paypal');
 		};
@@ -1016,7 +1016,7 @@ class TransitQuote_Premium_Public {
 		};
 
 		//set payment status to 1 = Awaiting Payment
-		if(!self::update_payment_status($job_id, 1)){
+		if(!self::update_payment_status_id($job_id, 1)){
 			return array('success'=>'false',
 							 'msg'=>'Unable to update job '.$job_id.' to payment by stripe');
 		};
@@ -1871,19 +1871,19 @@ class TransitQuote_Premium_Public {
 	 *	 
 	 * @since    1.0.0
 	 */	
-	private function update_payment_status($job_id, $payment_status_type_id){
+	private function update_payment_status_id($job_id, $payment_status_id){
 		if(empty($job_id)){
-			self::debug('update_payment_status: No job_id');
+			self::debug('update_payment_status_id: No job_id');
 			return false;
 		};
 
-		if(empty($payment_status_type_id)){
-			self::debug('update_payment_status: No payment_status_type_id');
+		if(empty($payment_status_id)){
+			self::debug('payment_status_id: No payment_status_id');
 			return false;
 		};
 
 		// update the payment status to the selected type in the db and update the job object
-		$this->job = $this->cdb->update_field('jobs','payment_status_type_id', $payment_status_type_id, $job_id);
+		$this->job = $this->cdb->update_field('jobs','payment_status_id', $payment_status_id, $job_id);
 		if($this->job===false){
 			return false;
 		};

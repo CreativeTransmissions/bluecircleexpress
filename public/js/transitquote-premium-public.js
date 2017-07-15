@@ -244,6 +244,10 @@
 				});	
 			},
 
+			initPayPal: function(){
+
+			},
+			
 			processCustomerAddresses: function(){
 				//convert json string to array of customer addresses indexed as per database
 				var addresses = $.parseJSON(this.settings.customerAddresses);
