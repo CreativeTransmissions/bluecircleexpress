@@ -1547,20 +1547,8 @@ class TransitQuote_Premium_Public {
 		return $out;
 	}
 	public function format_job($job){
-		$commerical_move_sizes = array();
-		$commerical_move_sizes[1] = 'Factory';
-		$commerical_move_sizes[2] = 'Warehouse';
-		$commerical_move_sizes[3] = 'Small Office 1-10 employees';
-		$commerical_move_sizes[4] = 'Medium Office 1-100 employees';
-		$commerical_move_sizes[5] = 'Large Office - 100 + employees';
-
-		$domestic_move_sizes = array();
-		$domestic_move_sizes[1] = 'Less than 1 Bed House';
-		$domestic_move_sizes[2] = '1 Bed House';
-		$domestic_move_sizes[3] = '2 Bed House';
-		$domestic_move_sizes[4] = '3 Bed House';
-		$domestic_move_sizes[5] = '4 Bed House';
-		$domestic_move_sizes[6] = '5 + Bed House';
+		$services = self::get_services();
+		$this->services = $this->index_array_by_db_id($services);
 
 		//format for display in job details view
 		$out = array();
@@ -1574,10 +1562,10 @@ class TransitQuote_Premium_Public {
 					$field['value'] = $value;
 					$out[] = $field;
 					break;
-				case 'move_size_id':
+			/*	case 'move_size_id':
 					$field['label'] = 'Move Size';
 					$field['value'] = '';
-					switch ($job['service_type_id']) {
+					switch ($job['service_id']) {
 						case 1:
 							if(isset($commerical_move_sizes[$value])){
 								$field['value'] .= $commerical_move_sizes[$value];
@@ -1594,19 +1582,11 @@ class TransitQuote_Premium_Public {
 							break;
 					};
 					$out[] = $field;
-					break;					
-				case 'service_type_id':
-					$field['label'] = 'Move Type';
-					$field['value'] = '';
-					switch ($job['service_type_id']) {
-						case 1:
-							$field['value'] .= 'Commercial';
-							break;
-						case 2:
-							$field['value'] .= 'Domestic';
-							break;
+					break;					*/
+				case 'service_id':
+					if(self::using_service_types($value)){
+						$out[] = self::format_service_type($value);
 					};
-					$out[] = $field;
 					break;								
 				default:
 					break;
@@ -1614,6 +1594,25 @@ class TransitQuote_Premium_Public {
 		};
 		return $out;
 	}
+
+	public function index_array_by_db_id($array){
+		$indexed_array = array();
+		foreach ($array as $key => $record) {
+			$indexed_array[$record['id']] = $record;
+		}
+		return $indexed_array;
+	}
+
+	private function format_service_type($value){
+		$field = array('label' => 'Service');
+		$service_name = '';
+		if(isset($this->services[$value])){
+			$service_name = $this->services[$value]['name'];
+		};
+		$field['value'] = $service_name;
+		return $field;
+	}
+
 	public function format_journey($journey){
 		$distance_unit = self::get_distance_unit();
 		//format for display in job details view
@@ -1735,6 +1734,13 @@ class TransitQuote_Premium_Public {
 			
 		};
 		return $out;
+	}
+
+	public function using_service_types($value){
+		if(empty($value)){
+			return false;
+		};
+		return true;
 	}
 
 	public function render_route_details($waypoints){
