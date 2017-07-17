@@ -1,7 +1,7 @@
 <div class="tq-row progress" style="display:none;">
 	<h2>One moment</h2><p>Sending request...</p>
 </div>
-<div class="tq-row success" style="display:none;">
+<div class="tq-row success buttons" style="display:none;">
     <h2>Payment Options</h2><p><?php echo self::get_success_message(); ?></p>
     <?php echo self::get_payment_buttons(); ?>
     <input type="hidden" name="job_id" value="<?php echo self::get_job_id(); ?>"/>

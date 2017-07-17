@@ -295,7 +295,9 @@ class TransitQuote_Premium {
 		$this->loader->add_action( 'wp_ajax_premium_ipn', $plugin_public, 'premium_ipn_callback');	
 		$this->loader->add_action( 'wp_ajax_nopriv_premium_ipn', $plugin_public, 'premium_ipn_callback');
 
+		$this->loader->add_action( 'wp_ajax_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_nopriv_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
+		$this->loader->add_action( 'wp_ajax_execute_paypal_payment', $plugin_public, 'execute_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_nopriv_execute_paypal_payment', $plugin_public, 'execute_paypal_payment' );
 	}
 

@@ -285,29 +285,35 @@ class TransitQuote_Premium_Public {
 
     public function create_paypal_payment(){
     	self::init_paypal();
-
-    	self::get_job_details_from_id($job_id);
-
-		$invoice_no = $this->job['id'];
-    	$price = $this->quote['total'];
-
-		$this->paypal->add_payment_item(array(	'name'=>'Delivery',
-												'currency'=> self::get_currency(),
-												'quantity'=>'1',
-												'order_no'=>'123',
-												'price'=>$price
-												));
-
+    	
+    	$job_id = $this->ajax->param(array('name'=>'jobId', 'optional'=>false));	
+    	$payment_item = self::create_payment_item($job_id);
+		$this->paypal->add_payment_item($payment_item);
+		
 		$this->paypal->create_transaction(array('description'=>self::get_description(),
-												'total'=>$price,
-												'invoice_no'=>$invoice_no));
+												'total'=>$this->quote['total'],
+												'invoice_no'=>$job_id));
+
 		$payment_id = $this->paypal->get_payment_id();
 
 		$this->ajax->respond(array('success' => 'true',
 									'payment_id' => $payment_id,
-                                    'msg'=>''));
+                                    'msg'=>'',
+                                    'data'=>array('payment_item'=>$payment_item)));
     }
 
+    private function create_payment_item(int $job_id){
+    	self::get_job_details_from_id($job_id);
+
+    	$price = $this->quote['total'];
+
+    	return array('name'=>'Delivery',
+					'currency'=> self::get_currency(),
+					'quantity'=>'1',
+					'order_no'=>'123',
+					'price'=>$price
+					);
+    }
     private function init_paypal(){
     	self::get_paypal_config();
 		if(self::has_paypal_config()){
@@ -326,13 +332,14 @@ class TransitQuote_Premium_Public {
 
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
-		self::get_job_details_from_id($job_id);
 
     	self::init_paypal();
 
-    	self::get_payment_authorization_response_data();
-
+		$job_id = $this->ajax->param(array('name'=>'jobId', 'optional'=>false));	
+		self::get_job_details_from_id($job_id);
     	$price = $this->quote['total'];
+    	
+    	self::get_payment_authorization_response_data();
 
     	$this->paypal->execute_payment(array('payment_id'=>$this->payment_id,
     										'payer_id'=>$this->payer_id,

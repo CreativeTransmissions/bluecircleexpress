@@ -254,10 +254,12 @@
 
 				    // payment() is called when the button is clicked
 				    payment: function() {
+				    	var jobId = $('input[name="job_id"]').val();
+				        // Set up a url on your server to create the payment_id
+				        var CREATE_URL = TransitQuotePremiumSettings.paypal.createPaymentUrl+'&jobId='+jobId;
 
-				        // Set up a url on your server to create the payment
-				        var CREATE_URL = TransitQuotePremiumSettings.paypal.createPaymentUrl;
-
+						// Set up the data you need to pass to your server
+		
 				        // Make a call to your server to set up the payment
 				        return paypal.request.post(CREATE_URL)
 				            .then(function(res) {
@@ -267,21 +269,22 @@
 
 				    // onAuthorize() is called when the buyer approves the payment
 				    onAuthorize: function(data, actions) {
-				        console.log(data);
-
+				        
 				        // Set up a url on your server to execute the payment
 				        var EXECUTE_URL = TransitQuotePremiumSettings.paypal.executePaymentURL;
 
 				        // Set up the data you need to pass to your server
+				        var jobId = $('input[name="job_id"]').val();
 				        var data = {
 				            paymentID: data.paymentID,
-				            payerID: data.payerID
+				            payerID: data.payerID,
+				            jobId: jobId
 				        };
 
 				        // Make a call to your server to execute the payment
 				        return paypal.request.post(EXECUTE_URL, data)
 				            .then(function (res) {
-				                window.alert('Payment Complete!');
+				                console.log(res);
 				            });
 				    }
 
@@ -375,9 +378,8 @@
 						invalid = true;		
 					};
 				};
-
 			
-				$('.progress, .success, failure').hide();
+				$('.failure').hide();
 				this.updateProgressMessage('Sending your request to our staff, please wait a moment...');
 				$('.buttons').hide();
 				$('.spinner-div').css({
@@ -448,7 +450,7 @@
 			},
 
 			hideStatusMessages: function(){
-				$('.failure, .progress, .spinner-div, .success').hide();
+				$('.failure, .progress, .spinner-div').hide();
 			},
 
 			showSuccessMessage(){
