@@ -200,6 +200,7 @@ class TransitQuote_Premium_Public {
 		};
 		return true;
 	}
+
 	public function debug($error){
 		if($this->debug==true){		
 			$plugin = new TransitQuote_Premium();	
@@ -302,6 +303,14 @@ class TransitQuote_Premium_Public {
                                     'data'=>array('payment_item'=>$payment_item)));
     }
 
+	public function get_msg_auth_success(){
+		return 'Thank you! Your Payment has been authorized successfully. You will recieve a confirmation email as soon as the payment has been processed.';
+	}
+	
+	public function get_msg_auth_fail(){
+		return 'Sorry, we were unable to process your payment. Please check your PayPal account for more information.';
+	}
+
     private function create_payment_item(int $job_id){
     	self::get_job_details_from_id($job_id);
 
@@ -341,11 +350,32 @@ class TransitQuote_Premium_Public {
     	
     	self::get_payment_authorization_response_data();
 
-    	$this->paypal->execute_payment(array('payment_id'=>$this->payment_id,
+    	$response = $this->paypal->execute_payment(array('payment_id'=>$this->payment_id,
     										'payer_id'=>$this->payer_id,
     										'currency'=> self::get_currency(),
 											'price'=>$price,
 											));
+    	if($response===false){
+			if(!self::update_payment_status_id($job_id, 3)){
+				return array('success'=>'false',
+								 'msg'=>'Unable to update job '.$job_id.' to failed');
+			};
+
+			$this->ajax->respond(array('success' => 'false',
+    									'msg'=>'Payment failed due to error.'));
+    	} else {
+
+    		if(!self::update_payment_status_id($job_id, 4)){
+				return array('success'=>'false',
+								 'msg'=>'Unable to update job '.$job_id.' to pending / authorized');
+			};
+
+			$this->ajax->respond(array('success' => 'true',
+    								'payment_id'=>$this->payment_id,
+                                    'data'=>array($response)));
+    	}
+
+    	
 
 	}
 

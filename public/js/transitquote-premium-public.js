@@ -284,7 +284,11 @@
 				        // Make a call to your server to execute the payment
 				        return paypal.request.post(EXECUTE_URL, data)
 				            .then(function (res) {
-				                console.log(res);
+				            	if(res.success=='true'){
+				                	this.processResponseExecution(res);				            		
+				            	} else {
+				            		console.log(res);
+				            	}
 				            });
 				    }
 
@@ -292,6 +296,15 @@
 
 			},
 			
+			processResponseExecution: function(response){
+				if(response.data.state === 'approved'){
+					$('.paypal-msg-success').show();
+				} else {
+					$('.paypal-msg-failure').show();
+					console.log(res);
+				}
+			},
+
 			processCustomerAddresses: function(){
 				//convert json string to array of customer addresses indexed as per database
 				var addresses = $.parseJSON(this.settings.customerAddresses);
