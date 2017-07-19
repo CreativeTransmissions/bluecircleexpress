@@ -362,17 +362,24 @@ class TransitQuote_Premium_Public {
 			};
 
 			$this->ajax->respond(array('success' => 'false',
-    									'msg'=>'Payment failed due to error.'));
+    									'msg'=>'Payment failed due to error.',
+    									'error'=>$this->paypal->get_exception()));
     	} else {
+    		if($response==='approved'){
+	    		if(!self::update_payment_status_id($job_id, 4)){
+					return array('success'=>'false',
+									 'msg'=>'Unable to update job '.$job_id.' to pending / authorized');
+				};
 
-    		if(!self::update_payment_status_id($job_id, 4)){
-				return array('success'=>'false',
-								 'msg'=>'Unable to update job '.$job_id.' to pending / authorized');
-			};
-
-			$this->ajax->respond(array('success' => 'true',
-    								'payment_id'=>$this->payment_id,
-                                    'data'=>array($response)));
+				$this->ajax->respond(array('success' => 'true',
+	    								'payment_id'=>$this->payment_id,
+	                                    'state'=>$response));
+			} else {
+				$this->ajax->respond(array('success' => 'false',
+	    								'payment_id'=>$this->payment_id,
+	    								'msg'=>'Payment was not approved.',
+	                                    'state'=>$response));
+			}
     	}
 
     	

@@ -245,6 +245,8 @@
 			},
 
 			initPayPal: function(){
+				var that = this;
+
 				paypal.Button.render({
 
 				    env: 'sandbox', // sandbox | production
@@ -285,7 +287,7 @@
 				        return paypal.request.post(EXECUTE_URL, data)
 				            .then(function (res) {
 				            	if(res.success=='true'){
-				                	this.processResponseExecution(res);				            		
+				                	that.processResponseExecution(res);				            		
 				            	} else {
 				            		console.log(res);
 				            	}
@@ -297,7 +299,8 @@
 			},
 			
 			processResponseExecution: function(response){
-				if(response.data.state === 'approved'){
+				if(response.state === 'approved'){
+					$('#paypal-button-container').hide();
 					$('.paypal-msg-success').show();
 				} else {
 					$('.paypal-msg-failure').show();
