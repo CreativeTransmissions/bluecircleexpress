@@ -43,6 +43,7 @@ class TransitQuote_Premium_Activator {
 		$plugin->load_dependencies();
 		$cdb = $plugin->get_custom_db();
 		$cdb->create_tables();
+		echo "tables created";	
 		$plugin->insert_default_data($cdb);
 	}
 

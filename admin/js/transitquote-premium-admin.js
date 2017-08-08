@@ -48,7 +48,10 @@
 							this.initVehicleTabUI();
 							this.initVehicleTabEvents();
 							this.initEditTableEvents('vehicles');
-						break;	
+						break;
+						case 'premium_paypal_transactions':
+							this.initPayPayTransactionsTabUI();
+						break;
 						default:
 							this.initJobsTabUI();
 							this.initJobsTabEvents();
@@ -331,6 +334,14 @@
 							
 				},
 				
+				initPayPayTransactionsTabUI: function(){
+					var that = this;
+					console.log('initPayPayTransactionsTabUI');
+					this.loadTable({
+						table: 'transactions_paypal'
+					});
+							
+				},
 
 				initSurchargeTabEvents : function(){
 					var that = this;

@@ -457,6 +457,13 @@ class TransitQuote_Premium_Admin {
 		die();
 	}
 
+	public function load_transactions_paypal_callback(){
+		$html = self::load_table('transactions_paypal');
+		$this->ajax->respond(array('success'=>'true',
+										'msg'=>'Success',
+                               		    'html'=>$html));
+	}
+
 	public function load_table_callback(){
 		$table = $this->ajax->param(array('name'=>'table'));
 		$html = self::load_table($table);
@@ -549,6 +556,12 @@ class TransitQuote_Premium_Admin {
 					'inputs'=>false,
 					'actions'=>array('Edit','Delete')
 				);
+			case 'transactions_paypal':
+				$defaults = array(
+					'table'=>'transactions_paypal',
+					'fields'=>array('id','customer_id', 'job_id', 'amount', 'currency', 'paypal_status'),
+					'inputs'=>false
+				);
 			break;
 			case 'vehicles':
 				$defaults = array(
@@ -602,18 +615,26 @@ class TransitQuote_Premium_Admin {
 		switch ($table) {
 			case 'jobs':
 				$empty_colspan = 8;
+				$table_output_name = $table;
 				break;
 			case 'customers':
 				$empty_colspan = 4;
+				$table_output_name = $table;
 				break;
 			case 'rates':
 				$empty_colspan = 6;
+				$table_output_name = $table;
+				break;
+			case 'transactions_paypal':
+				$empty_colspan = 5;
+				$table_output_name = 'payments';
 				break;
 			default:
 				$empty_colspan = 999;
 				break;
-		}
-		return '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no '.$table.' in the database yet.</td></tr>';
+		};
+
+		return '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no '.$table_output_name.' in the database yet.</td></tr>';
 	}
 
 	public function save_record_callback(){

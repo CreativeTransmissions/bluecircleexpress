@@ -305,7 +305,7 @@ private function config_quotes(){
       'null' => 'not null',
       'auto' => '',
       'default' => '',
-      'format' => '%f',
+      'format' => '%f'
     ),
     'rate_unit' => 
     array (
@@ -314,7 +314,7 @@ private function config_quotes(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%f',
+      'format' => '%f'
     ),
   'rate_amount' => 
     array (
@@ -323,7 +323,7 @@ private function config_quotes(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%f',
+      'format' => '%f'
     ),
   'rate_hour' => 
     array (
@@ -332,7 +332,7 @@ private function config_quotes(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%f',
+      'format' => '%f'
     ),
     'distance_cost' => 
     array (
@@ -341,7 +341,7 @@ private function config_quotes(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%f',
+      'format' => '%f'
     ),
     'time_cost' => 
     array (
@@ -350,7 +350,7 @@ private function config_quotes(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%f',
+      'format' => '%f'
     ),
    'notice_cost' => 
     array (
@@ -359,7 +359,7 @@ private function config_quotes(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%f',
+      'format' => '%f'
     ),
     'created' => 
     array (
@@ -368,7 +368,7 @@ private function config_quotes(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%s',
+      'format' => '%s'
     ),
     'modified' => 
     array (
@@ -377,7 +377,7 @@ private function config_quotes(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%s',
+      'format' => '%s'
     )
   ),
   'pk' => 'id',
@@ -437,7 +437,7 @@ private function config_vehicles(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%f',
+      'format' => '%f'
     ),
     'created' => 
     array (
@@ -584,7 +584,7 @@ private function config_services(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%f',
+      'format' => '%f'
     ),
     'created' => 
     array (
@@ -1465,6 +1465,109 @@ private function config_rates(){
 );
 
 }
+
+private function config_transactions_paypal(){
+  return array (
+    'name' => 'transactions_paypal',
+    'defaults' => array (
+        'fields' =>   array (),
+        'orderby' => 'id',
+        'order' => 'asc',
+        'user_id' => false,
+        'since' => false,
+        'until' => false,
+        'number' => -1,
+        'offset' => 0,
+    ),
+    'cols' => 
+    array (
+    'id' => 
+      array (
+        'name' => 'id',
+        'type' => 'int',
+        'null' => 'not null',
+        'auto' => 'auto_increment',
+        'default' => '',
+        'format' => '%d'
+    ),
+    'customer_id' => 
+      array (
+        'name' => 'customer_id',
+        'type' => 'int',
+        'null' => 'not null',
+        'auto' => '',
+        'default' => '',
+        'format' => ''
+      ),
+    'job_id' => 
+      array (
+        'name' => 'job_id',
+        'type' => 'int',
+        'null' => 'not null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s'
+    ),
+    'amount' => 
+      array (
+        'name' => 'amount',
+        'type' => 'decimal(10,2)',
+        'null' => 'not null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%f'
+    ),
+    'currency' => 
+      array (
+        'name' => 'currency',
+        'type' => 'varchar(5)',
+        'null' => 'not null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s'
+    ),
+    'paypal_status' => 
+      array (
+        'name' => 'paypal_status',
+        'type' => 'varchar(45)',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s'
+    ),
+    'paypal_create_response' => 
+      array (
+        'name' => 'paypal_create_response',
+        'type' => 'text',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s'
+    ),
+    'paypal_exec_response' => 
+      array (
+        'name' => 'paypal_exec_response',
+        'type' => 'text',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s'
+    ),
+    'created' => 
+      array (
+        'name' => 'created',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s'
+      )
+    ),
+    'pk' => 'id',
+  );
+
+}
+
 private function config_event_logs(){
  return array (
   'name' => 'event_logs',

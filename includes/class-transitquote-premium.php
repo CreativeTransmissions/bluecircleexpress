@@ -271,6 +271,7 @@ class TransitQuote_Premium {
 		$this->loader->add_action( 'wp_ajax_select_options', $plugin_admin, 'select_options_callback' );
 		$this->loader->add_action( 'wp_ajax_premium_load_table', $plugin_admin, 'load_table_callback' );
 		$this->loader->add_action( 'wp_ajax_load_job_details', $plugin_admin, 'load_job_details_callback' );
+		$this->loader->add_action( 'wp_ajax_transactions_paypal', $plugin_admin, 'load_transactions_paypal_callback' );
 
 	}
 
@@ -381,6 +382,7 @@ class TransitQuote_Premium {
 		$cdb->define_table($db_config->get_config('quote_surcharges'));
 		$cdb->define_table($db_config->get_config('journeys'));
 		$cdb->define_table($db_config->get_config('journeys_locations'));
+		$cdb->define_table($db_config->get_config('transactions_paypal'));
 		$cdb->define_table($db_config->get_config('rates'));
 		$cdb->define_table($db_config->get_config('event_logs')); 
 		$cdb->define_table($db_config->get_config('event_data'));

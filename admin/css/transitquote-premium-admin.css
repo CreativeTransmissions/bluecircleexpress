@@ -68,7 +68,7 @@ input.wide {
 }
 .admin-form  p.submit {
 	margin: 0em;
-	padding: 0;
+	padding: 1em 0em 0em;
 }
 .admin-form  p.submit input {
   padding: 1em;
