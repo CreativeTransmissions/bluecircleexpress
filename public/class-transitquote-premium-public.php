@@ -320,7 +320,8 @@ class TransitQuote_Premium_Public {
 					'currency'=> self::get_currency(),
 					'quantity'=>'1',
 					'order_no'=>'123',
-					'price'=>$price
+					'price'=>$price,
+					'customer_id'=>$this->job['customer_id']
 					);
     }
     private function init_paypal(){

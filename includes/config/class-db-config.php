@@ -1535,18 +1535,93 @@ private function config_transactions_paypal(){
         'default' => '',
         'format' => '%s'
     ),
-    'paypal_create_response' => 
+    'created' => 
       array (
-        'name' => 'paypal_create_response',
+        'name' => 'created',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s'
+      ),
+    'modified' => 
+      array (
+        'name' => 'modified',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s'
+      )
+    ),
+    'pk' => 'id',
+  );
+
+}
+
+private function config_transaction_logs_paypal(){
+  return array (
+    'name' => 'transaction_logs_paypal',
+    'defaults' => array (
+        'fields' =>   array (),
+        'orderby' => 'id',
+        'order' => 'asc',
+        'user_id' => false,
+        'since' => false,
+        'until' => false,
+        'number' => -1,
+        'offset' => 0,
+    ),
+    'cols' => 
+    array (
+    'id' => 
+      array (
+        'name' => 'id',
+        'type' => 'int',
+        'null' => 'not null',
+        'auto' => 'auto_increment',
+        'default' => '',
+        'format' => '%d'
+    ),
+    'transaction_id' => 
+      array (
+        'name' => 'transaction_id',
+        'type' => 'int',
+        'null' => 'not null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%d'
+      ),
+    'payment_type_id' => 
+      array (
+        'name' => 'payment_type_id',
+        'type' => 'int',
+        'null' => 'not null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%d'
+    ),
+    'request_type_id' => 
+      array (
+        'name' => 'request_type_id',
+        'type' => 'int',
+        'null' => 'not null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%d'
+    ),
+    'request' => 
+      array (
+        'name' => 'request',
         'type' => 'text',
         'null' => 'null',
         'auto' => '',
         'default' => '',
         'format' => '%s'
     ),
-    'paypal_exec_response' => 
+    'response' => 
       array (
-        'name' => 'paypal_exec_response',
+        'name' => 'response',
         'type' => 'text',
         'null' => 'null',
         'auto' => '',
@@ -1556,6 +1631,15 @@ private function config_transactions_paypal(){
     'created' => 
       array (
         'name' => 'created',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s'
+    ),
+    'modified' => 
+      array (
+        'name' => 'modified',
         'type' => 'timestamp',
         'null' => 'null',
         'auto' => '',

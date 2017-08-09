@@ -383,6 +383,7 @@ class TransitQuote_Premium {
 		$cdb->define_table($db_config->get_config('journeys'));
 		$cdb->define_table($db_config->get_config('journeys_locations'));
 		$cdb->define_table($db_config->get_config('transactions_paypal'));
+		$cdb->define_table($db_config->get_config('transaction_logs_paypal'));
 		$cdb->define_table($db_config->get_config('rates'));
 		$cdb->define_table($db_config->get_config('event_logs')); 
 		$cdb->define_table($db_config->get_config('event_data'));
