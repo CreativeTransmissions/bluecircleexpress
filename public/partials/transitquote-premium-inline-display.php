@@ -53,7 +53,7 @@
 
         <div class="tq-row buttons">
             <div class="tq-col100 tq-button-center">
-                <input  tabindex="12" id="form-submit" type="submit" value="Get Estimate" class="tq-button">
+                <input tabindex="12" name="tq-form-submit" type="submit" value="Get Estimate" class="tq-button">
             </div>
         </div>
     </div>

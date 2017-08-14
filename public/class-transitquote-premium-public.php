@@ -313,7 +313,6 @@ class TransitQuote_Premium_Public {
 
     private function create_payment_item(int $job_id){
     	self::get_job_details_from_id($job_id);
-
     	$price = $this->quote['total'];
 
     	return array('name'=>'Delivery',
@@ -330,7 +329,8 @@ class TransitQuote_Premium_Public {
 			$this->paypal = new CT_PayPal(array('application_client_id' => $this->application_client_id,
 												'application_client_secret' => $this->application_client_secret,
 												'payment_approved_url'=>$this->payment_approved_url,
-												'payment_cancelled_url'=>$this->payment_cancelled_url));
+												'payment_cancelled_url'=>$this->payment_cancelled_url,
+												'cdb'=>$this->cdb));
 			
 		};
     }
@@ -501,7 +501,7 @@ class TransitQuote_Premium_Public {
 		};	
 
 		if(self::job_is_available()){
-			self::get_job_details($this->job);
+			$this->job = self::get_job_details($this->job);
 		};
 		//get text payment status message
 		$payment_status = $this->paypal->get_payment_status($this->job);

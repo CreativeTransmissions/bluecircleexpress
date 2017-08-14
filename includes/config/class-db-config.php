@@ -1497,7 +1497,7 @@ private function config_transactions_paypal(){
         'null' => 'not null',
         'auto' => '',
         'default' => '',
-        'format' => ''
+        'format' => '%d'
       ),
     'job_id' => 
       array (
@@ -1506,7 +1506,7 @@ private function config_transactions_paypal(){
         'null' => 'not null',
         'auto' => '',
         'default' => '',
-        'format' => '%s'
+        'format' => '%d'
     ),
     'amount' => 
       array (
