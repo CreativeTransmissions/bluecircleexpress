@@ -323,7 +323,7 @@ class TransitQuote_Premium_Public {
 					'customer_id'=>$this->job['customer_id']
 					);
     }
-    private function init_paypal(){
+    public function init_paypal(){
     	self::get_paypal_config();
 		if(self::has_paypal_config()){
 			$this->paypal = new CT_PayPal(array('application_client_id' => $this->application_client_id,

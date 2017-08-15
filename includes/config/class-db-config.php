@@ -532,6 +532,66 @@ private function config_payment_types(){
 
 }
 
+private function config_request_types(){
+ return array (
+  'name' => 'request_types',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'asc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d'
+    ),
+    'name' => 
+    array (
+      'name' => 'name',
+      'type' => 'varchar(45)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
+
 private function config_services(){
  return array (
   'name' => 'services',
@@ -1622,6 +1682,15 @@ private function config_transaction_logs_paypal(){
     'response' => 
       array (
         'name' => 'response',
+        'type' => 'text',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s'
+    ),
+    'message' => 
+      array (
+        'name' => 'message',
         'type' => 'text',
         'null' => 'null',
         'auto' => '',

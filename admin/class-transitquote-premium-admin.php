@@ -482,11 +482,52 @@ class TransitQuote_Premium_Admin {
 		die();
 	}
 
+	public function load_transactions_paypal_details_callback(){
+		//get the job id for the post parameters
+		$transaction_id = $this->ajax->param(array('name'=>'transaction_id', 'optional'=>false));
+
+		$this->plugin->init_paypal();
+
+		//load the transaction record from the database
+		$this->transaction_logs = self::get_transaction_logs($transaction_id);
+
+		if(is_array($this->transaction_logs)){
+			$defaults = array(
+							'table'=>'transaction_logs_paypal',
+							'fields'=>array('id', 'request_type_id','success','message','created'),
+							'inputs'=>false
+						);
+
+			$rows = $this->dbui->table_rows($params);
+
+			//output the view which will be returned via ajax and inserted into the hidden
+			include('partials/premium_job_details.php'); 
+		
+		}
+
+		
+		die();
+	}
+
+	private function get_transaction_logs($id){
+
+    	$transaction_logs = $this->paypal->get_logs_for_transaction($id);
+
+    	return $transaction_logs;
+    	
+    }
+
 	public function load_transactions_paypal_callback(){
 		$html = self::load_table('transactions_paypal');
 		$this->ajax->respond(array('success'=>'true',
 										'msg'=>'Success',
                                		    'html'=>$html));
+	}
+
+
+	public function render_transaction_details_table(){
+
+		include('partials/premium_paypal_transactions_details.php'); 
 	}
 
 	public function load_table_callback(){
@@ -637,10 +678,6 @@ class TransitQuote_Premium_Admin {
 			$filters['vehicle_id'] = $vehicle_id;
 		};
 		return $filters;
-	}
-
-	private function get_transations(){
-
 	}
 
 	private function render_empty_table($table){
