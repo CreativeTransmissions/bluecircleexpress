@@ -351,22 +351,30 @@ class TransitQuote_Premium_Public {
     	
     	self::get_payment_authorization_response_data();
 
-    	$response = $this->paypal->execute_payment(array('payment_id'=>$this->payment_id,
-    										'payer_id'=>$this->payer_id,
-    										'currency'=> self::get_currency(),
-											'price'=>$price,
+    	$success = $this->paypal->execute_payment(array(
+    											'job_id'=>$job_id,
+	    										'payment_id'=>$this->payment_id,
+	    										'payer_id'=>$this->payer_id,
+	    										'currency'=> self::get_currency(),
+												'price'=>$price,
 											));
-    	if($response===false){
+    	if($success===false){
 			if(!self::update_payment_status_id($job_id, 3)){
 				return array('success'=>'false',
 								 'msg'=>'Unable to update job '.$job_id.' to failed');
 			};
 
+			$exception = $this->paypal->get_exception();
+			$msg = $exception->getData();
+			$url = $exception->getUrl();
+
 			$this->ajax->respond(array('success' => 'false',
     									'msg'=>'Payment failed due to error.',
-    									'error'=>$this->paypal->get_exception()));
+    									'error'=>$msg,
+    									'url'=>$url));
     	} else {
-    		if($response==='approved'){
+    		$status = $this->paypal->get_paypal_status();
+    		if($status==='approved'){
 	    		if(!self::update_payment_status_id($job_id, 4)){
 					return array('success'=>'false',
 									 'msg'=>'Unable to update job '.$job_id.' to pending / authorized');
@@ -374,12 +382,12 @@ class TransitQuote_Premium_Public {
 
 				$this->ajax->respond(array('success' => 'true',
 	    								'payment_id'=>$this->payment_id,
-	                                    'state'=>$response));
+	                                    'status'=>$status));
 			} else {
 				$this->ajax->respond(array('success' => 'false',
 	    								'payment_id'=>$this->payment_id,
 	    								'msg'=>'Payment was not approved.',
-	                                    'state'=>$response));
+	                                    'status'=>$status));
 			}
     	}
 

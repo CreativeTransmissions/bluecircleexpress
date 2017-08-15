@@ -1628,6 +1628,15 @@ private function config_transaction_logs_paypal(){
         'default' => '',
         'format' => '%s'
     ),
+    'success' => 
+      array (
+        'name' => 'success',
+        'type' => 'tinyint(1)',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%d'
+    ),
     'created' => 
       array (
         'name' => 'created',

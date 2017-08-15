@@ -299,7 +299,7 @@
 			},
 			
 			processResponseExecution: function(response){
-				if(response.state === 'approved'){
+				if(response.status === 'approved'){
 					$('#paypal-button-container').hide();
 					$('.paypal-msg-success').show();
 				} else {
