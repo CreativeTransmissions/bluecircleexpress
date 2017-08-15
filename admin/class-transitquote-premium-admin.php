@@ -339,7 +339,7 @@ class TransitQuote_Premium_Admin {
 		return $this->cdb->get_row('jobs',$job_id);
     }
 
-	function get_jobs($filters = null, $dates = null){
+	private function get_jobs($filters = null, $dates = null){
 
     	//current and future only
     	$clauses = array();/*"date(jobs.delivery_date) >= CURDATE() ",*/
@@ -422,6 +422,31 @@ class TransitQuote_Premium_Admin {
 			".$filter_sql." 
 			order by jobs.id desc;";
 
+
+		$data = $this->cdb->query($sql);
+		return $data;
+    }
+
+	private function get_transactions(){
+
+    	$sql = "SELECT distinct	pt.id as id,
+						trim(concat(c.first_name,' ',c.last_name)) as customer_name,
+						c.email as email,
+						jobs.id as jobid, 
+						q. total as amount,
+						pt.currency as currency,
+						pt.paypal_status as paypal_status
+					FROM wp_tq_prm_transactions_paypal pt
+						inner join wp_tq_prm_jobs jobs 
+							on pt.job_id = jobs.id
+
+						inner join wp_tq_prm_customers c 
+							on c.id = jobs.customer_id 
+
+						inner join wp_tq_prm_quotes q 
+							on q.id = jobs.accepted_quote_id
+
+				order by pt.id desc;";
 
 		$data = $this->cdb->query($sql);
 		return $data;
@@ -556,10 +581,13 @@ class TransitQuote_Premium_Admin {
 					'inputs'=>false,
 					'actions'=>array('Edit','Delete')
 				);
+			break;
 			case 'transactions_paypal':
+				$transaction_data = $this->get_transactions();
 				$defaults = array(
+					'data'=>$transaction_data,
 					'table'=>'transactions_paypal',
-					'fields'=>array('id','customer_id', 'job_id', 'amount', 'currency', 'paypal_status'),
+					'fields'=>array('id', 'jobid', 'customer_name', 'email', 'amount', 'currency', 'paypal_status'),
 					'inputs'=>false
 				);
 			break;
@@ -609,6 +637,10 @@ class TransitQuote_Premium_Admin {
 			$filters['vehicle_id'] = $vehicle_id;
 		};
 		return $filters;
+	}
+
+	private function get_transations(){
+
 	}
 
 	private function render_empty_table($table){

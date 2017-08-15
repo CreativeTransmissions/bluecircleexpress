@@ -336,7 +336,6 @@
 				
 				initPayPayTransactionsTabUI: function(){
 					var that = this;
-					console.log('initPayPayTransactionsTabUI');
 					this.loadTable({
 						table: 'transactions_paypal'
 					});
