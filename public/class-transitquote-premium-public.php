@@ -177,8 +177,6 @@ class TransitQuote_Premium_Public {
 			self::debug('check_payment_config: no payment_type_id');
 			return false;
 		};
-
-		self::load_settings();
 		
 		switch ($payment_type_id) {
 			case 1: // payment on delivery
@@ -401,6 +399,8 @@ class TransitQuote_Premium_Public {
 	}
 
 	private function get_paypal_config(){
+		self::load_settings();
+
 		$this->application_client_id = self::get_setting('premium_paypal_options','application_client_id');
 		$this->application_client_secret = self::get_setting('premium_paypal_options','application_client_secret');
 

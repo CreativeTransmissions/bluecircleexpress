@@ -270,7 +270,7 @@ class TransitQuote_Premium {
 		$this->loader->add_action( 'wp_ajax_delete_record', $plugin_admin, 'delete_record_callback' );
 		$this->loader->add_action( 'wp_ajax_select_options', $plugin_admin, 'select_options_callback' );
 		$this->loader->add_action( 'wp_ajax_premium_load_table', $plugin_admin, 'load_table_callback' );
-		$this->loader->add_action( 'wp_ajax_load_job_details', $plugin_admin, 'load_job_details_callback' );
+		$this->loader->add_action( 'wp_ajax_load_details', $plugin_admin, 'load_details_callback' );
 		$this->loader->add_action( 'wp_ajax_transactions_paypal', $plugin_admin, 'load_transactions_paypal_callback' );
 
 	}

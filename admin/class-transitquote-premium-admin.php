@@ -452,10 +452,24 @@ class TransitQuote_Premium_Admin {
 		return $data;
     }
 
-	public function load_job_details_callback(){
+	public function load_details_callback(){
 		//get the job id for the post parameters
-		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
+		$row_id = $this->ajax->param(array('name'=>'row_id', 'optional'=>false));
+		$table_name = $this->ajax->param(array('name'=>'table_name', 'optional'=>false));
 
+		switch ($table_name) {
+			case 'jobs_table':
+				self::render_job_details($row_id);
+				break;
+			case 'transactions_paypal_table':
+				self::render_transaction_details($row_id);
+				break;
+		}
+		
+		die();
+	}
+
+	private function render_job_details($job_id){
 		//load the job record from the database
 		$this->job = self::get_job($job_id);
 
@@ -478,13 +492,10 @@ class TransitQuote_Premium_Admin {
 
 		//output the view which will be returned via ajax and inserted into the hidden
 		include('partials/premium_job_details.php'); 
-		
-		die();
 	}
 
-	public function load_transactions_paypal_details_callback(){
-		//get the job id for the post parameters
-		$transaction_id = $this->ajax->param(array('name'=>'transaction_id', 'optional'=>false));
+
+	public function render_transaction_details($transaction_id){
 
 		$this->plugin->init_paypal();
 
@@ -492,26 +503,27 @@ class TransitQuote_Premium_Admin {
 		$this->transaction_logs = self::get_transaction_logs($transaction_id);
 
 		if(is_array($this->transaction_logs)){
-			$defaults = array(
+			$params = array(
 							'table'=>'transaction_logs_paypal',
-							'fields'=>array('id', 'request_type_id','success','message','created'),
+							'data'=>$this->transaction_logs,
+							'fields'=>array('id','created', 'request_type_id','success','message'),
 							'inputs'=>false
 						);
 
 			$rows = $this->dbui->table_rows($params);
 
 			//output the view which will be returned via ajax and inserted into the hidden
-			include('partials/premium_job_details.php'); 
-		
-		}
-
+			include('partials/premium_paypal_transactions_details.php'); 
+		} else {
+			echo 'Payment Not Created';
+		};
 		
 		die();
 	}
 
 	private function get_transaction_logs($id){
 
-    	$transaction_logs = $this->paypal->get_logs_for_transaction($id);
+    	$transaction_logs = $this->plugin->paypal->get_logs_for_transaction($id);
 
     	return $transaction_logs;
     	
@@ -629,7 +641,8 @@ class TransitQuote_Premium_Admin {
 					'data'=>$transaction_data,
 					'table'=>'transactions_paypal',
 					'fields'=>array('id', 'jobid', 'customer_name', 'email', 'amount', 'currency', 'paypal_status'),
-					'inputs'=>false
+					'inputs'=>false,
+					'tpl_row'=>'<tr class="expand"></tr>'
 				);
 			break;
 			case 'vehicles':

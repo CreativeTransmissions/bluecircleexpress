@@ -51,6 +51,7 @@
 						break;
 						case 'premium_paypal_transactions':
 							this.initPayPayTransactionsTabUI();
+							this.initPayPayTransactionsTabEvents();
 						break;
 						default:
 							this.initJobsTabUI();
@@ -88,7 +89,7 @@
 					//expand details row on click 
 					$('#jobs_table').on('click', 'tr', function(e){
 						var dataId = $(this).attr('data-id');
-						that.clickJobRow(dataId);
+						that.clickRow('jobs_table',dataId);
 					});
 
 					//refresh table on change date range
@@ -342,8 +343,20 @@
 							
 				},
 
+				initPayPayTransactionsTabEvents: function(){
+					var that = this;
+
+					//expand details row on click 
+					$('#transactions_paypal_table').on('click', 'tr', function(e){
+						var dataId = $(this).attr('data-id');
+						that.clickRow('transactions_paypal_table',dataId);
+					});
+
+				},
+
 				initSurchargeTabEvents : function(){
 					var that = this;
+
 					//set form to read/populate
 					this.editForm = $('#edit_service_types_surcharges_form')[0];
 					this.editTableObj = $('#service_types_surcharges_table')[0];
@@ -510,8 +523,8 @@
 					});
 				},
 
-				clickJobRow: function(dataId){
-					if(!this.expandRow(dataId)){
+				clickRow: function(table, dataId){
+					if(!this.expandRow(table, dataId)){
 						return false;
 					};
 					return true;
@@ -585,18 +598,19 @@
 				},
 
 
-				expandRow: function(dataId){
+				expandRow: function(table, dataId){
+					console.log('expandRow ',table,dataId);
 					//expand the hidden row in a table
 					var that = this;
 
 					//get the row for the data id
-					var jobRow = this.getRow('jobs_table', dataId);
-					if(!jobRow){
+					var tableRow = this.getRow(table, dataId);
+					if(!tableRow){
 						return false;
 					};
 
 					//get the next row down - the expandable one
-					var nextRow = $(jobRow).next();
+					var nextRow = $(tableRow).next();
 					if(!nextRow){
 						return false;
 					};
@@ -616,10 +630,9 @@
 						$(nextRow).show();	
 
 						//then load the job details view and inject it into the table 
-						this.getJobDetails(dataId,  function(jobDetailsHtml){
-							if(jobDetailsHtml){
-								$(nextRow).html('<td colspan="100">'+jobDetailsHtml+'</td>');
-								$('#jobs_table').trigger('jobdetailscomplete');
+						this.getTableDetails(table, dataId,  function(tableDetailsHtml){
+							if(tableDetailsHtml){
+								$(nextRow).html('<td colspan="100">'+tableDetailsHtml+'</td>');
 							} else {
 								$(nextRow).html('<td colspan="100">Could not load details.</td>');
 							}
@@ -726,14 +739,15 @@
 
 				},
 
-				getJobDetails: function(jobId, callback){
+				getTableDetails: function(tableName, rowId, callback){
 					var that = this;
-					if(!jobId){
+					if(!rowId){
 						return false;
 					};
 					var data = {
-					 	action: 'load_job_details',
-					 	job_id: jobId
+					 	action: 'load_details',
+					 	table_name: tableName,
+					 	row_id: rowId
 					};
 
 					//load the html view from the server to include in the job hidden row

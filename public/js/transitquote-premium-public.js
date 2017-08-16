@@ -108,26 +108,26 @@
 			},
 
 			initDataRates: function(){
-					this.log('initDataRates');
-					var limits = [];
-					var rates = [];
-					var costPerUnit = []; //cost for additional miles
+				this.log('initDataRates');
+				var limits = [];
+				var rates = [];
+				var costPerUnit = []; //cost for additional miles
 
-					if(!this.settings.data.rates){
-						this.log('Warning: no Rates supplied');
-						return false;
+				if(!this.settings.data.rates){
+					this.log('Warning: no Rates supplied');
+					return false;
 
-					} else {
-						this.rates = this.settings.data.rates;
-					}
-					
-					this.limits = limits;
-					
-					this.log('initDataRates');
-					this.log(this.limits);
-					this.log(this.rates);
-					return true;
-				},
+				} else {
+					this.rates = this.settings.data.rates;
+				}
+				
+				this.limits = limits;
+				
+				this.log('initDataRates');
+				this.log(this.limits);
+				this.log(this.rates);
+				return true;
+			},
 
 			initDataMapSettings: function(){
 				//Initialize map settings
