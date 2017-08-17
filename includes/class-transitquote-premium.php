@@ -423,6 +423,12 @@ class TransitQuote_Premium {
 			$cdb->update_row('payment_status_types', array('name' => 'pending', 'description'=> 'Payment Pending', 'created'=>$created, 'modified'=>$modified ));					
 		};
 
+		if($cdb->get_count('request_types')==0){
+			$cdb->update_row('request_types', array('name'=>'Created', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('request_types', array('name'=>'Executed', 'created'=>$created, 'modified'=>$modified ));
+		};
+		
+
 		if($cdb->get_count('services')==0){
 			$cdb->update_row('services', array('name'=>'Standard', 'description' =>'Standard rates and turnaround apply.', 'amount'=>0,' created'=>$created, 'modified'=>$modified ));
 		};
