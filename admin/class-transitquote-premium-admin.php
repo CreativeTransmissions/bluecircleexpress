@@ -204,8 +204,14 @@ class TransitQuote_Premium_Admin {
 		 	$config['tab_key'] = $tab_key;
 
 		 	// instanciate tab
-
-			$tabs[$tab_key] = new TransitQuote_Premium_Tab($config);
+		 	switch ($tab_key) {
+		 		case 'premium_job_requests':
+		 			$tabs[$tab_key] = new TransitQuote_Premium_Grid_Tab($config);
+		 			break;
+		 		default:
+		 			$tabs[$tab_key] = new TransitQuote_Premium_Tab($config);
+		 			break;
+		 	}
 
 			// register tab with 
 			$tabs[$tab_key]->register_tab();
@@ -339,33 +345,63 @@ class TransitQuote_Premium_Admin {
 		return $this->cdb->get_row('jobs',$job_id);
     }
 
-	private function get_jobs($filters = null, $dates = null){
+	private function get_jobs($filters = null, $params = null){
 
     	//current and future only
-    	$clauses = array();/*"date(jobs.delivery_date) >= CURDATE() ",*/
-    	$filter_sql = '';
-    	/*if(!empty($filters)){
+    	$clauses = array();
+
+		$filter_sql = " where date(jobs.created) <= '".$filters['to_date']."' and date(jobs.created) >= '".$filters['from_date']."'";
+
+		if(!empty($filters)){
 			foreach ($filters as $name => $values) {
-	     		if(strpos($name, '.')==-1){
-	     			//no table specified so filter jobs table
-	    			$clauses[] = 'jobs.'.$name.' IN('.implode(',',$values).')';
-	    		} else {
-	    			if(is_array($values)){
-	    				$clauses[] = $name.' IN('.implode(',',$values).')';
-	    			} else {
-	    				$clauses[] = $name.' IN('.$values.')';
-	    			}
-	    		}
+				if(($name!='to_date')&&($name!='from_date')){
+		     		if(strpos($name, '.')==-1){
+		     			//no table specified so filter jobs table
+		    			$clauses[] = 'jobs.'.$name.' IN('.implode(',',$values).')';
+		    		} else {
+		    			if(is_array($values)){
+		    				$clauses[] = $name.' IN('.implode(',',$values).')';
+		    			} else {
+		    				$clauses[] = $name.' IN('.$values.')';
+		    			}
+		    		}
+		    	}
+	    	};
+	    	if(count($clauses)>0){
+	    		$filter_sql .= ' and '.implode(' AND ', $clauses);  		    		
 	    	}
+    	};
+//echo $filter_sql;
+		if (!empty($params)){/***susheel***/
+    		$orderby = $params['orderby'];
+	    	$order   = $params['order'];
+	    	switch ($orderby) {
+			    case "name":
+			        $orderby = 'last_name'; 
+			        break;
+			    case "delivery_time":
+			        $orderby = 'delivery_time'; 
+			        break;
+			    case "pick_up":
+			        $orderby = 'lo.address'; 
+			        break;			    
+			    case "drop_off":
+			        $orderby = 'ld.address'; 
+			        break;			    
+			    case "received":
+			        $orderby = 'received'; 
+			        break;
+			    default:
+			       	$orderby = 'j.job_id'; 
+			}
 
-	    	$filter_sql = 'where '.implode(' AND ', $clauses);  	
-    	};*/
-
-    	if(!empty($dates)){
-	    	$filter_sql .= " where date(jobs.created) <= '".$dates['to_date']."' and date(jobs.created) >= '".$dates['from_date']."'"; 
-    	};    	
+	    }else{
+	    	$orderby = 'j.job_id'; 
+	    	$order   = 'desc';
+	    }
 
     	$sql = "SELECT distinct	jobs.id,
+    							status_type_id,
 								l.address as pick_up,
 								ld.address as drop_off,
 								jobs.customer_id,
@@ -427,6 +463,55 @@ class TransitQuote_Premium_Admin {
 		return $data;
     }
 
+	private function set_filter($filter_name, $values){
+		if(is_array($values)){
+			$values = implode(',', $values);
+		};
+		$record_data = array('name'=>$filter_name,
+					'filter_values'=>$values);
+		$current_filter = self::get_filter($filter_name);
+		if($current_filter!==false){
+			$record_data['id'] = $current_filter['id'];
+		};
+		return $this->plugin->save_record('table_filters', $record_data);
+	}
+
+	private function get_filter($filter_name){
+		//get current filter by name
+		return $this->cdb->get_row('table_filters',$filter_name,'name');
+	}
+
+	public function filter_status_types(){
+		//get check box name / value array from post data
+		$filter_status_types = $this->ajax->param(array('name'=>'filter_status_types',
+														'type'=>'array',
+														'optional'=>true));
+
+		/***susheel***/
+		if(!empty($_REQUEST['orderby']) && !empty($_REQUEST['order']) ){
+			$params= array('orderby'=>$_REQUEST['orderby'], 'order'=>$_REQUEST['order']);
+		}else{
+			$params= array();
+		}
+		//dont filter if there is nothing selected
+		if(empty($filter_status_types)){
+			$this->job_filters = false;
+		} else {
+			//save the filter state to the database 
+			self::set_filter('status_type_id', $filter_status_types);
+		};
+
+		//get the filtered table rows
+		$html = self::load_table('jobs');
+
+		//return success message and table rows html
+		$response = array('success' => 'true',
+                                	'msg'=>'Updated filters ok',
+                                	'html'=>$html);
+
+		$this->ajax->respond($response);
+	}
+	
 	private function get_transactions(){
 
     	$sql = "SELECT distinct	pt.id as id,
@@ -604,15 +689,19 @@ class TransitQuote_Premium_Admin {
 					$from_date = $this->ajax->param(array('name'=>'from_date'));
 					$to_date = $this->ajax->param(array('name'=>'to_date'));
 
-					$dates = array('from_date'=>$from_date, 'to_date'=>$to_date);
+					$filters = array('from_date'=>$from_date, 'to_date'=>$to_date);
 					//get data
-					//$filters = $this->plugin->get_job_filters(); // status filters
+					$status_filters = self::get_job_filters(); // status filters
+					if(!empty($status_filters)){
+						$filters = array_merge($filters, $status_filters);
+					};
 
-					$job_data = $this->get_jobs(array(), $dates);
+					$job_data = $this->get_jobs($filters, $params);
 
 					$defaults = array(
 									'data'=>$job_data,
 									'fields'=>array(/*'move_type',*/
+													'status_type_id',
 													'created',
 													'c.last_name as last_name',
 													'l.address as pick_up',
@@ -620,7 +709,7 @@ class TransitQuote_Premium_Admin {
 													'delivery_time',
 													'payment_type',
 													'payment_status'),
-									'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime'),
+									'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime','status_type_id'=>'select'),
 									'inputs'=>false,
 									'table'=>'jobs',
 									'actions'=>array('Delete'),
@@ -672,6 +761,27 @@ class TransitQuote_Premium_Admin {
 		return $rows;
 	}
 
+	public function get_job_filters(){
+		//return filter status for jobs table
+		//use field name for the table being filtered
+		if(!isset($this->job_filters)){
+			$status_filter = self::get_filter('status_type_id');
+			if(empty($status_filter)){
+				$this->job_filters = false;
+			} else {
+				//there is a filter row
+				if($status_filter['filter_values']!=''){
+					$values = explode(',', $status_filter['filter_values']);
+					$this->job_filters = array('status_type_id'=>$values);
+				} else {
+					$this->job_filters = false;
+				}
+			}
+
+		};
+		return $this->job_filters;
+	}
+
 	private function get_rates_filters(){
 		$filters = null;
 		// check for filter params
@@ -717,6 +827,23 @@ class TransitQuote_Premium_Admin {
 		};
 
 		return '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no '.$table_output_name.' in the database yet.</td></tr>';
+	}
+
+	public function update_job_status_callback(){
+		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
+		$status_type_id = $this->ajax->param(array('name'=>'status_type_id', 'optional'=>false));
+		$success = $this->plugin->update_job_status($job_id, $status_type_id);
+		if($success!==false){
+			$view = $this->ajax->param(array('name'=>'view', 'optional'=>true));
+			$html = self::load_table('jobs');
+			$response = array('success' => 'true',
+                                	'msg'=>'Updated status ok',
+                                	'html'=>$html);
+		} else {
+			$response = array('success' => 'false',
+                    	'msg'=>'Could not update status');
+		}
+		$this->ajax->respond($response);
 	}
 
 	public function save_record_callback(){

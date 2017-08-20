@@ -29,6 +29,7 @@ class TransitQuote_Premium_Tab {
 		$this->tab_key = $this->config['tab_key'];
 		$this->admin = $this->config['admin'];
 		$this->cdb = $this->admin->cdb;
+        $this->dbui = $this->admin->dbui;
         $this->sections = array();
 	}
 

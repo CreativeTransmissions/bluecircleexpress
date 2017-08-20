@@ -59,6 +59,9 @@ class TransitQuote_Premium_Public {
 		$this->version = $version;
 		$this->debug = true;
 		$this->log_requests = true;
+		$this->cdb = TransitQuote_Premium::get_custom_db();
+		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+
 	}
 
 	public function enqueue_styles() {
@@ -1915,6 +1918,92 @@ class TransitQuote_Premium_Public {
 		}
 
 		echo $descriptions_html;
+	}
+
+	public function update_job_status($job_id, $status_type_id){
+		if(empty($job_id)){
+			return false;
+		};
+
+		if(empty($status_type_id)){
+			return false;
+		};
+
+		$this->job = self::get_job($job_id);
+   		
+
+		$this->job['status_type_id'] = $status_type_id;
+		$success = self::save_record('jobs', $this->job);
+		if($success===false){
+			return false;
+		}
+
+		//get details for the job
+   		self::get_job_details($this->job);		
+
+		//status updated ok, send email
+		$subject = self::get_status_subject($status_type_id, $job_id);
+		$notify = false;
+		if($this->job['status_type_id']!==1){
+			$notify = true;
+		};
+		self::email_dispatch($subject, $notify);
+
+		return true;
+	}
+
+	private function get_status_subject($status_type_id = null, $job_id = null){
+		if(empty($job_id)){
+			//use current job if none is passed
+			$job = $this->job;
+		} else {
+			//get job for passed id
+			$job = self::get_job($job_id);
+		};
+
+		if(empty($job)){
+			//job id not valide
+			return false;
+		};
+
+		$status_type_rec = self::get_status_type($status_type_id);
+   		if(empty($status_type_rec)){
+   			//status type
+   			return false;
+   		};
+
+   		//create email subject
+   		$customer = trim($this->customer['first_name']." ".$this->customer['last_name']);
+   		$assigned = self::get_assigned($job);
+   		if($assigned===false){
+   			$assigned = ' - Not Assigned';
+   		} else {
+   			$assigned = ' - '.$assigned['name'];
+   		};
+   		$subject = 'Delivery for '.$customer.' '.$status_type_rec['name'].$assigned;
+
+   		return $subject;
+   	}
+
+	private function get_status_type($status_type_id = null){
+		//get the status type record for an id
+   		if(empty($status_type_id)){
+   			return false;
+   		};
+   		if(empty($this->status_types[$status_type_id])){
+   			return false;
+   		};
+   		return $this->status_types[$status_type_id];
+   	}
+
+	private function get_status_types(){
+		$status_types = $this->cdb->get_rows('status_types');
+		$status_types_indexed = array();
+		foreach ($status_types as $key => $status_type) {
+			$status_types_indexed[$status_type['id']] = $status_type;
+		}
+		//$this->ajax->pa($vehicles);
+		return $status_types_indexed;				
 	}
 
 	/**

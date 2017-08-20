@@ -800,6 +800,75 @@ private function config_status_types(){
 
 }
 
+private function config_table_filters(){
+ return array (
+  'name' => 'table_filters',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'asc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'name' => 
+    array (
+      'name' => 'name',
+      'type' => 'varchar(45)',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'filter_values' => 
+    array (
+      'name' => 'filter_values',
+      'type' => 'varchar(45)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'datetime',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'datetime',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+  ),
+  'pk' => 'id',
+);
+
+}
+
 private function config_jobs(){
  return array (
   'name' => 'jobs',

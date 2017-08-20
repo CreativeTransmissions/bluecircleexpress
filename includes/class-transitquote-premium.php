@@ -272,6 +272,8 @@ class TransitQuote_Premium {
 		$this->loader->add_action( 'wp_ajax_premium_load_table', $plugin_admin, 'load_table_callback' );
 		$this->loader->add_action( 'wp_ajax_load_details', $plugin_admin, 'load_details_callback' );
 		$this->loader->add_action( 'wp_ajax_transactions_paypal', $plugin_admin, 'load_transactions_paypal_callback' );
+		$this->loader->add_action( 'wp_ajax_update_job_status', $plugin_admin, 'update_job_status_callback');
+		$this->loader->add_action( 'wp_ajax_filter_status_types', $plugin_admin, 'filter_status_types');
 
 	}
 
@@ -376,6 +378,7 @@ class TransitQuote_Premium {
 		$cdb->define_table($db_config->get_config('payment_types'));
 		$cdb->define_table($db_config->get_config('payment_status_types'));
 		$cdb->define_table($db_config->get_config('status_types'));
+		$cdb->define_table($db_config->get_config('table_filters'));
 		$cdb->define_table($db_config->get_config('jobs'));
 		$cdb->define_table($db_config->get_config('locations'));
 		$cdb->define_table($db_config->get_config('surcharges'));
@@ -432,6 +435,17 @@ class TransitQuote_Premium {
 		if($cdb->get_count('services')==0){
 			$cdb->update_row('services', array('name'=>'Standard', 'description' =>'Standard rates and turnaround apply.', 'amount'=>0,' created'=>$created, 'modified'=>$modified ));
 		};
+
+		if($cdb->get_count('status_types')==0){
+			$cdb->update_row('status_types', array('name' => 'New', 'description'=> 'New request has been received', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('status_types', array('name' => 'Assigned', 'description'=> 'Request has been assigned to a courier','created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('status_types', array('name' => 'In Progress', 'description'=> 'Courier is travelling to collect','created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('status_types', array('name' => 'Collected', 'description'=> 'Item has been collected','created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('status_types', array('name' => 'Delivered', 'description'=> 'Item has been delivered','created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('status_types', array('name' => 'Completed', 'description'=> 'Payment has been received','created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('status_types', array('name' => 'Cancelled', 'description'=> 'Customer cancelled the delivery','created'=>$created, 'modified'=>$modified ));
+		};
+
 
 		if($cdb->get_count('vehicles')==0){
 			$cdb->update_row('vehicles', array('name'=>'Van', 'description' =>'Standard delivery vehicle.', 'amount'=>0,' created'=>$created, 'modified'=>$modified ));

@@ -88,8 +88,20 @@
 
 					//expand details row on click 
 					$('#jobs_table').on('click', 'tr', function(e){
-						var dataId = $(this).attr('data-id');
-						that.clickRow('jobs_table',dataId);
+						var tagName = e.target.tagName.toLowerCase();
+						switch(tagName){
+							case 'select':
+							case 'option':
+							break;
+							default:
+								var dataId = $(this).attr('data-id');
+								if(dataId){
+									that.clickRow('jobs_table',dataId);
+								} else {
+									that.clickHeaderRow();
+								};
+							break;
+						};
 					});
 
 					//refresh table on change date range
@@ -110,6 +122,18 @@
 							to_date: $('#to_date_alt').val(),
 							table: 'jobs'
 						});
+					});
+
+					$('.admin-form table').on('change', 'select.select-status_type_id',function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						that.selectStatus(this);
+						$.data(this, 'current', $(this).val());
+					});
+
+					//Filter the list when a checkbox is changed
+					$('#filter_status_types_form').on('click', 'input[type=checkbox]', function(){
+						that.saveFilters('filter_status_types_form');
 					});
 				},
 
@@ -523,6 +547,24 @@
 					});
 				},
 
+				clickHeaderRow: function(el){
+					var orderby	= $(el).attr('data-sortby');
+					var order 	= $(el).attr('data-order');
+
+					$('input[name=orderby]').attr('value',orderby)
+					$('input[name=order]').attr('value',order)
+
+					$(el).siblings('th').children('.sorting').removeClass('asc').css("visibility","hidden");
+					if(order =='ASC'){
+						$(el).attr('data-order', "DESC");
+						$(el).children('.sorting').addClass('desc').removeClass('asc').css("visibility","visible");
+					}else{
+						$(el).attr('data-order', "ASC");	
+						$(el).children('.sorting').addClass('asc').removeClass('desc').css("visibility","visible");					
+					};
+					this.saveFilters('filter_status_types_form');
+				},
+
 				clickRow: function(table, dataId){
 					if(!this.expandRow(table, dataId)){
 						return false;
@@ -920,6 +962,8 @@
 					var that = this;
 					this.spinner(true);
 					var data = $('#'+form).serialize();
+					data += '&from_date='+$('#from_date_alt').val();
+					data += '&to_date='+$('#to_date_alt').val();
 					$.post(ajaxurl, data, function(response) {
 						if(response.success=='true'){						
 							//refresh table
@@ -945,14 +989,6 @@
 
 				selectStatus: function(select){
 					var value = $(select).val();
-					var row = $(select).closest('tr');
-					var courierId = $(row).find('select[name="courier_id"]').val()
-					if((value == '2')&&(parseInt(courierId)==0)){
-						//cant change to assigned
-
-						$(select).val($.data(select, 'current')); 
-						return false;
-					};
 					var row = $(select).closest('tr');
 					var rowId = $(row).attr('data-id');
 					this.updateJobStatus({	job_id: rowId,
@@ -1032,6 +1068,8 @@
 
 					var data = $.extend({
 					 	action: 'update_job_status',
+					 	from_date: $('#from_date_alt').val(),
+						to_date: $('#to_date_alt').val(),
 					 }, data);
 
 
@@ -1040,7 +1078,7 @@
 							//refresh table
 							$('tbody', that.editTable).empty();
 							$('tbody', that.editTable).append(response.html);	
-							that.initStatusTypes();
+							//that.initStatusTypes();
 						} else {
 							that.feedbackMessage({header:'Unable to update job status.'});
 						};
@@ -1062,7 +1100,7 @@
 							//refresh table
 							$('tbody', that.editTable).empty();
 							$('tbody', that.editTable).append(response.html);	
-							that.initStatusTypes();
+							//that.initStatusTypes();
 						} else {
 							that.feedbackMessage({header:'Unable to update courier.'});
 						};
