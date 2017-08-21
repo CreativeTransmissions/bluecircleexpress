@@ -20,7 +20,7 @@
 	<table id="jobs_table" class="settings-table">
 		<thead>
 			<tr><th>Status</th>
-			<th data-sortby='received' data-order='ASC'>Received<span class="sorting"></span></th>
+			<th data-sortby='created' data-order='ASC'>Received<span class="sorting"></span></th>
 			<th data-sortby='name' data-order='ASC'>Customer Name<span class="sorting"></span></th>
 			<th data-sortby='pick_up' data-order='ASC'>Collection Address<span class="sorting"></span></th>
 			<th data-sortby='drop_off' data-order='ASC'>Delivery Address<span class="sorting"></span></th>

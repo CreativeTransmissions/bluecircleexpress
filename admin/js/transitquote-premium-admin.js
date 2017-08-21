@@ -97,11 +97,13 @@
 								var dataId = $(this).attr('data-id');
 								if(dataId){
 									that.clickRow('jobs_table',dataId);
-								} else {
-									that.clickHeaderRow();
 								};
 							break;
 						};
+					});
+
+					$('#jobs_table').on('click', 'th', function(e){
+						that.clickHeaderRow(this);
 					});
 
 					//refresh table on change date range
@@ -548,6 +550,7 @@
 				},
 
 				clickHeaderRow: function(el){
+					console.log('clickHeaderRow');
 					var orderby	= $(el).attr('data-sortby');
 					var order 	= $(el).attr('data-order');
 
@@ -964,6 +967,9 @@
 					var data = $('#'+form).serialize();
 					data += '&from_date='+$('#from_date_alt').val();
 					data += '&to_date='+$('#to_date_alt').val();
+					data += '&orderby='+$('input[name=orderby]').val();
+					data += '&order='+$('input[name=order]').val();
+					console.log(data)
 					$.post(ajaxurl, data, function(response) {
 						if(response.success=='true'){						
 							//refresh table

@@ -456,8 +456,7 @@ class TransitQuote_Premium_Admin {
 								left join wp_tq_prm_status_types st 
 									on pst.id = jobs.status_type_id
 			".$filter_sql." 
-			order by jobs.id desc;";
-
+			order by ".$orderby." ".$order.";";
 
 		$data = $this->cdb->query($sql);
 		return $data;
@@ -487,12 +486,6 @@ class TransitQuote_Premium_Admin {
 														'type'=>'array',
 														'optional'=>true));
 
-		/***susheel***/
-		if(!empty($_REQUEST['orderby']) && !empty($_REQUEST['order']) ){
-			$params= array('orderby'=>$_REQUEST['orderby'], 'order'=>$_REQUEST['order']);
-		}else{
-			$params= array();
-		}
 		//dont filter if there is nothing selected
 		if(empty($filter_status_types)){
 			$this->job_filters = false;
@@ -686,16 +679,17 @@ class TransitQuote_Premium_Admin {
 				);
 			break;
 			case 'jobs':
-					$from_date = $this->ajax->param(array('name'=>'from_date'));
-					$to_date = $this->ajax->param(array('name'=>'to_date'));
-
-					$filters = array('from_date'=>$from_date, 'to_date'=>$to_date);
+					
 					//get data
+					$date_filters = self::get_date_filters();
 					$status_filters = self::get_job_filters(); // status filters
+
 					if(!empty($status_filters)){
-						$filters = array_merge($filters, $status_filters);
+						$filters = array_merge($date_filters, $status_filters);
 					};
 
+					$params = self::get_sort_params();
+					
 					$job_data = $this->get_jobs($filters, $params);
 
 					$defaults = array(
@@ -761,6 +755,20 @@ class TransitQuote_Premium_Admin {
 		return $rows;
 	}
 
+	public function get_sort_params(){
+		$orderby = $this->ajax->param(array('name'=>'orderby', 'optional'=>true, 'type'=>'alpha'));
+		if(!$orderby){
+			$orderby = 'created';
+		};
+
+		$order = $this->ajax->param(array('name'=>'order', 'optional'=>true, 'type'=>'alpha'));
+		if(!$order){
+			$order = 'desc';
+		};
+
+		return array('orderby'=>$orderby, 'order'=>$order);
+	}
+
 	public function get_job_filters(){
 		//return filter status for jobs table
 		//use field name for the table being filtered
@@ -780,6 +788,14 @@ class TransitQuote_Premium_Admin {
 
 		};
 		return $this->job_filters;
+	}
+
+	public function get_date_filters(){
+		$from_date = $this->ajax->param(array('name'=>'from_date'));
+		$to_date = $this->ajax->param(array('name'=>'to_date'));
+
+		$filters = array('from_date'=>$from_date, 'to_date'=>$to_date);
+		return $filters;
 	}
 
 	private function get_rates_filters(){
