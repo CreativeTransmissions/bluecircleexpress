@@ -164,6 +164,7 @@
 
 			initCalculator: function(){
 
+				console.log('this.settings.data.max_address_pickers: '+this.settings.data.max_address_pickers);
 				//Initialize Google Maps Quote Calculator jquery plugin
 				this.calculator = $('#map').mapQuoteCalculator({
 
@@ -185,6 +186,7 @@
 					geolocate: this.geolocate,
 					// Google Map Options
 					map :this.mapSettings,
+					maxAddressPickers: this.settings.data.max_address_pickers,
 					minNotice: this.settings.data.min_notice,
 					minNoticeCharge: this.settings.data.min_notice_charge,
 

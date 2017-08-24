@@ -176,6 +176,8 @@ class TransitQuote_Premium_Public {
 
 	public function check_payment_config($payment_type_id = null){
 		// Check we have all required paypal config values
+		$payment_config_is_ok = false;
+
 		if(empty($payment_type_id)){
 			self::debug('check_payment_config: no payment_type_id');
 			return false;
@@ -183,23 +185,15 @@ class TransitQuote_Premium_Public {
 		
 		switch ($payment_type_id) {
 			case 1: // payment on delivery
+				$payment_config_is_ok = true;
 				break;
 			case 2: // payment by paypal
-				$this->business_email = self::get_setting($this->tab_6_settings_key, 'business_email');
-				if(empty($this->business_email)){
-					self::debug('no business_email set');
-					print_r($this->{$this->tab_6_settings_key});
-					return false;
-				};
-
-				$this->currency_code = self::get_currency_code();
-				if(empty($this->currency_code)){
-					self::debug('no currency_code set');
-					return false;
-				};
+				self::get_paypal_config();
+				$payment_config_is_ok = self::has_paypal_config();
 				break;
 		};
-		return true;
+		
+		return $payment_config_is_ok;
 	}
 
 	public function debug($error){
@@ -316,10 +310,10 @@ class TransitQuote_Premium_Public {
     	self::get_job_details_from_id($job_id);
     	$price = $this->quote['total'];
 
-    	return array('name'=>'Delivery',
+    	return array('name'=>self::get_description(),
 					'currency'=> self::get_currency(),
 					'quantity'=>'1',
-					'order_no'=>'123',
+					'order_no'=>$job_id,
 					'price'=>$price,
 					'customer_id'=>$this->job['customer_id']
 					);
@@ -439,48 +433,33 @@ class TransitQuote_Premium_Public {
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
-		
-		
-
 		$this->pick_start_address = 'true';
 		// added layout option if given and inline then form will  be inline map else admin setting
 
 		//get paths for includes
 		self::get_paths_for_includes();
 
-		//get action from form or querystring
-		$this->action = $this->ajax->param(array('name'=>'action', 'optional'=>true));
+		// display the plugin form
+		$attributes = shortcode_atts( array(
+	        'layout' => '',
+	    ), $atts );
+		
+	    if ($attributes['layout'] == 'inline'){
+	    	$layout = 1;
+	    }elseif($attributes['layout'] == 'popup'){
+	    	$layout = 2;
+	    }else{
+	    	$layout = $this->currency = self::get_layout();
+	    }
+		$this->currency = self::get_currency();
+		$this->distance_unit = self::get_distance_unit();
 
-		// Change view if returning from paypal
-		if(($this->action=='paypal') && (self::check_payment_config(2))){
-			// only perform paypal actions when we have the options set
-			if(!self::process_paypal_request()){
-				self::debug('Unable to process PayPal request');
-				return false;
-			};
-		} else {
-			// display the plugin form
-			$attributes = shortcode_atts( array(
-		        'layout' => '',
-		    ), $atts );
-			
-		    if ($attributes['layout'] == 'inline'){
-		    	$layout = 1;
-		    }elseif($attributes['layout'] == 'popup'){
-		    	$layout = 2;
-		    }else{
-		    	$layout = $this->currency = self::get_layout();
-		    }
-			$this->currency = self::get_currency();
-			$this->distance_unit = self::get_distance_unit();
-
-			if($layout==1){ //Inline Map public
-				$this->view = 'partials/transitquote-premium-inline-display.php';
-			}else{ //business_qoute
-				$this->view = 'partials/transitquote-premium-popup-display.php';
-			};
+		if($layout==1){ //Inline Map public
+			$this->view = 'partials/transitquote-premium-inline-display.php';
+		}else{ //business_qoute
+			$this->view = 'partials/transitquote-premium-popup-display.php';
 		};
-
+		
 		ob_start();
 	   	include $this->view;
 	   	return ob_get_clean();

@@ -99,26 +99,21 @@ class Admin_Config {
                               'key'=>'premium_quote_options',
                               'title'=>'Quote Options',
                               'sections'=>array('prem_settings_quote_options'=>array(
-                                                  'id'=>'prem_settings_quote_options',
-                                                  'title'=>'Quote Options',
-                                                  'fields'=>array(
+                                                'id'=>'prem_settings_quote_options',
+                                                'title'=>'Quote Options',
+                                                'fields'=>array(
                                                     
                                                       'currency'=>array(
                                                         'id'=>'currency',
                                                         'label'=>'Currency Symbol',
                                                         'type'=>'input',
                                                         'help'=>'Please enter the currency symbol or text to display. For example: £, $, GBP, USD etc..'),
-                                                      'quote_element'=>array(
-                                                        'id'=>'quote_element',
-                                                        'label'=>'Quote Display Element',
-                                                        'help'=>'Please enter the class or id of the html element in which to display the final quote.<br/>Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.',
-                                                        'type'=>'input'),
-                                                      'success_message'=>array(
-                                                        'id'=>'success_message',
-                                                        'label'=>'Success Message',
-                                                        'type'=>'textarea',
-                                                        'help'=>'Please enter the message that will be displayed to the customer after their quote has been saved and displayed on screen.
-This should explain any next steps they must take to confirm their booking.'),
+                                                      'max_address_pickers'=>array(
+                                                        'id'=>'stops_allowed',
+                                                        'label'=>'Maximum Destinations',
+                                                        'type'=>'input',
+                                                        'help'=>'Customers can request one or more destinations as part of the same job. If multiple destinations are allowed you can enter a number to limit the number of stops on one route.',
+                                                        'value'=>3),
                                                       'min_notice'=>array(
                                                         'id'=>'min_notice',
                                                         'label'=>'Minimum Notice Period (HH:MM)',
@@ -128,9 +123,19 @@ This should explain any next steps they must take to confirm their booking.'),
                                                         'id'=>'min_notice_charge',
                                                         'label'=>'Minimum Notice Charge',
                                                         'type'=>'input',
-                                                        'help'=>'Please enter the additional charge for jobs booked within 24 hours..')
+                                                        'help'=>'Please enter the additional charge for jobs booked within 24 hours..'),
+                                                      'success_message'=>array(
+                                                        'id'=>'success_message',
+                                                        'label'=>'Success Message',
+                                                        'type'=>'textarea',
+                                                        'help'=>'Please enter the message that will be displayed to the customer after their quote has been saved and displayed on screen. This should explain any next steps they must take to confirm their booking.'),
+                                                      'quote_element'=>array(
+                                                        'id'=>'quote_element',
+                                                        'label'=>'Quote Display Element',
+                                                        'help'=>'Please enter the class or id of the html element in which to display the final quote.<br/>Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.',
+                                                        'type'=>'input')
                                                     )
-                                              )
+                                                )
 
                                 )
                ),
@@ -190,42 +195,21 @@ This should explain any next steps they must take to confirm their booking.'),
                                                         'type'=>'input',
                                                         'help'=>'Log into PayPal and Create An App to Get This Code.'
                                                      ),
-                                                    'business_email'=>array(
-                                                        'id'=>'business_email',
-                                                        'label'=>'PayPal Email Address',
-                                                        'type'=>'input',
-                                                        'help'=>'This is the email address that you use to login to PayPal and accept payments.'
-                                                     ),
-                                                    'item_name'=>array(
-                                                        'id'=>'item_name',
+                                                  
+                                                    'sales_item_description'=>array(
+                                                        'id'=>'sales_item_description',
                                                         'label'=>'PayPal Item Name',
                                                         'type'=>'input',
                                                         'help'=>'This is the item name that will be be listed against the payment in your customers PayPal account.'
                                                      ),
-                                                    'endpoint'=>array(
-                                                        'id'=>'endpoint',
-                                                        'label'=>'Live API Endpoint',
-                                                        'type'=>'input',
-                                                        'help'=>'This is the PayPal URL  that live payment information is sent to. Changing this is not recommended.'
-                                                     ),
+                                              
                                                     'sandbox'=>array(
                                                         'id'=>'sandbox',
                                                         'label'=>'Use Sandbox/Testing Mode',
                                                         'type'=>'checkbox',
                                                         'help'=>'When this box is ticked all payments will be simulated using the PayPal sandbox website.'
-                                                     ),
-                                                    'test_business_email'=>array(
-                                                        'id'=>'test_business_email',
-                                                        'label'=>'PayPal Sandbox Email Address',
-                                                        'type'=>'input',
-                                                        'help'=>'This is the email address that will recieve test payments in sandbox mode. This is a a dummy PayPal account which should be set up in your PayPal developer account for testing payments.'
-                                                     ),
-                                                    'sandbox_endpoint'=>array(
-                                                        'id'=>'sandbox_endpoint',
-                                                        'label'=>'Sandbox API Endpoint',
-                                                        'type'=>'input',
-                                                        'help'=>'This is the PayPal URL that test payment information is sent to. Changing this is not recommended.')
-                                                     ),
+                                                     )
+                                                     )
                                                   )
                                           )
                               ),
