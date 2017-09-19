@@ -58,7 +58,7 @@ class TransitQuote_Premium_Tab {
     }
 
     public function render(){
-    	echo '<div class="wrap">';
+    	echo '<div class="wrap tq-admin-form ">';
         include_once $this->config['partials_path'].$this->tab_key.'.php';
         echo '</div>';
     }

@@ -1,4 +1,3 @@
-<?php echo $this->filter_bar(); ?>
 	<input type="hidden" name="orderby" value=''/>
 	<input type="hidden" name="order" value=''/>
 	<fieldset class="date-filters">
@@ -13,6 +12,7 @@
 			<input id="to_date_alt" class="datepicker" type="hidden" />
 		</div>	
  	</fieldset>
+	<?php echo $this->filter_bar(); ?>
 
 <form id="table-form" class="admin-form" method="post" action="options.php" autocomplete="false">
 	<?php settings_fields( 'transportation_requests' ); ?>

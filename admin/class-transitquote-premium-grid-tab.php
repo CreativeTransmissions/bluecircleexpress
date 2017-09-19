@@ -28,7 +28,7 @@ class TransitQuote_Premium_Grid_Tab extends TransitQuote_Premium_Tab {
         echo $this->dbui->filter_bar(array('table' =>'status_types',
                                             'name_col'=>'name',
                                             'value_col'=>'id',
-                                            'title'=>'<p>Choose which jobs to display:</p>',
+                                            'title'=>'<legend>Display jobs with status:</legend>',
                                             'defaults'=>$defaults['status_type_id']));
     }
 

@@ -13,7 +13,6 @@ input.wide {
 
 .admin-form {
 	clear: left;
-	padding: 1em 1em 2em 1em;
 	margin: 0;
 	font-size: 14px;
 }
@@ -35,15 +34,17 @@ input.wide {
 	display: block;
 	margin-top: 1em;
 }
-.admin-form .inline-field {
+.tq-admin-form .inline-field {
 	padding-right: 1em;
+	display: inline-block;
+	float: left;
 }
-.admin-form .inline-field label{
+.tq-admin-form .inline-field label{
 	margin: 0em;
 	padding: 0.25em
 }
-.admin-form .inline-field input,
-.admin-form .inline-field select {
+.tq-admin-form .inline-field input,
+.tq-admin-form .inline-field select {
 	padding: 0.25em;
 	margin: 0;
 	display: block;
@@ -235,14 +236,24 @@ td.email input{
 }
 
 .filter-bar {
-	margin: 1em 0em 0em 1em;
+    margin: 0em;
+    padding: 1em 0em;
+}
+.filter-bar fieldset {
+    border: solid 1px #aaa;
+    display: inline;
+    padding: 1em;
+    margin: 0;	
 }
 .filter-bar .field {
 	display: inline-block;
-	padding: 0em 0em 0em 1em;
+	padding:0em 1em 0em 0em;
 }
 .filter-bar .field input{
 	margin-left: 0.25em;
+}
+.filter-bar p {
+	margin: 0 0 1em 0;
 }
 
 #place-selector {
@@ -285,10 +296,6 @@ td.email input{
 }
 .job-details .full table h3 {
 	margin: 0;
-}
-
-.date-filters {
-	padding-bottom: 2em;
 }
 
 /*!
