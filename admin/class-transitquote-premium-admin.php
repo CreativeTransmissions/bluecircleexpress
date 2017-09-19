@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(E_ERROR | E_PARSE | E_ALL);
+ ini_set('display_errors', 1);
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -401,6 +402,7 @@ class TransitQuote_Premium_Admin {
 	    }
 
     	$sql = "SELECT distinct	jobs.id,
+    							jobs.id as job_id,
     							status_type_id,
 								l.address as pick_up,
 								ld.address as drop_off,
@@ -699,6 +701,7 @@ class TransitQuote_Premium_Admin {
 									'data'=>$job_data,
 									'fields'=>array(/*'move_type',*/
 													'status_type_id',
+													'id as job_id',
 													'created',
 													'c.last_name as last_name',
 													'l.address as pick_up',
@@ -856,6 +859,20 @@ class TransitQuote_Premium_Admin {
 		};
 
 		return '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no '.$table_output_name.' in the database yet.</td></tr>';
+	}
+
+	public function test_customer_email_callback(){
+		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
+
+		$this->plugin->test_customer_email($job_id);
+		die();
+	}
+
+	public function test_dispatch_email_callback(){
+		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
+
+		$this->plugin->test_dispatch_email($job_id);
+		die();
 	}
 
 	public function update_job_status_callback(){

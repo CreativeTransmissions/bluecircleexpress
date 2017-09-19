@@ -855,6 +855,29 @@ class TransitQuote_Premium_Public {
 		return $journey_order;
 	}
 
+	private function load_journey_locations(){
+		// load all locations in journey
+		$this->locations_in_journey_order = array();
+		foreach ($this->journey_order as $key => $journey_stop) {
+			$location = $this->load_location($journey_stop['location_id']);
+			if($location === false){
+				self::debug('Unable to save location: '.$address_index);
+				return false;
+			};
+			// store ids in array ready for save
+			$this->locations_in_journey_order[$key] = array('location'=> $location,
+															'journey_id' => $journey_stop['journey_id'],
+															'location_id'=> $journey_stop['location_id'],
+															'journey_order'=>$key,
+															'created'=>date('Y-m-d G:i:s'),
+															'modified'=>date('Y-m-d G:i:s'));
+		};
+	}
+
+	private function load_location($location_id){
+		return $this->cdb->get_row('locations', $location_id);
+	}
+
 	private function save_locations(){
 		// save all locations in journey
 		$this->locations_in_journey_order = array();
@@ -963,6 +986,18 @@ class TransitQuote_Premium_Public {
 		
 		return $location[0]['id'];
 		
+	}
+
+	private function load_journey_order($journey_id){
+
+		$this->journey_order = $this->cdb->get_rows('journeys_locations',
+																array('journey_id'=>$journey_id),
+																array(),
+																null,
+																array('journey_order'=>'asc')
+															);
+
+
 	}
 
 	private function save_journeys_locations(){
@@ -1137,9 +1172,7 @@ class TransitQuote_Premium_Public {
 		echo $html;
 	}
 	
-
-
- 	private function get_job($job_id = null){
+ 	public function get_job($job_id = null){
     	//get job record from property or database
     	if(empty($job_id)){
     		// if no job passed, get the job currently being processed from the job property
@@ -1173,7 +1206,9 @@ class TransitQuote_Premium_Public {
 
 		$job['customer'] = $this->customer = self::get_customer($job['customer_id']);
 		$job['journey'] = $this->journey = self::get_journey_by_job_id($job['id']);
-		$job['stops'] = self::get_journey_stops($this->journey['id']);
+		$job['stops'] = self::get_journey_stops($job['journey']['id']);
+		self::load_journey_order($job['journey']['id']);
+		self::load_journey_locations();
 
 		if(!isset($this->quote)){
 			if(!empty($job['accepted_quote_id'])) {
@@ -1319,6 +1354,36 @@ class TransitQuote_Premium_Public {
 	
 	public function get_customer_email(){
         return $this->customer['email'];
+    }
+
+    public function test_customer_email($job_id){
+    	$this->job = self::get_job($job_id);
+   		
+		//get details for the job
+		if(self::job_is_available()){
+			$this->job = self::get_job_details($this->job);
+		};	
+
+		$message = self::get_customer_message();
+
+		ob_start();
+		include 'partials/emails/email_customer.php'; 
+		$html_email = ob_get_clean();
+
+		echo $html_email;
+    }
+
+    public function test_dispatch_email($job_id){
+    	$this->job = self::get_job($job_id);
+   		
+		//get details for the job
+   		self::get_job_details($this->job);		
+
+		ob_start();
+		include 'partials/emails/email_job_details.php'; 
+		$html_email = ob_get_clean();
+
+		echo $html_email;
     }
 
 	private function email_customer(){
