@@ -87,7 +87,7 @@
 					this.editTable = $('#jobs_table')[0];
 
 					//expand details row on click 
-					$('#jobs_table').on('click', 'tr', function(e){
+					$('#jobs_table').on('click', 'tr td', function(e){
 						var tagName = e.target.tagName.toLowerCase();
 						switch(tagName){
 							case 'select':
@@ -363,7 +363,10 @@
 				
 				initPayPayTransactionsTabUI: function(){
 					var that = this;
+					this.initDatePicker();
 					this.loadTable({
+						from_date: $('#from_date_alt').val(),
+						to_date: $('#to_date_alt').val(),
 						table: 'transactions_paypal'
 					});
 							
@@ -377,6 +380,31 @@
 						var dataId = $(this).attr('data-id');
 						that.clickRow('transactions_paypal_table',dataId);
 					});
+
+					$('#transactions_paypal_table').on('click', 'th', function(e){
+						that.clickHeaderRow(this);
+					});
+
+					//refresh table on change date range
+					$('#to_date').datepicker('option', 'onSelect', function(){
+
+						that.loadTable({
+							from_date: $('#from_date_alt').val(),
+							to_date: $('#to_date_alt').val(),
+							table: 'transactions_paypal'
+						});
+					});
+
+
+					$('#from_date').datepicker('option', 'onSelect', function(){
+
+						that.loadTable({
+							from_date: $('#from_date_alt').val(),
+							to_date: $('#to_date_alt').val(),
+							table: 'transactions_paypal'
+						});
+					});
+
 
 				},
 
@@ -550,7 +578,6 @@
 				},
 
 				clickHeaderRow: function(el){
-					console.log('clickHeaderRow');
 					var orderby	= $(el).attr('data-sortby');
 					var order 	= $(el).attr('data-order');
 

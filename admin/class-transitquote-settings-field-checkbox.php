@@ -24,7 +24,7 @@
 class TransitQuote_Premium_Settings_Field_Checkbox extends TransitQuote_Premium_Settings_Field {
 
     public function render(){
-    	echo '<input type="checkbox" id="geolocate"  name="'.$this->field_name.'" value="1" '.checked( 1 == $this->value,true,false).'/>';
+    	echo '<input type="checkbox" id="'.$this->field_name.'"  name="'.$this->field_name.'" value="1" '.checked( 1 == $this->value,true,false).'/>';
         echo '<p>'.$this->help.'</p>';
     }
 

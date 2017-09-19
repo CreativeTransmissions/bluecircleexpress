@@ -505,9 +505,12 @@ class TransitQuote_Premium_Admin {
 		$this->ajax->respond($response);
 	}
 	
-	private function get_transactions(){
+	private function get_transactions($filters = null){
+
+		$filter_sql = " where date(pt.created) <= '".$filters['to_date']."' and date(pt.created) >= '".$filters['from_date']."'";
 
     	$sql = "SELECT distinct	pt.id as id,
+    					pt.created as payment_date,
 						trim(concat(c.first_name,' ',c.last_name)) as customer_name,
 						c.email as email,
 						jobs.id as jobid, 
@@ -523,7 +526,7 @@ class TransitQuote_Premium_Admin {
 
 						inner join wp_tq_prm_quotes q 
 							on q.id = jobs.accepted_quote_id
-
+				".$filter_sql."
 				order by pt.id desc;";
 
 		$data = $this->cdb->query($sql);
@@ -719,11 +722,12 @@ class TransitQuote_Premium_Admin {
 				);
 			break;
 			case 'transactions_paypal':
-				$transaction_data = $this->get_transactions();
+				$filters = self::get_date_filters();
+				$transaction_data = $this->get_transactions($filters);
 				$defaults = array(
 					'data'=>$transaction_data,
 					'table'=>'transactions_paypal',
-					'fields'=>array('id', 'jobid', 'customer_name', 'email', 'amount', 'currency', 'paypal_status'),
+					'fields'=>array('id', 'jobid', 'payment_date', 'customer_name', 'email', 'amount', 'currency', 'paypal_status'),
 					'inputs'=>false,
 					'tpl_row'=>'<tr class="expand"></tr>'
 				);
@@ -744,7 +748,16 @@ class TransitQuote_Premium_Admin {
 			$params = $defaults;
 		};
 
-		$rows = $this->dbui->table_rows($params);
+		if(isset($params['data'])){
+			if(empty($params['data'])){
+				$rows = '<tr><td colspan="100" class="full-width-cell">No '.str_replace('_', '', $table).' found</td></tr>';
+			} else {
+				$rows = $this->dbui->table_rows($params);
+			};
+		} else {
+			echo 'no params data';
+			$rows = $this->dbui->table_rows($params);
+		};
 
 		if($rows===false){
 			$response = array('success'=>'false',

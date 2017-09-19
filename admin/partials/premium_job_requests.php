@@ -1,7 +1,4 @@
 <?php echo $this->filter_bar(); ?>
-<form id="table-form" class="admin-form" method="post" action="options.php" autocomplete="false">
-	<?php settings_fields( 'transportation_requests' ); ?>
-	<?php do_settings_sections( 'transportation_requests' ); ?>
 	<input type="hidden" name="orderby" value=''/>
 	<input type="hidden" name="order" value=''/>
 	<fieldset class="date-filters">
@@ -17,15 +14,20 @@
 		</div>	
  	</fieldset>
 
+<form id="table-form" class="admin-form" method="post" action="options.php" autocomplete="false">
+	<?php settings_fields( 'transportation_requests' ); ?>
+	<?php do_settings_sections( 'transportation_requests' ); ?>
 	<table id="jobs_table" class="settings-table">
 		<thead>
 			<tr><th>Status</th>
-			<th data-sortby='created' data-order='ASC'>Received<span class="sorting"></span></th>
+			<th data-sortby='created' data-order='DESC'>Received<span class="sorting"></span></th>
 			<th data-sortby='name' data-order='ASC'>Customer Name<span class="sorting"></span></th>
 			<th data-sortby='pick_up' data-order='ASC'>Collection Address<span class="sorting"></span></th>
 			<th data-sortby='drop_off' data-order='ASC'>Delivery Address<span class="sorting"></span></th>
 			<th data-sortby='delivery_time' data-order='ASC'>Pick Up Time<span class="sorting"></span></th>
-			<th>Payment Method</th><th>Payment Status</th></tr>
+			<th data-sortby='payment_method' data-order='ASC'>Payment Method<span class="sorting"></span></th>
+			<th data-sortby='payment_status' data-order='ASC'>Payment Status<span class="sorting"></span></th>
+		</tr>
 		</thead>
 		<tbody>
 		</tbody>

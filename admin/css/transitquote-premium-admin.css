@@ -119,6 +119,11 @@ input.wide {
 	text-align: left;
 	padding: 0.5em;
 }
+
+.settings-table td[data-id="paypal_status"]{
+	text-transform: capitalize;
+}
+
 .wrap .settings-table td.actions {
 	vertical-align: middle !important;
 }
