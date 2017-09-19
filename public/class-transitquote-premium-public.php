@@ -1377,7 +1377,9 @@ class TransitQuote_Premium_Public {
     	$this->job = self::get_job($job_id);
    		
 		//get details for the job
-   		self::get_job_details($this->job);		
+		if(self::job_is_available()){
+			$this->job = self::get_job_details($this->job);
+		};			
 
 		ob_start();
 		include 'partials/emails/email_job_details.php'; 

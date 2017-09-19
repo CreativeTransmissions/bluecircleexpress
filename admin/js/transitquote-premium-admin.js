@@ -94,7 +94,7 @@
 							case 'option':
 							break;
 							default:
-								var dataId = $(this).attr('data-id');
+								var dataId = $(this).parent('tr').attr('data-id');
 								if(dataId){
 									that.clickRow('jobs_table',dataId);
 								};
@@ -671,7 +671,6 @@
 
 
 				expandRow: function(table, dataId){
-					console.log('expandRow ',table,dataId);
 					//expand the hidden row in a table
 					var that = this;
 
