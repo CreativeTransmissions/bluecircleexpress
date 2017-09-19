@@ -233,6 +233,7 @@
 						that.calculator.updateQuote();
 					}
 				});
+				$('#'+this.settings.datepickerSelector).datepicker('setDate', new Date());
 
 			},
 
@@ -244,6 +245,7 @@
 					 	that.calculator.updateQuote();
 					}
 				});	
+				$('#'+this.settings.timepickerSelector).timepicker('setTime', new Date());
 			},
 
 			initPayPal: function(){

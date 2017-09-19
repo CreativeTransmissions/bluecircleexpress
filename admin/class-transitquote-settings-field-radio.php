@@ -60,7 +60,7 @@ class TransitQuote_Premium_Settings_Field_Radio {
     }
 
     public function render(){
-    	echo  'Section: '.$this->section_id;
+
     }
 
 }

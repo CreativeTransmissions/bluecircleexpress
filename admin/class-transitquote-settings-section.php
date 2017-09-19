@@ -87,7 +87,7 @@ class TransitQuote_Premium_Settings_Section {
     }
 
     public function render(){
-    	echo  'Section: '.$this->section_id;
+
     }
 
 }
