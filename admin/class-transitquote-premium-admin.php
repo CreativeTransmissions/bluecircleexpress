@@ -758,7 +758,6 @@ class TransitQuote_Premium_Admin {
 				$rows = $this->dbui->table_rows($params);
 			};
 		} else {
-			echo 'no params data';
 			$rows = $this->dbui->table_rows($params);
 		};
 

@@ -38,6 +38,7 @@
 						break;	
 						case 'premium_rates':				
 							this.initRatesTabEvents();
+							this.initEditTableEvents('rates');
 						break;
 						case 'premium_services':
 							this.initServiceTabUI();
@@ -157,7 +158,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_customer_form')[0];
-					this.editTableObj = $('#customers_table')[0];
+					this.editTable = $('#customers_table')[0];
 
 					this.editRecordMessage = 'Editing Customer Details';
 					this.newRecordMessage = 'Enter New Customer Details'
@@ -413,7 +414,7 @@
 
 					//set form to read/populate
 					this.editForm = $('#edit_service_types_surcharges_form')[0];
-					this.editTableObj = $('#service_types_surcharges_table')[0];
+					this.editTable = $('#service_types_surcharges_table')[0];
 
 					this.editRecordMessage = 'Editing Surcharge';
 					this.newRecordMessage = 'Enter New Surcharge'
@@ -438,7 +439,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_status_type_form')[0];
-					this.editTableObj = $('#status_types_table')[0];
+					this.editTable = $('#status_types_table')[0];
 
 					this.editRecordMessage = 'Editing Status Type';
 					this.newRecordMessage = 'Enter New Status Type'
@@ -463,7 +464,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_vehicle_form')[0];
-					this.editTableObj = $('#vehicles_table')[0];
+					this.editTable = $('#vehicles_table')[0];
 
 					this.editRecordMessage = 'Editing Vehicle Details';
 					this.newRecordMessage = 'Enter New Vehicle'
@@ -488,7 +489,7 @@
 					var that = this;
 					//set form to read/populate
 					this.editForm = $('#edit_service_types_vehicle_types_form')[0];
-					this.editTableObj = $('#service_types_vehicle_types_table')[0];
+					this.editTable = $('#service_types_vehicle_types_table')[0];
 
 					this.editRecordMessage = 'Editing Vehicle Rate';
 					this.newRecordMessage = 'Enter New Vehicle Rate'
@@ -1053,20 +1054,20 @@
 							var msg = 'Saved Successfully.';
 
 							//clear the form
-							that.clearForm(that.editTableObj);
-							that.updateLegend(that.editTableObj, that.newRecordMessage);
+							that.clearForm(that.editTable);
+							that.updateLegend(that.editTable, that.newRecordMessage);
 							if(response.id){
 								//update row
-								if(that.editTableObj){
-									var row = $(that.editTableObj).find('tr[data-id="'+response.id+'"]');
+								if(that.editTable){
+									var row = $(that.editTable).find('tr[data-id="'+response.id+'"]');
 									$(row).replaceWith(response.html);								
 								}
 
 							} else {
 								if(response.html){
 									//refresh table
-									$('tbody', that.editTableObj).empty();
-									$('tbody', that.editTableObj).append(response.html);		
+									$('tbody', that.editTable).empty();
+									$('tbody', that.editTable).append(response.html);		
 								}						
 							};
 							that.spinner(false);

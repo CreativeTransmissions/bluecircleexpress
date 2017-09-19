@@ -1,6 +1,6 @@
 <?php settings_fields( 'premium_rates' ); ?>
 <?php do_settings_sections( 'premium_rates' ); ?>
-<form class="admin-form box-form round" id="edit_rate_form" method="post" autocomplete="false">
+<form class="box-form round tq-admin-form" id="edit_rate_form" method="post" autocomplete="false">
 	<fieldset>
 		<legend>Add a new rate by entering the details below:</legend>
 		<div class="row">

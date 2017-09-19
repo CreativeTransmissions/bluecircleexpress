@@ -34,6 +34,17 @@ input.wide {
 	display: block;
 	margin-top: 1em;
 }
+.tq-admin-form {
+    padding: 1em;
+    margin: 0 0 1em 0;
+ }
+.tq-admin-form .inline-field  p input[type="submit"] {
+	padding: 0em 2em 2em 2em;
+}
+.tq-admin-form .inline-field  p.submit{
+	margin: 0;
+    padding: 1em 0em 0em;
+}
 .tq-admin-form .inline-field {
 	padding-right: 1em;
 	display: inline-block;
@@ -41,8 +52,13 @@ input.wide {
 }
 .tq-admin-form .inline-field label{
 	margin: 0em;
-	padding: 0.25em
+	padding: 0.25em;
 }
+.tq-admin-form legend{
+	font-size: 14px;
+	font-weight: bold;
+}
+	
 .tq-admin-form .inline-field input,
 .tq-admin-form .inline-field select {
 	padding: 0.25em;
