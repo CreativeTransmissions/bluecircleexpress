@@ -366,7 +366,7 @@ class TransitQuote_Pro {
 
 	public static function get_custom_db(){
 		//define and register tables
-		$cdb = new TransitQuote_Pro\CT_CDB(array('prefix'=>'tq_prm'));
+		$cdb = new TransitQuote_Pro\CT_CDB(array('prefix'=>'tq_pro'));
 		$db_config = new TransitQuote_Pro\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
