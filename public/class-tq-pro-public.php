@@ -59,6 +59,7 @@ class TransitQuote_Pro_Public {
 		$this->version = $version;
 		$this->debug = true;
 		$this->log_requests = true;
+		$this->prefix = 'tq_pro';
 		$this->cdb = TransitQuote_Pro::get_custom_db();
 		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
@@ -254,7 +255,7 @@ class TransitQuote_Pro_Public {
 		// get ordered list of rates with distance 0 as the final record
     	$sql = "select distinct * 
     				from (select distinct * 
-								from wp_tq_prm_rates
+								from wp_".$this->prefix."_rates
 								where distance <> 0
 								".$filter_sql."
 							order by service_id, vehicle_id, distance
@@ -262,7 +263,7 @@ class TransitQuote_Pro_Public {
 					union
 				select distinct * from (
 					select distinct * 
-						from wp_tq_prm_rates
+						from wp_".$this->prefix."_rates
 					where distance = 0
 					".$filter_sql.") r2;";
 		//echo $sql;
@@ -277,8 +278,60 @@ class TransitQuote_Pro_Public {
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
+		if(!self::api_keys_are_present()){
+			add_action( 'admin_notices', array($this, 'api_key_notice') );
+		};
+
     }
 
+    public function api_keys_are_present(){
+    	$this->api_setup_message = '';
+    	$success = true;
+    	$this->application_client_id = self::get_setting('tq_pro_paypal_options','application_client_id');
+		$this->application_client_secret = self::get_setting('tq_pro_paypal_options','application_client_secret');
+
+    	if(!self::get_api_key()){
+    		$this->api_setup_message = '<li>Please enter a valid Google Maps API Key in the Map Options tab of your TransitQuote Pro Dashboard.</li>';
+    	};
+
+    	if(empty($this->application_client_id)){
+    		$this->api_setup_message .= '<li>Please enter a valid PayPal Application Client ID in the PayPal tab of your TransitQuote Pro Dashboard.</li>';
+
+    	};
+
+    	if(empty($this->application_client_id)){
+    		$this->api_setup_message .= '<li>Please enter a valid PayPal Application Client Secret in the PayPal tab of your TransitQuote Pro Dashboard.</li>';
+    	};
+
+    	if(!self::rates_exist()){
+    		$this->api_setup_message .= '<li>Please enter your rates in the Rates tab of your TransitQuote Pro Dashboard.</li>';
+    	}
+
+		if($success === false){
+			$this->api_setup_message = '<p>To use TransitQuote Pro please update your settingss follows:</p><ul>'.$this->api_setup_message.'</ul>';
+		}
+
+    }
+
+    public function rates_exist(){
+    	$rates = self::get_rates();
+    	if(empty($rates)){
+
+    		return false;
+    	} else {
+    		return true;
+    	}
+    }
+
+    public function api_key_notice(){
+    	?><div class="update-nag notice">
+    		<h3>TransitQuote Pro Setup Notice</h3>
+    		<?php echo $this->api_setup_message; ?>
+    	</div>
+    	<?php
+    }
+   
+    
     public function create_paypal_payment(){
     	self::init_paypal();
     	

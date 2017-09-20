@@ -65,6 +65,9 @@ input.wide {
 	margin: 0;
 	display: block;
 }
+.tq-admin-form .service-filters{
+	margin-bottom: 1em;
+}
 .admin-form .field input {
 	width: 30em;
 }

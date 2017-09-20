@@ -415,47 +415,47 @@ class TransitQuote_Pro_Admin {
 								q.total as quote,
 								pt.name as payment_type,
 								pst.description as payment_status
-							FROM wp_tq_prm_jobs jobs
-								left join wp_tq_prm_journeys j 
+							FROM wp_'.$this->prefix.'_jobs jobs
+								left join wp_'.$this->prefix.'_journeys j 
 									on j.job_id = jobs.id 
 
 								inner join (SELECT j.job_id, o.location_id as last_loc_id
-												FROM wp_tq_prm_journeys_locations o                    
-												  LEFT JOIN wp_tq_prm_journeys_locations b           
+												FROM wp_'.$this->prefix.'_journeys_locations o                    
+												  LEFT JOIN wp_'.$this->prefix.'_journeys_locations b           
 													  ON o.journey_id = b.journey_id AND o.journey_order < b.journey_order
-													  inner join wp_tq_prm_journeys j 
+													  inner join wp_'.$this->prefix.'_journeys j 
 														on o.journey_id = j.id	
 												WHERE b.journey_order is NULL     
 												order by j.job_id asc) last_stop
 										on last_stop.job_id = jobs.id
 
-								left join wp_tq_prm_journeys_locations jl 
+								left join wp_'.$this->prefix.'_journeys_locations jl 
 									on j.id = jl.journey_id and
 										jl.journey_order = 0
-								left join wp_tq_prm_locations l 
+								left join wp_'.$this->prefix.'_locations l 
 									on jl.location_id = l.id and 
 										jl.journey_order = 0
 
-								left join wp_tq_prm_locations ld 
+								left join wp_'.$this->prefix.'_locations ld 
 									on ld.id = last_stop.last_loc_id
 
-								left join wp_tq_prm_customers c 
+								left join wp_'.$this->prefix.'_customers c 
 									on c.id = jobs.customer_id 
-								left join wp_tq_prm_vehicles v 
+								left join wp_'.$this->prefix.'_vehicles v 
 									on v.id = jobs.vehicle_id 
-								left join wp_tq_prm_services s 
+								left join wp_'.$this->prefix.'_services s 
 									on v.id = jobs.service_id 
-								left join wp_tq_prm_quotes q 
+								left join wp_'.$this->prefix.'_quotes q 
 									on q.id = jobs.accepted_quote_id
 
-								left join wp_tq_prm_payment_types pt 
+								left join wp_'.$this->prefix.'_payment_types pt 
 									on pt.id = jobs.payment_type_id
 
 
-								left join wp_tq_prm_payment_status_types pst 
+								left join wp_'.$this->prefix.'_payment_status_types pst 
 									on pst.id = jobs.payment_status_id
 
-								left join wp_tq_prm_status_types st 
+								left join wp_'.$this->prefix.'_status_types st 
 									on pst.id = jobs.status_type_id
 			".$filter_sql." 
 			order by ".$orderby." ".$order.";";
@@ -519,14 +519,14 @@ class TransitQuote_Pro_Admin {
 						q. total as amount,
 						pt.currency as currency,
 						pt.paypal_status as paypal_status
-					FROM wp_tq_prm_transactions_paypal pt
-						inner join wp_tq_prm_jobs jobs 
+					FROM wp_'.$this->prefix.'_transactions_paypal pt
+						inner join wp_'.$this->prefix.'_jobs jobs 
 							on pt.job_id = jobs.id
 
-						inner join wp_tq_prm_customers c 
+						inner join wp_'.$this->prefix.'_customers c 
 							on c.id = jobs.customer_id 
 
-						inner join wp_tq_prm_quotes q 
+						inner join wp__quotes q 
 							on q.id = jobs.accepted_quote_id
 				".$filter_sql."
 				order by pt.id desc;";

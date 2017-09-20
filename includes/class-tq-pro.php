@@ -410,7 +410,7 @@ class TransitQuote_Pro {
 		// 	$cdb->update_row('ct_products', array('name'=>'TransitQuote Lite', 'description' => 'TransitQuote Lite', 'paddleid'=> '500997', 'created'=>$created, 'modified'=>$modified ));			
 		// };
 		if($cdb->get_count('rates')==0){
-			$cdb->update_row('rates', array('service_type_id'=>1, 'distance' => '30', 'amount'=> '600', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('rates', array('service_type_id'=>1, 'distance' => '30', 'amount'=> '10', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('rates', array('service_type_id'=>1, 'distance' => '0', 'unit'=> '12', 'created'=>$created, 'modified'=>$modified ));
 		};
 
