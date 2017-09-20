@@ -449,7 +449,7 @@ class TransitQuote_Pro_Public {
 	    }elseif($attributes['layout'] == 'popup'){
 	    	$layout = 2;
 	    }else{
-	    	$layout = $this->currency = self::get_layout();
+	    	$layout = 1;
 	    }
 		$this->currency = self::get_currency();
 		$this->distance_unit = self::get_distance_unit();
@@ -1340,7 +1340,7 @@ class TransitQuote_Pro_Public {
 	}	
 
     public function get_layout(){
-        return self::get_setting($this->tab_2_settings_key, 'layout');
+        return self::get_setting($this->tab_2_settings_key, 'layout', 'inline');
     }
 	public function get_customer_by_email($email){
 		//check for the email address to see if this is a previous customer

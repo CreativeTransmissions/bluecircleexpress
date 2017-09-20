@@ -288,6 +288,7 @@ class TransitQuote_Pro {
 	private function define_public_hooks() {
 		$plugin_public = new TransitQuote_Pro_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
 		add_shortcode( 'TransitQuote_Pro', array( $plugin_public, 'display_TransitQuote_Pro' ) );
+		add_shortcode( 'transitquote_pro', array( $plugin_public, 'display_TransitQuote_Pro' ) );
 		add_filter( 'widget_text', 'do_shortcode', 11);
 		$this->loader->add_action( 'init', $plugin_public, 'init_plugin');
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_styles');
