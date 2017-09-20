@@ -1,6 +1,6 @@
 <?php settings_fields( 'vehicles' ); ?>
 <?php do_settings_sections( 'vehicles' ); ?>
-<form class="admin-form box-form round" id="edit_vehicle_form" method="post" autocomplete="false">
+<form class="admin-form tq-admin-form box-form round" id="edit_vehicle_form" method="post" autocomplete="false">
 	<fieldset>
 		<legend>Add a new vehicle by entering the details below:</legend>
 		
@@ -15,19 +15,22 @@
 			</div>
 		</div>
 	</fieldset>
-	<input type="hidden" name="id" value=""/>
-	<input type="hidden" name="action" value="save_record"/>
-	<input type="hidden" name="update" value="vehicles"/>
-	<div class="inline-field">
-		<?php submit_button('Save vehicle', 'primary', 'save_vehicle', true, array('class'=>'submit')); ?>
-	</div>
-	<div class="inline-field">
-		<?php submit_button('Clear Rate', 'primary', 'clear_vehicle', true, array('class'=>'submit')); ?>
+
+	<div class="buttons">
+		<div class="inline-field">
+			<?php submit_button('Save vehicle', 'primary', 'save_vehicle', true, array('class'=>'submit')); ?>
+		</div>
+		<div class="inline-field">
+			<?php submit_button('Clear Rate', 'primary', 'clear_vehicle', true, array('class'=>'submit')); ?>
+		</div>
 	</div>
 	<div class="inline-field">
 		<div class="spinner"></div>
 	</div>
 	<div class="clear"></div>
+	<input type="hidden" name="id" value=""/>
+	<input type="hidden" name="action" value="save_record"/>
+	<input type="hidden" name="update" value="vehicles"/>	
 </form>
 <form id="table-form" class="admin-form" method="post" action="options.php" autocomplete="false">
 	<table id="vehicles_table" class="settings-table">

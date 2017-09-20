@@ -1,6 +1,6 @@
 <?php settings_fields( 'services' ); ?>
 <?php do_settings_sections( 'services' ); ?>
-<form class="admin-form box-form round" id="edit_service_form" method="post" autocomplete="false">
+<form class="admin-form tq-admin-form box-form round" id="edit_service_form" method="post" autocomplete="false">
 	<fieldset>
 		<legend>Add a new service by entering the details below:</legend>
 		
