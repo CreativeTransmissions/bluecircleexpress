@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/admin
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/admin
  */
 
 /**
@@ -17,11 +17,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/admin
- * @author     Your Name <email@example.com>
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/admin
+ * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
-class TransitQuote_Premium_Tab {
+class TransitQuote_Pro_Tab {
 
 
 	public function __construct($config = null) {
@@ -46,7 +46,7 @@ class TransitQuote_Premium_Tab {
     	foreach ($this->config['sections'] as $key => $section_config) {
             $section_config['page'] = $this->tab_key;
             $section_config['admin'] = $this->admin;
-            $this->sections[$key] = new TransitQuote_Premium_Settings_Section($section_config);
+            $this->sections[$key] = new TransitQuote_Pro_Settings_Section($section_config);
             $this->sections[$key]->add_section();
     	}
 	    

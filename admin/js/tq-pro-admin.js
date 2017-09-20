@@ -28,29 +28,29 @@
 
 				initTab: function(){
 					switch(this.tab){
-						case 'premium_map_options':
+						case 'tq_pro_map_options':
 							this.initMapTabEvents();
 						break;	
-						case 'premium_customers':
+						case 'tq_pro_customers':
 							this.initCustomersTabUI();						
 							this.initCustomersTabEvents();
 							this.initEditTableEvents('customers');
 						break;	
-						case 'premium_rates':				
+						case 'tq_pro_rates':				
 							this.initRatesTabEvents();
 							this.initEditTableEvents('rates');
 						break;
-						case 'premium_services':
+						case 'tq_pro_services':
 							this.initServiceTabUI();
 							this.initServiceTabEvents();					
 							this.initEditTableEvents('services');
 						break;							
-						case 'premium_vehicles':
+						case 'tq_pro_vehicles':
 							this.initVehicleTabUI();
 							this.initVehicleTabEvents();
 							this.initEditTableEvents('vehicles');
 						break;
-						case 'premium_paypal_transactions':
+						case 'tq_pro_paypal_transactions':
 							this.initPayPayTransactionsTabUI();
 							this.initPayPayTransactionsTabEvents();
 						break;
@@ -895,7 +895,7 @@
 
 					$('#'+tableName+' tbody').empty();
 					var data = $.extend({
-							 	action: 'premium_load_table',
+							 	action: 'tq_pro_load_table',
 							 }, options );
 					$.post(this.settings.ajaxUrl, data, function(response) {
 						if(response.success){

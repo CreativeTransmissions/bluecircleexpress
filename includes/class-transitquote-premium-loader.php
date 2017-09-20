@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/includes
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/includes
- * @author     Your Name <email@example.com>
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/includes
+ * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
-class TransitQuote_Premium_Loader {
+class TransitQuote_Pro_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

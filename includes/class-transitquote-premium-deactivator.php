@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/includes
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/includes
- * @author     Your Name <email@example.com>
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/includes
+ * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
-class TransitQuote_Premium_Deactivator {
+class TransitQuote_Pro_Deactivator {
 
 	/**
 	 * Short Description. (use period)

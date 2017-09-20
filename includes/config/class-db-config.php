@@ -5,13 +5,13 @@
  *
  * @link       http://customgooglemaptools.com
  * @since      1.0.0
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/includes
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/includes
  * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  * @copyright 2016 Creative Transmissions
  */
 
-namespace TransitQuote_Premium;
+namespace TransitQuote_Pro;
 class DB_Config {
 
   public function __construct() {

@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/includes
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/includes
  */
 
 /**
@@ -16,12 +16,12 @@
  * This class defines all code necessary to run during the plugin's activation.
  *
  * @since      1.0.0
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/includes
- * @author     Your Name <email@example.com>
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/includes
+ * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
 
-class TransitQuote_Premium_Activator {
+class TransitQuote_Pro_Activator {
 
 	/**
 	 * Short Description. (use period)
@@ -39,7 +39,7 @@ class TransitQuote_Premium_Activator {
 
 	public static function init_database(){
 		//set up custom database on activate 
-		$plugin = new TransitQuote_Premium(); 
+		$plugin = new TransitQuote_Pro(); 
 		$plugin->load_dependencies();
 		$cdb = $plugin->get_custom_db();
 		$cdb->create_tables();

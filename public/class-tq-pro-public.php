@@ -7,8 +7,8 @@ error_reporting(E_ERROR | E_PARSE | E_ALL);
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/public 
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/public 
  */
 
 /**
@@ -17,11 +17,11 @@ error_reporting(E_ERROR | E_PARSE | E_ALL);
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/public
- * @author     Your Name <email@example.com>
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/public
+ * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
-class TransitQuote_Premium_Public {
+class TransitQuote_Pro_Public {
 
 	/**
 	 * The ID of this plugin.
@@ -33,10 +33,10 @@ class TransitQuote_Premium_Public {
 	private $plugin_name;
 	private $plugin_slug;
 	private $vendor_id;
-    private $tab_1_settings_key = 'premium_rates';
-	private $tab_2_settings_key = 'premium_quote_options';
-	private $tab_5_settings_key = 'premium_email_options';
-	private $tab_6_settings_key = 'premium_paypal_options';
+    private $tab_1_settings_key = 'tq_pro_rates';
+	private $tab_2_settings_key = 'tq_pro_quote_options';
+	private $tab_5_settings_key = 'tq_pro_email_options';
+	private $tab_6_settings_key = 'tq_pro_paypal_options';
 	/**
 	 * The version of this plugin.
 	 *
@@ -59,8 +59,8 @@ class TransitQuote_Premium_Public {
 		$this->version = $version;
 		$this->debug = true;
 		$this->log_requests = true;
-		$this->cdb = TransitQuote_Premium::get_custom_db();
-		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->cdb = TransitQuote_Pro::get_custom_db();
+		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 	}
 
@@ -69,10 +69,10 @@ class TransitQuote_Premium_Public {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in TransitQuote_Premium_Loader as all of the hooks are defined
+		 * defined in TransitQuote_Pro_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The TransitQuote_Premium_Loader will then create the relationship
+		 * The TransitQuote_Pro_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -82,7 +82,7 @@ class TransitQuote_Premium_Public {
 		wp_enqueue_style( $this->plugin_slug . '-calc-styles', plugins_url( 'js/js-transitquote/css/map-quote-calculator.css', __FILE__ ), array(), $this->version );
 		wp_enqueue_style( $this->plugin_slug . '-jqueryui-styles', plugins_url( 'css/jquery-ui.css', __FILE__ ), array(), $this->version );
 		wp_enqueue_style( $this->plugin_slug . '-timepicker-styles', plugins_url( 'css/jquery-ui-timepicker-addon.css', __FILE__ ), array(), $this->version );
-		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugin_dir_url( __FILE__ ) . 'css/transitquote-premium-public.css', array(), $this->version );
+		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugin_dir_url( __FILE__ ) . 'css/tq-pro-public.css', array(), $this->version );
 		wp_enqueue_style( $this->plugin_slug . '-parsley-styles', plugin_dir_url( __FILE__ ) . 'css/parsley.css', array(), $this->version );
 		wp_enqueue_style( $this->plugin_slug . '-popup-styles', plugins_url( 'css/magnific-popup.css', __FILE__ ), array(), $this->version );
 	}
@@ -112,23 +112,23 @@ class TransitQuote_Premium_Public {
 		wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'js/jquery.ui.map.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True ); //was commented
 		wp_enqueue_script( $this->plugin_slug.'-jqui-timepicker', plugins_url( 'js/jquery-ui-timepicker-addon.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True );
 		wp_enqueue_script( $this->plugin_slug.'-map-quote-calculator', plugins_url( 'js/js-transitquote/js/map-quote-calculator.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
-		wp_enqueue_script($this->plugin_slug . '-transitquote-premium', plugins_url('js/transitquote-premium-public.js', __FILE__ ), array($this->plugin_slug.'-map-quote-calculator'), $this->version, true);
+		wp_enqueue_script($this->plugin_slug . '-tq-pro', plugins_url('js/tq-pro-public.js', __FILE__ ), array($this->plugin_slug.'-map-quote-calculator'), $this->version, true);
 
-		wp_enqueue_script( $this->plugin_slug . '-parsley-script', plugins_url( 'js/parsley.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );	
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public-main.js', __FILE__ ), array( $this->plugin_slug . '-transitquote-premium' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_slug . '-parsley-script', plugins_url( 'js/parsley.js', __FILE__ ), array( $this->plugin_slug . '-tq-pro' ), $this->version, true );	
+		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public-main.js', __FILE__ ), array( $this->plugin_slug . '-tq-pro' ), $this->version, true );
  		wp_localize_script( $this->plugin_slug . '-plugin-script', 'TransitQuotePremiumSettings', $tq_settings);
  		
 	}
 
 	public function get_plugin_settings(){
-		$this->start_lat = $this->get_setting('premium_quote_options', 'start_lat','55.870853');
-		$this->start_lng = $this->get_setting('premium_quote_options', 'start_lng', '-4.252036');
-		$this->start_place_name = $this->get_setting('premium_quote_options', 'start_place_name', 'Glasgow');
+		$this->start_lat = $this->get_setting('tq_pro_quote_options', 'start_lat','55.870853');
+		$this->start_lng = $this->get_setting('tq_pro_quote_options', 'start_lng', '-4.252036');
+		$this->start_place_name = $this->get_setting('tq_pro_quote_options', 'start_place_name', 'Glasgow');
 		$this->currency = self::get_currency();
 		$this->distance_unit = self::get_distance_unit();
-		$this->min_notice = $this->get_setting('premium_quote_options', 'min_notice', '24:00');
-		$this->min_notice_charge = $this->get_setting('premium_quote_options', 'min_notice_charge', '200');
-		$this->quote_element = $this->get_setting('premium_quote_options', 'quote_element', 'quote');
+		$this->min_notice = $this->get_setting('tq_pro_quote_options', 'min_notice', '24:00');
+		$this->min_notice_charge = $this->get_setting('tq_pro_quote_options', 'min_notice_charge', '200');
+		$this->quote_element = $this->get_setting('tq_pro_quote_options', 'quote_element', 'quote');
 		$this->api_key = self::get_api_key();
 		$this->api_string = self::get_api_string();
 		$geolocate = self::get_geolocate();
@@ -198,9 +198,9 @@ class TransitQuote_Premium_Public {
 
 	public function debug($error){
 		if($this->debug==true){		
-			$plugin = new TransitQuote_Premium();	
+			$plugin = new TransitQuote_Pro();	
 			$this->cdb = $plugin->get_custom_db();
-			$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+			$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 			$this->ajax->error_log_request($error, 'log');
 			if(is_array($error)){
 				echo '<pre>';
@@ -215,7 +215,7 @@ class TransitQuote_Premium_Public {
 	}
 
 	public function define_tab_config(){
-		return TransitQuote_Premium\Admin_Config::get_config('tabs');
+		return TransitQuote_Pro\Admin_Config::get_config('tabs');
 	}
 
 	public function load_settings(){
@@ -231,7 +231,7 @@ class TransitQuote_Premium_Public {
 	}
 
 	private function get_rates(){
-	   	$plugin = new TransitQuote_Premium();
+	   	$plugin = new TransitQuote_Pro();
 		$this->cdb = $plugin->get_custom_db();
     	$rates = $this->cdb->get_rows('rates');
 		return $rates;
@@ -271,11 +271,11 @@ class TransitQuote_Premium_Public {
     }
 
 	public function init_plugin(){
-		$plugin = new TransitQuote_Premium();
+		$plugin = new TransitQuote_Pro();
 		self::load_settings();
 
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
     }
 
@@ -332,11 +332,11 @@ class TransitQuote_Premium_Public {
 
     public function execute_paypal_payment(){
 
-    	$plugin = new TransitQuote_Premium();
+    	$plugin = new TransitQuote_Pro();
 		self::load_settings();
 
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
     	self::init_paypal();
 
@@ -398,12 +398,12 @@ class TransitQuote_Premium_Public {
 	private function get_paypal_config(){
 		self::load_settings();
 
-		$this->application_client_id = self::get_setting('premium_paypal_options','application_client_id');
-		$this->application_client_secret = self::get_setting('premium_paypal_options','application_client_secret');
+		$this->application_client_id = self::get_setting('tq_pro_paypal_options','application_client_id');
+		$this->application_client_secret = self::get_setting('tq_pro_paypal_options','application_client_secret');
 
 		$site_url = get_site_url();
-		$payment_approved_url = self::get_setting('premium_paypal_options','payment_approved_url','/payment-approved');
-		$payment_cancelled_url = self::get_setting('premium_paypal_options','payment_approved_url','/payment-cancelled');
+		$payment_approved_url = self::get_setting('tq_pro_paypal_options','payment_approved_url','/payment-approved');
+		$payment_cancelled_url = self::get_setting('tq_pro_paypal_options','payment_approved_url','/payment-cancelled');
 		$this->payment_approved_url = $site_url.$payment_approved_url; 
 		$this->payment_cancelled_url = $site_url.$payment_cancelled_url;
 	}
@@ -417,7 +417,7 @@ class TransitQuote_Premium_Public {
 	}
 
 	public function get_description(){
-		return $this->sales_item_description = self::get_setting('premium_paypal_options','sales_item_description', 'Delivery');
+		return $this->sales_item_description = self::get_setting('tq_pro_paypal_options','sales_item_description', 'Delivery');
 	}
 
 	/**
@@ -425,13 +425,13 @@ class TransitQuote_Premium_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function display_TransitQuote_Premium($atts) {
+	public function display_TransitQuote_Pro($atts) {
 		global $add_my_script_flag;
 		$add_my_script_flag = true;
 
-		$plugin = new TransitQuote_Premium();
+		$plugin = new TransitQuote_Pro();
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 		$this->pick_start_address = 'true';
 		// added layout option if given and inline then form will  be inline map else admin setting
@@ -455,9 +455,9 @@ class TransitQuote_Premium_Public {
 		$this->distance_unit = self::get_distance_unit();
 
 		if($layout==1){ //Inline Map public
-			$this->view = 'partials/transitquote-premium-inline-display.php';
+			$this->view = 'partials/tq-pro-inline-display.php';
 		}else{ //business_qoute
-			$this->view = 'partials/transitquote-premium-popup-display.php';
+			$this->view = 'partials/tq-pro-popup-display.php';
 		};
 		
 		ob_start();
@@ -470,7 +470,7 @@ class TransitQuote_Premium_Public {
 	function process_paypal_request(){
 		// page is being requested after paypal redirects customer back to the website
 		$this->paypal = new CT_PayPal(array('cdb'=>$this->cdb,
-											'sandbox'=>self::get_setting('premium_paypal_options', 'sandbox', 1)));
+											'sandbox'=>self::get_setting('tq_pro_paypal_options', 'sandbox', 1)));
 		$this->payment_status_type_id = $this->paypal->process_paypal_return();
 		$this->job_id = $this->paypal->get_transaction_id();
 		if(empty($this->job_id)){
@@ -574,7 +574,7 @@ class TransitQuote_Premium_Public {
 	}
 
 	function get_paths_for_includes(){
-		$file = dirname(dirname(__FILE__)) . '/transitquote-premium.php';
+		$file = dirname(dirname(__FILE__)) . '/tq-pro.php';
 		$this->plugin_root_dir = plugin_dir_path($file);
 		$this->paypal_partials_dir = $this->plugin_root_dir.'includes/ct-payment-pp/partials/';
 	}
@@ -683,10 +683,10 @@ class TransitQuote_Premium_Public {
 	}
 
 	/*** Front end ajax methods ***/
-	public function premium_save_job_callback(){
-		$this->plugin = new TransitQuote_Premium();	
+	public function tq_pro_save_job_callback(){
+		$this->plugin = new TransitQuote_Pro();	
 		$this->cdb = $this->plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Premium\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 		
 		// save job request from customer facing form
 		if($this->log_requests == true){
@@ -743,7 +743,7 @@ class TransitQuote_Premium_Public {
 		};		
 	}
 
-	public function premium_ipn_callback(){
+	public function tq_pro_ipn_callback(){
 		//get job id from paypal ipn message
 		$this->job_id = $this->paypal->get_transaction_id();
 		if(empty($this->job_id)){
@@ -1200,7 +1200,7 @@ class TransitQuote_Premium_Public {
     }
 
 	public function get_job_details($job = null){
-		$plugin = new TransitQuote_Premium();	
+		$plugin = new TransitQuote_Pro();	
 		$this->cdb = $plugin->get_custom_db();
 		//add the details to a job record
 
@@ -1485,7 +1485,7 @@ class TransitQuote_Premium_Public {
     }
 
     public function get_payment_buttons(){
-    	$plugin = new TransitQuote_Premium();
+    	$plugin = new TransitQuote_Pro();
     	$this->cdb = $plugin->get_custom_db();
     	$methods = $this->cdb->get_rows('payment_types', array('available'=>1), array('id', 'name'), null);
     	if(count($methods)===0){
@@ -1552,7 +1552,7 @@ class TransitQuote_Premium_Public {
     }
 
 	public function get_oldest_job_date(){
-		$plugin = new TransitQuote_Premium();
+		$plugin = new TransitQuote_Pro();
 		$this->cdb = $plugin->get_custom_db();
 		$jobs = $this->cdb->get_rows('jobs', array(), array('id', 'created'), null);
 		if(empty($jobs)){

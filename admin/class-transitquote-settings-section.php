@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/admin
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/admin
  */
 
 /**
@@ -17,11 +17,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/admin
- * @author     Your Name <email@example.com>
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/admin
+ * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
-class TransitQuote_Premium_Settings_Section {
+class TransitQuote_Pro_Settings_Section {
 
 
 	public function __construct($config = null) {
@@ -57,22 +57,22 @@ class TransitQuote_Premium_Settings_Section {
             $field_config['section_id'] = $this->section_id;
             switch ($field_config['type']) {
                 case 'addresspicker':
-                    $field = new TransitQuote_Premium_Settings_Field_AddressPicker($field_config);
+                    $field = new TransitQuote_Pro_Settings_Field_AddressPicker($field_config);
                     break;
                 case 'checkbox':
-                    $field = new TransitQuote_Premium_Settings_Field_Checkbox($field_config);
+                    $field = new TransitQuote_Pro_Settings_Field_Checkbox($field_config);
                     break;
                 case 'input':
-                    $field = new TransitQuote_Premium_Settings_Field_Input($field_config);
+                    $field = new TransitQuote_Pro_Settings_Field_Input($field_config);
                     break;
                 case 'radio':
-                    $field = new TransitQuote_Premium_Settings_Field_Radio($field_config);
+                    $field = new TransitQuote_Pro_Settings_Field_Radio($field_config);
                     break;
                 case 'select':
-                    $field = new TransitQuote_Premium_Settings_Field_Select($field_config);
+                    $field = new TransitQuote_Pro_Settings_Field_Select($field_config);
                     break;
                 case 'textarea':
-                    $field = new TransitQuote_Premium_Settings_Field_Textarea($field_config);
+                    $field = new TransitQuote_Pro_Settings_Field_Textarea($field_config);
                     break;
             };
             

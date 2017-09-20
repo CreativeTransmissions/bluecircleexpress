@@ -7,8 +7,8 @@ error_reporting(E_ERROR | E_PARSE | E_ALL);
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/admin
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/admin
  */
 
 /**
@@ -17,11 +17,11 @@ error_reporting(E_ERROR | E_PARSE | E_ALL);
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/admin
- * @author     Your Name <email@example.com>
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/admin
+ * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
-class TransitQuote_Premium_Admin {
+class TransitQuote_Pro_Admin {
 
 	/**
 	 * The ID of this plugin.
@@ -34,12 +34,12 @@ class TransitQuote_Premium_Admin {
 	private $plugin_slug;
 	protected $plugin_screen_hook_suffix = null;
 
-    private $tab_1_settings_key = 'premium_rates';
-	private $tab_2_settings_key = 'premium_quote_options';
-	private $tab_3_settings_key = 'premium_customers';
-	private $tab_4_settings_key = 'premium_job_requests';
-	private $tab_5_settings_key = 'premium_email_options';
-	private $tab_6_settings_key = 'premium_paypal_options';
+    private $tab_1_settings_key = 'tq_pro_rates';
+	private $tab_2_settings_key = 'tq_pro_quote_options';
+	private $tab_3_settings_key = 'tq_pro_customers';
+	private $tab_4_settings_key = 'tq_pro_job_requests';
+	private $tab_5_settings_key = 'tq_pro_email_options';
+	private $tab_6_settings_key = 'tq_pro_paypal_options';
 	
 	/**
 	 * The version of this plugin.
@@ -61,7 +61,7 @@ class TransitQuote_Premium_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->plugin_slug = $plugin_slug;
 		$this->version = $version;
-		$this->plugin = new TransitQuote_Premium_Public($plugin_name,  $version, $plugin_slug);
+		$this->plugin = new TransitQuote_Pro_Public($plugin_name,  $version, $plugin_slug);
 	}
 
 	/**
@@ -86,8 +86,8 @@ class TransitQuote_Premium_Admin {
 		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
 		 */
 		$this->plugin_screen_hook_suffix = add_menu_page(
-			__( 'TransitQuote Premium', $this->plugin_slug ),
-			__( 'TransitQuote Premium', $this->plugin_slug ),
+			__( 'TransitQuote Pro', $this->plugin_slug ),
+			__( 'TransitQuote Pro', $this->plugin_slug ),
 			'manage_options',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )
@@ -112,11 +112,11 @@ class TransitQuote_Premium_Admin {
 	 */
 
 	public function display_plugin_admin_page() {
-		$this->current_tab_key = isset( $_GET['tab'] ) ? $_GET['tab'] : 'premium_job_requests';
+		$this->current_tab_key = isset( $_GET['tab'] ) ? $_GET['tab'] : 'tq_pro_job_requests';
 
 		//if url is not pointing to a tab, set to default
 		if(!array_key_exists($this->current_tab_key, $this->tabs_config)){
-			$this->current_tab_key = 'premium_job_requests';
+			$this->current_tab_key = 'tq_pro_job_requests';
 		};
 		$this->current_tab = $this->tabs[$this->current_tab_key];
 
@@ -137,10 +137,10 @@ class TransitQuote_Premium_Admin {
 	 * @since    1.0.0
 	 */
 	public function settings_admin_init() {
-		$this->ajax = new TransitQuote_Premium\CT_AJAX();
-		$this->cdb = TransitQuote_Premium::get_custom_db();
+		$this->ajax = new TransitQuote_Pro\CT_AJAX();
+		$this->cdb = TransitQuote_Pro::get_custom_db();
 		$this->plugin->cdb = $this->cdb;
-		$this->dbui = new TransitQuote_Premium\CT_DBUI(array('cdb'=>$this->cdb));
+		$this->dbui = new TransitQuote_Pro\CT_DBUI(array('cdb'=>$this->cdb));
 		$this->tabs_config = $this->plugin->define_tab_config();
 		$this->update_config_defaults();
 		$this->init_data();
@@ -206,11 +206,11 @@ class TransitQuote_Premium_Admin {
 
 		 	// instanciate tab
 		 	switch ($tab_key) {
-		 		case 'premium_job_requests':
-		 			$tabs[$tab_key] = new TransitQuote_Premium_Grid_Tab($config);
+		 		case 'tq_pro_job_requests':
+		 			$tabs[$tab_key] = new TransitQuote_Pro_Grid_Tab($config);
 		 			break;
 		 		default:
-		 			$tabs[$tab_key] = new TransitQuote_Premium_Tab($config);
+		 			$tabs[$tab_key] = new TransitQuote_Pro_Tab($config);
 		 			break;
 		 	}
 
@@ -254,10 +254,10 @@ class TransitQuote_Premium_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in TransitQuote_Premium_Loader as all of the hooks are defined
+		 * defined in TransitQuote_Pro_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The TransitQuote_Premium_Loader will then create the relationship
+		 * The TransitQuote_Pro_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -267,7 +267,7 @@ class TransitQuote_Premium_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/transitquote-premium-admin.css', array(), $this->version, 'all' );
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/tq-pro-admin.css', array(), $this->version, 'all' );
 			wp_enqueue_style( 'wp-jquery-ui-dialog' );
 		}
 	}
@@ -286,11 +286,11 @@ class TransitQuote_Premium_Admin {
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
 			$this->api_key = $this->plugin->get_api_key();
-			$this->start_place_name = $this->plugin->get_setting('premium_quote_options', 'start_place_name', 'Glasgow');
-			$this->start_lat = $this->plugin->get_setting('premium_quote_options', 'start_lat','55.870853');
-			$this->start_lng = $this->plugin->get_setting('premium_quote_options', 'start_lng', '-4.252036');
-			$this->min_notice = $this->plugin->get_setting('premium_quote_options', 'min_notice', '24:00');
-			$this->min_notice_charge = $this->plugin->get_setting('premium_quote_options', 'min_notice_charge', '200');
+			$this->start_place_name = $this->plugin->get_setting('tq_pro_quote_options', 'start_place_name', 'Glasgow');
+			$this->start_lat = $this->plugin->get_setting('tq_pro_quote_options', 'start_lat','55.870853');
+			$this->start_lng = $this->plugin->get_setting('tq_pro_quote_options', 'start_lng', '-4.252036');
+			$this->min_notice = $this->plugin->get_setting('tq_pro_quote_options', 'min_notice', '24:00');
+			$this->min_notice_charge = $this->plugin->get_setting('tq_pro_quote_options', 'min_notice_charge', '200');
 			$this->oldest_job_date = $this->plugin->get_oldest_job_date();
 			$this->api_string = $this->plugin->get_api_string();
 			
@@ -308,8 +308,8 @@ class TransitQuote_Premium_Admin {
 			wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) ), array( 'jquery',$this->plugin_slug.'-jqui'), '', True );
 			wp_enqueue_script( $this->plugin_slug.'-place-selector',plugins_url( '/js/place-selector.js', __FILE__ ) , array( 'jquery' ), '', True );
 
-			wp_enqueue_script( $this->plugin_slug.'-admin-js', plugin_dir_url( __FILE__ ) . 'js/transitquote-premium-admin.js', array( 'jquery' ), $this->version, true );
-			wp_enqueue_script( $this->plugin_slug.'-admin-mainscript', plugin_dir_url( __FILE__ ). 'js/transitquote-premium-admin-main.js', array( $this->plugin_slug.'-admin-js' ), $this->version, True );
+			wp_enqueue_script( $this->plugin_slug.'-admin-js', plugin_dir_url( __FILE__ ) . 'js/tq-pro-admin.js', array( 'jquery' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_slug.'-admin-mainscript', plugin_dir_url( __FILE__ ). 'js/tq-pro-admin-main.js', array( $this->plugin_slug.'-admin-js' ), $this->version, True );
 
 
 			wp_localize_script( $this->plugin_slug . '-admin-mainscript', 'TransitQuotePremiumSettings', $tq_settings);
@@ -574,7 +574,7 @@ class TransitQuote_Premium_Admin {
 		}
 
 		//output the view which will be returned via ajax and inserted into the hidden
-		include('partials/premium_job_details.php'); 
+		include('partials/tq_pro_job_details.php'); 
 	}
 
 
@@ -596,7 +596,7 @@ class TransitQuote_Premium_Admin {
 			$rows = $this->dbui->table_rows($params);
 
 			//output the view which will be returned via ajax and inserted into the hidden
-			include('partials/premium_paypal_transactions_details.php'); 
+			include('partials/tq_pro_paypal_transactions_details.php'); 
 		} else {
 			echo 'Payment Not Created';
 		};
@@ -622,7 +622,7 @@ class TransitQuote_Premium_Admin {
 
 	public function render_transaction_details_table(){
 
-		include('partials/premium_paypal_transactions_details.php'); 
+		include('partials/tq_pro_paypal_transactions_details.php'); 
 	}
 
 	public function load_table_callback(){

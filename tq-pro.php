@@ -8,20 +8,20 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              http://example.com
+ * @link              http://transitquote.co.uk
  * @since             1.0.0
- * @package           TransitQuote_Premium
+ * @package           TransitQuote_Pro
  *
  * @wordpress-plugin
- * Plugin Name:       TransitQuote Premium
- * Plugin URI:        http://example.com/plugin-name-uri/
- * Description:       Base plugin heaving all the functionalities to start.
+ * Plugin Name:       TransitQuote Pro
+ * Plugin URI:        http://transitquote.co.uk
+ * Description:       The automatic transportation quote calculator for WordPres
  * Version:           1.0.0
  * Author:            Creative Transmissions
  * Author URI:        http://creativetransmissions.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       transitquote-premium
+ * Text Domain:       tq-pro
  * Domain Path:       /languages
  */
 
@@ -32,30 +32,30 @@ if ( ! defined( 'WPINC' ) ) {
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-transitquote-premium-activator.php
+ * This action is documented in includes/class-tq-pro-activator.php
  */
-function activate_transitquote_premium() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-transitquote-premium-activator.php';
-	TransitQuote_Premium_Activator::activate();
+function activate_TransitQuote_Pro() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-tq-pro-activator.php';
+	TransitQuote_Pro_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-transitquote-premium-deactivator.php
+ * This action is documented in includes/class-tq-pro-deactivator.php
  */
-function deactivate_transitquote_premium() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-transitquote-premium-deactivator.php';
-	TransitQuote_Premium_Deactivator::deactivate();
+function deactivate_TransitQuote_Pro() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-tq-pro-deactivator.php';
+	TransitQuote_Pro_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_transitquote_premium' );
-register_deactivation_hook( __FILE__, 'deactivate_transitquote_premium' );
+register_activation_hook( __FILE__, 'activate_TransitQuote_Pro' );
+register_deactivation_hook( __FILE__, 'deactivate_TransitQuote_Pro' );
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-transitquote-premium.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-tq-pro.php';
 
 /**
  * Begins execution of the plugin.
@@ -66,16 +66,16 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-transitquote-premium.php';
  *
  * @since    1.0.0
  */
-function run_transitquote_premium() {
+function run_TransitQuote_Pro() {
 
-	$plugin = new TransitQuote_Premium();
+	$plugin = new TransitQuote_Pro();
 	$plugin->run();
 
 }
 function tp_save_error($tmp_plugin){
-  	update_option( 'wp_premium_plugin_activation_error',  ob_get_contents() );
+  	update_option( 'wp_tq_pro_plugin_activation_error',  ob_get_contents() );
 }
 
 add_action( 'activated_plugin', 'tp_save_error' );
 
-run_transitquote_premium();
+run_TransitQuote_Pro();

@@ -1,5 +1,5 @@
-<?php settings_fields( 'premium_rates' ); ?>
-<?php do_settings_sections( 'premium_rates' ); ?>
+<?php settings_fields( 'tq_pro_rates' ); ?>
+<?php do_settings_sections( 'tq_pro_rates' ); ?>
 <form class="box-form round tq-admin-form" id="edit_rate_form" method="post" autocomplete="false">
 	<fieldset>
 		<legend>Add a new rate by entering the details below:</legend>

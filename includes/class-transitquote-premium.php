@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/includes
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/includes
  */
 
 /**
@@ -23,11 +23,11 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/includes
- * @author     Your Name <email@example.com>
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/includes
+ * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
-class TransitQuote_Premium {
+class TransitQuote_Pro {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,10 +35,10 @@ class TransitQuote_Premium {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      TransitQuote_Premium_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      TransitQuote_Pro_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
-	const VERSION = '1.0.0';
+	const VERSION = '3.0.0';
 	/**
 	 * The unique identifier of this plugin.
 	 *
@@ -72,8 +72,8 @@ class TransitQuote_Premium {
 
 	public function __construct() {
 
-		$this->plugin_name = 'TransitQuote Premium';
-		$this->plugin_slug = 'transitquote-premium';
+		$this->plugin_name = 'TransitQuote Pro';
+		$this->plugin_slug = 'tq-pro';
 		$this->version = '1.0.0';
 
 		$this->load_dependencies();
@@ -125,10 +125,10 @@ class TransitQuote_Premium {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - TransitQuote_Premium_Loader. Orchestrates the hooks of the plugin.
-	 * - TransitQuote_Premium_i18n. Defines internationalization functionality.
-	 * - TransitQuote_Premium_Admin. Defines all hooks for the admin area.
-	 * - TransitQuote_Premium_Public. Defines all hooks for the public side of the site.
+	 * - TransitQuote_Pro_Loader. Orchestrates the hooks of the plugin.
+	 * - TransitQuote_Pro_i18n. Defines internationalization functionality.
+	 * - TransitQuote_Pro_Admin. Defines all hooks for the admin area.
+	 * - TransitQuote_Pro_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -142,34 +142,34 @@ class TransitQuote_Premium {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-transitquote-premium-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-transitquote-premium-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-transitquote-premium-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-tq-pro-public.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-premium-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-tq-pro-admin.php';
 
 		/**
 		 * The class responsible for defining all admin tabs in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-premium-tab.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-tq-pro-tab.php';
 
 		/**
 		 * The class responsible for defining a gred tab  in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-transitquote-premium-grid-tab.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-tq-pro-grid-tab.php';
 
 		/**
 		 * The class responsible for defining all settings sections in the admin area.
@@ -229,21 +229,21 @@ class TransitQuote_Premium {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/ct-payment-pp/ct-paypal.php';		
 
-		$this->loader = new TransitQuote_Premium_Loader();
+		$this->loader = new TransitQuote_Pro_Loader();
 
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the TransitQuote_Premium_i18n class in order to set the domain and to register the hook
+	 * Uses the TransitQuote_Pro_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function set_locale() {
-		$plugin_i18n = new TransitQuote_Premium_i18n();
+		$plugin_i18n = new TransitQuote_Pro_i18n();
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 	}
 
@@ -256,7 +256,7 @@ class TransitQuote_Premium {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new TransitQuote_Premium_Admin( $this->get_plugin_name(),  $this->get_version(), $this->get_plugin_slug());
+		$plugin_admin = new TransitQuote_Pro_Admin( $this->get_plugin_name(),  $this->get_version(), $this->get_plugin_slug());
 
 		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . $this->get_plugin_slug() . '.php' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -269,7 +269,7 @@ class TransitQuote_Premium {
 		$this->loader->add_action( 'wp_ajax_save_record', $plugin_admin, 'save_record_callback' );
 		$this->loader->add_action( 'wp_ajax_delete_record', $plugin_admin, 'delete_record_callback' );
 		$this->loader->add_action( 'wp_ajax_select_options', $plugin_admin, 'select_options_callback' );
-		$this->loader->add_action( 'wp_ajax_premium_load_table', $plugin_admin, 'load_table_callback' );
+		$this->loader->add_action( 'wp_ajax_tq_pro_load_table', $plugin_admin, 'load_table_callback' );
 		$this->loader->add_action( 'wp_ajax_load_details', $plugin_admin, 'load_details_callback' );
 		$this->loader->add_action( 'wp_ajax_transactions_paypal', $plugin_admin, 'load_transactions_paypal_callback' );
 		$this->loader->add_action( 'wp_ajax_update_job_status', $plugin_admin, 'update_job_status_callback');
@@ -286,18 +286,18 @@ class TransitQuote_Premium {
 	 * @access   private
 	 */
 	private function define_public_hooks() {
-		$plugin_public = new TransitQuote_Premium_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
-		add_shortcode( 'transitquote_premium', array( $plugin_public, 'display_TransitQuote_Premium' ) );
+		$plugin_public = new TransitQuote_Pro_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
+		add_shortcode( 'TransitQuote_Pro', array( $plugin_public, 'display_TransitQuote_Pro' ) );
 		add_filter( 'widget_text', 'do_shortcode', 11);
 		$this->loader->add_action( 'init', $plugin_public, 'init_plugin');
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_scripts');	
 
-		$this->loader->add_action( 'wp_ajax_premium_save_job', $plugin_public, 'premium_save_job_callback');	
-		$this->loader->add_action( 'wp_ajax_nopriv_premium_save_job', $plugin_public, 'premium_save_job_callback');	
+		$this->loader->add_action( 'wp_ajax_tq_pro_save_job', $plugin_public, 'tq_pro_save_job_callback');	
+		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro_save_job', $plugin_public, 'tq_pro_save_job_callback');	
 
-		$this->loader->add_action( 'wp_ajax_premium_ipn', $plugin_public, 'premium_ipn_callback');	
-		$this->loader->add_action( 'wp_ajax_nopriv_premium_ipn', $plugin_public, 'premium_ipn_callback');
+		$this->loader->add_action( 'wp_ajax_tq_pro_ipn', $plugin_public, 'tq_pro_ipn_callback');	
+		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro_ipn', $plugin_public, 'tq_pro_ipn_callback');
 
 		$this->loader->add_action( 'wp_ajax_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_nopriv_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
@@ -341,7 +341,7 @@ class TransitQuote_Premium {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    TransitQuote_Premium_Loader    Orchestrates the hooks of the plugin.
+	 * @return    TransitQuote_Pro_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;
@@ -366,8 +366,8 @@ class TransitQuote_Premium {
 
 	public static function get_custom_db(){
 		//define and register tables
-		$cdb = new TransitQuote_Premium\CT_CDB(array('prefix'=>'tq_prm'));
-		$db_config = new TransitQuote_Premium\DB_Config();
+		$cdb = new TransitQuote_Pro\CT_CDB(array('prefix'=>'tq_prm'));
+		$db_config = new TransitQuote_Pro\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
 		$cdb->define_table($db_config->get_config('companies'));

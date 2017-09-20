@@ -5,13 +5,13 @@
  *
  * @link       http://customgooglemaptools.com
  * @since      1.0.0
- * @package    TransitQuote_Premium
- * @subpackage TransitQuote_Premium/includes
+ * @package    TransitQuote_Pro
+ * @subpackage TransitQuote_Pro/includes
  * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  * @copyright 2016 Creative Transmissions
  */
 
-namespace TransitQuote_Premium;
+namespace TransitQuote_Pro;
 class Admin_Config {
 
   public function __construct() {
@@ -28,44 +28,44 @@ class Admin_Config {
 
   private static function config_tabs(){
     return array( 
-              'premium_job_requests'=>array( 
-                              'key'=>'premium_job_requests',
+              'tq_pro_job_requests'=>array( 
+                              'key'=>'tq_pro_job_requests',
                               'title'=>'Jobs',
                               'table'=>'jobs',
                               'sections'=>array()
                               ),
 
-              'premium_customers'=>array(
-                              'key'=>'premium_customers',
+              'tq_pro_customers'=>array(
+                              'key'=>'tq_pro_customers',
                               'title'=>'Customers',
                               'table'=>'customers',
                               'sections'=>array()
                               ),
 
-              'premium_rates'=>array(
-                              'key'=>'premium_rates',
+              'tq_pro_rates'=>array(
+                              'key'=>'tq_pro_rates',
                               'title'=>'Rates',
                               'table'=>'rates',
                               'sections'=>array(),
                               'data'=>array('distance_unit' => 'Kilometer')
                               ),
 
-              'premium_vehicles'=>array(
-                              'key'=>'premium_vehicles',
+              'tq_pro_vehicles'=>array(
+                              'key'=>'tq_pro_vehicles',
                               'title'=>'Vehicles',
                               'table'=>'vehicles',
                               'sections'=>array()
                               ),
 
-              'premium_services'=>array(
-                              'key'=>'premium_services',
+              'tq_pro_services'=>array(
+                              'key'=>'tq_pro_services',
                               'title'=>'Services',
                               'table'=>'services',
                               'sections'=>array()
                               ),
 
-              'premium_map_options'=>array(
-                              'key'=>'premium_map_options',
+              'tq_pro_map_options'=>array(
+                              'key'=>'tq_pro_map_options',
                               'title'=>'Map Options',
                               'sections'=>array('prem_settings_map_options'=>array(
                                                   'id'=>'prem_settings_map_options',
@@ -95,8 +95,8 @@ class Admin_Config {
                                 )
                               ),
 
-              'premium_quote_options'=>array(
-                              'key'=>'premium_quote_options',
+              'tq_pro_quote_options'=>array(
+                              'key'=>'tq_pro_quote_options',
                               'title'=>'Quote Options',
                               'sections'=>array('prem_settings_quote_options'=>array(
                                                 'id'=>'prem_settings_quote_options',
@@ -139,8 +139,8 @@ class Admin_Config {
 
                                 )
                ),
-              'premium_email_options'=>array(
-                              'key'=>'premium_email_options',
+              'tq_pro_email_options'=>array(
+                              'key'=>'tq_pro_email_options',
                               'title'=>'Email Options',
                               'sections'=>array('prem_settings_email_options'=>array(
                                                   'id'=>'prem_settings_email_options',
@@ -176,8 +176,8 @@ class Admin_Config {
                                               ))
                               ),
 
-              'premium_paypal_options'=>array(
-                              'key'=>'premium_paypal_options',
+              'tq_pro_paypal_options'=>array(
+                              'key'=>'tq_pro_paypal_options',
                               'title'=>'PayPal Options',
                               'sections'=>array('prem_settings_paypal_options'=>array(
                                                   'id'=>'prem_settings_paypal_options',
@@ -214,8 +214,8 @@ class Admin_Config {
                                           )
                               ),
 
-              'premium_paypal_transactions'=>array(
-                              'key'=>'premium_paypal_transactions',
+              'tq_pro_paypal_transactions'=>array(
+                              'key'=>'tq_pro_paypal_transactions',
                               'title'=>'PayPal Transactions',
                               'sections'=>array()
                              )

@@ -22,7 +22,7 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    TransitQuote_Premium
+ * @package    TransitQuote_Pro
  */
 
 // If uninstall not called from WordPress, then exit.
