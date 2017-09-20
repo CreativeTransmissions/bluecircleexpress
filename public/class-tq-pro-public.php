@@ -311,6 +311,8 @@ class TransitQuote_Pro_Public {
 			$this->api_setup_message = '<p>To use TransitQuote Pro please update your settingss follows:</p><ul>'.$this->api_setup_message.'</ul>';
 		}
 
+		return $success;
+
     }
 
     public function rates_exist(){
