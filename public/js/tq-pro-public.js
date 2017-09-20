@@ -9,7 +9,7 @@
 ;(function ( $, window, document, undefined ) {
 		// Create the defaults 
 		var map;
-		var pluginName = "TransitQuotePremium",
+		var pluginName = "TransitQuotePro",
 		
 		defaults = {
 			ajaxUrl: '',
@@ -168,7 +168,7 @@
 				//Initialize Google Maps Quote Calculator jquery plugin
 				this.calculator = $('#map').mapQuoteCalculator({
 
-					ajaxUrl: TransitQuotePremiumSettings.ajaxurl,
+					ajaxUrl: TransitQuoteProSettings.ajaxurl,
 					debug: this.settings.debug,
 
 					// fare calculation options
@@ -262,7 +262,7 @@
 				    payment: function() {
 				    	var jobId = $('input[name="job_id"]').val();
 				        // Set up a url on your server to create the payment_id
-				        var CREATE_URL = TransitQuotePremiumSettings.paypal.createPaymentUrl+'&jobId='+jobId;
+				        var CREATE_URL = TransitQuoteProSettings.paypal.createPaymentUrl+'&jobId='+jobId;
 
 						// Set up the data you need to pass to your server
 		
@@ -277,7 +277,7 @@
 				    onAuthorize: function(data, actions) {
 				        
 				        // Set up a url on your server to execute the payment
-				        var EXECUTE_URL = TransitQuotePremiumSettings.paypal.executePaymentURL;
+				        var EXECUTE_URL = TransitQuoteProSettings.paypal.executePaymentURL;
 
 				        // Set up the data you need to pass to your server
 				        var jobId = $('input[name="job_id"]').val();

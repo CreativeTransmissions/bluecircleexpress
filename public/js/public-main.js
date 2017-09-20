@@ -3,9 +3,9 @@
 	// Code by AS
 	$(function () {
 		if($('#quote-form').length>0){
-			$('#quote-form').TransitQuotePremium({
-				ajaxUrl: TransitQuotePremiumSettings.ajaxurl,
-				data: TransitQuotePremiumSettings,
+			$('#quote-form').TransitQuotePro({
+				ajaxUrl: TransitQuoteProSettings.ajaxurl,
+				data: TransitQuoteProSettings,
 			});
 		}
 

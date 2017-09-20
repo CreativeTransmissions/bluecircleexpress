@@ -312,7 +312,7 @@ class TransitQuote_Pro_Admin {
 			wp_enqueue_script( $this->plugin_slug.'-admin-mainscript', plugin_dir_url( __FILE__ ). 'js/tq-pro-admin-main.js', array( $this->plugin_slug.'-admin-js' ), $this->version, True );
 
 
-			wp_localize_script( $this->plugin_slug . '-admin-mainscript', 'TransitQuotePremiumSettings', $tq_settings);
+			wp_localize_script( $this->plugin_slug . '-admin-mainscript', 'TransitQuoteProSettings', $tq_settings);
 
 
 		}

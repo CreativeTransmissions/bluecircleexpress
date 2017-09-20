@@ -116,7 +116,7 @@ class TransitQuote_Pro_Public {
 
 		wp_enqueue_script( $this->plugin_slug . '-parsley-script', plugins_url( 'js/parsley.js', __FILE__ ), array( $this->plugin_slug . '-tq-pro' ), $this->version, true );	
 		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public-main.js', __FILE__ ), array( $this->plugin_slug . '-tq-pro' ), $this->version, true );
- 		wp_localize_script( $this->plugin_slug . '-plugin-script', 'TransitQuotePremiumSettings', $tq_settings);
+ 		wp_localize_script( $this->plugin_slug . '-plugin-script', 'TransitQuoteProSettings', $tq_settings);
  		
 	}
 

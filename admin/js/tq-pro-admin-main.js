@@ -4,7 +4,7 @@
 	$(function () {
 		$('#wpbody-content').transitQuotePremiumAdmin({
 			ajaxUrl:ajaxurl,
-			data: TransitQuotePremiumSettings
+			data: TransitQuoteProSettings
 		});
 	});
 
