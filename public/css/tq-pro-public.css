@@ -294,7 +294,9 @@ form.tq-form .ideal-check.checked.focus {
 .tq-form .tq-payment-buttons {
 	text-align: center;
 }
-.tq-form .tq-button, .tq-payment-buttons button.tq-button{
+#address-popup .tq-button,
+.tq-form .tq-button,
+.tq-payment-buttons button.tq-button{
 	max-width: 300px;
 	background: rgba(6,166,2,1) !important;
 	color: #ffffff;

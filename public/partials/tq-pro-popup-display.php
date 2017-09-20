@@ -1,4 +1,4 @@
-<div class="requestform"> 
+<div class="requestform tq-form"> 
     <div class="spinner-div"> </div>
     <div class="request-contact-form">  
         <form id="quote-form" class="request-calc-form tq-form" autocomplete="off" data-parsley-errors-messages-disabled>

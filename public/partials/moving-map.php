@@ -17,5 +17,5 @@
     </div>
     <input type="hidden" name="distance" value=""/>
     <input class="hours" type="hidden" name="time" value=""/>
-    <input type="button" class="popup-submit-field" name="addresses-ok" value="Addresses Are Correct"/>
+    <div style="clear: left; text-align: center;"><input type="button" class="tq-button" name="addresses-ok" value="Addresses Are Correct"/></div>
 </div>

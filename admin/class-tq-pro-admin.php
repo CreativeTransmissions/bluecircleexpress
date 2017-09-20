@@ -837,7 +837,7 @@ class TransitQuote_Pro_Admin {
 	private function render_empty_table($table){
 		switch ($table) {
 			case 'jobs':
-				$empty_colspan = 8;
+				$empty_colspan = 9;
 				$table_output_name = $table;
 				break;
 			case 'customers':
