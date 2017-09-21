@@ -506,7 +506,7 @@ class TransitQuote_Pro_Public {
 	    }else{
 	    	$layout = 1;
 	    }
-		$this->currency = self::get_currency();
+		$this->currency_code = self::get_currency_code();
 		$this->distance_unit = self::get_distance_unit();
 
 		if($layout==1){ //Inline Map public
@@ -1592,7 +1592,10 @@ class TransitQuote_Pro_Public {
 
     public function get_currency_code(){
     	$this->currency = self::get_currency();
-    	$this->currency_code = $this->cdb->get_row('currencies', $this->currency);
+    	if(empty($this->currency)){
+    		return false;
+    	};
+    	$this->currency_code = $this->cdb->get_field('currencies', 'currency_code', $this->currency);
         return $this->currency_code;
     }
 
@@ -1609,6 +1612,9 @@ class TransitQuote_Pro_Public {
 		return $jobs[0]['created'];
 	}
 	public function get_setting($tab, $name, $default = ''){
+		if(empty($this->settings)){
+			self::load_settings();			
+		};
 		//get and escape setting
 		if(empty($this->settings[$name])){
 			return $default;

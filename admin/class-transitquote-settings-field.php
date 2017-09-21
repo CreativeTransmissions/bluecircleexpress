@@ -66,9 +66,7 @@ class TransitQuote_Pro_Settings_Field {
         if(isset($this->config['default'])){
             if(empty($this->value)){
                 $this->value = $this->config['default'];
-            } else {
-                echo 'have start value';
-            }
+            };
         };
     }
 }

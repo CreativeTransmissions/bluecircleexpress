@@ -124,9 +124,9 @@ private function config_currencies(){
       'default' => '',
       'format' => '%s'
     ),
-   'code' => 
+   'currency_code' => 
     array (
-      'name' => 'code',
+      'name' => 'currency_code',
       'type' => 'varchar(5)',
       'null' => 'not null',
       'auto' => '',

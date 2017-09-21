@@ -421,30 +421,30 @@ class TransitQuote_Pro {
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
 			
-			$cdb->update_row('currencies', array('name'=>'Australian dollar', 'code' => 'AUD', 'symbol'=> '&#36;', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Brazilian real', 'code' => 'BRL', 'symbol'=> 'BRL', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Canadian dollar', 'code' => 'CAD', 'symbol'=> 'CAD', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Czech koruna', 'code' => 'CZK', 'symbol'=> 'CZK', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Danish krone', 'code' => 'DKK', 'symbol'=> 'DKK', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Euro', 'code' => 'EUR', 'symbol'=> 'EUR', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Hong Kong dollar', 'code' => 'HKD', 'symbol'=> 'HKD', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Hungarian forint', 'code' => 'HUF', 'symbol'=> 'HUF', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Israeli new shekel', 'code' => 'ILS', 'symbol'=> 'ILS', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Japanese yen', 'code' => 'JPY', 'symbol'=> 'JPY', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Malaysian ringgit', 'code' => 'MYR', 'symbol'=> 'MYR', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Mexican peso', 'code' => 'MXN', 'symbol'=> 'MXN', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'New Taiwan dollar', 'code' => 'TWD', 'symbol'=> 'TWD', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'New Zealand dollar', 'code' => 'NZD', 'symbol'=> 'NZD', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Norwegian krone', 'code' => 'NOK', 'symbol'=> 'NOK', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Philippine peso', 'code' => 'PHP', 'symbol'=> 'PHP', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Polish złoty', 'code' => 'PLN', 'symbol'=> 'PLN', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Pound sterling', 'code' => 'GBP', 'symbol'=> 'GBP', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Russian ruble', 'code' => 'RUB', 'symbol'=> 'RUB', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Singapore dollar', 'code' => 'SGD', 'symbol'=> 'SGD', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Swedish krona', 'code' => 'SEK', 'symbol'=> 'SEK', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Swiss franc', 'code' => 'CHF', 'symbol'=> 'CHF', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'Thai baht', 'code' => 'THB', 'symbol'=> 'THB', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('currencies', array('name'=>'United States dollar', 'code' => 'USD', 'symbol'=> 'USD', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Australian dollar', 'currency_code' => 'AUD', 'symbol'=> '&#36;', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Brazilian real', 'currency_code' => 'BRL', 'symbol'=> 'BRL', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Canadian dollar', 'currency_code' => 'CAD', 'symbol'=> 'CAD', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Czech koruna', 'currency_code' => 'CZK', 'symbol'=> 'CZK', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Danish krone', 'currency_code' => 'DKK', 'symbol'=> 'DKK', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Euro', 'currency_code' => 'EUR', 'symbol'=> 'EUR', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Hong Kong dollar', 'currency_code' => 'HKD', 'symbol'=> 'HKD', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Hungarian forint', 'currency_code' => 'HUF', 'symbol'=> 'HUF', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Israeli new shekel', 'currency_code' => 'ILS', 'symbol'=> 'ILS', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Japanese yen', 'currency_code' => 'JPY', 'symbol'=> 'JPY', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Malaysian ringgit', 'currency_code' => 'MYR', 'symbol'=> 'MYR', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Mexican peso', 'currency_code' => 'MXN', 'symbol'=> 'MXN', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'New Taiwan dollar', 'currency_code' => 'TWD', 'symbol'=> 'TWD', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'New Zealand dollar', 'currency_code' => 'NZD', 'symbol'=> 'NZD', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Norwegian krone', 'currency_code' => 'NOK', 'symbol'=> 'NOK', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Philippine peso', 'currency_code' => 'PHP', 'symbol'=> 'PHP', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Polish złoty', 'currency_code' => 'PLN', 'symbol'=> 'PLN', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Pound sterling', 'currency_code' => 'GBP', 'symbol'=> 'GBP', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Russian ruble', 'currency_code' => 'RUB', 'symbol'=> 'RUB', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Singapore dollar', 'currency_code' => 'SGD', 'symbol'=> 'SGD', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Swedish krona', 'currency_code' => 'SEK', 'symbol'=> 'SEK', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Swiss franc', 'currency_code' => 'CHF', 'symbol'=> 'CHF', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Thai baht', 'currency_code' => 'THB', 'symbol'=> 'THB', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'United States dollar', 'currency_code' => 'USD', 'symbol'=> 'USD', 'created'=>$created, 'modified'=>$modified ));
 
 		}
 
