@@ -373,6 +373,7 @@ class TransitQuote_Pro {
 		$cdb->define_table($db_config->get_config('companies'));
 		$cdb->define_table($db_config->get_config('contacts'));
 		$cdb->define_table($db_config->get_config('customers'));
+		$cdb->define_table($db_config->get_config('currencies'));
 		$cdb->define_table($db_config->get_config('quotes'));
 		$cdb->define_table($db_config->get_config('services'));
 		$cdb->define_table($db_config->get_config('vehicles'));
@@ -402,42 +403,104 @@ class TransitQuote_Pro {
 	 * @since    1.0.0
 	 */
 	public function insert_default_data($cdb){
-		//populate status table
-		$created = date('Y-m-d G:i:s');
-		$modified = $created;
-		// if($cdb->get_count('tablename')==0){ //can insert some default data here by replacing the table name and fields
-		// 	$cdb->update_row('ct_products', array('name'=>'TransitQuote Lite', 'description' => 'TransitQuote Lite', 'paddleid'=> '500997', 'created'=>$created, 'modified'=>$modified ));			
-		// };
+		self::insert_currencies();
+		self::insert_rates();
+		self::insert_payment_types();
+		self::insert_payment_status_types();
+		self::insert_request_types();
+		self::insert_services();
+		self::insert_status_types();
+		self::insert_vehicles();
+	}
+
+	private function insert_currencies(){
+
+		if($cdb->get_count('currencies')==0){
+
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;
+			
+			$cdb->update_row('currencies', array('name'=>'Australian dollar', 'code' => 'AUD', 'symbol'=> '&#36;', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Brazilian real', 'code' => 'BRL', 'symbol'=> 'BRL', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Canadian dollar', 'code' => 'CAD', 'symbol'=> 'CAD', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Czech koruna', 'code' => 'CZK', 'symbol'=> 'CZK', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Danish krone', 'code' => 'DKK', 'symbol'=> 'DKK', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Euro', 'code' => 'EUR', 'symbol'=> 'EUR', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Hong Kong dollar', 'code' => 'HKD', 'symbol'=> 'HKD', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Hungarian forint', 'code' => 'HUF', 'symbol'=> 'HUF', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Israeli new shekel', 'code' => 'ILS', 'symbol'=> 'ILS', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Japanese yen', 'code' => 'JPY', 'symbol'=> 'JPY', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Malaysian ringgit', 'code' => 'MYR', 'symbol'=> 'MYR', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Mexican peso', 'code' => 'MXN', 'symbol'=> 'MXN', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'New Taiwan dollar', 'code' => 'TWD', 'symbol'=> 'TWD', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'New Zealand dollar', 'code' => 'NZD', 'symbol'=> 'NZD', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Norwegian krone', 'code' => 'NOK', 'symbol'=> 'NOK', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Philippine peso', 'code' => 'PHP', 'symbol'=> 'PHP', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Polish złoty', 'code' => 'PLN', 'symbol'=> 'PLN', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Pound sterling', 'code' => 'GBP', 'symbol'=> 'GBP', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Russian ruble', 'code' => 'RUB', 'symbol'=> 'RUB', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Singapore dollar', 'code' => 'SGD', 'symbol'=> 'SGD', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Swedish krona', 'code' => 'SEK', 'symbol'=> 'SEK', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Swiss franc', 'code' => 'CHF', 'symbol'=> 'CHF', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'Thai baht', 'code' => 'THB', 'symbol'=> 'THB', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('currencies', array('name'=>'United States dollar', 'code' => 'USD', 'symbol'=> 'USD', 'created'=>$created, 'modified'=>$modified ));
+
+		}
+
+	}
+
+
+	private function insert_rates(){
 		if($cdb->get_count('rates')==0){
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;
 			$cdb->update_row('rates', array('service_type_id'=>1, 'distance' => '30', 'amount'=> '600', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('rates', array('service_type_id'=>1, 'distance' => '0', 'unit'=> '12', 'created'=>$created, 'modified'=>$modified ));
 		};
+	}
 
+	private function insert_payment_types(){
 		if($cdb->get_count('payment_types')==0){
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;
 			$cdb->update_row('payment_types', array('name' => 'On Delivery', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_types', array('name' => 'PayPal', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_types', array('name' => 'Stripe', 'available'=>0, 'created'=>$created, 'modified'=>$modified ));
 		};
+	}
 
+	private function insert_payment_status_types(){
 		if($cdb->get_count('payment_status_types')==0){
-
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;
 			$cdb->update_row('payment_status_types', array('name' => 'wating', 'description'=> 'Awaiting Payment', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_status_types', array('name' => 'recieved', 'description'=> 'Payment Recieved', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_status_types', array('name' => 'failed', 'description'=> 'Payment Failed', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_status_types', array('name' => 'pending', 'description'=> 'Payment Pending', 'created'=>$created, 'modified'=>$modified ));					
 		};
+	}
 
+	private function insert_request_types(){
 		if($cdb->get_count('request_types')==0){
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;
 			$cdb->update_row('request_types', array('name'=>'Created', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('request_types', array('name'=>'Executed', 'created'=>$created, 'modified'=>$modified ));
 		};
-		
+	}
 
+	private function insert_services(){
 		if($cdb->get_count('services')==0){
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;
 			$cdb->update_row('services', array('name'=>'Standard', 'description' =>'Standard rates and turnaround apply.', 'amount'=>0,' created'=>$created, 'modified'=>$modified ));
 		};
+	}
 
+	private function insert_status_types(){
 		if($cdb->get_count('status_types')==0){
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;
 			$cdb->update_row('status_types', array('name' => 'New', 'description'=> 'New request has been received', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('status_types', array('name' => 'Assigned', 'description'=> 'Request has been assigned to a courier','created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('status_types', array('name' => 'In Progress', 'description'=> 'Courier is travelling to collect','created'=>$created, 'modified'=>$modified ));
@@ -446,14 +509,13 @@ class TransitQuote_Pro {
 			$cdb->update_row('status_types', array('name' => 'Completed', 'description'=> 'Payment has been received','created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('status_types', array('name' => 'Cancelled', 'description'=> 'Customer cancelled the delivery','created'=>$created, 'modified'=>$modified ));
 		};
+	}
 
-
+	private function insert_vehicles(){
 		if($cdb->get_count('vehicles')==0){
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;
 			$cdb->update_row('vehicles', array('name'=>'Van', 'description' =>'Standard delivery vehicle.', 'amount'=>0,' created'=>$created, 'modified'=>$modified ));
 		};
-
-		return;
 	}
-	
-
 }

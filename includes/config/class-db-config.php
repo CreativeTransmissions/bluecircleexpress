@@ -87,6 +87,85 @@ private function config_companies(){
 
 }
 
+/* holds list of companies */
+private function config_currencies(){
+ return array (
+  'name' => 'currencies',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'desc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d'
+    ),
+    'name' => 
+    array (
+      'name' => 'name',
+      'type' => 'varchar(45)',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+   'code' => 
+    array (
+      'name' => 'code',
+      'type' => 'varchar(5)',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'symbol' => 
+    array (
+      'name' => 'name',
+      'type' => 'varchar(10)',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'datetime',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'datetime',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
+
 /* contacts at the pick up and drop off locations */
 private function config_contacts(){
  return array (
