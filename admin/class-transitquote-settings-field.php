@@ -44,6 +44,13 @@ class TransitQuote_Pro_Settings_Field {
         if(empty($this->config)){
             return false;
         };
+
+        if(isset($this->config['table'])){
+            self::load_options();
+        };
+
+        self::set_start_value();
+
         add_settings_field( $this->config['id'],
                             $this->config['label'], 
                             array( $this, 'render' ), 
@@ -51,4 +58,17 @@ class TransitQuote_Pro_Settings_Field {
                             $this->section_id);
     }
 
+    private function load_options(){
+        $this->config['options'] = $this->cdb->get_rows($this->config['table'], array(), array($this->config['id_field'], $this->config['display_field']));
+    }
+
+    private function set_start_value(){
+        if(isset($this->config['default'])){
+            if(empty($this->value)){
+                $this->value = $this->config['default'];
+            } else {
+                echo 'have start value';
+            }
+        };
+    }
 }

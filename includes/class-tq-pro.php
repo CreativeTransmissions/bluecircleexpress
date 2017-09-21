@@ -404,17 +404,17 @@ class TransitQuote_Pro {
 	 * @since    1.0.0
 	 */
 	public function insert_default_data($cdb){
-		self::insert_currencies();
-		self::insert_rates();
-		self::insert_payment_types();
-		self::insert_payment_status_types();
-		self::insert_request_types();
-		self::insert_services();
-		self::insert_status_types();
-		self::insert_vehicles();
+		self::insert_currencies($cdb);
+		self::insert_rates($cdb);
+		self::insert_payment_types($cdb);
+		self::insert_payment_status_types($cdb);
+		self::insert_request_types($cdb);
+		self::insert_services($cdb);
+		self::insert_status_types($cdb);
+		self::insert_vehicles($cdb);
 	}
 
-	private function insert_currencies(){
+	private function insert_currencies($cdb){
 
 		if($cdb->get_count('currencies')==0){
 
@@ -451,7 +451,7 @@ class TransitQuote_Pro {
 	}
 
 
-	private function insert_rates(){
+	private function insert_rates($cdb){
 		if($cdb->get_count('rates')==0){
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
@@ -459,7 +459,7 @@ class TransitQuote_Pro {
 		};
 	}
 
-	private function insert_payment_types(){
+	private function insert_payment_types($cdb){
 		if($cdb->get_count('payment_types')==0){
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
@@ -469,7 +469,7 @@ class TransitQuote_Pro {
 		};
 	}
 
-	private function insert_payment_status_types(){
+	private function insert_payment_status_types($cdb){
 		if($cdb->get_count('payment_status_types')==0){
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
@@ -480,7 +480,7 @@ class TransitQuote_Pro {
 		};
 	}
 
-	private function insert_request_types(){
+	private function insert_request_types($cdb){
 		if($cdb->get_count('request_types')==0){
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
@@ -489,7 +489,7 @@ class TransitQuote_Pro {
 		};
 	}
 
-	private function insert_services(){
+	private function insert_services($cdb){
 		if($cdb->get_count('services')==0){
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
@@ -497,7 +497,7 @@ class TransitQuote_Pro {
 		};
 	}
 
-	private function insert_status_types(){
+	private function insert_status_types($cdb){
 		if($cdb->get_count('status_types')==0){
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
@@ -511,7 +511,7 @@ class TransitQuote_Pro {
 		};
 	}
 
-	private function insert_vehicles(){
+	private function insert_vehicles($cdb){
 		if($cdb->get_count('vehicles')==0){
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;

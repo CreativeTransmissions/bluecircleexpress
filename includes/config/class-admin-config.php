@@ -106,7 +106,11 @@ class Admin_Config {
                                                       'currency'=>array(
                                                         'id'=>'currency',
                                                         'label'=>'Currency Symbol',
-                                                        'type'=>'input',
+                                                        'type'=>'select',
+                                                        'table'=>'currencies',
+                                                        'display_field'=>'name',
+                                                        'id_field'=>'id',
+                                                        'default'=>18,
                                                         'help'=>'Please enter the currency symbol or text to display. For example: £, $, GBP, USD etc..'),
                                                       'max_address_pickers'=>array(
                                                         'id'=>'stops_allowed',
