@@ -135,7 +135,7 @@ private function config_currencies(){
     ),
     'symbol' => 
     array (
-      'name' => 'name',
+      'name' => 'symbol',
       'type' => 'varchar(10)',
       'null' => 'not null',
       'auto' => '',
