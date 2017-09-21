@@ -149,7 +149,7 @@ class TransitQuote_Pro_Admin {
 	}
 
 	public function init_data(){
-		$this->currency = $this->plugin->get_currency();
+		$this->currency = $this->plugin->get_currency_code();
    		$this->distance_unit = $this->plugin->get_distance_unit();
 	}
 	

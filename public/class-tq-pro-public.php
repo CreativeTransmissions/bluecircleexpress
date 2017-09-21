@@ -125,7 +125,7 @@ class TransitQuote_Pro_Public {
 		$this->start_lat = $this->get_setting('tq_pro_quote_options', 'start_lat','55.870853');
 		$this->start_lng = $this->get_setting('tq_pro_quote_options', 'start_lng', '-4.252036');
 		$this->start_place_name = $this->get_setting('tq_pro_quote_options', 'start_place_name', 'Glasgow');
-		$this->currency = self::get_currency();
+		self::get_currency_code();
 		$this->distance_unit = self::get_distance_unit();
 		$this->min_notice = $this->get_setting('tq_pro_quote_options', 'min_notice', '24:00');
 		$this->min_notice_charge = $this->get_setting('tq_pro_quote_options', 'min_notice_charge', '200');
@@ -366,7 +366,7 @@ class TransitQuote_Pro_Public {
     	$price = $this->quote['total'];
 
     	return array('name'=>self::get_description(),
-					'currency'=> self::get_currency(),
+					'currency'=> self::get_currency_code(),
 					'quantity'=>'1',
 					'order_no'=>$job_id,
 					'price'=>$price,
@@ -405,7 +405,7 @@ class TransitQuote_Pro_Public {
     											'job_id'=>$job_id,
 	    										'payment_id'=>$this->payment_id,
 	    										'payer_id'=>$this->payer_id,
-	    										'currency'=> self::get_currency(),
+	    										'currency'=> self::get_currency_code(),
 												'price'=>$price,
 											));
     	if($success===false){
@@ -1591,19 +1591,9 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_currency_code(){
-    	$currency_symbol = self::get_setting($this->tab_2_settings_key, 'currency', '$');
-    	switch ($currency_symbol) {
-    		case '$':
-    			$currency = 'USD';
-    			break;
-    		case '£':
-    			$currency = 'GBP';
-    			break;
-    		default:
-    			$currency = 'USD';
-    			break;
-    	}
-        return $currency;
+    	$this->currency = self::get_currency();
+    	$this->currency_code = $this->cdb->get_row('currencies', $this->currency);
+        return $this->currency_code;
     }
 
 	public function get_oldest_job_date(){

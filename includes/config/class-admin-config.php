@@ -79,7 +79,8 @@ class Admin_Config {
                                                       'id'=>'distance_unit',
                                                       'label'=>'Distance Unit',
                                                       'type'=>'select',
-                                                      'options'=>array('Kilometer', 'Mile')),
+                                                      'options'=>array('Kilometer', 'Mile'),
+                                                      'default'=>'Kilometer'),
                                                     'start_location'=>array(
                                                       'id'=>'start_location',
                                                       'label'=>'Start Location',
