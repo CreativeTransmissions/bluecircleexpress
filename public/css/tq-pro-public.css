@@ -1,6 +1,9 @@
 /* This stylesheet is used to style the public-facing components of the plugin. */
 
 /* General Purpose Styles */
+.full-width {
+	width: 100%
+}
 .right {
 	float: right !important;
 }
@@ -13,6 +16,12 @@
 }
 .half {
 	width: 49.9%;
+}
+.tq-form .half-field{
+	width: 97%;
+}
+.tq-form .half-field-right{
+	margin-left: 3%;
 }
 .round {
   /* Safari 3-4, iOS 1-3.2, Android 1.6- */
@@ -256,9 +265,12 @@ form.tq-form .ideal-check.checked.focus {
 .tq-form label{
 	font-size: 16px;
 	color: #333333;
-	margin-bottom: 10px;
-	display: block;
+	margin-bottom: 0.25em;
+	display: inline-block;
 	cursor: pointer;
+}
+.tq-form .no-address{
+	float: right;
 }
 .tq-row{
 	padding: 5px 0;
@@ -411,6 +423,12 @@ form.tq-form select option{
 	.tq-form textarea,
 	.tq-form input{
 		margin-bottom: 30px;
+	}
+	.tq-form .half-field-right {
+		margin-left: 0;
+	}
+	.tq-form .half-field {
+		width: 100%;
 	}
 }
 @media screen and (max-width: 500px){

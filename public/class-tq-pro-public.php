@@ -127,8 +127,8 @@ class TransitQuote_Pro_Public {
 		$this->start_place_name = $this->get_setting('tq_pro_quote_options', 'start_place_name', 'Glasgow');
 		self::get_currency_code();
 		$this->distance_unit = self::get_distance_unit();
-		$this->min_notice = $this->get_setting('tq_pro_quote_options', 'min_notice', '24:00');
-		$this->min_notice_charge = $this->get_setting('tq_pro_quote_options', 'min_notice_charge', '200');
+		$this->min_notice = $this->get_setting('tq_pro_quote_options', 'min_notice', '');
+		$this->min_notice_charge = $this->get_setting('tq_pro_quote_options', 'min_notice_charge', '');
 		$this->quote_element = $this->get_setting('tq_pro_quote_options', 'quote_element', 'quote');
 		$this->api_key = self::get_api_key();
 		$this->api_string = self::get_api_string();
@@ -234,7 +234,7 @@ class TransitQuote_Pro_Public {
 	public function get_prefix(){
 		return $this->prefix;
 	}
-	
+
 	private function get_rates(){
 	   	$plugin = new TransitQuote_Pro();
 		$this->cdb = $plugin->get_custom_db();
