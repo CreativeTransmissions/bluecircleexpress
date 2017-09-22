@@ -23,6 +23,12 @@
 .tq-form .half-field-right{
 	margin-left: 3%;
 }
+.tq-form .text-center{
+	text-align: center;
+}
+.tq-form .picker-btn {
+	margin-top: 0.75em;
+}
 .round {
   /* Safari 3-4, iOS 1-3.2, Android 1.6- */
   -webkit-border-radius: 3px; 
@@ -444,7 +450,8 @@ button.ui-datepicker-current {
 .requestform .bt-flabels__error-desc{
     margin: 30px 0 -9px 9px;
     color: rgb(227, 134, 119) !important;
-    right: 27px !important;
+    right: 0px !important;
+    top: 0px !important;
 }
 .requestform  .progress{background-color: transparent !important;height: auto;}
 .requestform .request-contact-form h2 {
