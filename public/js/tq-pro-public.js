@@ -429,6 +429,9 @@
 
 				if(this.hasValidPaymentMethod(response)){
 					var paymentMethod = this.getPaymentMethodFromResponse(response);
+					if(paymentMethod==1){
+						$('.on-delivery-msg-succcess').html(response.success_message);
+					};
 					this.showPaymentButton(paymentMethod);
 				} else {
 					// just returning the quote
@@ -483,6 +486,7 @@
 			showPaymentButton: function(paymentMethod){
 				switch(paymentMethod){
 					case 1:
+
 						$('.on-delivery').show();
 					break;
 					case 2:

@@ -112,7 +112,7 @@ class Admin_Config {
                                                         'display_field'=>'name',
                                                         'id_field'=>'id',
                                                         'default'=>18,
-                                                        'help'=>'Please enter the currency symbol or text to display. For example: £, $, GBP, USD etc..'),
+                                                        'help'=>'Please select the currency used for quotes and PayPal payments.'),
                                                       'max_address_pickers'=>array(
                                                         'id'=>'stops_allowed',
                                                         'label'=>'Maximum Destinations',
@@ -128,17 +128,20 @@ class Admin_Config {
                                                         'id'=>'min_notice_charge',
                                                         'label'=>'Minimum Notice Charge',
                                                         'type'=>'input',
-                                                        'help'=>'Please enter the additional charge for jobs booked within 24 hours..'),
+                                                        'help'=>'Please enter the additional charge for jobs booked within 24 hours..',
+                                                        'default'=>0),
                                                       'success_message'=>array(
                                                         'id'=>'success_message',
                                                         'label'=>'Success Message',
                                                         'type'=>'textarea',
-                                                        'help'=>'Please enter the message that will be displayed to the customer after their quote has been saved and displayed on screen. This should explain any next steps they must take to confirm their booking.'),
+                                                        'help'=>'Please enter the message that will be displayed to the customer after their quote has been saved and displayed on screen. This should explain any next steps they must take to confirm their booking.',
+                                                        'default'=>'Thank you for your order. We will be in touch to confirm your order as soon as possible.'),
                                                       'quote_element'=>array(
                                                         'id'=>'quote_element',
                                                         'label'=>'Quote Display Element',
                                                         'help'=>'Please enter the class or id of the html element in which to display the final quote.<br/>Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.',
-                                                        'type'=>'input')
+                                                        'type'=>'input',
+                                                        'default'=>'quote')
                                                     )
                                                 )
 
@@ -166,17 +169,20 @@ class Admin_Config {
                                                         'id'=>'from_name',
                                                         'label'=>'Contact Name for Customer Quote Emails',
                                                         'type'=>'input',
-                                                        'help'=>'Please enter the <em>From</em> email address that customers will recieve their quote emails from.<br/>Example: <b>customerservice@mycompany.com</b>'),
+                                                        'help'=>'Please enter the <em>contact or business name</em> that customers will recieve their quote emails from.<br/>Example: <b>TransitQuote Customer Service</b>',
+                                                        'default'=>'Your Business Name'),
                                                       'customer_subject'=>array(
                                                         'id'=>'customer_subject',
                                                         'label'=>'Customer Quote Email Subject',
                                                         'type'=>'input',
-                                                        'help'=>'Please enter the email subject for customer quote emails.<br/>Example: <b>Your Tranporation Quote</b>'),
+                                                        'help'=>'Please enter the email subject for customer quote emails.<br/>Example: <b>Your Tranporation Quote</b>',
+                                                        'default'=>'Your Tranporation Quote'),
                                                       'customer_message'=>array(
                                                         'id'=>'customer_message',
                                                         'label'=>'Customer Quote Email Message',
                                                         'type'=>'textarea',
-                                                        'help'=>'Please enter the message to your customer that will appear above the journey details and quote.')
+                                                        'help'=>'Please enter the message to your customer that will appear above the journey details and quote.',
+                                                        'default'=>'Thank you for your order. Your tranporation details and quote are below.')
                                                     )
                                               ))
                               ),

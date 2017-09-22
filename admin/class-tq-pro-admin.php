@@ -520,18 +520,17 @@ class TransitQuote_Pro_Admin {
 						q. total as amount,
 						pt.currency as currency,
 						pt.paypal_status as paypal_status
-					FROM wp_'.$this->prefix.'_transactions_paypal pt
-						inner join wp_'.$this->prefix.'_jobs jobs 
+					FROM wp_".$this->prefix."_transactions_paypal pt
+						inner join wp_".$this->prefix."_jobs jobs 
 							on pt.job_id = jobs.id
 
-						inner join wp_'.$this->prefix.'_customers c 
+						inner join wp_".$this->prefix."_customers c 
 							on c.id = jobs.customer_id 
 
-						inner join wp__quotes q 
+						inner join wp_".$this->prefix."_quotes q 
 							on q.id = jobs.accepted_quote_id
 				".$filter_sql."
 				order by pt.id desc;";
-
 		$data = $this->cdb->query($sql);
 		return $data;
     }

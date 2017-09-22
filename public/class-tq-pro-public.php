@@ -512,6 +512,7 @@ class TransitQuote_Pro_Public {
 	    }
 		$this->currency_code = self::get_currency_code();
 		$this->distance_unit = self::get_distance_unit();
+		$this->success_message = self::get_success_message();
 
 		if($layout==1){ //Inline Map public
 			$this->view = 'partials/tq-pro-inline-display.php';
@@ -1091,7 +1092,7 @@ class TransitQuote_Pro_Public {
 		};
 
 		return array(	'success'=>'true',
-						'success_message'=>'<h2>Thank You.</h2><p>Your job has now been booked with payment due on delivery. Your reference number is: '.$job_id.'</p>',
+						'success_message'=>'<h2>Thank You.</h2><p>Your job has now been booked with payment due on delivery.<br/>Your reference number is: '.$job_id.'</p>',
 					 	'payment_method'=>1);
 
 	}

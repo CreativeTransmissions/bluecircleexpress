@@ -49,7 +49,7 @@ class TransitQuote_Pro_Settings_Field {
             self::load_options();
         };
 
-        self::set_start_value();
+        $this->set_start_value();
 
         add_settings_field( $this->config['id'],
                             $this->config['label'], 

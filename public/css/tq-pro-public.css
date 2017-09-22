@@ -23,7 +23,8 @@
 .tq-form .half-field-right{
 	margin-left: 3%;
 }
-.tq-form .text-center{
+.tq-form .text-center,
+.payment-result .text-center {
 	text-align: center;
 }
 .tq-form .picker-btn {

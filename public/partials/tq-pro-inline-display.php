@@ -110,8 +110,10 @@
     <input class="basicCost" type="hidden" name="distance_cost" value=""/>
 
 </form>
-<div id="on-delivery" style="display: none;">
-<div class="on-delivery-msg-succcess" style="display: none;">Thank you! Your has been booked with payment due on delivery.</div>
+<div class="payment-result">
+    <div class="on-delivery text-center" style="display: none;">
+        <div class="on-delivery-msg-succcess on-delivery" style="display: none;"><?php echo $this->success_message; ?></div>
+    </div>
 </div>
 <div id="paypal" style="display: none;">
     <?php
