@@ -231,6 +231,10 @@ class TransitQuote_Pro_Public {
 		};
 	}
 
+	public function get_prefix(){
+		return $this->prefix;
+	}
+	
 	private function get_rates(){
 	   	$plugin = new TransitQuote_Pro();
 		$this->cdb = $plugin->get_custom_db();
