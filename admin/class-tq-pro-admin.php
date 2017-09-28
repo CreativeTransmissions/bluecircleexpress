@@ -849,7 +849,7 @@ class TransitQuote_Pro_Admin {
 				$table_output_name = $table;
 				break;
 			case 'transactions_paypal':
-				$empty_colspan = 5;
+				$empty_colspan = 7;
 				$table_output_name = 'payments';
 				break;
 			default:
