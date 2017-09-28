@@ -138,10 +138,10 @@ class TransitQuote_Pro_Admin {
 	 * @since    1.0.0
 	 */
 	public function settings_admin_init() {
-		$this->ajax = new TransitQuote_Pro\CT_AJAX();
+		$this->ajax = new TransitQuote_Pro3\CT_AJAX();
 		$this->cdb = TransitQuote_Pro::get_custom_db();
 		$this->plugin->cdb = $this->cdb;
-		$this->dbui = new TransitQuote_Pro\CT_DBUI(array('cdb'=>$this->cdb));
+		$this->dbui = new TransitQuote_Pro3\CT_DBUI(array('cdb'=>$this->cdb));
 		$this->tabs_config = $this->plugin->define_tab_config();
 		$this->update_config_defaults();
 		$this->init_data();

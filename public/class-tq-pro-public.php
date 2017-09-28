@@ -59,9 +59,9 @@ class TransitQuote_Pro_Public {
 		$this->version = $version;
 		$this->debug = true;
 		$this->log_requests = true;
-		$this->prefix = 'tq_pro';
+		$this->prefix = 'tq_pro3';
 		$this->cdb = TransitQuote_Pro::get_custom_db();
-		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 	}
 
@@ -201,7 +201,7 @@ class TransitQuote_Pro_Public {
 		if($this->debug==true){		
 			$plugin = new TransitQuote_Pro();	
 			$this->cdb = $plugin->get_custom_db();
-			$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+			$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 			$this->ajax->error_log_request($error, 'log');
 			if(is_array($error)){
 				echo '<pre>';
@@ -216,7 +216,7 @@ class TransitQuote_Pro_Public {
 	}
 
 	public function define_tab_config(){
-		return TransitQuote_Pro\Admin_Config::get_config('tabs');
+		return TransitQuote_Pro3\Admin_Config::get_config('tabs');
 	}
 
 	public function load_settings(){
@@ -280,7 +280,7 @@ class TransitQuote_Pro_Public {
 		self::load_settings();
 
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 		if(!self::api_keys_are_present()){
 			add_action( 'admin_notices', array($this, 'api_key_notice') );
@@ -395,7 +395,7 @@ class TransitQuote_Pro_Public {
 		self::load_settings();
 
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
     	self::init_paypal();
 
@@ -490,7 +490,7 @@ class TransitQuote_Pro_Public {
 
 		$plugin = new TransitQuote_Pro();
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 		$this->pick_start_address = 'true';
 		// added layout option if given and inline then form will  be inline map else admin setting
@@ -746,7 +746,7 @@ class TransitQuote_Pro_Public {
 	public function tq_pro_save_job_callback(){
 		$this->plugin = new TransitQuote_Pro();	
 		$this->cdb = $this->plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Pro\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 		
 		// save job request from customer facing form
 		if($this->log_requests == true){

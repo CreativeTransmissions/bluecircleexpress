@@ -74,7 +74,7 @@ class TransitQuote_Pro {
 
 		$this->plugin_name = 'TransitQuote Pro';
 		$this->plugin_slug = 'tq-pro';
-		$this->version = '1.0.0';
+		$this->version = '3.0.0';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -367,8 +367,8 @@ class TransitQuote_Pro {
 
 	public static function get_custom_db(){
 		//define and register tables
-		$cdb = new TransitQuote_Pro\CT_CDB(array('prefix'=>'tq_pro'));
-		$db_config = new TransitQuote_Pro\DB_Config();
+		$cdb = new TransitQuote_Pro3\CT_CDB(array('prefix'=>'tq_pro3'));
+		$db_config = new TransitQuote_Pro3\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
 		$cdb->define_table($db_config->get_config('companies'));

@@ -11,7 +11,7 @@
  * @copyright 2016 Creative Transmissions
  */
 
-namespace TransitQuote_Pro;
+namespace TransitQuote_Pro3;
 class Admin_Config {
 
   public function __construct() {
