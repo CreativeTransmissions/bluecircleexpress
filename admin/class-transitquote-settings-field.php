@@ -35,6 +35,7 @@ class TransitQuote_Pro_Settings_Field {
 		$this->cdb = $this->admin->cdb;
         $this->page = $this->config['page'];
         $this->value = $this->config['value'];
+       // echo $this->config['id'].' config value: '.$this->value.'<br/>';
         $this->help = $this->config['help'];
         $this->field_name = $this->page.'['.$this->config['id'].']';
 	}

@@ -114,11 +114,11 @@ class Admin_Config {
                                                         'default'=>18,
                                                         'help'=>'Please select the currency used for quotes and PayPal payments.'),
                                                       'max_address_pickers'=>array(
-                                                        'id'=>'stops_allowed',
+                                                        'id'=>'max_address_pickers',
                                                         'label'=>'Maximum Destinations',
                                                         'type'=>'input',
                                                         'help'=>'Customers can request one or more destinations as part of the same job. If multiple destinations are allowed you can enter a number to limit the number of stops on one route.',
-                                                        'value'=>3),
+                                                        'default'=>3),
                                                       'min_notice'=>array(
                                                         'id'=>'min_notice',
                                                         'label'=>'Minimum Notice Period (HH:MM)',

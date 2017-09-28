@@ -291,7 +291,7 @@ class TransitQuote_Pro_Admin {
 			$this->start_lat = $this->plugin->get_setting('tq_pro_quote_options', 'start_lat','55.870853');
 			$this->start_lng = $this->plugin->get_setting('tq_pro_quote_options', 'start_lng', '-4.252036');
 			$this->min_notice = $this->plugin->get_setting('tq_pro_quote_options', 'min_notice', '24:00');
-			$this->min_notice_charge = $this->plugin->get_setting('tq_pro_quote_options', 'min_notice_charge', '200');
+			$this->min_notice_charge = $this->plugin->get_setting('tq_pro_quote_options', 'min_notice_charge', '0');
 			$this->oldest_job_date = $this->plugin->get_oldest_job_date();
 			$this->api_string = $this->plugin->get_api_string();
 			
