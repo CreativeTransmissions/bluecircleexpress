@@ -218,7 +218,8 @@ class Admin_Config {
                                                         'id'=>'sandbox',
                                                         'label'=>'Use Sandbox/Testing Mode',
                                                         'type'=>'checkbox',
-                                                        'help'=>'When this box is ticked all payments will be simulated using the PayPal sandbox website.'
+                                                        'help'=>'When this box is ticked all payments will be simulated using the PayPal sandbox website.',
+                                                        'default'=>1
                                                      )
                                                      )
                                                   )
