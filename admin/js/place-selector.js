@@ -562,7 +562,6 @@
 					}
 
 					var options = this.getMapOptions();
-					console.log(options)
 					this.gmap = $(this.mapElement[0]).gmap(options);
 
 					//store jquery version

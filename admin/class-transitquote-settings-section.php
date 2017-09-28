@@ -57,7 +57,9 @@ class TransitQuote_Pro_Settings_Section {
             $field_config['section_id'] = $this->section_id;
             switch ($field_config['type']) {
                 case 'addresspicker':
-                    $field = new TransitQuote_Pro_Settings_Field_AddressPicker($field_config);
+                    if($this->admin->has_gmaps_api_key()){
+                         $field = new TransitQuote_Pro_Settings_Field_AddressPicker($field_config);
+                    };
                     break;
                 case 'checkbox':
                     $field = new TransitQuote_Pro_Settings_Field_Checkbox($field_config);

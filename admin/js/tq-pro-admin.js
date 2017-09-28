@@ -200,7 +200,6 @@
 				},
 
 				initMapTabEvents: function(){
-					console.log('initQuoteTabEvents');
 					$(document).on('keyup keypress', 'form input[type="text"]', function(e) {
 					  if(e.keyCode == 13) {
 					    e.preventDefault();

@@ -320,18 +320,10 @@ class TransitQuote_Pro_Admin {
 
 	}
 
-
-
-
-
-
-
-
-
-
 	private function debug($data = null){
 		$this->plugin->debug($data);
 	}
+
 	public function get_job($job_id = null){
     	//get job record from property or database
     	if(empty($job_id)){
@@ -533,6 +525,11 @@ class TransitQuote_Pro_Admin {
 				order by pt.id desc;";
 		$data = $this->cdb->query($sql);
 		return $data;
+    }
+
+    public function has_gmaps_api_key(){
+    	$key = $this->plugin->get_api_key();
+    	return !empty($key);
     }
 
 	public function load_details_callback(){
