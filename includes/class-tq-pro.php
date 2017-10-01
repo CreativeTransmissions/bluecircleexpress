@@ -266,7 +266,7 @@ class TransitQuote_Pro {
 		$this->loader->add_filter( 'plugin_action_links_'.$plugin_basename, $plugin_admin, 'add_action_links' );
 
 
-		$this->loader->add_action( 'wp_ajax_save_record', $plugin_admin, 'save_record_callback' );
+		$this->loader->add_action( 'wp_ajax_tq_pro3_save_record', $plugin_admin, 'save_record_callback' );
 		$this->loader->add_action( 'wp_ajax_delete_record', $plugin_admin, 'delete_record_callback' );
 		$this->loader->add_action( 'wp_ajax_select_options', $plugin_admin, 'select_options_callback' );
 		$this->loader->add_action( 'wp_ajax_tq_pro_load_table', $plugin_admin, 'load_table_callback' );

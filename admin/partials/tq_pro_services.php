@@ -16,7 +16,7 @@
 		</div>
 	</fieldset>
 	<input type="hidden" name="id" value=""/>
-	<input type="hidden" name="action" value="save_record"/>
+	<input type="hidden" name="action" value="tq_pro3_save_record"/>
 	<input type="hidden" name="update" value="services"/>
 	<div class="inline-field">
 		<?php submit_button('Save service', 'primary', 'save_service', true, array('class'=>'submit')); ?>

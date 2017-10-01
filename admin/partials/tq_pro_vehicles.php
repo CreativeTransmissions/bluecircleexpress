@@ -29,7 +29,7 @@
 	</div>
 	<div class="clear"></div>
 	<input type="hidden" name="id" value=""/>
-	<input type="hidden" name="action" value="save_record"/>
+	<input type="hidden" name="action" value="tq_pro3_save_record"/>
 	<input type="hidden" name="update" value="vehicles"/>	
 </form>
 <form id="table-form" class="admin-form" method="post" action="options.php" autocomplete="false">
