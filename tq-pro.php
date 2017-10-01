@@ -68,7 +68,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-tq-pro.php';
  */
 function run_TransitQuote_Pro() {
 
-	$plugin = new TransitQuote_Pro();
+	$plugin = new TransitQuote_Pro3();
 	$plugin->run();
 
 }

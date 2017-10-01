@@ -27,7 +27,7 @@
  * @subpackage TransitQuote_Pro/includes
  * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
-class TransitQuote_Pro {
+class TransitQuote_Pro3 {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -269,7 +269,7 @@ class TransitQuote_Pro {
 		$this->loader->add_action( 'wp_ajax_tq_pro3_save_record', $plugin_admin, 'save_record_callback' );
 		$this->loader->add_action( 'wp_ajax_delete_record', $plugin_admin, 'delete_record_callback' );
 		$this->loader->add_action( 'wp_ajax_select_options', $plugin_admin, 'select_options_callback' );
-		$this->loader->add_action( 'wp_ajax_tq_pro_load_table', $plugin_admin, 'load_table_callback' );
+		$this->loader->add_action( 'wp_ajax_tq_pro3_load_table', $plugin_admin, 'load_table_callback' );
 		$this->loader->add_action( 'wp_ajax_load_details', $plugin_admin, 'load_details_callback' );
 		$this->loader->add_action( 'wp_ajax_transactions_paypal', $plugin_admin, 'load_transactions_paypal_callback' );
 		$this->loader->add_action( 'wp_ajax_update_job_status', $plugin_admin, 'update_job_status_callback');

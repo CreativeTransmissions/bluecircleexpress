@@ -60,7 +60,7 @@ class TransitQuote_Pro_Public {
 		$this->debug = true;
 		$this->log_requests = true;
 		$this->prefix = 'tq_pro3';
-		$this->cdb = TransitQuote_Pro::get_custom_db();
+		$this->cdb = TransitQuote_Pro3::get_custom_db();
 		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 	}
@@ -201,7 +201,7 @@ class TransitQuote_Pro_Public {
 
 	public function debug($error){
 		if($this->debug==true){		
-			$plugin = new TransitQuote_Pro();	
+			$plugin = new TransitQuote_Pro3();	
 			$this->cdb = $plugin->get_custom_db();
 			$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 			$this->ajax->error_log_request($error, 'log');
@@ -238,7 +238,7 @@ class TransitQuote_Pro_Public {
 	}
 
 	private function get_rates(){
-	   	$plugin = new TransitQuote_Pro();
+	   	$plugin = new TransitQuote_Pro3();
 		$this->cdb = $plugin->get_custom_db();
     	$rates = $this->cdb->get_rows('rates');
 		return $rates;
@@ -278,7 +278,7 @@ class TransitQuote_Pro_Public {
     }
 
 	public function init_plugin(){
-		$plugin = new TransitQuote_Pro();
+		$plugin = new TransitQuote_Pro3();
 		self::load_settings();
 
 		$this->cdb = $plugin->get_custom_db();
@@ -393,7 +393,7 @@ class TransitQuote_Pro_Public {
 
     public function execute_paypal_payment(){
 
-    	$plugin = new TransitQuote_Pro();
+    	$plugin = new TransitQuote_Pro3();
 		self::load_settings();
 
 		$this->cdb = $plugin->get_custom_db();
@@ -490,7 +490,7 @@ class TransitQuote_Pro_Public {
 		global $add_my_script_flag;
 		$add_my_script_flag = true;
 
-		$plugin = new TransitQuote_Pro();
+		$plugin = new TransitQuote_Pro3();
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
@@ -746,7 +746,7 @@ class TransitQuote_Pro_Public {
 
 	/*** Front end ajax methods ***/
 	public function tq_pro_save_job_callback(){
-		$this->plugin = new TransitQuote_Pro();	
+		$this->plugin = new TransitQuote_Pro3();	
 		$this->cdb = $this->plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 		
@@ -1231,7 +1231,7 @@ class TransitQuote_Pro_Public {
     }
 
 	public function get_job_details($job = null){
-		$plugin = new TransitQuote_Pro();	
+		$plugin = new TransitQuote_Pro3();	
 		$this->cdb = $plugin->get_custom_db();
 		//add the details to a job record
 
@@ -1357,8 +1357,9 @@ class TransitQuote_Pro_Public {
 		return $record_data;
 	}
 	public function save_record($table, $record_data){
-		//Save the main event record
-		//$this->ajax->pa($record_data);
+		////Save the main event record
+	//	$prefix = $this->cdb->get_prefix();
+	//	$this->ajax->pa(array('prefix'=>$prefix));
 
 		//save or update
 		$rec_id = $this->cdb->update_row($table, $record_data);
@@ -1516,7 +1517,7 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_payment_buttons(){
-    	$plugin = new TransitQuote_Pro();
+    	$plugin = new TransitQuote_Pro3();
     	$this->cdb = $plugin->get_custom_db();
     	$methods = $this->cdb->get_rows('payment_types', array('available'=>1), array('id', 'name'), null);
     	if(count($methods)===0){
@@ -1576,7 +1577,7 @@ class TransitQuote_Pro_Public {
     }
 
 	public function get_oldest_job_date(){
-		$plugin = new TransitQuote_Pro();
+		$plugin = new TransitQuote_Pro3();
 		$this->cdb = $plugin->get_custom_db();
 		$jobs = $this->cdb->get_rows('jobs', array(), array('id', 'created'), null);
 		if(empty($jobs)){

@@ -139,7 +139,7 @@ class TransitQuote_Pro_Admin {
 	 */
 	public function settings_admin_init() {
 		$this->ajax = new TransitQuote_Pro3\CT_AJAX();
-		$this->cdb = TransitQuote_Pro::get_custom_db();
+		$this->cdb = TransitQuote_Pro3::get_custom_db();
 		$this->plugin->cdb = $this->cdb;
 		$this->dbui = new TransitQuote_Pro3\CT_DBUI(array('cdb'=>$this->cdb));
 		$this->tabs_config = $this->plugin->define_tab_config();
@@ -893,7 +893,7 @@ class TransitQuote_Pro_Admin {
 		$table = $this->ajax->param(array('name'=>'update'));
 		$update_id = $this->ajax->param(array('name'=>'id', 'optional'=>true));
 		$refresh = $this->ajax->param(array('name'=>'refresh', 'optional'=>true));
-		$record_data = self::save($table);
+		$record_data = $this->plugin->save($table);
 		if($record_data === false){
 			$this->ajax->respond(array('success'=>'false',
 										 'msg'=>'Unable to save records',
@@ -925,83 +925,5 @@ class TransitQuote_Pro_Admin {
 								 		'msg'=>'Unable to delete record'));
 		}
 	}
-
-
-
-	public function save($table, $idx = null, $defaults = null){
-		if(empty($table)){
-			return false;
-		};
-		//get param data
-		$record_data = self::get_record_data($table, $idx);
-		if(!empty($defaults)){
-			//merge with passed data
-			$record_data = array_merge($defaults, $record_data);
-		}
-
-		//save
-		$row_id = self::save_record($table, $record_data);
-		if($row_id === false){
-			$this->ajax->respond(array('success'=>'false',
-										 'msg'=>'Unable to save '.rtrim($table,'s'),
-                               		     'sql'=>$this->cdb->last_query));
-		}
-		$record_data['id'] = $row_id;		
-		return $record_data;
-	}
-	public function save_record($table, $record_data){
-		//save or update
-		$rec_id = $this->cdb->update_row($table, $record_data);
-
-		if($rec_id === false){
-			$this->ajax->respond(array('success' => 'false',
-                                    'msg'=>'Unable to update '.$table,
-                                    'sql'=>$this->cdb->last_query));
-		};
-
-		return $rec_id;
-	}
-	private function get_record_data($table, $idx = null){
-		//get params for records data from front end
-		//idx is a 0 based index for where more than one rec is passed
-		//get the field names to save
-		$fields = $this->cdb->get_table_col_names($table);
-		if($fields === false){
-			$this->ajax->respond(array('success' => 'false',
-                                    'msg'=>'Invalid table for update '.$table));
-		};
-
-		//append string to param name for instances of more than 1 rec
-		$idx_str = '';
-		if(is_numeric($idx)){
-			$idx_str = '_'.$idx;
-		};
-
-		//init the record array
-		$record_data = array();
-
-		//get parameters
-		foreach ($fields as $key => $field) {
-			switch($field){
-				case 'created':
-				case 'modified':
-					$record_data[$field] = date('Y-m-d G:i:s');
-					break;
-				default:
-					$field_name = $field.$idx_str;
-					//$this->ajax->pa($field_name);
-					$val = $this->ajax->param(array('name'=>$field_name, 'optional'=>true));
-					if(!empty($val)){
-						$record_data[$field] = sanitize_text_field($val);
-					};
-					if(strrpos($field, '_date')>-1){
-						$record_data[$field] = $this->cdb->mysql_date($record_data[$field]);
-					};				
-			};
-		};
-
-		return $record_data;
-	}
-	
 
 }
