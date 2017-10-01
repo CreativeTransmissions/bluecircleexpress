@@ -94,5 +94,5 @@
 		<div class="clear"></div>
 	</div>
 </div>
-<input type="hidden" name="action" value="tq_pro_save_job"/>
+<input type="hidden" name="action" value="tq_pro3_save_job"/>
 <input type="hidden" id="delivery_date" name="delivery_date" value=""/>

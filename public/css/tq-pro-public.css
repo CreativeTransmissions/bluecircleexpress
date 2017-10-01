@@ -60,9 +60,9 @@
 	width: 30%;
 }
 
-.tq-form .field {
+form.tq-form .field {
 	clear: left;
-	padding: 0.5em 1em 0.5em 0em;
+	padding: 0;
 }
 .calc-form .field .block-label{
 	display: block;
@@ -290,6 +290,10 @@ form.tq-form .ideal-check.checked.focus {
 .tq-row{
 	padding: 5px 0;
 }
+.tq-form fieldset.search-fields {
+	padding-bottom: 0;
+    margin-bottom: 0;
+}
 .tq-form textarea,
 .tq-form input,
 .tq-form select {
@@ -306,15 +310,18 @@ form.tq-form .ideal-check.checked.focus {
 }
 .tq-address-container {
 	background: #dddddd;
-	padding: 25px;
+	padding: 0.5em 1em;
 }
 /*.tq-form fieldset{
 	padding: 10px;
 	border:1px solid #dddddd;
 }*/
-.tq-form legend{
+form.tq-form legend{
 	font-size: 20px;
 	font-weight: bold;
+	background: transparent;
+    padding: 0;
+    margin: 0;
 }
 .tq-form .tq-payment-buttons {
 	text-align: center;
