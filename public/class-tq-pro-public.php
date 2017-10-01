@@ -367,7 +367,7 @@ class TransitQuote_Pro_Public {
 		return 'Sorry, we were unable to process your payment. Please check your PayPal account for more information.';
 	}
 
-    private function create_payment_item(int $job_id){
+    private function create_payment_item($job_id){
     	self::get_job_details_from_id($job_id);
     	$price = $this->quote['total'];
 
