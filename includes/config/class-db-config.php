@@ -87,7 +87,7 @@ private function config_companies(){
 
 }
 
-/* holds list of companies */
+/* holds list of currencies */
 private function config_currencies(){
  return array (
   'name' => 'currencies',
