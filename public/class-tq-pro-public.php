@@ -1826,7 +1826,7 @@ class TransitQuote_Pro_Public {
 		if(empty($quote)){
 			return false;
 		};		
-		$currency = self::get_currency();
+		$currency = self::get_currency_code();
 		$out = array();
 		foreach ($quote as $key => $value) {
 			//init new field
@@ -1835,20 +1835,20 @@ class TransitQuote_Pro_Public {
 			switch ($key) {
 				case 'total':
 					$field['label'] = 'Total';
-					$field['value'] = $currency.$value;
+					$field['value'] = $currency.' '.$value;
 					$out[] = $field;
 					break;
 				case 'rate_per_unit':
 					break;
 				case 'distance_cost':
 					$field['label'] = 'Distance Cost';
-					$field['value'] =$currency.$value;
+					$field['value'] = $currency.' '.$value;
 					$out[] = $field;
 					break;
 				case 'notice_cost':
 					if($value!=0){
 						$field['label'] = 'Short Notice Cost';
-						$field['value'] = $currency.$value;
+						$field['value'] = $currency.' '.$value;
 						$out[] = $field;					
 					}
 					break;
