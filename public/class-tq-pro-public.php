@@ -57,7 +57,7 @@ class TransitQuote_Pro_Public {
 		$this->plugin_name = $plugin_name;
 		$this->plugin_slug = $plugin_slug;
 		$this->version = $version;
-		$this->debug = true;
+		$this->debug = false;
 		$this->log_requests = true;
 		$this->prefix = 'tq_pro3';
 		$this->cdb = TransitQuote_Pro3::get_custom_db();

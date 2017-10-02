@@ -81,7 +81,7 @@ class TransitQuote_Pro3 {
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 		$this->api_hooks();
-		$this->debug = true;
+		$this->debug = false;
 		$this->log_requests = false;
 	}
 
