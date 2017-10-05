@@ -283,12 +283,16 @@ form.tq-form .ideal-check.checked.focus {
 	margin-bottom: 0.25em;
 	display: inline-block;
 	cursor: pointer;
+	text-align: left;
 }
 .tq-form .no-address{
 	float: right;
 }
 .tq-row{
 	padding: 5px 0;
+}
+.tq-form .bt-flabels__wrapper {
+	text-align: left;
 }
 .tq-form fieldset.search-fields {
 	padding-bottom: 0;
@@ -321,6 +325,7 @@ form.tq-form legend{
 	font-weight: bold;
 	background: transparent;
     padding: 0;
+    text-align: left;
     margin: 0;
 }
 .tq-form .tq-payment-buttons {
@@ -430,7 +435,9 @@ form.tq-form select option{
 	background-color: #fff;
 	color: #000;
 }
-
+.tq-form .add-waypoint {
+		float: left;
+	}
 
 @media screen and (max-width: 800px){
 	.bt-flabels__error-desc{
@@ -451,10 +458,16 @@ form.tq-form select option{
 		width: 100%;
 	}
 }
+
+
 @media screen and (max-width: 500px){
 	.tq-col48{
 		width: 100%;
 	}
+	.tq-form .no-address {
+		float: left;
+	}
+
 }
 button.ui-datepicker-current {
 	display: none;
