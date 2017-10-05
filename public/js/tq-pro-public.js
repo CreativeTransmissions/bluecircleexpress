@@ -215,7 +215,12 @@
 					pickUpLng: 'address_0_lng',
 
 					dropOfLat: 'address_1_lat',
-					dropOfLng: 'address_1_lng'
+					dropOfLng: 'address_1_lng',
+					afterQuote: function(){
+						$('.tq-row.success').show();
+						$('.tq-row.buttons').hide();
+						$('.tq-row.success.buttons').show();
+					}
 
 				});
 			},

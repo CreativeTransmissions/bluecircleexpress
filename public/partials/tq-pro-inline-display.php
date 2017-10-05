@@ -23,15 +23,16 @@
             $hide_section = $this->form_includes[3]['hidden']; 
             include $this->form_includes[3]['template'].'.php' ?>
 
-        <div class="tq-row buttons">
+    <!--    <div class="tq-row buttons">
             <div class="tq-col100 tq-button-center">
                 <input tabindex="12" name="tq-form-submit" type="submit" value="Get Estimate" class="tq-button">
             </div>
         </div>
     </div>
+-->
     <div class="tq-row success" style="display:none;">
             <fieldset class="quote-fields">
-                <legend>Transportation Cost</legend>
+                <legend>Delivery Cost</legend>
                 <div class="field">
                     <label class="" for="distance">Distance (<?php echo $this->distance_unit; ?>s):</label>
                     <span class="sub-total" id="distance"></span>
