@@ -64,6 +64,55 @@ class Admin_Config {
                               'sections'=>array()
                               ),
 
+              'tq_pro_form_options'=>array(
+                              'key'=>'tq_pro_form_options',
+                              'title'=>'Order Form',
+                              'sections'=>array('prem_settings_form_options'=>array(
+                                                'id'=>'prem_settings_form_options',
+                                                'title'=>'Order Form Options',
+                                                'fields'=>array(
+                                                    
+                                                      'form_section_order'=>array(
+                                                        'id'=>'form_section_order',
+                                                        'label'=>'Form Section Order',
+                                                        'type'=>'select',
+                                                        'options'=>array('Customer Information', 'Delivery Information'),
+                                                        'default'=>'Customer Information',
+                                                        'help'=>'Please select the information that the customer will enter first.<br/>If you ask for Delivery Information first the customer will see their quote before having to enter their contact details.'),
+
+                                                      'show_vehicle_description'=>array(
+                                                        'id'=>'show_vehicle_description',
+                                                        'label'=>'Show Vehicle Description',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will display the description of the selected vehicle as entered on the Vehicles tab.<br/>The description will change if the customer changes the vehicle selection drop down.',
+                                                        'default'=>0),
+
+                                                      'show_vehicle_link'=>array(
+                                                        'id'=>'show_vehicle_link',
+                                                        'label'=>'Show Vehicle Link',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will display a link to another page on your website which should provide your customer with more information about the selected vehicle.<br/>The link address will be based on the vehicle name as entered on the Vehicles tab with hyphens (-) instead of spaces.<br/>The link will change if the customer changes the vehicle selection drop down.',
+                                                        'default'=>0),
+
+                                                      'show_service_description'=>array(
+                                                        'id'=>'show_service_description',
+                                                        'label'=>'Show Service Description',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will display the description of the selected service as entered on the Services tab.<br/>The description will change if the customer changes the service selection drop down.',
+                                                        'default'=>0),
+
+                                                      'show_service_link'=>array(
+                                                        'id'=>'show_service_link',
+                                                        'label'=>'Show Service Link',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will display a link to another page on your website which should provide your customer with more information about the selected service.<br/>The link address will be based on the service name as entered on the Service tab with hyphens (-) instead of spaces.<br/>The link will change if the customer changes the service selection drop down.',
+                                                        'default'=>0)
+                                                    )
+                                                )
+                                        )
+                                
+               ),
+
               'tq_pro_map_options'=>array(
                               'key'=>'tq_pro_map_options',
                               'title'=>'Map Options',
