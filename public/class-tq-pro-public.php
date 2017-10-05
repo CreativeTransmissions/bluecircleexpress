@@ -57,7 +57,7 @@ class TransitQuote_Pro_Public {
 		$this->plugin_name = $plugin_name;
 		$this->plugin_slug = $plugin_slug;
 		$this->version = $version;
-		$this->debug = false;
+		$this->debug = true;
 		$this->log_requests = true;
 		$this->prefix = 'tq_pro3';
 		$this->cdb = TransitQuote_Pro3::get_custom_db();
@@ -515,7 +515,8 @@ class TransitQuote_Pro_Public {
 		$this->currency_code = self::get_currency_code();
 		$this->distance_unit = self::get_distance_unit();
 		$this->success_message = self::get_success_message();
-
+		$this->form_section_order = self::get_form_section_order();
+		$this->build_form_include_list();
 		if($layout==1){ //Inline Map public
 			$this->view = 'partials/tq-pro-inline-display.php';
 		}else{ //business_qoute
@@ -527,7 +528,36 @@ class TransitQuote_Pro_Public {
 	   	return ob_get_clean();
 	}	
 
+	function build_form_include_list(){
+		$this->form_includes = array();
+		switch ($this->form_section_order) {
+		    case 'Delivery Information':
+		       $this->form_includes = array(
+		       		array(	'template'=>'search_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'delivery_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'map',
+		       				'hidden'=>''),
+		       		array(	'template'=>'customer_fields',
+		       				'hidden'=>'hidden')
+		       	);
+		       break;
+		    case 'Customer Information':
+		       $this->form_includes = array(
 
+		       		array(	'template'=>'customer_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'delivery_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'map',
+		       				'hidden'=>''),
+		       		array(	'template'=>'search_fields',
+		       				'hidden'=>''),
+				);
+		       break;
+		}
+	}
 
 	function process_paypal_request(){
 		// page is being requested after paypal redirects customer back to the website
@@ -856,7 +886,7 @@ class TransitQuote_Pro_Public {
 		};
 
 		
-		$email = self::email_dispatch('New Removal Request: '.$this->customer['first_name']." ".$this->customer['last_name']);
+		$email = self::email_dispatch('New Job Booking Request: '.$this->customer['first_name']." ".$this->customer['last_name']);
 		$customer_email = self::email_customer();
 
 		return array('success'=>'true',
@@ -1574,6 +1604,14 @@ class TransitQuote_Pro_Public {
     	};
     	$this->currency_code = $this->cdb->get_field('currencies', 'currency_code', $this->currency);
         return $this->currency_code;
+    }
+
+    public function get_form_section_order(){
+    	$form_section_order = self::get_setting('tq_pro_form_options', 'form_section_order');
+    	if(empty($form_section_order)){
+    		return false;
+    	};
+        return $form_section_order;
     }
 
 	public function get_oldest_job_date(){

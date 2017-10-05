@@ -1,6 +1,6 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE | E_ALL);
- ini_set('display_errors', 1);*/
+error_reporting(E_ERROR | E_PARSE | E_ALL);
+ ini_set('display_errors', 1);
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -34,13 +34,6 @@ class TransitQuote_Pro_Admin {
 	private $plugin_slug;
 	protected $plugin_screen_hook_suffix = null;
 
-    private $tab_1_settings_key = 'tq_pro_rates';
-	private $tab_2_settings_key = 'tq_pro_quote_options';
-	private $tab_3_settings_key = 'tq_pro_customers';
-	private $tab_4_settings_key = 'tq_pro_job_requests';
-	private $tab_5_settings_key = 'tq_pro_email_options';
-	private $tab_6_settings_key = 'tq_pro_paypal_options';
-	
 	/**
 	 * The version of this plugin.
 	 *
