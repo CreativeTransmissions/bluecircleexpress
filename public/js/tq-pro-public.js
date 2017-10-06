@@ -221,6 +221,8 @@
 						$('.tq-row.buttons').hide();
 						$('.tq-row.success.buttons').show();
 						$('.tq-form-fields-container').show();
+						$('.tq-form-fields-container').removeClass('hidden');
+						$('.quote-fields').removeClass('hidden');
 					}
 
 				});
