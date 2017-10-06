@@ -13,7 +13,8 @@
 <div class="requestform round">
 <div class="spinner-div"> </div>
 <form id="quote-form" class="request-calc-form tq-form" autocomplete="off" data-parsley-errors-messages-disabled>
-        <?php $hide_section = $this->form_includes[0]['hidden'];
+        <?php
+            $hide_section = $this->form_includes[0]['hidden'];
             include $this->form_includes[0]['template'].'.php';
             $hide_section = $this->form_includes[1]['hidden'];
             include $this->form_includes[1]['template'].'.php'; ?>

@@ -554,8 +554,10 @@ class TransitQuote_Pro_Public {
 		       				'hidden'=>''),
 		       		array(	'template'=>'map',
 		       				'hidden'=>''),
-		       		array(	'template'=>'search_fields',
-		       				'hidden'=>''),
+		       		array(	'template'=>'quote_fields',
+		       				'hidden'=>'hidden'),
+		       		array(	'template'=>'customer_fields',
+		       				'hidden'=>'')
 				);
 		       break;
 		}
