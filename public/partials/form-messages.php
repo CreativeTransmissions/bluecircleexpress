@@ -9,5 +9,5 @@
 	 </fieldset>
 </div>
 <div class="tq-row failure" style="display:none;">
-		<h2>Error!</h2><p>Sorry we were unable to send your move request, please call us on one of the numbers above for assistance.</p>
+		<h2>Error!</h2><p>Sorry we were unable to save your request, please contact us above for assistance.</p>
 </div>

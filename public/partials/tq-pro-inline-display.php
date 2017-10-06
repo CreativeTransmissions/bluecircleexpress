@@ -21,7 +21,10 @@
     <?php   $hide_section = $this->form_includes[2]['hidden']; 
             include  $this->form_includes[2]['template'].'.php' ;
             $hide_section = $this->form_includes[3]['hidden']; 
-            include $this->form_includes[3]['template'].'.php' ?>
+            include $this->form_includes[3]['template'].'.php';
+            $hide_section = $this->form_includes[4]['hidden']; 
+            include $this->form_includes[4]['template'].'.php';
+    ?>
 
     <!--    <div class="tq-row buttons">
             <div class="tq-col100 tq-button-center">
@@ -30,31 +33,7 @@
         </div>
     </div>
 -->
-    <div class="tq-row success" style="display:none;">
-            <fieldset class="quote-fields">
-                <legend>Delivery Cost</legend>
-                <div class="field">
-                    <label class="" for="distance">Distance (<?php echo $this->distance_unit; ?>s):</label>
-                    <span class="sub-total" id="distance"></span>
-                    
-                </div>
-                <div class="field">
-                    <label class="" for="hours">Estimated Travel Time:</label>
-                    <span class="sub-total" id="hours"></span>
-                </div>
-                <div class="field notice-field">
-                    <label class="" for="notice">Short Notice Cost:</label>
-                    <span class="sub-total"><?php echo $this->currency_code; ?></span>
-                    <span class="sub-total noticeCost"></span>
-                    
-                </div>
-                <div class="field">
-                    <label class="" for="totalCost"><b>Estimated</b> Cost:</label>
-                    <span class="sub-total"><?php echo $this->currency_code; ?></span>
-                    <span class="sub-total quote" id="totalCost"></span>
-                </div>      
-            </fieldset>
-    </div>
+    
     <?php include 'form-messages.php';?>
             
     <div class="clear"></div>    

@@ -220,6 +220,7 @@
 						$('.tq-row.success').show();
 						$('.tq-row.buttons').hide();
 						$('.tq-row.success.buttons').show();
+						$('.tq-form-fields-container').show();
 					}
 
 				});
@@ -431,7 +432,9 @@
 
 			submissionSuccess: function(response){
 				this.hideStatusMessages();
-
+				if(response.data.job_id){
+					this.populateFormWithJobId(response);
+				};
 				if(this.hasValidPaymentMethod(response)){
 					var paymentMethod = this.getPaymentMethodFromResponse(response);
 					if(paymentMethod==1){
@@ -441,7 +444,6 @@
 				} else {
 					// just returning the quote
 					this.showSuccessMessage();
-					this.populateFormWithJobId(response);
 				}
 
 

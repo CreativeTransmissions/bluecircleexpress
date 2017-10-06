@@ -55,12 +55,8 @@
 	margin: 0;
 	width: 49%;
 }
-
-/* Form styles */
-.calc-form{
-	clear: left;
-	float: left;
-	width: 30%;
+.tq-form .quote-fields{
+	margin-bottom: 2em;
 }
 
 form.tq-form .field {

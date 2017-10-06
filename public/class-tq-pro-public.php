@@ -539,6 +539,8 @@ class TransitQuote_Pro_Public {
 		       				'hidden'=>''),
 		       		array(	'template'=>'map',
 		       				'hidden'=>''),
+		       		array(	'template'=>'quote_fields',
+		       				'hidden'=>'hidden'),
 		       		array(	'template'=>'customer_fields',
 		       				'hidden'=>'hidden')
 		       	);
@@ -785,11 +787,32 @@ class TransitQuote_Pro_Public {
 			$this->ajax->log_requests();
 		}
 
-		// get the submit type for the submitted qutoe form
-		$submit_type = $this->ajax->param(array('name'=>'submit_type', 'optional'=>true));
+
 
 		//get the job id in submitted form, unless it is a quote request submission
 		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
+		if(empty($job_id)){
+			$response = self::save_job();
+			if($response['success'] == true){
+				$job_id = $this->job['id'];
+			}
+		};
+		
+		$response = self::process_payment_method($job_id);
+
+		if($response === false){
+			$response = array('success'=>false, 
+								'msg'=>'Sorry, an error occured and we are unable to process this request.');
+		};
+
+		$this->ajax->respond($response);		
+	}
+
+	private function process_payment_method($job_id){
+
+		// get the submit type for the submitted qutoe form
+		$submit_type = $this->ajax->param(array('name'=>'submit_type', 'optional'=>true));
+
 
 		switch ($submit_type) {
 			case 'pay_method_1':
@@ -806,19 +829,10 @@ class TransitQuote_Pro_Public {
 				// Stripe
 				self::get_job_details_from_id($job_id);
 				$response = self::request_payment_stripe($job_id);
-				break;				
-			default:
-				//get estimate
-				$response = self::get_quote();
 				break;
 		}
 
-		if($response === false){
-			$response = array('success'=>false, 
-								'msg'=>'Sorry, an error occured and we are unable to process this request.');
-		};
-
-		$this->ajax->respond($response);		
+		return $response;
 	}
 
 	public function get_job_details_from_id($job_id){
@@ -847,7 +861,7 @@ class TransitQuote_Pro_Public {
 		return $this->job['id'];
 	}
 
-	public function get_quote(){
+	public function save_job(){
 		//get email for notification
 		$email = $this->ajax->param(array('name'=>'email'));
 
@@ -1108,8 +1122,6 @@ class TransitQuote_Pro_Public {
 			self::debug('could not update payment_type');
 			return false;
 		};
-
-		$paypal_return_url = $this->ajax->param(array('name'=>'return_url'));
 
 		//set payment status to 1 = Awaiting Payment
 		if(!self::update_payment_status_id($job_id, 1)){

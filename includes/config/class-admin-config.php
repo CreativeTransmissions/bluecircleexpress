@@ -155,7 +155,7 @@ class Admin_Config {
                                                     
                                                       'currency'=>array(
                                                         'id'=>'currency',
-                                                        'label'=>'Currency Symbol',
+                                                        'label'=>'Currency',
                                                         'type'=>'select',
                                                         'table'=>'currencies',
                                                         'display_field'=>'name',
