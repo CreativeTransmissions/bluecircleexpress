@@ -92,7 +92,7 @@ class Admin_Config {
                                                         'label'=>'Show Vehicle Link',
                                                         'type'=>'checkbox',
                                                         'help'=>'If enabled, this option will display a link to another page on your website which should provide your customer with more information about the selected vehicle.<br/>The link address will be based on the vehicle name as entered on the Vehicles tab with hyphens (-) instead of spaces.<br/>The link will change if the customer changes the vehicle selection drop down.',
-                                                        'default'=>0),
+                                                        'default'=>0)/*,
 
                                                       'show_service_description'=>array(
                                                         'id'=>'show_service_description',
@@ -106,7 +106,7 @@ class Admin_Config {
                                                         'label'=>'Show Service Link',
                                                         'type'=>'checkbox',
                                                         'help'=>'If enabled, this option will display a link to another page on your website which should provide your customer with more information about the selected service.<br/>The link address will be based on the service name as entered on the Service tab with hyphens (-) instead of spaces.<br/>The link will change if the customer changes the service selection drop down.',
-                                                        'default'=>0)
+                                                        'default'=>0)*/
                                                     )
                                                 )
                                         )

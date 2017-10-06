@@ -1,6 +1,8 @@
 <?php 
     $has_services = $this->has_services(); 
-    $has_vehicles = $this->has_vehicles(); 
+    $has_vehicles = $this->has_vehicles();
+    $using_service_descript = $this->using_service_descript();
+    $using_vehicle_descript = $this->using_vehicle_descript();
 ?>
 <fieldset class="search-fields">
 <div class="tq-row  <?php echo $hide_section; ?>">
@@ -33,7 +35,11 @@
 				</div>
 				<div class="tq-col48 right">
 					<div class="tq-row bt-flabels__wrapper">
-						<?php echo $this->render_vehicle_descriptions(); ?>
+						<?php 
+							if($using_vehicle_descript){
+								echo $this->render_vehicle_descriptions();
+							};
+						?>
 					</div>
 				</div>			
 			<?php }; ?>

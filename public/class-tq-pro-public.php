@@ -2040,10 +2040,67 @@ class TransitQuote_Pro_Public {
 			if($key>0){
 				$style_attribute = ' style="display: none;" ';
 			};
-			$descriptions_html .= '<p class="select-desc v-desc-'.$vehicle['id'].'" '.$style_attribute.'>'.$vehicle['description'].'</p>';
+			$descriptions_html .= '<p class="select-desc v-desc-'.$vehicle['id'].'" '.$style_attribute.'>'.$vehicle['description'];
+			if(self::using_vehicle_links()){
+				$vehicle_link = self::build_vehicle_link($vehicle);
+				if(empty($vehicle['description'])){
+					$descriptions_html .= $vehicle_link;
+				} else {
+					$descriptions_html .= ' '.$vehicle_link;
+				};
+				
+			};
+			$descriptions_html .= '</p>';
 		}
 
 		echo $descriptions_html;
+	}
+
+	private function using_vehicle_links(){
+		$using_link = self::get_setting('tq_pro_form_options', 'show_vehicle_link', false);
+		if($using_link == 1){
+			return true;
+		};
+		return false;
+	}
+
+	public function using_service_descript(){
+		$using_service_descript = self::get_setting('tq_pro_form_options', 'show_service_description', false);
+		if($using_service_descript == 1){
+			return true;
+		};
+		return false;
+	}
+
+	public function using_vehicle_descript(){
+		$vehicle_descript = self::get_setting('tq_pro_form_options', 'show_vehicle_description', false);
+		if($vehicle_descript == 1){
+			return true;
+		};
+		return false;
+	}
+
+	private function build_vehicle_link($vehicle){
+		$page_name = self::format_string_for_url($vehicle['name']);
+		$link_text = 'View vehicle..';
+		return '<a target="_blank" href="/'.$page_name.'">'.$link_text.'</a>';
+
+	}
+
+	public function format_string_for_url($string){
+		$string = self::remove_spaces($string);
+		$string = self::strip_non_alphanum($string);
+		$url_friendly = strtolower($string);
+		return $url_friendly;
+		
+	}
+
+	public function remove_spaces($string){
+		return str_replace(' ', '', $string);
+	}
+
+	public function strip_non_alphanum($string){
+		return preg_replace("/[^A-Za-z0-9 ]/", '', $string);
 	}
 
 	public function update_job_status($job_id, $status_type_id){
