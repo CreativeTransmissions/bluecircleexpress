@@ -223,6 +223,13 @@
 						$('.tq-form-fields-container').show();
 						$('.tq-form-fields-container').removeClass('hidden');
 						$('.quote-fields').removeClass('hidden');
+					},
+
+					callbackChangeVehicleId: function(vehicleId){
+						// UI changes on vehicle selection
+						$('.select-desc').hide();
+						var descToShowSelector = '.v-desc-'+String(vehicleId);
+						$(descToShowSelector).show();
 					}
 
 				});
@@ -371,7 +378,9 @@
 				$(this.element).on('click','button:submit', function(e){
 					e.preventDefault();
 					var btn = e.target;
-					that.submitForm(btn)					
+					if($(that.element).parsley().validate()){
+						that.submitForm(btn)
+					};					
 				});
 
 				$.listen('parsley:field:error', function(parsleyField) {
