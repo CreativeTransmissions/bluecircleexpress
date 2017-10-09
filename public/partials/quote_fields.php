@@ -17,7 +17,7 @@
             
         </div>
         <div class="field">
-            <label class="" for="totalCost"><b>Estimated</b> Cost:</label>
+            <label class="" for="totalCost">Estimated Cost:</label>
             <span class="sub-total"><?php echo $this->currency_code; ?></span>
             <span class="sub-total quote" id="totalCost"></span>
         </div>      
