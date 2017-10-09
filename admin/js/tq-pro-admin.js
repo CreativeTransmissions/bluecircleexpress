@@ -230,7 +230,7 @@
 						settings.startPlaceName = this.settings.data.startPlaceName;
 					};
 
-					$('#place-selector').placeSelector(settings);
+					//$('#place-selector').placeSelector(settings);
 				},
 
 				initRatesTabEvents: function(){
