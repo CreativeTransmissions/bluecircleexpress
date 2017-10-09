@@ -166,8 +166,8 @@ class TransitQuote_Pro_Admin {
 						} else {
 							$field['value'] = $default_value;
 						};
-
-						//echo ' value: '.$field['value'];
+						//echo $field_key.' get setting..';
+						//echo ' value: '.$field['value'].'<br/>';
 						$section['fields'][$field_key] = $field;
 					}
 					$tab['sections'][$section_key] = $section;
@@ -280,11 +280,11 @@ class TransitQuote_Pro_Admin {
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
 			$this->api_key = $this->plugin->get_api_key();
-			$this->start_place_name = $this->plugin->get_setting('tq_pro_quote_options', 'start_place_name', 'Glasgow');
-			$this->start_lat = $this->plugin->get_setting('tq_pro_quote_options', 'start_lat','55.870853');
-			$this->start_lng = $this->plugin->get_setting('tq_pro_quote_options', 'start_lng', '-4.252036');
-			$this->min_notice = $this->plugin->get_setting('tq_pro_quote_options', 'min_notice', '24:00');
-			$this->min_notice_charge = $this->plugin->get_setting('tq_pro_quote_options', 'min_notice_charge', '0');
+			$this->start_place_name = $this->plugin->get_setting('', 'start_location', '');
+			$this->start_lat = $this->plugin->get_setting('', 'start_lat','');
+			$this->start_lng = $this->plugin->get_setting('', 'start_lng', '');
+			$this->min_notice = $this->plugin->get_setting('', 'min_notice', '24:00');
+			$this->min_notice_charge = $this->plugin->get_setting('', 'min_notice_charge', '0');
 			$this->oldest_job_date = $this->plugin->get_oldest_job_date();
 			$this->api_string = $this->plugin->get_api_string();
 			
