@@ -1125,6 +1125,10 @@ class TransitQuote_Pro_Public {
 
 		return array(	'success'=>'true',
 						'success_message'=>'<h2>Thank You.</h2><p>Your job has now been booked with payment due on delivery.<br/>Your reference number is: '.$job_id.'</p>',
+						'data'=>array('customer_id'=>$this->customer['id'],
+					 				'job_id'=>$job_id,
+					 				'quote_id'=>$this->quote['id'],
+					 				'email'=>$this->customer['email']),
 					 	'payment_method'=>1);
 
 	}

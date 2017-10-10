@@ -186,7 +186,9 @@ form.tq-form .progress {
 	font-size: 1.5em;
 }
 
-form.tq-form input[type="text"]{
+form.tq-form input[type="text"],
+form.tq-form textarea
+{
 	background-color: #fff;
 	margin-bottom: 0.25em !important;
 }
@@ -253,15 +255,18 @@ form.tq-form .ideal-check.checked.focus {
 }
 #quote-form.tq-form label{
 	font-size: 16px;
-	margin-bottom: 0.25em;
+	margin-bottom: 0em;
+	padding-bottom: 0.25em;
 	display: inline-block;
 	text-align: left;
 }
 .tq-form .no-address{
 	float: right;
+	margin-top: 1em;
 }
 #quote-form.tq-form .quote-fields label {
 	font-weight: normal;
+	padding: 0 0 0.5em 0em;
 }
 .tq-row{
 	padding: 5px 0;
@@ -295,6 +300,7 @@ form.tq-form .ideal-check.checked.focus {
 	margin-top: 2em
 }
 #quote-form.tq-form legend{
+	border-bottom: none;
 	font-size: 20px;
 	font-weight: bold;
 	background: transparent;
@@ -446,7 +452,7 @@ button.ui-datepicker-current {
 
 /*********************Domestic/business requst form********************/
 .requestform .bt-flabels__error-desc{
-    margin: 30px 0 -9px 9px;
+    margin: 38px 0 -9px 9px;
     color: rgb(227, 134, 119) !important;
     right: 5px !important;
     top: 0px !important;
