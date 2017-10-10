@@ -104,6 +104,8 @@ class TransitQuote_Pro_Public {
 
 		$tq_settings = self::get_settings_for_js();
 
+		self::dequeue_maps();
+
 		//include dependancies
 		wp_enqueue_script($this->plugin_slug.'-magnific-popup', plugins_url( 'js/jquery-magnific-popup.js', __FILE__ ), '', 1.1, True );
 		wp_enqueue_script($this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
@@ -177,6 +179,11 @@ class TransitQuote_Pro_Public {
 		return $tq_settings;
 	}
 
+	public function dequeue_maps(){
+
+	}
+
+	
 	public function check_payment_config($payment_type_id = null){
 		// Check we have all required paypal config values
 		$payment_config_is_ok = false;
