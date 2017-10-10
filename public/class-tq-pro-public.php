@@ -104,7 +104,7 @@ class TransitQuote_Pro_Public {
 
 		$tq_settings = self::get_settings_for_js();
 
-		self::dequeue_maps();
+		//self::dequeue_maps(); // uncomment to debug multiple maps installs
 
 		//include dependancies
 		wp_enqueue_script($this->plugin_slug.'-magnific-popup', plugins_url( 'js/jquery-magnific-popup.js', __FILE__ ), '', 1.1, True );
@@ -184,7 +184,9 @@ class TransitQuote_Pro_Public {
 	}
 
 	function  inspect_scripts() {
+		//for finding out if gmamps installed more than once. 
 	    global $wp_scripts;
+		echo 'scriptlist:';
 	    foreach( $wp_scripts->queue as $handle ) :
 	        echo $handle . ' | ';
 	    endforeach;

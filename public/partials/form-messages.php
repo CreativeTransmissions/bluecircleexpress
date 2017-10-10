@@ -1,5 +1,5 @@
 <div class="tq-row progress" style="display:none;">
-	<h2>One moment</h2><p>Sending request...</p>
+	<h2>One moment please</h2><p>Sending request...</p>
 </div>
 <div class="tq-row success buttons" style="display:none;">
 	<fieldset class="payment-options">
