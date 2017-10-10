@@ -34,11 +34,14 @@
 .payment-result .text-center {
 	text-align: center;
 }
+.tq-form .payment-result p {
+	color: #000;
+}
 .tq-form .picker-btn {
 	margin-top: 0.75em;
 }
 .tq-form .address-wrap {
-	margin-bottom: 1em;
+	margin-bottom: 0em;
 }
 .tq-form .remove-address{
 	display: inline-block;
@@ -295,6 +298,7 @@ form.tq-form .ideal-check.checked.focus {
 .tq-address-container {
 	background: #dddddd;
 	padding: 0.5em 1em;
+	margin-top: 1em;
 }
 .tq-form .payment-options{
 	margin-top: 2em
