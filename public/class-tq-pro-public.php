@@ -180,10 +180,16 @@ class TransitQuote_Pro_Public {
 	}
 
 	public function dequeue_maps(){
-
+		self::inspect_scripts();
 	}
 
-	
+	function  inspect_scripts() {
+	    global $wp_scripts;
+	    foreach( $wp_scripts->queue as $handle ) :
+	        echo $handle . ' | ';
+	    endforeach;
+	}
+
 	public function check_payment_config($payment_type_id = null){
 		// Check we have all required paypal config values
 		$payment_config_is_ok = false;
