@@ -57,8 +57,8 @@ class TransitQuote_Pro_Public {
 		$this->plugin_name = $plugin_name;
 		$this->plugin_slug = $plugin_slug;
 		$this->version = $version;
-		$this->debug = true;
-		$this->log_requests = true;
+		$this->debug = false;
+		$this->log_requests = false;
 		$this->prefix = 'tq_pro3';
 		$this->cdb = TransitQuote_Pro3::get_custom_db();
 		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
@@ -1694,15 +1694,15 @@ class TransitQuote_Pro_Public {
 		}
 	}
 	public function get_notification_emails(){
-        // return self::get_setting($this->tab_5_settings_key, 'notify', get_option( 'admin_email' ));
-        return get_option( 'admin_email' );
+        return self::get_setting('', 'notify', null);
     }
+
     public function get_from_address(){
         return get_option( 'admin_email' );
     }
+    
     public function get_from_name(){
-        return 'Custom Google Map Tools';
-        // return self::get_setting($this->tab_5_settings_key, 'from_name', 'Medical Rescue');
+        return self::get_setting('', 'from_name', null);
     }
 
 
