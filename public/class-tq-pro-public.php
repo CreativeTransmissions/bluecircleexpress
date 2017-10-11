@@ -241,13 +241,25 @@ class TransitQuote_Pro_Public {
 		$this->settings = array();
 		// update the conif with any saved settings
 		foreach ($this->tabs_config as $tab_key => $tab) {
+			$defaults = self::get_tab_defaults($tab);
 			$saved_options = (array) get_option($tab_key, array());
 			if(!empty($saved_options)){
-				$this->settings = array_merge($this->settings, $saved_options);
+				$this->settings = array_merge($this->settings, $defaults, $saved_options);
 			}
 		};
 	}
 
+	private function get_tab_defaults($tab){
+		$defaults = array();
+		foreach ($tab['sections'] as $section_key => $section) {
+			foreach ($section['fields'] as $field_key => $field) {
+				if(isset($field['default'])){
+					$defaults[$field['id']] = $field['default'];
+				}
+			}
+		}
+		return $defaults;
+	}
 	public function get_prefix(){
 		return $this->prefix;
 	}
@@ -624,6 +636,14 @@ class TransitQuote_Pro_Public {
 			return false;
 		};
 		return $payment_status_type_id;
+	}
+
+	public function get_min_cost_msg(){
+
+	}
+
+	public function get_min_distance_msg(){
+
 	}
 
 	private function get_result_class($payment_status_type_id = null){

@@ -1,6 +1,7 @@
 <div class="tq-row success  <?php echo $hide_section; ?> quote-fields" >
     <fieldset>
         <legend>Delivery Cost</legend>
+        <p>All prices are subject to change depending on traffic, loading times and package size.</p>
         <div class="field">
             <label class="" for="distance">Distance (<?php echo $this->distance_unit; ?>s):</label>
             <span class="sub-total" id="distance"></span>

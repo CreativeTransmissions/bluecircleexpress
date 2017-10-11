@@ -77,7 +77,7 @@ class Admin_Config {
                                                         'label'=>'Form Section Order',
                                                         'type'=>'select',
                                                         'options'=>array('Customer Information', 'Delivery Information'),
-                                                        'default'=>'Customer Information',
+                                                        'default'=>'Delivery Information',
                                                         'help'=>'Please select the information that the customer will enter first.<br/>If you ask for Delivery Information first the customer will see their quote before having to enter their contact details.'),
 
                                                       'show_vehicle_description'=>array(
