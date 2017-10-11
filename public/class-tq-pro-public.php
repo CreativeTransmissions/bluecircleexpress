@@ -459,7 +459,7 @@ class TransitQuote_Pro_Public {
     									'url'=>$url));
     	} else {
     		$status = $this->paypal->get_paypal_status();
-    		if($status==='approved'){
+    		if($status=='approved'){
 	    		if(!self::update_payment_status_id($job_id, 4)){
 					return array('success'=>'false',
 									 'msg'=>'Unable to update job '.$job_id.' to pending / authorized');
@@ -467,12 +467,14 @@ class TransitQuote_Pro_Public {
 
 				$this->ajax->respond(array('success' => 'true',
 	    								'payment_id'=>$this->payment_id,
-	                                    'status'=>$status));
+	                                    'status'=>$status,
+	                               		'job_id'=>$job_id));
 			} else {
 				$this->ajax->respond(array('success' => 'false',
 	    								'payment_id'=>$this->payment_id,
 	    								'msg'=>'Payment was not approved.',
-	                                    'status'=>$status));
+	                                    'status'=>$status,
+	                               		'job_id'=>$job_id));
 			}
     	}
 

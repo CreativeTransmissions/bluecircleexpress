@@ -505,25 +505,29 @@ class TransitQuote_Pro_Admin {
 
 		$filter_sql = " where date(pt.created) <= '".$filters['to_date']."' and date(pt.created) >= '".$filters['from_date']."'";
 
-    	$sql = "SELECT distinct	pt.id as id,
-    					pt.created as payment_date,
-						trim(concat(c.first_name,' ',c.last_name)) as customer_name,
-						c.email as email,
-						jobs.id as jobid, 
-						q. total as amount,
-						pt.currency as currency,
-						pt.paypal_status as paypal_status
-					FROM wp_".$this->prefix."_transactions_paypal pt
-						inner join wp_".$this->prefix."_jobs jobs 
-							on pt.job_id = jobs.id
+    	$sql = "SELECT distinct	
+    				max(pt.id) as id,
+					jobs.id as jobid,
+					trim(concat(c.first_name,' ',c.last_name)) as customer_name,
+					min(pt.created) as payment_date,
+					max(c.email) as email,
+					max(q.total) as amount,
+					max(pt.currency) as currency,
+				max(pt.paypal_status) as paypal_status
+				FROM wp_tq_pro3_transactions_paypal pt
+					inner join wp_tq_pro3_jobs jobs 
+						on pt.job_id = jobs.id
 
-						inner join wp_".$this->prefix."_customers c 
-							on c.id = jobs.customer_id 
+					inner join wp_tq_pro3_customers c 
+						on c.id = jobs.customer_id 
 
-						inner join wp_".$this->prefix."_quotes q 
-							on q.id = jobs.accepted_quote_id
+					inner join wp_tq_pro3_quotes q 
+						on q.id = jobs.accepted_quote_id
+					
 				".$filter_sql."
+				group by job_id, customer_name
 				order by pt.id desc;";
+				//echo $sql;
 		$data = $this->cdb->query($sql);
 		return $data;
     }
@@ -728,7 +732,7 @@ class TransitQuote_Pro_Admin {
 				$defaults = array(
 					'data'=>$transaction_data,
 					'table'=>'transactions_paypal',
-					'fields'=>array('id', 'jobid', 'payment_date', 'customer_name', 'email', 'amount', 'currency', 'paypal_status'),
+					'fields'=>array('id', 'jobid',  'customer_name', 'payment_date', 'email', 'amount', 'currency', 'paypal_status'),
 					'inputs'=>false,
 					'tpl_row'=>'<tr class="expand"></tr>'
 				);
