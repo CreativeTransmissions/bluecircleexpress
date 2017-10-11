@@ -11,5 +11,5 @@
 <div class="tq-row failure" style="display:none;">
 		<h2>Error!</h2><p>Sorry we were unable to save your request, please contact us above for assistance.</p>
 </div>
-<p class="min-cost-msg tq-warning" style="display: none;"><?php echo self::get_min_cost_msg(); ?></p>
+<p class="min-cost-msg tq-warning" style="display: none;"><?php echo self::get_min_price_msg(); ?></p>
 <p class="min-distance-msg tq-warning" style="display: none;"><?php echo self::get_min_distance_msg(); ?></p>

@@ -132,6 +132,8 @@ class TransitQuote_Pro_Public {
 		$this->max_address_pickers = $this->get_setting('tq_pro_quote_options', 'max_address_pickers', '1');
 		$this->min_notice = $this->get_setting('tq_pro_quote_options', 'min_notice', '');
 		$this->min_notice_charge = $this->get_setting('tq_pro_quote_options', 'min_notice_charge', '');
+		$this->min_price = $this->get_setting('', 'min_price');
+		$this->min_distance = $this->get_setting('', 'min_distance');
 		$this->quote_element = $this->get_setting('tq_pro_quote_options', 'quote_element', 'quote');
 		$this->api_key = self::get_api_key();
 		$this->api_string = self::get_api_string();
@@ -161,6 +163,8 @@ class TransitQuote_Pro_Public {
 							'rates'=>$rates,
 							'min_notice'=>$this->min_notice,
 							'min_notice_charge'=>$this->min_notice_charge,
+							'min_price'=>$this->min_price,
+							'min_distance'=>$this->min_distance,
 							'quote_element'=>$this->quote_element,
 							'max_address_pickers'=>$this->max_address_pickers
 							);
@@ -243,9 +247,7 @@ class TransitQuote_Pro_Public {
 		foreach ($this->tabs_config as $tab_key => $tab) {
 			$defaults = self::get_tab_defaults($tab);
 			$saved_options = (array) get_option($tab_key, array());
-			if(!empty($saved_options)){
-				$this->settings = array_merge($this->settings, $defaults, $saved_options);
-			}
+			$this->settings = array_merge($this->settings, $defaults, $saved_options);
 		};
 	}
 
@@ -638,12 +640,12 @@ class TransitQuote_Pro_Public {
 		return $payment_status_type_id;
 	}
 
-	public function get_min_cost_msg(){
-
+	public function get_min_price_msg(){
+		return $this->get_setting('', 'min_price_message');
 	}
 
 	public function get_min_distance_msg(){
-
+		return $this->get_setting('', 'min_distance_message');
 	}
 
 	private function get_result_class($payment_status_type_id = null){
