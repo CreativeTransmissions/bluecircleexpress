@@ -188,6 +188,8 @@
 					maxAddressPickers: this.settings.data.max_address_pickers,
 					minNotice: this.settings.data.min_notice,
 					minNoticeCharge: this.settings.data.min_notice_charge,
+					minCost: this.settings.data.min_price,
+					minDistance: this.settings.data.min_distance,
 
 					/*	
 						The form elements tell the plugin which html inputs are used for 
