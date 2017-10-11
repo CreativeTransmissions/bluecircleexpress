@@ -1698,9 +1698,9 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_from_address(){
-        return get_option( 'admin_email' );
+        return self::get_setting('', 'from_address', null);
     }
-    
+
     public function get_from_name(){
         return self::get_setting('', 'from_name', null);
     }
