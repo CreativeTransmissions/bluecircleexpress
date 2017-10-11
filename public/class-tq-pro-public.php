@@ -465,6 +465,13 @@ class TransitQuote_Pro_Public {
 									 'msg'=>'Unable to update job '.$job_id.' to pending / authorized');
 				};
 
+				self::get_job_details_from_id($job_id);
+
+				if(!self::email_dispatch('Delivery '.$job_id.' Update: Payment Authorized')){
+					$this->ajax->log_error(array('name'=>'Unable to email dispatch',
+		                'value'=>'job_id: '.$job['id']));
+				};
+
 				$this->ajax->respond(array('success' => 'true',
 	    								'payment_id'=>$this->payment_id,
 	                                    'status'=>$status,
@@ -592,44 +599,6 @@ class TransitQuote_Pro_Public {
 				);
 		       break;
 		}
-	}
-
-	function process_paypal_request(){
-		// page is being requested after paypal redirects customer back to the website
-		$this->paypal = new CT_PayPal(array('cdb'=>$this->cdb,
-											'sandbox'=>self::get_setting('tq_pro_paypal_options', 'sandbox', 1)));
-		$this->payment_status_type_id = $this->paypal->process_paypal_return();
-		$this->job_id = $this->paypal->get_transaction_id();
-		if(empty($this->job_id)){
-			$this->ajax->log_error(array('name'=>'Paypal return error','value'=>'No job id returned from PayPal'));
-			return false;
-		};
-
-		if(!self::update_payment_status_id($this->job_id, $this->payment_status_type_id)){
-			self::debug('could not update payment_status');
-			return false;
-		};
-
-		$this->job = self::get_job($this->job_id);
-		if($this->job===false){
-			$this->ajax->log_error(array('name'=>'Could not load job to update',
-                'value'=>'job_id: '.$job['id']));
-            return false;				
-		};	
-
-		if(self::job_is_available()){
-			$this->job = self::get_job_details($this->job);
-		};
-		//get text payment status message
-		$payment_status = $this->paypal->get_payment_status($this->job);
-
-		if(!self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status)){
-			$this->ajax->log_error(array('name'=>'Unable to email dispatch',
-                'value'=>'job_id: '.$job['id']));
-		};
-
-		$this->view = $this->paypal_partials_dir.'payment_result.php';
-		return true;
 	}
 
 	private function check_payment_status_type_id($payment_status_type_id){
@@ -941,7 +910,7 @@ class TransitQuote_Pro_Public {
 		};
 
 		
-		$email = self::email_dispatch('New Job Booking Request: '.$this->customer['first_name']." ".$this->customer['last_name']);
+		$email = self::email_dispatch('New Job Booking - ref: '.$this->job['id']." ".$this->customer['first_name']." ".$this->customer['last_name']);
 		$customer_email = self::email_customer();
 
 		return array('success'=>'true',

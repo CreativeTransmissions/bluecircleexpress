@@ -104,6 +104,7 @@
 					return false;
 				};
 				this.initDataMapSettings();
+				this.payPalInitialized = false;
 				return true;
 			},
 
@@ -320,8 +321,8 @@
 			},
 			
 			processResponseExecution: function(response){
+				$('#paypal-button-container').hide();
 				if(response.status === 'approved'){
-					$('#paypal-button-container').hide();
 					$('.paypal-msg-success').show();
 				} else {
 					var message = 'Unknown PayPal Error.';
@@ -333,7 +334,8 @@
 					};
 					message = 'Your payment could not be processed because PayPal returned the following error.<br/>'+message + '<br/>Please try again or contact us for assistance.';
 					$('.paypal-msg-failure').html(message);
-					$('.paypal-msg-failure').show();
+					$('.paypal-msg-failure').show();	
+					$('.buttons').show();
 					
 				}
 			},
@@ -520,8 +522,15 @@
 						$('.on-delivery').show();
 					break;
 					case 2:
+						$('.paypal-msg-failure').hide();
 						$('#paypal').show();
-						this.initPayPal();
+						$('#paypal-button-container').show();
+						if(!this.payPalInitialized){
+							this.payPalInitialized = true;
+							this.initPayPal();
+
+						};
+						
 					break;
 				}
 			},
