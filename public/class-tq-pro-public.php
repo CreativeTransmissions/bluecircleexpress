@@ -1640,7 +1640,7 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_form_section_order(){
-    	$form_section_order = self::get_setting('tq_pro_form_options', 'form_section_order');
+    	$form_section_order = self::get_setting('tq_pro_form_options', 'form_section_order', 'Delivery Information');
     	if(empty($form_section_order)){
     		return false;
     	};
@@ -1659,6 +1659,7 @@ class TransitQuote_Pro_Public {
 		};
 		return $jobs[0]['created'];
 	}
+
 	public function get_setting($tab, $name, $default = ''){
 		if(empty($this->settings)){
 			self::load_settings();			

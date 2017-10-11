@@ -21,6 +21,11 @@
 .tq-form .hidden {
 	display: none;
 }
+.tq-form p.tq-warning {
+	font-size: 18px;
+	color: #F00;
+	text-align: center;
+}
 .half {
 	width: 49.9%;
 }
@@ -67,6 +72,9 @@
 }
 .tq-form .quote-fields{
 	margin-bottom: 2em;
+}
+.tq-form .quote-fields p {
+	color: #000;
 }
 
 form.tq-form .field {
