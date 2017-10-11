@@ -276,14 +276,19 @@
 
 				    // payment() is called when the button is clicked
 				    payment: function() {
+				    	$('.paypal-msg-failure').hide();
+				    	$('.paypal-msg-success').hide();
 				    	var jobId = $('input[name="job_id"]').val();
 				        // Set up a url on your server to create the payment_id
-				        var CREATE_URL = TransitQuoteProSettings.paypal.createPaymentUrl+'&jobId='+jobId;
+				        var CREATE_URL = TransitQuoteProSettings.paypal.createPaymentUrl;
 
 						// Set up the data you need to pass to your server
+						var data = {
+				            jobId: jobId
+				        };
 		
 				        // Make a call to your server to set up the payment
-				        return paypal.request.post(CREATE_URL)
+				        return paypal.request.post(CREATE_URL, data)
 				            .then(function(res) {
 				                return res.payment_id;
 				            });
@@ -304,13 +309,9 @@
 				        };
 
 				        // Make a call to your server to execute the payment
-				        return paypal.request.post(EXECUTE_URL, data)
-				            .then(function (res) {
-				            	if(res.success=='true'){
-				                	that.processResponseExecution(res);				            		
-				            	} else {
-				            		console.log(res);
-				            	}
+				        return paypal.request.post(EXECUTE_URL, data, {timeout: 30000})
+				            .then(function (response) {
+				            	that.processResponseExecution(response);	
 				            });
 				    }
 
@@ -323,8 +324,17 @@
 					$('#paypal-button-container').hide();
 					$('.paypal-msg-success').show();
 				} else {
+					var message = 'Unknown PayPal Error.';
+					if(response.error){
+						var errorData = response.error;
+						if(errorData.details){
+							var message = errorData.details;
+						};
+					};
+					message = 'Your payment could not be processed because PayPal returned the following error.<br/>'+message + '<br/>Please try again or contact us for assistance.';
+					$('.paypal-msg-failure').html(message);
 					$('.paypal-msg-failure').show();
-					console.log(res);
+					
 				}
 			},
 

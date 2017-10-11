@@ -389,7 +389,7 @@ class TransitQuote_Pro_Public {
     }
 
 	public function get_msg_auth_success(){
-		return 'Thank you! Your Payment has been authorized successfully. You will recieve a confirmation email as soon as the payment has been processed.';
+		return 'Thank you! Your Payment has been authorized successfully.<br/>You will recieve a confirmation email as soon as the payment has been processed.';
 	}
 	
 	public function get_msg_auth_fail(){
