@@ -525,7 +525,7 @@ class TransitQuote_Pro_Admin {
 						on q.id = jobs.accepted_quote_id
 					
 				".$filter_sql."
-				group by job_id, customer_name
+				group by job_id, c.first_name, c.last_name
 				order by pt.id desc;";
 				//echo $sql;
 		$data = $this->cdb->query($sql);
