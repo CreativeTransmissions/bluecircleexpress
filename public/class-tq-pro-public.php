@@ -865,8 +865,8 @@ class TransitQuote_Pro_Public {
             return false;				
 		};	
 
-		if(self::job_is_available()){
-			self::get_job_details($this->job);
+		if(self::job_is_available($this->job)){
+			$this->job = self::get_job_details($this->job);
 		};		
 	}
 
@@ -2146,7 +2146,7 @@ class TransitQuote_Pro_Public {
 		}
 
 		//get details for the job
-   		self::get_job_details($this->job);		
+   		$this->job = self::get_job_details($this->job);		
 
 		//status updated ok, send email
 		$subject = self::get_status_subject($status_type_id, $job_id);
