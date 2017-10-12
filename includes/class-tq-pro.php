@@ -418,6 +418,7 @@ class TransitQuote_Pro3 {
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
 			
+			$cdb->update_row('currencies', array('name'=>'Nigerian Naira', 'currency_code' => 'NGN', 'symbol'=> '&#8358;', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('currencies', array('name'=>'Australian dollar', 'currency_code' => 'AUD', 'symbol'=> '&#36;', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('currencies', array('name'=>'Brazilian real', 'currency_code' => 'BRL', 'symbol'=> 'BRL', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('currencies', array('name'=>'Canadian dollar', 'currency_code' => 'CAD', 'symbol'=> 'CAD', 'created'=>$created, 'modified'=>$modified ));
