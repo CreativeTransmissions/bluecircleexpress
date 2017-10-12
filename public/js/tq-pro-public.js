@@ -44,7 +44,6 @@
 					return false
 				};
 
-
 			},
 			initRequestForms: function(){
 				var that = this;
@@ -407,7 +406,7 @@
 					$("input[name=field2]").focus();
 					}*/
 				});
-			
+				return true;
 			},
 
 			submitForm: function(btn){

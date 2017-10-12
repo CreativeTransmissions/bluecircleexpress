@@ -32,8 +32,9 @@
                 <input tabindex="12" name="tq-form-submit" type="submit" value="Get Estimate" class="tq-button">
             </div>
         </div>
+        -->
     </div>
--->
+
     
     <?php include 'form-messages.php';?>
             
