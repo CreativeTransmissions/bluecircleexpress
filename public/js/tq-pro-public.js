@@ -327,8 +327,8 @@
 					var message = 'Unknown PayPal Error.';
 					if(response.error){
 						var errorData = response.error;
-						if(errorData.details){
-							var message = errorData.details;
+						if(errorData.message){
+							var message = errorData.message;
 						};
 					};
 					message = 'Your payment could not be processed because PayPal returned the following error.<br/>'+message + '<br/>Please try again or contact us for assistance.';

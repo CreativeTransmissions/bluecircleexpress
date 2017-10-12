@@ -264,16 +264,16 @@ form.tq-form .ideal-check.checked.focus {
 	text-align: center;
     padding: 1em;
 }
-.tq-form p.paypal-msg-success,
-.tq-form p.paypal-msg-failure,
+.requestform p.paypal-msg-success,
+.requestform p.paypal-msg-failure,
  {
 	font-size: 18px;
 	line-height: 1.5em;
 }
-.tq-form p.paypal-msg-failure {
+.requestform p.paypal-msg-failure {
 	color: #F00;
 }
-.tq-form p.paypal-msg-success{
+.requestform p.paypal-msg-success{
 	color: #000;
 }
 #quote-form.tq-form label{
