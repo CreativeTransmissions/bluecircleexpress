@@ -43,6 +43,8 @@ class TransitQuote_Pro_Settings_Field_Select extends TransitQuote_Pro_Settings_F
 
             echo '<option '.$selected_att.' value="'.$option_id.'">'.$option_name.'</option>';
         };
+
+        echo '</select>';
         echo '<p>'.$this->help.'</p>';
 
     }

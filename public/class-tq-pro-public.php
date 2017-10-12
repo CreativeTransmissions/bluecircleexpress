@@ -58,7 +58,7 @@ class TransitQuote_Pro_Public {
 		$this->plugin_slug = $plugin_slug;
 		$this->version = $version;
 		$this->debug = false;
-		$this->log_requests = true;
+		$this->log_requests = false;
 		$this->prefix = 'tq_pro3';
 		$this->cdb = TransitQuote_Pro3::get_custom_db();
 		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
@@ -104,6 +104,8 @@ class TransitQuote_Pro_Public {
 
 		$tq_settings = self::get_settings_for_js();
 
+		//self::dequeue_maps(); // uncomment to debug multiple maps installs
+
 		//include dependancies
 		wp_enqueue_script($this->plugin_slug.'-magnific-popup', plugins_url( 'js/jquery-magnific-popup.js', __FILE__ ), '', 1.1, True );
 		wp_enqueue_script($this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
@@ -130,17 +132,33 @@ class TransitQuote_Pro_Public {
 		$this->max_address_pickers = $this->get_setting('tq_pro_quote_options', 'max_address_pickers', '1');
 		$this->min_notice = $this->get_setting('tq_pro_quote_options', 'min_notice', '');
 		$this->min_notice_charge = $this->get_setting('tq_pro_quote_options', 'min_notice_charge', '');
+		$this->min_price = $this->get_setting('', 'min_price');
+		$this->min_distance = $this->get_setting('', 'min_distance');
 		$this->quote_element = $this->get_setting('tq_pro_quote_options', 'quote_element', 'quote');
 		$this->api_key = self::get_api_key();
 		$this->api_string = self::get_api_string();
 		$geolocate = self::get_geolocate();
-		if($geolocate==1){
-			$this->geolocate = 'true';		
-		} else {
-			$this->geolocate = 'false';	
-		};		
+		$sandbox = self::get_sandbox();
+		$this->sandbox = self::bool_to_text($sandbox);
+		$this->geolocate = self::bool_to_text($geolocate);
 	}
 
+	public function get_sandbox(){
+		$sandbox = self::get_setting('', 'sandbox', '');
+		if($sandbox == 1){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function bool_to_text($bool){
+		if($bool === true){
+			return 'true';
+		} else {
+			return 'false';
+		}
+	}
 	public function get_settings_for_js(){
 		//get varibles to pass to JS
 		// $holidays = self::get_holidays();
@@ -159,8 +177,11 @@ class TransitQuote_Pro_Public {
 							'rates'=>$rates,
 							'min_notice'=>$this->min_notice,
 							'min_notice_charge'=>$this->min_notice_charge,
+							'min_price'=>$this->min_price,
+							'min_distance'=>$this->min_distance,
 							'quote_element'=>$this->quote_element,
-							'max_address_pickers'=>$this->max_address_pickers
+							'max_address_pickers'=>$this->max_address_pickers,
+							'sandbox'=>$this->sandbox
 							);
 
 		if(!empty($this->api_key)){
@@ -175,6 +196,19 @@ class TransitQuote_Pro_Public {
 			$tq_settings['paypal'] = $paypal_settings;
 		};
 		return $tq_settings;
+	}
+
+	public function dequeue_maps(){
+		self::inspect_scripts();
+	}
+
+	function  inspect_scripts() {
+		//for finding out if gmamps installed more than once. 
+	    global $wp_scripts;
+		echo 'scriptlist:';
+	    foreach( $wp_scripts->queue as $handle ) :
+	        echo $handle . ' | ';
+	    endforeach;
 	}
 
 	public function check_payment_config($payment_type_id = null){
@@ -226,13 +260,23 @@ class TransitQuote_Pro_Public {
 		$this->settings = array();
 		// update the conif with any saved settings
 		foreach ($this->tabs_config as $tab_key => $tab) {
+			$defaults = self::get_tab_defaults($tab);
 			$saved_options = (array) get_option($tab_key, array());
-			if(!empty($saved_options)){
-				$this->settings = array_merge($this->settings, $saved_options);
-			}
+			$this->settings = array_merge($this->settings, $defaults, $saved_options);
 		};
 	}
 
+	private function get_tab_defaults($tab){
+		$defaults = array();
+		foreach ($tab['sections'] as $section_key => $section) {
+			foreach ($section['fields'] as $field_key => $field) {
+				if(isset($field['default'])){
+					$defaults[$field['id']] = $field['default'];
+				}
+			}
+		}
+		return $defaults;
+	}
 	public function get_prefix(){
 		return $this->prefix;
 	}
@@ -360,7 +404,7 @@ class TransitQuote_Pro_Public {
     }
 
 	public function get_msg_auth_success(){
-		return 'Thank you! Your Payment has been authorized successfully. You will recieve a confirmation email as soon as the payment has been processed.';
+		return 'Thank you! Your Payment has been authorized successfully.<br/>You will recieve a confirmation email as soon as the payment has been processed.';
 	}
 	
 	public function get_msg_auth_fail(){
@@ -430,20 +474,29 @@ class TransitQuote_Pro_Public {
     									'url'=>$url));
     	} else {
     		$status = $this->paypal->get_paypal_status();
-    		if($status==='approved'){
+    		if($status=='approved'){
 	    		if(!self::update_payment_status_id($job_id, 4)){
 					return array('success'=>'false',
 									 'msg'=>'Unable to update job '.$job_id.' to pending / authorized');
 				};
 
+				self::get_job_details_from_id($job_id);
+
+				if(!self::email_dispatch('Delivery '.$job_id.' Update: Payment Authorized')){
+					$this->ajax->log_error(array('name'=>'Unable to email dispatch',
+		                'value'=>'job_id: '.$job['id']));
+				};
+
 				$this->ajax->respond(array('success' => 'true',
 	    								'payment_id'=>$this->payment_id,
-	                                    'status'=>$status));
+	                                    'status'=>$status,
+	                               		'job_id'=>$job_id));
 			} else {
 				$this->ajax->respond(array('success' => 'false',
 	    								'payment_id'=>$this->payment_id,
 	    								'msg'=>'Payment was not approved.',
-	                                    'status'=>$status));
+	                                    'status'=>$status,
+	                               		'job_id'=>$job_id));
 			}
     	}
 
@@ -515,7 +568,8 @@ class TransitQuote_Pro_Public {
 		$this->currency_code = self::get_currency_code();
 		$this->distance_unit = self::get_distance_unit();
 		$this->success_message = self::get_success_message();
-
+		$this->form_section_order = self::get_form_section_order();
+		$this->build_form_include_list();
 		if($layout==1){ //Inline Map public
 			$this->view = 'partials/tq-pro-inline-display.php';
 		}else{ //business_qoute
@@ -527,44 +581,39 @@ class TransitQuote_Pro_Public {
 	   	return ob_get_clean();
 	}	
 
+	function build_form_include_list(){
+		$this->form_includes = array();
+		switch ($this->form_section_order) {
+		    case 'Delivery Information':
+		       $this->form_includes = array(
+		       		array(	'template'=>'search_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'delivery_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'map',
+		       				'hidden'=>''),
+		       		array(	'template'=>'quote_fields',
+		       				'hidden'=>'hidden'),
+		       		array(	'template'=>'customer_fields',
+		       				'hidden'=>'hidden')
+		       	);
+		       break;
+		    case 'Customer Information':
+		       $this->form_includes = array(
 
-
-	function process_paypal_request(){
-		// page is being requested after paypal redirects customer back to the website
-		$this->paypal = new CT_PayPal(array('cdb'=>$this->cdb,
-											'sandbox'=>self::get_setting('tq_pro_paypal_options', 'sandbox', 1)));
-		$this->payment_status_type_id = $this->paypal->process_paypal_return();
-		$this->job_id = $this->paypal->get_transaction_id();
-		if(empty($this->job_id)){
-			$this->ajax->log_error(array('name'=>'Paypal return error','value'=>'No job id returned from PayPal'));
-			return false;
-		};
-
-		if(!self::update_payment_status_id($this->job_id, $this->payment_status_type_id)){
-			self::debug('could not update payment_status');
-			return false;
-		};
-
-		$this->job = self::get_job($this->job_id);
-		if($this->job===false){
-			$this->ajax->log_error(array('name'=>'Could not load job to update',
-                'value'=>'job_id: '.$job['id']));
-            return false;				
-		};	
-
-		if(self::job_is_available()){
-			$this->job = self::get_job_details($this->job);
-		};
-		//get text payment status message
-		$payment_status = $this->paypal->get_payment_status($this->job);
-
-		if(!self::email_dispatch('Delivery Update: '.$this->customer['first_name']." ".$this->customer['last_name'].' PayPal '.$payment_status)){
-			$this->ajax->log_error(array('name'=>'Unable to email dispatch',
-                'value'=>'job_id: '.$job['id']));
-		};
-
-		$this->view = $this->paypal_partials_dir.'payment_result.php';
-		return true;
+		       		array(	'template'=>'customer_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'delivery_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'search_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'map',
+		       				'hidden'=>''),
+		       		array(	'template'=>'quote_fields',
+		       				'hidden'=>'hidden')
+				);
+		       break;
+		}
 	}
 
 	private function check_payment_status_type_id($payment_status_type_id){
@@ -575,6 +624,14 @@ class TransitQuote_Pro_Public {
 			return false;
 		};
 		return $payment_status_type_id;
+	}
+
+	public function get_min_price_msg(){
+		return $this->get_setting('', 'min_price_message');
+	}
+
+	public function get_min_distance_msg(){
+		return $this->get_setting('', 'min_distance_message');
 	}
 
 	private function get_result_class($payment_status_type_id = null){
@@ -755,11 +812,32 @@ class TransitQuote_Pro_Public {
 			$this->ajax->log_requests();
 		}
 
-		// get the submit type for the submitted qutoe form
-		$submit_type = $this->ajax->param(array('name'=>'submit_type', 'optional'=>true));
+
 
 		//get the job id in submitted form, unless it is a quote request submission
 		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
+		if(empty($job_id)){
+			$response = self::save_job();
+			if($response['success'] == true){
+				$job_id = $this->job['id'];
+			}
+		};
+		
+		$response = self::process_payment_method($job_id);
+
+		if($response === false){
+			$response = array('success'=>false, 
+								'msg'=>'Sorry, an error occured and we are unable to process this request.');
+		};
+
+		$this->ajax->respond($response);		
+	}
+
+	private function process_payment_method($job_id){
+
+		// get the submit type for the submitted qutoe form
+		$submit_type = $this->ajax->param(array('name'=>'submit_type', 'optional'=>true));
+
 
 		switch ($submit_type) {
 			case 'pay_method_1':
@@ -776,19 +854,10 @@ class TransitQuote_Pro_Public {
 				// Stripe
 				self::get_job_details_from_id($job_id);
 				$response = self::request_payment_stripe($job_id);
-				break;				
-			default:
-				//get estimate
-				$response = self::get_quote();
 				break;
 		}
 
-		if($response === false){
-			$response = array('success'=>false, 
-								'msg'=>'Sorry, an error occured and we are unable to process this request.');
-		};
-
-		$this->ajax->respond($response);		
+		return $response;
 	}
 
 	public function get_job_details_from_id($job_id){
@@ -800,8 +869,8 @@ class TransitQuote_Pro_Public {
             return false;				
 		};	
 
-		if(self::job_is_available()){
-			self::get_job_details($this->job);
+		if(self::job_is_available($this->job)){
+			$this->job = self::get_job_details($this->job);
 		};		
 	}
 
@@ -817,7 +886,7 @@ class TransitQuote_Pro_Public {
 		return $this->job['id'];
 	}
 
-	public function get_quote(){
+	public function save_job(){
 		//get email for notification
 		$email = $this->ajax->param(array('name'=>'email'));
 
@@ -856,7 +925,7 @@ class TransitQuote_Pro_Public {
 		};
 
 		
-		$email = self::email_dispatch('New Removal Request: '.$this->customer['first_name']." ".$this->customer['last_name']);
+		$email = self::email_dispatch('New Job Booking - ref: '.$this->job['id']." ".$this->customer['first_name']." ".$this->customer['last_name']);
 		$customer_email = self::email_customer();
 
 		return array('success'=>'true',
@@ -1064,6 +1133,10 @@ class TransitQuote_Pro_Public {
 
 		return array(	'success'=>'true',
 						'success_message'=>'<h2>Thank You.</h2><p>Your job has now been booked with payment due on delivery.<br/>Your reference number is: '.$job_id.'</p>',
+						'data'=>array('customer_id'=>$this->customer['id'],
+					 				'job_id'=>$job_id,
+					 				'quote_id'=>$this->quote['id'],
+					 				'email'=>$this->customer['email']),
 					 	'payment_method'=>1);
 
 	}
@@ -1078,8 +1151,6 @@ class TransitQuote_Pro_Public {
 			self::debug('could not update payment_type');
 			return false;
 		};
-
-		$paypal_return_url = $this->ajax->param(array('name'=>'return_url'));
 
 		//set payment status to 1 = Awaiting Payment
 		if(!self::update_payment_status_id($job_id, 1)){
@@ -1576,6 +1647,14 @@ class TransitQuote_Pro_Public {
         return $this->currency_code;
     }
 
+    public function get_form_section_order(){
+    	$form_section_order = self::get_setting('tq_pro_form_options', 'form_section_order', 'Delivery Information');
+    	if(empty($form_section_order)){
+    		return false;
+    	};
+        return $form_section_order;
+    }
+
 	public function get_oldest_job_date(){
 		$plugin = new TransitQuote_Pro3();
 		$this->cdb = $plugin->get_custom_db();
@@ -1588,6 +1667,7 @@ class TransitQuote_Pro_Public {
 		};
 		return $jobs[0]['created'];
 	}
+
 	public function get_setting($tab, $name, $default = ''){
 		if(empty($this->settings)){
 			self::load_settings();			
@@ -1600,15 +1680,15 @@ class TransitQuote_Pro_Public {
 		}
 	}
 	public function get_notification_emails(){
-        // return self::get_setting($this->tab_5_settings_key, 'notify', get_option( 'admin_email' ));
-        return get_option( 'admin_email' );
+        return self::get_setting('', 'notify', null);
     }
+
     public function get_from_address(){
-        return get_option( 'admin_email' );
+        return self::get_setting('', 'from_address', null);
     }
+
     public function get_from_name(){
-        return 'Custom Google Map Tools';
-        // return self::get_setting($this->tab_5_settings_key, 'from_name', 'Medical Rescue');
+        return self::get_setting('', 'from_name', null);
     }
 
 
@@ -1988,10 +2068,67 @@ class TransitQuote_Pro_Public {
 			if($key>0){
 				$style_attribute = ' style="display: none;" ';
 			};
-			$descriptions_html .= '<p class="select-desc v-desc-'.$vehicle['id'].'" '.$style_attribute.'>'.$vehicle['description'].'</p>';
+			$descriptions_html .= '<p class="select-desc v-desc-'.$vehicle['id'].'" '.$style_attribute.'>'.$vehicle['description'];
+			if(self::using_vehicle_links()){
+				$vehicle_link = self::build_vehicle_link($vehicle);
+				if(empty($vehicle['description'])){
+					$descriptions_html .= $vehicle_link;
+				} else {
+					$descriptions_html .= ' '.$vehicle_link;
+				};
+				
+			};
+			$descriptions_html .= '</p>';
 		}
 
 		echo $descriptions_html;
+	}
+
+	private function using_vehicle_links(){
+		$using_link = self::get_setting('tq_pro_form_options', 'show_vehicle_link', false);
+		if($using_link == 1){
+			return true;
+		};
+		return false;
+	}
+
+	public function using_service_descript(){
+		$using_service_descript = self::get_setting('tq_pro_form_options', 'show_service_description', false);
+		if($using_service_descript == 1){
+			return true;
+		};
+		return false;
+	}
+
+	public function using_vehicle_descript(){
+		$vehicle_descript = self::get_setting('tq_pro_form_options', 'show_vehicle_description', false);
+		if($vehicle_descript == 1){
+			return true;
+		};
+		return false;
+	}
+
+	private function build_vehicle_link($vehicle){
+		$page_name = self::format_string_for_url($vehicle['name']);
+		$link_text = 'View vehicle..';
+		return '<a target="_blank" href="/'.$page_name.'">'.$link_text.'</a>';
+
+	}
+
+	public function format_string_for_url($string){
+		$string = self::remove_spaces($string);
+		$string = self::strip_non_alphanum($string);
+		$url_friendly = strtolower($string);
+		return $url_friendly;
+		
+	}
+
+	public function remove_spaces($string){
+		return str_replace(' ', '', $string);
+	}
+
+	public function strip_non_alphanum($string){
+		return preg_replace("/[^A-Za-z0-9 ]/", '', $string);
 	}
 
 	public function update_job_status($job_id, $status_type_id){
@@ -2013,7 +2150,7 @@ class TransitQuote_Pro_Public {
 		}
 
 		//get details for the job
-   		self::get_job_details($this->job);		
+   		$this->job = self::get_job_details($this->job);		
 
 		//status updated ok, send email
 		$subject = self::get_status_subject($status_type_id, $job_id);

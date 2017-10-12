@@ -64,11 +64,60 @@ class Admin_Config {
                               'sections'=>array()
                               ),
 
+              'tq_pro_form_options'=>array(
+                              'key'=>'tq_pro_form_options',
+                              'title'=>'Order Form',
+                              'sections'=>array('pro_settings_form_options'=>array(
+                                                'id'=>'pro_settings_form_options',
+                                                'title'=>'Order Form Options',
+                                                'fields'=>array(
+                                                    
+                                                      'form_section_order'=>array(
+                                                        'id'=>'form_section_order',
+                                                        'label'=>'Form Section Order',
+                                                        'type'=>'select',
+                                                        'options'=>array('Customer Information', 'Delivery Information'),
+                                                        'default'=>'Delivery Information',
+                                                        'help'=>'Please select the information that the customer will enter first.<br/>If you ask for Delivery Information first the customer will see their quote before having to enter their contact details.'),
+
+                                                      'show_vehicle_description'=>array(
+                                                        'id'=>'show_vehicle_description',
+                                                        'label'=>'Show Vehicle Description',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will display the description of the selected vehicle as entered on the Vehicles tab.<br/>The description will change if the customer changes the vehicle selection drop down.',
+                                                        'default'=>0),
+
+                                                      'show_vehicle_link'=>array(
+                                                        'id'=>'show_vehicle_link',
+                                                        'label'=>'Show Vehicle Link',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will display a link to another page on your website which should provide your customer with more information about the selected vehicle.<br/>The link address will be based on the vehicle name as entered on the Vehicles tab with hyphens (-) instead of spaces.<br/>The link will change if the customer changes the vehicle selection drop down.',
+                                                        'default'=>0)/*,
+
+                                                      'show_service_description'=>array(
+                                                        'id'=>'show_service_description',
+                                                        'label'=>'Show Service Description',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will display the description of the selected service as entered on the Services tab.<br/>The description will change if the customer changes the service selection drop down.',
+                                                        'default'=>0),
+
+                                                      'show_service_link'=>array(
+                                                        'id'=>'show_service_link',
+                                                        'label'=>'Show Service Link',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will display a link to another page on your website which should provide your customer with more information about the selected service.<br/>The link address will be based on the service name as entered on the Service tab with hyphens (-) instead of spaces.<br/>The link will change if the customer changes the service selection drop down.',
+                                                        'default'=>0)*/
+                                                    )
+                                                )
+                                        )
+                                
+               ),
+
               'tq_pro_map_options'=>array(
                               'key'=>'tq_pro_map_options',
                               'title'=>'Map Options',
-                              'sections'=>array('prem_settings_map_options'=>array(
-                                                  'id'=>'prem_settings_map_options',
+                              'sections'=>array('pro_settings_map_options'=>array(
+                                                  'id'=>'pro_settings_map_options',
                                                   'title'=>'Map Options',
                                                   'fields'=>array(
                                                     'api_key'=>array(
@@ -99,14 +148,14 @@ class Admin_Config {
               'tq_pro_quote_options'=>array(
                               'key'=>'tq_pro_quote_options',
                               'title'=>'Quote Options',
-                              'sections'=>array('prem_settings_quote_options'=>array(
-                                                'id'=>'prem_settings_quote_options',
+                              'sections'=>array('pro_settings_quote_options'=>array(
+                                                'id'=>'pro_settings_quote_options',
                                                 'title'=>'Quote Options',
                                                 'fields'=>array(
                                                     
                                                       'currency'=>array(
                                                         'id'=>'currency',
-                                                        'label'=>'Currency Symbol',
+                                                        'label'=>'Currency',
                                                         'type'=>'select',
                                                         'table'=>'currencies',
                                                         'display_field'=>'name',
@@ -130,6 +179,30 @@ class Admin_Config {
                                                         'type'=>'input',
                                                         'help'=>'Please enter the additional charge for jobs booked within 24 hours..',
                                                         'default'=>0),
+                                                      'min_price'=>array(
+                                                        'id'=>'min_price',
+                                                        'label'=>'Minimum Price Accepted',
+                                                        'type'=>'input',
+                                                        'help'=>'If you do not wish to accept jobs below a certain price, enter the minimum price here and the customer will not be able to make a booking.',
+                                                        'default'=>0),
+                                                      'min_price_message'=>array(
+                                                        'id'=>'min_price_message',
+                                                        'label'=>'Minimum Price Message',
+                                                        'type'=>'textarea',
+                                                        'help'=>'This message will be displyed when a customer attempts to book a job below the minimum price.',
+                                                      'default'=>'Sorry, we are unable to accept jobs below our minimum price. Please contact us if you need any further assistance.'),
+                                                      'min_distance'=>array(
+                                                        'id'=>'min_distance',
+                                                        'label'=>'Minimum Distance Accepted',
+                                                        'type'=>'input',
+                                                        'help'=>'If you do not wish to accept jobs shorter than a specific distance, enter the distance here and the customer will not be able to make a booking.',
+                                                        'default'=>0),
+                                                      'min_distance_message'=>array(
+                                                        'id'=>'min_distance_message',
+                                                        'label'=>'Minimum Distance Message',
+                                                        'type'=>'textarea',
+                                                        'help'=>'This message will be displyed when a customer attempts to book a job below the minimum distance.',
+                                                      'default'=>'Sorry, we are unable to accept jobs below our minimum distance. Please contact us if you need any further assistance.'),
                                                       'success_message'=>array(
                                                         'id'=>'success_message',
                                                         'label'=>'Success Message',
@@ -150,8 +223,8 @@ class Admin_Config {
               'tq_pro_email_options'=>array(
                               'key'=>'tq_pro_email_options',
                               'title'=>'Email Options',
-                              'sections'=>array('prem_settings_email_options'=>array(
-                                                  'id'=>'prem_settings_email_options',
+                              'sections'=>array('pro_settings_email_options'=>array(
+                                                  'id'=>'pro_settings_email_options',
                                                   'title'=>'Email Options',
                                                   'fields'=>array(
                                                     
@@ -190,8 +263,8 @@ class Admin_Config {
               'tq_pro_paypal_options'=>array(
                               'key'=>'tq_pro_paypal_options',
                               'title'=>'PayPal Options',
-                              'sections'=>array('prem_settings_paypal_options'=>array(
-                                                  'id'=>'prem_settings_paypal_options',
+                              'sections'=>array('tq_pro_paypal_options'=>array(
+                                                  'id'=>'pro_settings_paypal_options',
                                                   'title'=>'PayPal Options',
                                                   'fields'=>array(
                                                     'application_client_id'=>array(

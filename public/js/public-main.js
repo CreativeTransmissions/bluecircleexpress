@@ -3,16 +3,7 @@
 	// Code by AS
 	$(function () {
 		if($('#quote-form').length>0){
-			$('#quote-form').TransitQuotePro({
-				ajaxUrl: TransitQuoteProSettings.ajaxurl,
-				data: TransitQuoteProSettings,
-			});
-		}
 
-	});
-	$(function() {
-		if($('#quote-form').length>0){
-		//for validator
 			$('#quote-form').parsley().on('form:error', function () {
 	            $.each(this.fields, function (key, field) {
 	                if (field.validationResult !== true) {
@@ -27,8 +18,14 @@
 	                this.$element.closest('.bt-flabels__wrapper').addClass('bt-flabels__error');
 	            }
 	        });	
-        }	
 
- 	});
+			$('#quote-form').TransitQuotePro({
+				ajaxUrl: TransitQuoteProSettings.ajaxurl,
+				data: TransitQuoteProSettings,
+			});
+		}
+
+	});
+
 
 }(jQuery));

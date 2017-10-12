@@ -18,8 +18,8 @@
 	<table id="transactions_paypal_table" class="settings-table">
 		<thead>
 			<tr><th data-sortby='jobid' data-order='DESC'>Job ID<span class="sorting"></span></th>
-				<th data-sortby='payment_date' data-order='DESC'>Payment Date<span class="sorting"></span></th>
 				<th data-sortby='customer_name' data-order='ASC'>Customer Name<span class="sorting"></span></th>
+				<th data-sortby='payment_date' data-order='DESC'>Payment Date<span class="sorting"></span></th>
 				<th data-sortby='email' data-order='ASC'>Customer Email<span class="sorting"></span></th>
 				<th data-sortby='amount' data-order='ASC'>Amount<span class="sorting"></span></th>
 				<th data-sortby='currency' data-order='ASC'>Currency<span class="sorting"></span></th>

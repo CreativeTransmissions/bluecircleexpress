@@ -44,7 +44,6 @@
 					return false
 				};
 
-
 			},
 			initRequestForms: function(){
 				var that = this;
@@ -104,6 +103,7 @@
 					return false;
 				};
 				this.initDataMapSettings();
+				this.payPalInitialized = false;
 				return true;
 			},
 
@@ -169,6 +169,7 @@
 
 					ajaxUrl: TransitQuoteProSettings.ajaxurl,
 					debug: this.settings.debug,
+					sandbox: this.settings.sandbox,
 
 					// fare calculation options
 					limits: this.limits, // Travel distance boundaries for which rates to use
@@ -188,6 +189,8 @@
 					maxAddressPickers: this.settings.data.max_address_pickers,
 					minNotice: this.settings.data.min_notice,
 					minNoticeCharge: this.settings.data.min_notice_charge,
+					minCost: this.settings.data.min_price,
+					minDistance: this.settings.data.min_distance,
 
 					/*	
 						The form elements tell the plugin which html inputs are used for 
@@ -215,7 +218,22 @@
 					pickUpLng: 'address_0_lng',
 
 					dropOfLat: 'address_1_lat',
-					dropOfLng: 'address_1_lng'
+					dropOfLng: 'address_1_lng',
+					afterQuote: function(){
+						$('.tq-row.success').show();
+						$('.tq-row.buttons').hide();
+						$('.tq-row.success.buttons').show();
+						$('.tq-form-fields-container').show();
+						$('.tq-form-fields-container').removeClass('hidden');
+						$('.quote-fields').removeClass('hidden');
+					},
+
+					callbackChangeVehicleId: function(vehicleId){
+						// UI changes on vehicle selection
+						$('.select-desc').hide();
+						var descToShowSelector = '.v-desc-'+String(vehicleId);
+						$(descToShowSelector).show();
+					}
 
 				});
 			},
@@ -259,14 +277,19 @@
 
 				    // payment() is called when the button is clicked
 				    payment: function() {
+				    	$('.paypal-msg-failure').hide();
+				    	$('.paypal-msg-success').hide();
 				    	var jobId = $('input[name="job_id"]').val();
 				        // Set up a url on your server to create the payment_id
-				        var CREATE_URL = TransitQuoteProSettings.paypal.createPaymentUrl+'&jobId='+jobId;
+				        var CREATE_URL = TransitQuoteProSettings.paypal.createPaymentUrl;
 
 						// Set up the data you need to pass to your server
+						var data = {
+				            jobId: jobId
+				        };
 		
 				        // Make a call to your server to set up the payment
-				        return paypal.request.post(CREATE_URL)
+				        return paypal.request.post(CREATE_URL, data)
 				            .then(function(res) {
 				                return res.payment_id;
 				            });
@@ -287,13 +310,9 @@
 				        };
 
 				        // Make a call to your server to execute the payment
-				        return paypal.request.post(EXECUTE_URL, data)
-				            .then(function (res) {
-				            	if(res.success=='true'){
-				                	that.processResponseExecution(res);				            		
-				            	} else {
-				            		console.log(res);
-				            	}
+				        return paypal.request.post(EXECUTE_URL, data, {timeout: 30000})
+				            .then(function (response) {
+				            	that.processResponseExecution(response);	
 				            });
 				    }
 
@@ -302,12 +321,22 @@
 			},
 			
 			processResponseExecution: function(response){
+				$('#paypal-button-container').hide();
 				if(response.status === 'approved'){
-					$('#paypal-button-container').hide();
 					$('.paypal-msg-success').show();
 				} else {
-					$('.paypal-msg-failure').show();
-					console.log(res);
+					var message = 'Unknown PayPal Error.';
+					if(response.error){
+						var errorData = response.error;
+						if(errorData.message){
+							var message = errorData.message;
+						};
+					};
+					message = 'Your payment could not be processed because PayPal returned the following error.<br/>'+message + '<br/>Please try again or contact us for assistance.';
+					$('.paypal-msg-failure').html(message);
+					$('.paypal-msg-failure').show();	
+					$('.buttons').show();
+					
 				}
 			},
 
@@ -363,7 +392,9 @@
 				$(this.element).on('click','button:submit', function(e){
 					e.preventDefault();
 					var btn = e.target;
-					that.submitForm(btn)					
+					if($(that.element).parsley().validate()){
+						that.submitForm(btn)
+					};					
 				});
 
 				$.listen('parsley:field:error', function(parsleyField) {
@@ -376,7 +407,7 @@
 					$("input[name=field2]").focus();
 					}*/
 				});
-			
+				return true;
 			},
 
 			submitForm: function(btn){
@@ -401,6 +432,7 @@
 				$('.failure').hide();
 				this.updateProgressMessage('Sending your request to our staff, please wait a moment...');
 				$('.buttons').hide();
+				$('.paypal-msg-failure').hide();
 				$('.spinner-div').css({
 					    height: $('#quote-form').height(), 
 					    width: $('#quote-form').width()
@@ -426,7 +458,9 @@
 
 			submissionSuccess: function(response){
 				this.hideStatusMessages();
-
+				if(response.data.job_id){
+					this.populateFormWithJobId(response);
+				};
 				if(this.hasValidPaymentMethod(response)){
 					var paymentMethod = this.getPaymentMethodFromResponse(response);
 					if(paymentMethod==1){
@@ -436,7 +470,6 @@
 				} else {
 					// just returning the quote
 					this.showSuccessMessage();
-					this.populateFormWithJobId(response);
 				}
 
 
@@ -490,8 +523,15 @@
 						$('.on-delivery').show();
 					break;
 					case 2:
+						$('.paypal-msg-failure').hide();
 						$('#paypal').show();
-						this.initPayPal();
+						$('#paypal-button-container').show();
+						if(!this.payPalInitialized){
+							this.payPalInitialized = true;
+							this.initPayPal();
+
+						};
+						
 					break;
 				}
 			},

@@ -38,7 +38,7 @@ class TransitQuote_Pro3 {
 	 * @var      TransitQuote_Pro_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
-	const VERSION = '3.0.1';
+	const VERSION = '3.0.4';
 	/**
 	 * The unique identifier of this plugin.
 	 *
@@ -473,7 +473,7 @@ class TransitQuote_Pro3 {
 			$cdb->update_row('payment_status_types', array('name' => 'wating', 'description'=> 'Awaiting Payment', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_status_types', array('name' => 'recieved', 'description'=> 'Payment Recieved', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_status_types', array('name' => 'failed', 'description'=> 'Payment Failed', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_status_types', array('name' => 'pending', 'description'=> 'Payment Pending', 'created'=>$created, 'modified'=>$modified ));					
+			$cdb->update_row('payment_status_types', array('name' => 'pending', 'description'=> 'Payment Approved', 'created'=>$created, 'modified'=>$modified ));					
 		};
 	}
 

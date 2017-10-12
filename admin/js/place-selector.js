@@ -29,8 +29,8 @@
 							html +='<input type="hidden" id="address_'+idx+'_administrative_area_level_1" name="administrative_area_level_1_'+idx+'" value=""/>';
 							html +='<input type="hidden" id="address_'+idx+'_country" name="country_'+idx+'" value=""/>';
 							html +='<input type="hidden" id="address_'+idx+'_postal_code" name="postal_code_'+idx+'" value=""/>';
-							html +='<input type="hidden" id="address_'+idx+'_lat" name="tq_pro_quote_options[start_lat]" value=""/>';
-							html +='<input type="hidden" id="address_'+idx+'_lng" name="tq_pro_quote_options[start_lng]" value=""/>';
+							html +='<input type="hidden" id="address_'+idx+'_lat" name="tq_pro_map_options[start_lat]" value=""/>';
+							html +='<input type="hidden" id="address_'+idx+'_lng" name="tq_pro_map_options[start_lng]" value=""/>';
 						return html;
 					},
 

@@ -1,6 +1,10 @@
 /* This stylesheet is used to style the public-facing components of the plugin. */
 
+#top fieldset.search-fields {
+	margin-bottom: 0;
+} 
 /* General Purpose Styles */
+
 .full-width {
 	width: 100%
 }
@@ -14,50 +18,66 @@
 .tq-form .inline-block{
 	display: inline-block;
 }
+.tq-form .hidden {
+	display: none;
+}
+.tq-form p.tq-warning {
+	font-size: 18px;
+	color: #F00;
+	text-align: center;
+}
+.tq-form p.select-desc {
+	padding-top: 2em;
+	padding-left: 0;
+}
 .half {
 	width: 49.9%;
 }
 .tq-form .half-field{
-	width: 97%;
 }
 .tq-form .half-field-right{
-	margin-left: 3%;
 }
 .tq-form .text-center,
 .payment-result .text-center {
 	text-align: center;
 }
+.tq-form .payment-result p {
+	color: #000;
+}
 .tq-form .picker-btn {
 	margin-top: 0.75em;
 }
 .tq-form .address-wrap {
-	margin-bottom: 1em;
+	clear: both;
+	margin-bottom: 0em;
 }
 .tq-form .remove-address{
 	display: inline-block;
 	margin-left: 1em;
 }
+.tq-form {
+	color: #000;	
+}
 .round {
   /* Safari 3-4, iOS 1-3.2, Android 1.6- */
-  -webkit-border-radius: 3px; 
+  -webkit-border-radius: 0.5em; 
 
   /* Firefox 1-3.6 */
-  -moz-border-radius: 3px; 
+  -moz-border-radius: 0.5em; 
   
   /* Opera 10.5, IE 9, Safari 5, Chrome, Firefox 4, iOS 4, Android 2.1+ */
-  border-radius: 3px; 
+  border-radius: 0.5em; 
 }
 
 .tq-form input.small {
 	margin: 0;
 	width: 49%;
 }
-
-/* Form styles */
-.calc-form{
-	clear: left;
-	float: left;
-	width: 30%;
+.tq-form .quote-fields{
+	margin-bottom: 2em;
+}
+.tq-form .quote-fields p {
+	color: #000;
 }
 
 form.tq-form .field {
@@ -78,38 +98,6 @@ form.tq-form .field {
     display: inline-block;
     width: 47%;
 }
-.calc-form .field input[type=text],
-.calc-form .field textarea
- {
-	background-color: #fff;
-	color: #000;
-	/*padding: 0.25em;
-	width: 95%;*/
-}
-
-.calc-form .field textarea{
-	height: 4.5em;
-}
-.calc-form .field .highlight {
-	font-weight: bold;
-}
-.calc-form .field span.sub-total {
-	line-height: 1.5em;
-	margin: 0em;
-	font-weight: bold;
-	font-size: 16px;
-	color: #06a602;	
-}
-.calc-form .field label {
-	display: inline-block;
-	/* width: 100%; */
-}
-
-.calc-form .group input{
-	clear: none;
-	width: auto;
-}
-
 
 .pop-up {
 	width: auto;
@@ -134,7 +122,7 @@ form.tq-form .field {
     width: 100%;
 }
 #map {
-	height: 35.8em;
+	height: 20em;
 }
 .quote-form fieldset.quote-fields.block {
 	display: block;
@@ -212,8 +200,11 @@ form.tq-form .progress {
 	font-size: 1.5em;
 }
 
-form.tq-form input{
+form.tq-form input[type="text"],
+form.tq-form textarea
+{
 	background-color: #fff;
+	margin-bottom: 0.25em !important;
 }
 form.tq-form .group,
 form.tq-form .error{
@@ -267,26 +258,44 @@ form.tq-form .ideal-check.checked.focus {
 	position: relative;
 	z-index: 5;
 	background: #efefef;
-	padding: 1em 2.5em 1em 1.5em;
+	padding: 1em 1.5em 1em 1.5em;
 	margin:0 auto; 
 	border: 1px solid #cccccc;
 	border-bottom: 1px solid #efefef;
-	border-radius: 10px 10px 0 0;
 }
 .requestform #paypal {
 	text-align: center;
     padding: 1em;
 }
-.tq-form label{
+.requestform p.paypal-msg-success,
+.requestform p.paypal-msg-failure,
+ {
+	font-size: 18px;
+	line-height: 1.5em;
+}
+.requestform p.paypal-msg-failure {
+	color: #F00;
+}
+.requestform p.paypal-msg-success{
+	color: #000;
+}
+.requestform .on-delivery-msg-succcess {
+	color: #000;
+}
+#quote-form.tq-form label{
 	font-size: 16px;
-	color: #333333;
-	margin-bottom: 0.25em;
+	margin-bottom: 0em;
+	padding-bottom: 0.25em;
 	display: inline-block;
-	cursor: pointer;
 	text-align: left;
 }
 .tq-form .no-address{
 	float: right;
+	margin-top: 1em;
+}
+#quote-form.tq-form .quote-fields label {
+	font-weight: normal;
+	padding: 0 0 0.5em 0em;
 }
 .tq-row{
 	padding: 5px 0;
@@ -308,6 +317,9 @@ form.tq-form .ideal-check.checked.focus {
 	font-size: 14px;
 	margin-bottom: 15px;
 	border-radius: 3px;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 .tq-form textarea{
 	resize: vertical;
@@ -315,17 +327,18 @@ form.tq-form .ideal-check.checked.focus {
 .tq-address-container {
 	background: #dddddd;
 	padding: 0.5em 1em;
+	margin-top: 1em;
 }
-/*.tq-form fieldset{
-	padding: 10px;
-	border:1px solid #dddddd;
-}*/
-form.tq-form legend{
+.tq-form .payment-options{
+	margin-top: 2em
+}
+#quote-form.tq-form legend{
+	border-bottom: none;
 	font-size: 20px;
 	font-weight: bold;
 	background: transparent;
-    padding: 0;
-    text-align: left;
+    padding: 0.5em;
+    text-align: center;
     margin: 0;
 }
 .tq-form .tq-payment-buttons {
@@ -428,9 +441,6 @@ form.tq-form legend{
 
 }
 
-form.tq-form select {
-	padding: 0.25em;
-}
 form.tq-form select option{
 	background-color: #fff;
 	color: #000;
@@ -475,9 +485,9 @@ button.ui-datepicker-current {
 
 /*********************Domestic/business requst form********************/
 .requestform .bt-flabels__error-desc{
-    margin: 30px 0 -9px 9px;
+    margin: 38px 0 -9px 9px;
     color: rgb(227, 134, 119) !important;
-    right: 0px !important;
+    right: 5px !important;
     top: 0px !important;
 }
 .requestform  .progress{background-color: transparent !important;height: auto;}

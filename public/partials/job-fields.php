@@ -1,10 +1,6 @@
-<?php 
-	$has_services = $this->has_services(); 
-	$has_vehicles = $this->has_vehicles(); 
-?>
-<!-- job fields here -->
+<!-- customer fields here -->
 <div class="clear"></div>
-<div class="tq-form-fields-container">
+<div class="tq-form-fields-container <?php echo $hide_section; ?>">
 	<div class="tq-form-fields-inner">
 		<div class="tq-row">
 			<div class="tq-col48">

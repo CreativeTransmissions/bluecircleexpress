@@ -13,13 +13,13 @@
                         <legend>Enter Addresses</legend>
                         <div class="row"> 
                             <div class="columns small-12 medium-6 bt-flabels__wrapper"> 
-                                <label for="phone">Location</label>
-                                <input type="text" required id="moving-from" name="moving_from" class="popup-with-form moving-from" placeholder="MOVING FROM*">
+                                <label for="pick_up">Collection Address</label>
+                                <input type="text" required id="moving-from" name="moving_from" class="popup-with-form moving-from" placeholder="Collection">
                                 <span class="bt-flabels__error-desc">Required Move From</span>
                              </div>
                             <div class="columns small-12 medium-6 bt-flabels__wrapper"> 
-                                <label for="phone">Destination</label>
-                                <input type="text" required name="moving_to" id="moving-to"class="popup-with-form moving-to"  placeholder="MOVING TO*"><span class="bt-flabels__error-desc">Required Move To</span>
+                                <label for="drop_off">Delivery Address</label>
+                                <input type="text" required name="moving_to" id="moving-to"class="popup-with-form moving-to"  placeholder="Delivery"><span class="bt-flabels__error-desc">Required Move To</span>
                             </div>
                         </div>
                     
@@ -58,7 +58,7 @@
                                 
                             </div>
                             <div class="field">
-                                <label class="" for="totalCost"><b>Estimated</b> Cost:</label>
+                                <label class="" for="totalCost">Estimated Cost:</label>
                                 <span class="sub-total"><?php echo $this->currency_code; ?></span>
                                 <span class="sub-total quote" id="totalCost"></span>
                             </div>      
@@ -66,6 +66,8 @@
                 </div>
                 <?php include 'form-messages.php';?>
             </div>
+            <input type="hidden" name="action" value="tq_pro3_save_job"/>
+            <input type="hidden" id="delivery_date" name="delivery_date" value=""/>
         </form>            
     </div>
 </div>

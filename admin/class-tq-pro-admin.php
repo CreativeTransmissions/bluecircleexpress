@@ -34,13 +34,6 @@ class TransitQuote_Pro_Admin {
 	private $plugin_slug;
 	protected $plugin_screen_hook_suffix = null;
 
-    private $tab_1_settings_key = 'tq_pro_rates';
-	private $tab_2_settings_key = 'tq_pro_quote_options';
-	private $tab_3_settings_key = 'tq_pro_customers';
-	private $tab_4_settings_key = 'tq_pro_job_requests';
-	private $tab_5_settings_key = 'tq_pro_email_options';
-	private $tab_6_settings_key = 'tq_pro_paypal_options';
-	
 	/**
 	 * The version of this plugin.
 	 *
@@ -95,6 +88,12 @@ class TransitQuote_Pro_Admin {
 		);
 
 	}
+
+	function disable_google_map_api($load_google_map_api) {
+	        $load_google_map_api = false;
+	        return $load_google_map_api;
+	}
+
 
 	public function add_action_links( $links ) {
 
@@ -173,8 +172,8 @@ class TransitQuote_Pro_Admin {
 						} else {
 							$field['value'] = $default_value;
 						};
-
-						//echo ' value: '.$field['value'];
+						//echo $field_key.' get setting..';
+						//echo ' value: '.$field['value'].'<br/>';
 						$section['fields'][$field_key] = $field;
 					}
 					$tab['sections'][$section_key] = $section;
@@ -286,12 +285,14 @@ class TransitQuote_Pro_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
+				add_filter('avf_load_google_map_api', array($this,'disable_google_map_api'), 10, 1);
+
 			$this->api_key = $this->plugin->get_api_key();
-			$this->start_place_name = $this->plugin->get_setting('tq_pro_quote_options', 'start_place_name', 'Glasgow');
-			$this->start_lat = $this->plugin->get_setting('tq_pro_quote_options', 'start_lat','55.870853');
-			$this->start_lng = $this->plugin->get_setting('tq_pro_quote_options', 'start_lng', '-4.252036');
-			$this->min_notice = $this->plugin->get_setting('tq_pro_quote_options', 'min_notice', '24:00');
-			$this->min_notice_charge = $this->plugin->get_setting('tq_pro_quote_options', 'min_notice_charge', '0');
+			$this->start_place_name = $this->plugin->get_setting('', 'start_location', '');
+			$this->start_lat = $this->plugin->get_setting('', 'start_lat','');
+			$this->start_lng = $this->plugin->get_setting('', 'start_lng', '');
+			$this->min_notice = $this->plugin->get_setting('', 'min_notice', '24:00');
+			$this->min_notice_charge = $this->plugin->get_setting('', 'min_notice_charge', '0');
 			$this->oldest_job_date = $this->plugin->get_oldest_job_date();
 			$this->api_string = $this->plugin->get_api_string();
 			
@@ -504,25 +505,29 @@ class TransitQuote_Pro_Admin {
 
 		$filter_sql = " where date(pt.created) <= '".$filters['to_date']."' and date(pt.created) >= '".$filters['from_date']."'";
 
-    	$sql = "SELECT distinct	pt.id as id,
-    					pt.created as payment_date,
-						trim(concat(c.first_name,' ',c.last_name)) as customer_name,
-						c.email as email,
-						jobs.id as jobid, 
-						q. total as amount,
-						pt.currency as currency,
-						pt.paypal_status as paypal_status
-					FROM wp_".$this->prefix."_transactions_paypal pt
-						inner join wp_".$this->prefix."_jobs jobs 
-							on pt.job_id = jobs.id
+    	$sql = "SELECT distinct	
+    				max(pt.id) as id,
+					jobs.id as jobid,
+					trim(concat(c.first_name,' ',c.last_name)) as customer_name,
+					min(pt.created) as payment_date,
+					max(c.email) as email,
+					max(q.total) as amount,
+					max(pt.currency) as currency,
+				max(pt.paypal_status) as paypal_status
+				FROM wp_tq_pro3_transactions_paypal pt
+					inner join wp_tq_pro3_jobs jobs 
+						on pt.job_id = jobs.id
 
-						inner join wp_".$this->prefix."_customers c 
-							on c.id = jobs.customer_id 
+					inner join wp_tq_pro3_customers c 
+						on c.id = jobs.customer_id 
 
-						inner join wp_".$this->prefix."_quotes q 
-							on q.id = jobs.accepted_quote_id
+					inner join wp_tq_pro3_quotes q 
+						on q.id = jobs.accepted_quote_id
+					
 				".$filter_sql."
+				group by job_id, c.first_name, c.last_name
 				order by pt.id desc;";
+				//echo $sql;
 		$data = $this->cdb->query($sql);
 		return $data;
     }
@@ -727,7 +732,7 @@ class TransitQuote_Pro_Admin {
 				$defaults = array(
 					'data'=>$transaction_data,
 					'table'=>'transactions_paypal',
-					'fields'=>array('id', 'jobid', 'payment_date', 'customer_name', 'email', 'amount', 'currency', 'paypal_status'),
+					'fields'=>array('id', 'jobid',  'customer_name', 'payment_date', 'email', 'amount', 'currency', 'paypal_status'),
 					'inputs'=>false,
 					'tpl_row'=>'<tr class="expand"></tr>'
 				);
