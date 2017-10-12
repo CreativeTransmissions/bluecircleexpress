@@ -46,15 +46,13 @@
 		<?php }; ?>
 </div>
 <div class="tq-row">
-	<div class="tq-col48">
-		<div class="tq-row bt-flabels__wrapper">
+	<div class="address-wrap">
+		<div class="bt-flabels__wrapper half left">
 			<label for="collection_date">Pick up date</label>
 			<input tabindex="6" data-parsley-trigger="select change" type="text" class="datepicker"  placeholder="Collection Date*"  name="collection_date" id="collection_date" required readonly="">
 			<span class="bt-flabels__error-desc">Required / Invalid Pick up date</span>
 		</div>
-	</div>
-	<div class="tq-col48 right">
-		<div class="tq-row bt-flabels__wrapper">
+		<div class="bt-flabels__wrapper half right last-address-field">
 			<label for="collection_time">Pick up time</label>
 			<input tabindex="7" data-parsley-trigger="select change" type="text" class="timepicker" readonly="" placeholder="Collection Time*" name="delivery_time" id="collection_time" required>
 			<span class="bt-flabels__error-desc">Required / Invalid Pick up time</span>

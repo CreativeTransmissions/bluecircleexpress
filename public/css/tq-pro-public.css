@@ -30,10 +30,8 @@
 	width: 49.9%;
 }
 .tq-form .half-field{
-	width: 97%;
 }
 .tq-form .half-field-right{
-	margin-left: 3%;
 }
 .tq-form .text-center,
 .payment-result .text-center {
@@ -46,6 +44,7 @@
 	margin-top: 0.75em;
 }
 .tq-form .address-wrap {
+	clear: both;
 	margin-bottom: 0em;
 }
 .tq-form .remove-address{

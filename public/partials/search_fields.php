@@ -8,7 +8,7 @@
                 <input tabindex="10" class="text addresspicker" required type="text" name="address_0_address" id="address_0" value="" autocomplete="false"/>
                 <span class="bt-flabels__error-desc">Required: Collection Address</span>
             </div>
-            <div class="inline-block bt-flabels__wrapper half">
+            <div class="inline-block bt-flabels__wrapper half left">
                 <input class="inline-block half-field" type="text" id="address_0_appartment_no" name="address_0_appartment_no" placeholder="Unit" value=""/>
             </div>
             <div class="inline-block bt-flabels__wrapper half right last-address-field">
@@ -22,7 +22,7 @@
                 <input  tabindex="11" class="text addresspicker" required type="text" name="address_1_address" id="address_1" value="" autocomplete="false"/>
                 <span class="bt-flabels__error-desc">Required: Destination Address</span>
             </div>
-            <div class="inline-block bt-flabels__wrapper half">
+            <div class="inline-block bt-flabels__wrapper half left">
                 <input class="inline-block half-field " type="text" id="address_1_appartment_no" name="address_1_appartment_no" placeholder="Unit" value=""/>
             </div>
             <div class="inline-block bt-flabels__wrapper half right last-address-field">
@@ -38,7 +38,7 @@
                 <input tabindex="10" class="text addresspicker" required type="text" name="address_1_address" id="address_1" value="" autocomplete="false"/>
                 <span class="bt-flabels__error-desc">Required: Destination Address</span>
             </div>
-            <div class="inline-block bt-flabels__wrapper half">
+            <div class="inline-block bt-flabels__wrapper half left">
                 <input class="inline-block half-field" type="text" id="address_1_appartment_no" name="address_1_appartment_no" placeholder="Unit" value=""/>
             </div>
             <div class="inline-block bt-flabels__wrapper half right last-address-field">
