@@ -431,6 +431,7 @@
 				$('.failure').hide();
 				this.updateProgressMessage('Sending your request to our staff, please wait a moment...');
 				$('.buttons').hide();
+				$('.paypal-msg-failure').hide();
 				$('.spinner-div').css({
 					    height: $('#quote-form').height(), 
 					    width: $('#quote-form').width()
