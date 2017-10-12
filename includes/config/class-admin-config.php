@@ -67,8 +67,8 @@ class Admin_Config {
               'tq_pro_form_options'=>array(
                               'key'=>'tq_pro_form_options',
                               'title'=>'Order Form',
-                              'sections'=>array('prem_settings_form_options'=>array(
-                                                'id'=>'prem_settings_form_options',
+                              'sections'=>array('pro_settings_form_options'=>array(
+                                                'id'=>'pro_settings_form_options',
                                                 'title'=>'Order Form Options',
                                                 'fields'=>array(
                                                     
@@ -116,8 +116,8 @@ class Admin_Config {
               'tq_pro_map_options'=>array(
                               'key'=>'tq_pro_map_options',
                               'title'=>'Map Options',
-                              'sections'=>array('prem_settings_map_options'=>array(
-                                                  'id'=>'prem_settings_map_options',
+                              'sections'=>array('pro_settings_map_options'=>array(
+                                                  'id'=>'pro_settings_map_options',
                                                   'title'=>'Map Options',
                                                   'fields'=>array(
                                                     'api_key'=>array(
@@ -148,8 +148,8 @@ class Admin_Config {
               'tq_pro_quote_options'=>array(
                               'key'=>'tq_pro_quote_options',
                               'title'=>'Quote Options',
-                              'sections'=>array('prem_settings_quote_options'=>array(
-                                                'id'=>'prem_settings_quote_options',
+                              'sections'=>array('pro_settings_quote_options'=>array(
+                                                'id'=>'pro_settings_quote_options',
                                                 'title'=>'Quote Options',
                                                 'fields'=>array(
                                                     
@@ -223,8 +223,8 @@ class Admin_Config {
               'tq_pro_email_options'=>array(
                               'key'=>'tq_pro_email_options',
                               'title'=>'Email Options',
-                              'sections'=>array('prem_settings_email_options'=>array(
-                                                  'id'=>'prem_settings_email_options',
+                              'sections'=>array('pro_settings_email_options'=>array(
+                                                  'id'=>'pro_settings_email_options',
                                                   'title'=>'Email Options',
                                                   'fields'=>array(
                                                     
@@ -263,8 +263,8 @@ class Admin_Config {
               'tq_pro_paypal_options'=>array(
                               'key'=>'tq_pro_paypal_options',
                               'title'=>'PayPal Options',
-                              'sections'=>array('prem_settings_paypal_options'=>array(
-                                                  'id'=>'prem_settings_paypal_options',
+                              'sections'=>array('tq_pro_paypal_options'=>array(
+                                                  'id'=>'pro_settings_paypal_options',
                                                   'title'=>'PayPal Options',
                                                   'fields'=>array(
                                                     'application_client_id'=>array(

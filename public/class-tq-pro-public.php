@@ -138,23 +138,27 @@ class TransitQuote_Pro_Public {
 		$this->api_key = self::get_api_key();
 		$this->api_string = self::get_api_string();
 		$geolocate = self::get_geolocate();
-		$this->sandbox = self::get_sandbox();
-		if($geolocate==1){
-			$this->geolocate = 'true';		
-		} else {
-			$this->geolocate = 'false';	
-		};		
+		$sandbox = self::get_sandbox();
+		$this->sandbox = self::bool_to_text($sandbox);
+		$this->geolocate = self::bool_to_text($geolocate);
 	}
 
 	public function get_sandbox(){
 		$sandbox = self::get_setting('', 'sandbox', '');
 		if($sandbox == 1){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function bool_to_text($bool){
+		if($bool === true){
 			return 'true';
 		} else {
 			return 'false';
 		}
 	}
-
 	public function get_settings_for_js(){
 		//get varibles to pass to JS
 		// $holidays = self::get_holidays();
@@ -601,12 +605,12 @@ class TransitQuote_Pro_Public {
 		       				'hidden'=>''),
 		       		array(	'template'=>'delivery_fields',
 		       				'hidden'=>''),
+		       		array(	'template'=>'search_fields',
+		       				'hidden'=>''),
 		       		array(	'template'=>'map',
 		       				'hidden'=>''),
 		       		array(	'template'=>'quote_fields',
-		       				'hidden'=>'hidden'),
-		       		array(	'template'=>'customer_fields',
-		       				'hidden'=>'')
+		       				'hidden'=>'hidden')
 				);
 		       break;
 		}
