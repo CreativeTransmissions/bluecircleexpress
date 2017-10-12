@@ -169,6 +169,7 @@
 
 					ajaxUrl: TransitQuoteProSettings.ajaxurl,
 					debug: this.settings.debug,
+					sandbox: this.settings.sandbox,
 
 					// fare calculation options
 					limits: this.limits, // Travel distance boundaries for which rates to use

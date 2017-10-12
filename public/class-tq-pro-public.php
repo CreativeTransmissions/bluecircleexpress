@@ -138,11 +138,21 @@ class TransitQuote_Pro_Public {
 		$this->api_key = self::get_api_key();
 		$this->api_string = self::get_api_string();
 		$geolocate = self::get_geolocate();
+		$this->sandbox = self::get_sandbox();
 		if($geolocate==1){
 			$this->geolocate = 'true';		
 		} else {
 			$this->geolocate = 'false';	
 		};		
+	}
+
+	public function get_sandbox(){
+		$sandbox = self::get_setting('', 'sandbox', '');
+		if($sandbox == 1){
+			return 'true';
+		} else {
+			return 'false';
+		}
 	}
 
 	public function get_settings_for_js(){
@@ -166,7 +176,8 @@ class TransitQuote_Pro_Public {
 							'min_price'=>$this->min_price,
 							'min_distance'=>$this->min_distance,
 							'quote_element'=>$this->quote_element,
-							'max_address_pickers'=>$this->max_address_pickers
+							'max_address_pickers'=>$this->max_address_pickers,
+							'sandbox'=>$this->sandbox
 							);
 
 		if(!empty($this->api_key)){
