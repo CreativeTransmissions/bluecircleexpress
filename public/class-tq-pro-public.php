@@ -262,6 +262,8 @@ class TransitQuote_Pro_Public {
 		foreach ($this->tabs_config as $tab_key => $tab) {
 			$defaults = self::get_tab_defaults($tab);
 			$saved_options = (array) get_option($tab_key, array());
+			//$this->ajax->pa($saved_options);
+
 			$this->settings = array_merge($this->settings, $defaults, $saved_options);
 		};
 	}
@@ -541,6 +543,9 @@ class TransitQuote_Pro_Public {
 	 * @since    1.0.0
 	 */
 	public function display_TransitQuote_Pro($atts) {
+		// display the plugin form
+
+		//set flag to include scripts, only include where plugin is used
 		global $add_my_script_flag;
 		$add_my_script_flag = true;
 
@@ -549,12 +554,15 @@ class TransitQuote_Pro_Public {
 		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 		$this->pick_start_address = 'true';
-		// added layout option if given and inline then form will  be inline map else admin setting
-
+		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
+		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);
+echo 'ask_for_unit_no: '.$this->ask_for_unit_no;
+echo 'ask_for_postcode:'.$this->ask_for_postcode;
 		//get paths for includes
 		self::get_paths_for_includes();
 
-		// display the plugin form
+		
+		// added layout option if given and inline then form will  be inline map else admin setting
 		$attributes = shortcode_atts( array(
 	        'layout' => '',
 	    ), $atts );
@@ -1674,7 +1682,9 @@ class TransitQuote_Pro_Public {
 			self::load_settings();			
 		};
 		//get and escape setting
-		if(empty($this->settings[$name])){
+		$setting_val = $this->settings[$name];
+		
+		if(empty($setting_val)&&($setting_val!=0)){
 			return $default;
 		} else {
 			return esc_attr($this->settings[$name]);

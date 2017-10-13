@@ -80,6 +80,20 @@ class Admin_Config {
                                                         'default'=>'Delivery Information',
                                                         'help'=>'Please select the information that the customer will enter first.<br/>If you ask for Delivery Information first the customer will see their quote before having to enter their contact details.'),
 
+                                                      'ask_for_postcode'=>array(
+                                                        'id'=>'ask_for_postcode',
+                                                        'label'=>'Ask For Postcode',
+                                                        'type'=>'checkbox',
+                                                        'default'=>0,
+                                                        'help'=>'Ask the customer for a postal code in the order form.'),
+
+                                                      'ask_for_unit_no'=>array(
+                                                        'id'=>'ask_for_unit_no',
+                                                        'label'=>'Ask For Unit No',
+                                                        'type'=>'checkbox',
+                                                        'default'=>0,
+                                                        'help'=>'Ask the customer for a unit/appartment number.'),
+
                                                       'show_vehicle_description'=>array(
                                                         'id'=>'show_vehicle_description',
                                                         'label'=>'Show Vehicle Description',
