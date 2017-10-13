@@ -46,7 +46,7 @@
 		<?php }; ?>
 </div>
 <div class="tq-row">
-	<div class="address-wrap">
+	<div>
 		<div class="bt-flabels__wrapper half left">
 			<label for="collection_date">Pick up date</label>
 			<input tabindex="6" data-parsley-trigger="select change" type="text" class="datepicker"  placeholder="Collection Date*"  name="collection_date" id="collection_date" required readonly="">
