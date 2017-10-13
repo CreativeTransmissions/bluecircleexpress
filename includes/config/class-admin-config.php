@@ -84,14 +84,14 @@ class Admin_Config {
                                                         'id'=>'ask_for_postcode',
                                                         'label'=>'Ask For Postcode',
                                                         'type'=>'checkbox',
-                                                        'default'=>0,
+                                                        'default'=>1,
                                                         'help'=>'Ask the customer for a postal code in the order form.'),
 
                                                       'ask_for_unit_no'=>array(
                                                         'id'=>'ask_for_unit_no',
                                                         'label'=>'Ask For Unit No',
                                                         'type'=>'checkbox',
-                                                        'default'=>0,
+                                                        'default'=>1,
                                                         'help'=>'Ask the customer for a unit/appartment number.'),
 
                                                       'show_vehicle_description'=>array(
