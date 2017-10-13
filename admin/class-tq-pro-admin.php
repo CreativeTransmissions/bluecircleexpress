@@ -395,6 +395,16 @@ class TransitQuote_Pro_Admin {
 	    	$order   = 'desc';
 	    }
 
+	    $jobs_table_name = $this->cdb->get_table_full_name('jobs');
+	    $journeys_table_name = $this->cdb->get_table_full_name('journeys');
+	    $journeys_locations_table_name = $this->cdb->get_table_full_name('journeys_locations');
+	    $locations_table_name = $this->cdb->get_table_full_name('locations');
+	    $customers_table_name = $this->cdb->get_table_full_name('customers');
+	    $quotes_table_name = $this->cdb->get_table_full_name('quotes');
+	    $payment_types = $this->cdb->get_table_full_name('payment_types');
+	    $payment_status_types_table_name = $this->cdb->get_table_full_name('payment_status_types');
+	    $status_types_table_name = $this->cdb->get_table_full_name('status_types');
+
     	$sql = "SELECT distinct	jobs.id,
     							jobs.id as job_id,
     							status_type_id,
@@ -409,47 +419,44 @@ class TransitQuote_Pro_Admin {
 								q.total as quote,
 								pt.name as payment_type,
 								pst.description as payment_status
-							FROM wp_".$this->prefix."_jobs jobs
-								left join wp_".$this->prefix."_journeys j 
+							FROM ".$jobs_table_name." jobs
+								left join ".$journeys_table_name." j 
 									on j.job_id = jobs.id 
 
 								inner join (SELECT j.job_id, o.location_id as last_loc_id
-												FROM wp_".$this->prefix."_journeys_locations o                    
-												  LEFT JOIN wp_".$this->prefix."_journeys_locations b           
+												FROM ".$journeys_locations_table_name." o                    
+												  LEFT JOIN ".$journeys_locations_table_name." b           
 													  ON o.journey_id = b.journey_id AND o.journey_order < b.journey_order
-													  inner join wp_".$this->prefix."_journeys j 
+													  inner join ".$journeys_table_name." j 
 														on o.journey_id = j.id	
 												WHERE b.journey_order is NULL     
 												order by j.job_id asc) last_stop
 										on last_stop.job_id = jobs.id
 
-								left join wp_".$this->prefix."_journeys_locations jl 
+								left join ".$journeys_locations_table_name." jl 
 									on j.id = jl.journey_id and
 										jl.journey_order = 0
-								left join wp_".$this->prefix."_locations l 
+
+								left join ".$locations_table_name." l 
 									on jl.location_id = l.id and 
 										jl.journey_order = 0
 
-								left join wp_".$this->prefix."_locations ld 
+								left join ".$locations_table_name." ld 
 									on ld.id = last_stop.last_loc_id
 
-								left join wp_".$this->prefix."_customers c 
+								left join ".$customers_table_name." c 
 									on c.id = jobs.customer_id 
-								left join wp_".$this->prefix."_vehicles v 
-									on v.id = jobs.vehicle_id 
-								left join wp_".$this->prefix."_services s 
-									on v.id = jobs.service_id 
-								left join wp_".$this->prefix."_quotes q 
+	
+								left join ".$quotes_table_name." q 
 									on q.id = jobs.accepted_quote_id
 
-								left join wp_".$this->prefix."_payment_types pt 
+								left join ".$payment_types." pt 
 									on pt.id = jobs.payment_type_id
 
-
-								left join wp_".$this->prefix."_payment_status_types pst 
+								left join ".$payment_status_types_table_name." pst 
 									on pst.id = jobs.payment_status_id
 
-								left join wp_".$this->prefix."_status_types st 
+								left join ".$status_types_table_name." st 
 									on pst.id = jobs.status_type_id
 			".$filter_sql." 
 			order by ".$orderby." ".$order.";";
@@ -505,6 +512,11 @@ class TransitQuote_Pro_Admin {
 
 		$filter_sql = " where date(pt.created) <= '".$filters['to_date']."' and date(pt.created) >= '".$filters['from_date']."'";
 
+	    $jobs_table_name = $this->cdb->get_table_full_name('jobs');
+	    $customers_table_name = $this->cdb->get_table_full_name('customers');
+	    $quotes_table_name = $this->cdb->get_table_full_name('quotes');
+	    $transactions_paypal_table_name = $this->cdb->get_table_full_name('transactions_paypal');
+
     	$sql = "SELECT distinct	
     				max(pt.id) as id,
 					jobs.id as jobid,
@@ -514,14 +526,14 @@ class TransitQuote_Pro_Admin {
 					max(q.total) as amount,
 					max(pt.currency) as currency,
 				max(pt.paypal_status) as paypal_status
-				FROM wp_tq_pro3_transactions_paypal pt
-					inner join wp_tq_pro3_jobs jobs 
+				FROM ".$transactions_paypal_table_name." pt
+					inner join ".$jobs_table_name." jobs 
 						on pt.job_id = jobs.id
 
-					inner join wp_tq_pro3_customers c 
+					inner join ".$customers_table_name." c 
 						on c.id = jobs.customer_id 
 
-					inner join wp_tq_pro3_quotes q 
+					inner join ".$quotes_table_name." q 
 						on q.id = jobs.accepted_quote_id
 					
 				".$filter_sql."

@@ -302,10 +302,11 @@ class TransitQuote_Pro_Public {
     		$filter_sql .= implode(' and ', $filter_clauses);
     	};
 
+    	$rates_table_name = $this->cdb->get_table_full_name('rates');
 		// get ordered list of rates with distance 0 as the final record
     	$sql = "select distinct * 
     				from (select distinct * 
-								from wp_".$this->prefix."_rates
+								from ".$rates_table_name."
 								where distance <> 0
 								".$filter_sql."
 							order by service_id, vehicle_id, distance
@@ -313,7 +314,7 @@ class TransitQuote_Pro_Public {
 					union
 				select distinct * from (
 					select distinct * 
-						from wp_".$this->prefix."_rates
+						from ".$rates_table_name."
 					where distance = 0
 					".$filter_sql.") r2;";
 		//echo $sql;
