@@ -556,8 +556,6 @@ class TransitQuote_Pro_Public {
 		$this->pick_start_address = 'true';
 		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
 		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);
-echo 'ask_for_unit_no: '.$this->ask_for_unit_no;
-echo 'ask_for_postcode:'.$this->ask_for_postcode;
 		//get paths for includes
 		self::get_paths_for_includes();
 
@@ -575,6 +573,7 @@ echo 'ask_for_postcode:'.$this->ask_for_postcode;
 	    	$layout = 1;
 	    }
 		$this->currency_code = self::get_currency_code();
+		$this->currency_symbol = self::get_currency_symbol();
 		$this->distance_unit = self::get_distance_unit();
 		$this->success_message = self::get_success_message();
 		$this->form_section_order = self::get_form_section_order();
@@ -1654,6 +1653,15 @@ echo 'ask_for_postcode:'.$this->ask_for_postcode;
     	};
     	$this->currency_code = $this->cdb->get_field('currencies', 'currency_code', $this->currency);
         return $this->currency_code;
+    }
+
+    public function get_currency_symbol(){
+    	$this->currency = self::get_currency();
+    	if(empty($this->currency)){
+    		return false;
+    	};
+    	$this->currency_symbol = $this->cdb->get_field('currencies', 'symbol', $this->currency);
+        return $this->currency_symbol;
     }
 
     public function get_form_section_order(){

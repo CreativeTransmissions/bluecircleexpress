@@ -13,13 +13,13 @@
         </div>
         <div class="field notice-field">
             <label class="" for="notice">Short Notice Cost:</label>
-            <span class="sub-total"><?php echo $this->currency_code; ?></span>
+            <span class="sub-total"><?php echo $this->currency_symbol; ?></span>
             <span class="sub-total noticeCost"></span>
             
         </div>
         <div class="field">
             <label class="" for="totalCost">Estimated Cost:</label>
-            <span class="sub-total"><?php echo $this->currency_code; ?></span>
+            <span class="sub-total"><?php echo $this->currency_symbol; ?></span>
             <span class="sub-total quote" id="totalCost"></span>
         </div>      
     </fieldset>
