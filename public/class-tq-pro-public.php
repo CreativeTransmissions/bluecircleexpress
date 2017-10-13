@@ -1,6 +1,6 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE | E_ALL);
- ini_set('display_errors', 1);*/
+error_reporting(E_ERROR | E_PARSE | E_ALL);
+ ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
  *
@@ -1690,6 +1690,10 @@ class TransitQuote_Pro_Public {
 			self::load_settings();			
 		};
 		//get and escape setting
+		if(!isset($this->settings[$name])){
+			return $default;
+		};
+
 		$setting_val = $this->settings[$name];
 		
 		if(empty($setting_val)&&($setting_val!=0)){

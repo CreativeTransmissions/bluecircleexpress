@@ -1,6 +1,6 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE | E_ALL);
- ini_set('display_errors', 1);*/
+error_reporting(E_ERROR | E_PARSE | E_ALL);
+ ini_set('display_errors', 1);
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -412,10 +412,8 @@ class TransitQuote_Pro_Admin {
 								ld.address as drop_off,
 								jobs.customer_id,
 								jobs.created,
-								jobs.modified,
 								trim(concat(c.first_name,' ',c.last_name)) as last_name,
 								jobs.delivery_time,
-								v.name as vehicle_type,
 								q.total as quote,
 								pt.name as payment_type,
 								pst.description as payment_status
@@ -462,6 +460,7 @@ class TransitQuote_Pro_Admin {
 			order by ".$orderby." ".$order.";";
 
 		$data = $this->cdb->query($sql);
+		//echo $this->cdb->last_query;
 		return $data;
     }
 
@@ -700,11 +699,17 @@ class TransitQuote_Pro_Admin {
 			case 'jobs':
 					
 					//get data
+					$filters = array();
 					$date_filters = self::get_date_filters();
 					$status_filters = self::get_job_filters(); // status filters
 
 					if(!empty($status_filters)){
-						$filters = array_merge($date_filters, $status_filters);
+						$filters = array_merge($filters, $status_filters);
+
+					};
+					
+					if(!empty($date_filters)){
+						$filters = array_merge($filters, $date_filters);
 					};
 
 					$params = self::get_sort_params();
