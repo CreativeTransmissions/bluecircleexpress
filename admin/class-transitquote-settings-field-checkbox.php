@@ -24,6 +24,7 @@
 class TransitQuote_Pro_Settings_Field_Checkbox extends TransitQuote_Pro_Settings_Field {
 
     public function render(){
+    	echo '<input type="hidden" name="'.$this->field_name.'" value="0"/>';
     	echo '<input type="checkbox" id="'.$this->field_name.'"  name="'.$this->field_name.'" value="1" '.checked( 1 == $this->value,true,false).'/>';
         echo '<p>'.$this->help.'</p>';
     }
