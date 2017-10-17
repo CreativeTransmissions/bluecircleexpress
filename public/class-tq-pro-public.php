@@ -139,7 +139,7 @@ class TransitQuote_Pro_Public {
 		$this->api_string = self::get_api_string();
 		$geolocate = self::get_geolocate();
 		$sandbox = self::get_sandbox();
-		$this->sandbox = self::bool_to_text($sandbox);
+		$this->sandbox = self::bool_to_text_sandbox($sandbox);
 		$this->geolocate = self::bool_to_text($geolocate);
 	}
 
@@ -157,6 +157,14 @@ class TransitQuote_Pro_Public {
 			return 'true';
 		} else {
 			return 'false';
+		}
+	}
+
+	public function bool_to_text_sandbox($bool){
+		if($bool === true){
+			return 'sandbox';
+		} else {
+			return 'production';
 		}
 	}
 	public function get_settings_for_js(){
@@ -1509,7 +1517,8 @@ class TransitQuote_Pro_Public {
 		$message = self::get_customer_message();
 
 		//test address
-		$headers = "Bcc: contact@creativetransmissions.com"."\r\n";
+		//$headers = "Bcc: contact@creativetransmissions.com"."\r\n";
+		$headers = "";
 		
 		ob_start();
 		include 'partials/emails/email_customer.php'; 

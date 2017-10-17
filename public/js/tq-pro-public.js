@@ -169,7 +169,6 @@
 
 					ajaxUrl: TransitQuoteProSettings.ajaxurl,
 					debug: this.settings.debug,
-					sandbox: this.settings.sandbox,
 
 					// fare calculation options
 					limits: this.limits, // Travel distance boundaries for which rates to use
@@ -270,7 +269,7 @@
 
 				paypal.Button.render({
 
-				    env: 'sandbox', // sandbox | production
+				    env: that.settings.data.sandbox, // sandbox | production
 
 				    // Show the buyer a 'Pay Now' button in the checkout flow
 				    commit: true,
