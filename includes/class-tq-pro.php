@@ -395,6 +395,36 @@ class TransitQuote_Pro3 {
 		return $cdb;
 	}
 
+	public function init_settings(){
+		$this->tabs_config = $this->define_tab_config();
+		$this->settings = array();
+		// update the conif with any saved settings
+		foreach ($this->tabs_config as $tab_key => $tab) {
+			$defaults = self::get_tab_defaults($tab);
+			$saved_options = (array) get_option($tab_key, array());
+			if(empty($saved_options)&&(!empty($defaults))){
+				update_option($tab_key, $defaults);
+			};
+			
+		};
+	}
+
+	public function define_tab_config(){
+		return TransitQuote_Pro3\Admin_Config::get_config('tabs');
+	}
+
+	public function get_tab_defaults($tab){
+		$defaults = array();
+		foreach ($tab['sections'] as $section_key => $section) {
+			foreach ($section['fields'] as $field_key => $field) {
+				if(isset($field['default'])){
+					$defaults[$field['id']] = $field['default'];
+				}
+			}
+		}
+		return $defaults;
+	}
+
 	/**
 	 * Insert the tables 
 	 *	 
