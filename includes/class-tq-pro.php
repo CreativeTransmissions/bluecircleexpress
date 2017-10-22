@@ -492,7 +492,7 @@ class TransitQuote_Pro3 {
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
 			$cdb->update_row('payment_types', array('name' => 'On Delivery', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_types', array('name' => 'PayPal', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_types', array('name' => 'Pay Online', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_types', array('name' => 'Stripe', 'available'=>0, 'created'=>$created, 'modified'=>$modified ));
 		};
 	}
