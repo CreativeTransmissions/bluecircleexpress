@@ -14,7 +14,7 @@
 		defaults = {
 			ajaxUrl: '',
 			customer: false,
-			debug: true,
+			debug: false,
 			quoteResult: 'quote',
 			timepickerSelector: 'collection_time',
 			datepickerSelector: 'collection_date'
@@ -99,6 +99,7 @@
 
 			initData: function(){
 				this.log('initData');
+				this.log('sandbox: '+this.settings.data.sandbox);
 				if(!this.initDataRates()){
 					return false;
 				};

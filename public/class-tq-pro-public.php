@@ -441,7 +441,8 @@ class TransitQuote_Pro_Public {
 												'application_client_secret' => $this->application_client_secret,
 												'payment_approved_url'=>$this->payment_approved_url,
 												'payment_cancelled_url'=>$this->payment_cancelled_url,
-												'cdb'=>$this->cdb));
+												'cdb'=>$this->cdb, 
+												'sandbox'=>self::get_sandbox()));
 			
 		};
     }
