@@ -82,7 +82,7 @@ class TransitQuote_Pro_Admin {
 		$this->plugin_screen_hook_suffix = add_menu_page(
 			__( 'TransitQuote Pro', $this->plugin_slug ),
 			__( 'TransitQuote Pro', $this->plugin_slug ),
-			'manage_options',
+			'read',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )
 		);
