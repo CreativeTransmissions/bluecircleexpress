@@ -22,7 +22,7 @@
 		<?php submit_button('Save service', 'primary', 'save_service', true, array('class'=>'submit')); ?>
 	</div>
 	<div class="inline-field">
-		<?php submit_button('Clear Rate', 'primary', 'clear_service', true, array('class'=>'submit')); ?>
+		<?php submit_button('Clear Form', 'primary', 'clear_service', true, array('class'=>'submit')); ?>
 	</div>
 	<div class="inline-field">
 		<div class="spinner"></div>

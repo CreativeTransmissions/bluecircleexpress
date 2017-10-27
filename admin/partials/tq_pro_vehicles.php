@@ -21,7 +21,7 @@
 			<?php submit_button('Save vehicle', 'primary', 'save_vehicle', true, array('class'=>'submit')); ?>
 		</div>
 		<div class="inline-field">
-			<?php submit_button('Clear Rate', 'primary', 'clear_vehicle', true, array('class'=>'submit')); ?>
+			<?php submit_button('Clear Form', 'primary', 'clear_vehicle', true, array('class'=>'submit')); ?>
 		</div>
 	</div>
 	<div class="inline-field">

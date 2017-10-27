@@ -43,7 +43,7 @@
 		<?php submit_button('Save Rates', 'primary', 'save_rate', true, array('class'=>'submit')); ?>
 	</div>
 	<div class="inline-field">
-		<?php submit_button('Clear Rate', 'primary', 'clear_rate', true, array('class'=>'submit')); ?>
+		<?php submit_button('Clear Form', 'primary', 'clear_rate', true, array('class'=>'submit')); ?>
 	</div>
 	<div class="inline-field">
 		<div class="spinner"></div>

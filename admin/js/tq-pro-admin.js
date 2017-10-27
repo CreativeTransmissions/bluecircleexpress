@@ -1048,12 +1048,11 @@
 					this.spinner(true);
 					var data = $(form).serialize();						
 					$.post(ajaxurl, data, function(response) {
+						//clear the form
+						that.clearForm(that.editForm);
 						if(response.success=='true'){
 							//display message
 							var msg = 'Saved Successfully.';
-
-							//clear the form
-							that.clearForm(that.editTable);
 							that.updateLegend(that.editTable, that.newRecordMessage);
 							if(response.id){
 								//update row
