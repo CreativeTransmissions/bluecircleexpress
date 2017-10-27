@@ -5,10 +5,10 @@
             <!-- <h2>Request a Quote</h2> <div class="subtext">Want a quick quote for move. Fill this quick form</div> -->
             <div class="request-form"> 
                 <input type="hidden" name="service_type_id" value="2">
-                <?php include_once 'job-fields.php'; ?>
+                <?php include_once 'customer_fields.php'; ?>
                 <div class="clear"></div>
                 <div class="tq-address-container">
-                    <?php //include 'moving-fields.php'; ?>
+                    <?php include 'delivery_fields.php'; ?>
                     <fieldset class="search-fields">
                         <legend>Enter Addresses</legend>
                         <div class="row"> 
@@ -37,7 +37,7 @@
                 </div>
 
             </div>
-            <?php include 'moving-map.php'; ?>
+            <?php// include 'map.php'; ?>
             <div class="tq-address-container">
                 <div class="tq-row success" style="display:none;">
                         <fieldset class="quote-fields">
