@@ -586,11 +586,12 @@ class TransitQuote_Pro_Public {
 		$this->distance_unit = self::get_distance_unit();
 		$this->success_message = self::get_success_message();
 		$this->form_section_order = self::get_form_section_order();
-		$this->build_form_include_list();
 		if($layout==1){ //Inline Map public
+			$this->build_form_include_list();
 			$this->view = 'partials/tq-pro-inline-display.php';
-		}else{ //business_qoute
-			$this->view = 'partials/tq-pro-popup-display.php';
+		}else{ //Popup
+			$this->build_form_include_list_popup();
+			$this->view = 'partials/tq-pro-popup-view.php';
 		};
 		
 		ob_start();
@@ -598,7 +599,7 @@ class TransitQuote_Pro_Public {
 	   	return ob_get_clean();
 	}	
 
-	function build_form_include_list(){
+	public function build_form_include_list(){
 		$this->form_includes = array();
 		switch ($this->form_section_order) {
 		    case 'Delivery Information':
@@ -625,6 +626,37 @@ class TransitQuote_Pro_Public {
 		       		array(	'template'=>'search_fields',
 		       				'hidden'=>''),
 		       		array(	'template'=>'map',
+		       				'hidden'=>''),
+		       		array(	'template'=>'quote_fields',
+		       				'hidden'=>'hidden')
+				);
+		       break;
+		}
+	}
+
+	public function build_form_include_list_popup(){
+		$this->form_includes = array();
+		switch ($this->form_section_order) {
+		    case 'Delivery Information':
+		       $this->form_includes = array(
+		       		array(	'template'=>'search_fields_popup',
+		       				'hidden'=>''),
+		       		array(	'template'=>'delivery_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'quote_fields',
+		       				'hidden'=>'hidden'),
+		       		array(	'template'=>'customer_fields',
+		       				'hidden'=>'hidden')
+		       	);
+		       break;
+		    case 'Customer Information':
+		       $this->form_includes = array(
+
+		       		array(	'template'=>'customer_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'delivery_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'search_fields_popup',
 		       				'hidden'=>''),
 		       		array(	'template'=>'quote_fields',
 		       				'hidden'=>'hidden')

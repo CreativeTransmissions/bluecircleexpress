@@ -17,14 +17,13 @@
             $hide_section = $this->form_includes[0]['hidden'];
             include $this->form_includes[0]['template'].'.php';
             $hide_section = $this->form_includes[1]['hidden'];
-            include $this->form_includes[1]['template'].'.php'; ?>
-    <div class="tq-address-container round">
-    <?php   $hide_section = $this->form_includes[2]['hidden']; 
+            include $this->form_includes[1]['template'].'.php';
+            $hide_section = $this->form_includes[2]['hidden']; ?>
+    <div class="round">
+    <?php   
             include  $this->form_includes[2]['template'].'.php' ;
             $hide_section = $this->form_includes[3]['hidden']; 
             include $this->form_includes[3]['template'].'.php';
-            $hide_section = $this->form_includes[4]['hidden']; 
-            include $this->form_includes[4]['template'].'.php';
     ?>
     </div>
 
@@ -39,6 +38,7 @@
     <input class="basicCost" type="hidden" name="distance_cost" value=""/>
     <input type="hidden" name="action" value="tq_pro3_save_job"/>
     <input type="hidden" id="delivery_date" name="delivery_date" value=""/>
+    <?php include 'popup-map.php'; ?>
 </form>
 <div class="payment-result">
     <div class="on-delivery text-center" style="display: none;">
