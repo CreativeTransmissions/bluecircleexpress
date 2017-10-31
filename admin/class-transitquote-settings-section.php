@@ -64,6 +64,9 @@ class TransitQuote_Pro_Settings_Section {
                 case 'checkbox':
                     $field = new TransitQuote_Pro_Settings_Field_Checkbox($field_config);
                     break;
+                case 'checkgroup':
+                    $field = new TransitQuote_Pro_Settings_Field_Check_Group($field_config);
+                    break;                    
                 case 'input':
                     $field = new TransitQuote_Pro_Settings_Field_Input($field_config);
                     break;

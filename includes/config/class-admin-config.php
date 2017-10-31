@@ -276,11 +276,21 @@ class Admin_Config {
 
               'tq_pro_paypal_options'=>array(
                               'key'=>'tq_pro_paypal_options',
-                              'title'=>'PayPal Options',
+                              'title'=>'Payment Options',
                               'sections'=>array('tq_pro_paypal_options'=>array(
                                                   'id'=>'pro_settings_paypal_options',
-                                                  'title'=>'PayPal Options',
+                                                  'title'=>'Payment Options',
                                                   'fields'=>array(
+                                                    'payment_types'=>array(
+                                                        'id'=>'payment_types',
+                                                        'label'=>'Accepted Payment Methods',
+                                                        'type'=>'select',
+                                                        'table'=>'payment_types',
+                                                        'display_field'=>'name',
+                                                        'id_field'=>'id',
+                                                        'type'=>'checkgroup',
+                                                        'help'=>'Your customers will only be able to select the payment methods that are selected above.'
+                                                     ),
                                                     'application_client_id'=>array(
                                                         'id'=>'application_client_id',
                                                         'label'=>'PayPal Application Client ID',
