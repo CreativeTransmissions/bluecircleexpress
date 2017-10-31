@@ -1650,7 +1650,7 @@ class TransitQuote_Pro_Public {
     	if(empty($selected_payment_methods)){
     		return 'No Payment Methods Are Currently Available';
     	};
-    	print_r($selected_payment_methods);
+
     	//build array of buttons based on payment methods available in the payment_types table
 		$button_html ='';
 
