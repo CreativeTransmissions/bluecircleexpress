@@ -1646,13 +1646,22 @@ class TransitQuote_Pro_Public {
     		return '';
     	};
 
+    	$selected_payment_methods = self::get_selected_payment_methods();
+    	if(empty($selected_payment_methods)){
+    		return 'No Payment Methods Are Currently Available';
+    	};
+    	print_r($selected_payment_methods);
     	//build array of buttons based on payment methods available in the payment_types table
 		$button_html ='';
+
     	$buttons = array();
     	foreach ($methods as $key => $payment_method) {
     		if(self::check_payment_config($payment_method['id'])){
-	    		$button_html = '<button id="pay_method_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_method_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
-				array_push($buttons, $button_html);
+    			echo 'payment_method: '.$payment_method['id'];
+    			if(in_array($payment_method['id'], $selected_payment_methods)){
+		    		$button_html = '<button id="pay_method_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_method_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
+					array_push($buttons, $button_html);
+				}
 			};
     	};
 
@@ -1662,6 +1671,10 @@ class TransitQuote_Pro_Public {
 
     	return $button_panel;
 
+    }
+
+    public function get_selected_payment_methods(){
+    	return self::get_setting('tq_pro_paypal_options', 'payment_types', array());
     }
 
  	private function get_return(){
@@ -1741,7 +1754,11 @@ class TransitQuote_Pro_Public {
 		if(empty($setting_val)&&($setting_val!=0)){
 			return $default;
 		} else {
-			return esc_attr($this->settings[$name]);
+			if(is_array($setting_val)){
+				return $setting_val;
+			} else {
+				return esc_attr($setting_val);
+			}
 		}
 	}
 	public function get_notification_emails(){
