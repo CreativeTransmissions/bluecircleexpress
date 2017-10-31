@@ -2,7 +2,7 @@
 <div class="clear"></div>
 <div class="tq-form-fields-container <?php echo $hide_section; ?>">
 	<fieldset>
-		<legend>Book This Delivery</legend>
+		<legend>Your Contact Information</legend>
 		<div class="tq-form-fields-inner">
 			<div class="tq-row">
 				<div class="tq-col48">
