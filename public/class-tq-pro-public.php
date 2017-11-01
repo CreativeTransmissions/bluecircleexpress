@@ -1456,35 +1456,38 @@ class TransitQuote_Pro_Public {
 		$job_date[0]=array('label'=>'Pick Up Date',
 								'value'=> $date);
 
-		/*$job_date[1] = array('label'=>'Pick Up Time',
+		$job_date[1] = array('label'=>'Pick Up Time',
 							'value'=>$hours.':'.$mins);
-		*/
+	
 		return $job_date;
 	}
 
 	public function get_job_payment($job){
 		$job_payment = array();
 
-		$paymment_method = self::get_job_payment_method($job);
-		$job_payment[] = array('label'=>'Payment Method',
-								'value'=> $payment_method);
+		$payment_method = self::get_job_payment_method($job);
+		if(!empty($payment_method)){
+			$job_payment[] = array('label'=>'Payment Method',
+									'value'=> $payment_method);
+		};
 
-		$paymment_status = self::get_job_payment_status($job);
-		$job_payment[] = array('label'=>'Payment Status',
-								'value'=> $paymment_status);
-
+		$payment_status = self::get_job_payment_status($job);
+		if(!empty($payment_status)){
+			$job_payment[] = array('label'=>'Payment Status',
+									'value'=> $payment_status);
+		};
 		return $job_payment;
 	}
 
 	private function get_job_payment_method($job){
 		if(empty($job['payment_type_id'])){
-			return 'Not selected';
+			return false;
 		};
 
 		$payment_type_id = $job['payment_type_id'];
 		$payment_type = $this->cdb->get_field('payment_types', 'name', $payment_type_id);
 		if(empty($payment_type)){
-			return 'Invalid Payment Method';
+			return false;
 		} else {
 			return $payment_type;
 		};
@@ -1493,13 +1496,13 @@ class TransitQuote_Pro_Public {
 
 	private function get_job_payment_status($job){
 		if(empty($job['payment_status_id'])){
-			return 'Not selected';
+			return false;
 		};
 
 		$payment_status_id = $job['payment_status_id'];
-		$payment_status = $this->cdb->get_field('payment_status_types', 'name', $payment_status_id);
+		$payment_status = $this->cdb->get_field('payment_status_types', 'description', $payment_status_id);
 		if(empty($payment_status)){
-			return 'Invalid Payment Status';
+			return false;
 		} else {
 			return $payment_status;
 		};
@@ -1702,7 +1705,6 @@ class TransitQuote_Pro_Public {
     	$buttons = array();
     	foreach ($methods as $key => $payment_method) {
     		if(self::check_payment_config($payment_method['id'])){
-    			echo 'payment_method: '.$payment_method['id'];
     			if(in_array($payment_method['id'], $selected_payment_methods)){
 		    		$button_html = '<button id="pay_method_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_method_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
 					array_push($buttons, $button_html);
@@ -1891,27 +1893,6 @@ class TransitQuote_Pro_Public {
 					$field['value'] = $value;
 					$out[] = $field;
 					break;
-			/*	case 'move_size_id':
-					$field['label'] = 'Move Size';
-					$field['value'] = '';
-					switch ($job['service_id']) {
-						case 1:
-							if(isset($commerical_move_sizes[$value])){
-								$field['value'] .= $commerical_move_sizes[$value];
-							} else {
-								$field['value'] .= $value;
-							};
-							break;
-						case 2:
-							if(isset($domestic_move_sizes[$value])){
-								$field['value'] .= $domestic_move_sizes[$value];
-							} else {
-								$field['value'] .= $value;
-							};
-							break;
-					};
-					$out[] = $field;
-					break;					*/
 				case 'service_id':
 					if(self::using_service_types($value)){
 						$out[] = self::format_service_type($value);
