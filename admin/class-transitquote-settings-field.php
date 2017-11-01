@@ -25,7 +25,8 @@ class TransitQuote_Pro_Settings_Field {
 
     private $default_config = array('label'=>'',
                                     'help'=>'',
-                                    'value'=>'');
+                                    'value'=>'',
+                                    'query'=>array());
 
 	public function __construct($config = null) {
         //merge config with defaults so all properties are present
@@ -60,7 +61,7 @@ class TransitQuote_Pro_Settings_Field {
     }
 
     private function load_options(){
-        $this->config['options'] = $this->cdb->get_rows($this->config['table'], array(), array($this->config['id_field'], $this->config['display_field']));
+        $this->config['options'] = $this->cdb->get_rows($this->config['table'], $this->config['query'], array($this->config['id_field'], $this->config['display_field']));
     }
 
     private function set_start_value(){

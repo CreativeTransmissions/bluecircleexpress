@@ -288,6 +288,7 @@ class Admin_Config {
                                                         'table'=>'payment_types',
                                                         'display_field'=>'name',
                                                         'id_field'=>'id',
+                                                        'query'=>array('available'=>1),
                                                         'type'=>'checkgroup',
                                                         'help'=>'Your customers will only be able to select the payment methods that are selected above.'
                                                      ),
