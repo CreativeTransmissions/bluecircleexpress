@@ -1372,6 +1372,7 @@ class TransitQuote_Pro_Public {
 		};
 		$job['quote'] = $this->quote;
 		$job['job_date'] = self::get_job_date($job);
+		$job['payment'] = self::get_job_payment($job);
 		return $job;
 	}
 
@@ -1460,6 +1461,50 @@ class TransitQuote_Pro_Public {
 		*/
 		return $job_date;
 	}
+
+	public function get_job_payment($job){
+		$job_payment = array();
+
+		$paymment_method = self::get_job_payment_method($job);
+		$job_payment[] = array('label'=>'Payment Method',
+								'value'=> $payment_method);
+
+		$paymment_status = self::get_job_payment_status($job);
+		$job_payment[] = array('label'=>'Payment Status',
+								'value'=> $paymment_status);
+
+		return $job_payment;
+	}
+
+	private function get_job_payment_method($job){
+		if(empty($job['payment_type_id'])){
+			return 'Not selected';
+		};
+
+		$payment_type_id = $job['payment_type_id'];
+		$payment_type = $this->cdb->get_field('payment_types', 'name', $payment_type_id);
+		if(empty($payment_type)){
+			return 'Invalid Payment Method';
+		} else {
+			return $payment_type;
+		};
+
+	}
+
+	private function get_job_payment_status($job){
+		if(empty($job['payment_status_id'])){
+			return 'Not selected';
+		};
+
+		$payment_status_id = $job['payment_status_id'];
+		$payment_status = $this->cdb->get_field('payment_status_types', 'name', $payment_status_id);
+		if(empty($payment_status)){
+			return 'Invalid Payment Status';
+		} else {
+			return $payment_status;
+		};
+	}
+
 	public function save($table, $idx = null, $defaults = null){
 		if(empty($table)){
 			return false;
