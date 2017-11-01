@@ -170,7 +170,7 @@ class TransitQuote_Pro_Public {
 	public function get_settings_for_js(){
 		//get varibles to pass to JS
 		// $holidays = self::get_holidays();
-		$rates = self::get_rates();
+		$rates = self::get_rates_list();
 	
 		// $surcharges = self::get_service_surcharges();
 		$ajax_url = admin_url( 'admin-ajax.php' );
@@ -294,12 +294,26 @@ class TransitQuote_Pro_Public {
 	private function get_rates(){
 	   	$plugin = new TransitQuote_Pro3();
 		$this->cdb = $plugin->get_custom_db();
-    	$rates = $this->cdb->get_rows('rates');
+    	$all_rates = $this->cdb->get_rows('rates',array(), array(), null, 'distance');
+    	$rates = [];
+    	foreach ($all_rates as $key => $rate) {
+    		if($rate['distance']===0){
+    			$max_distance_rate = $rate;
+    		} else {
+	    		$rates[] = $rate;
+    		};
+    	};
+
+    	if(isset($max_distance_rate)){
+    		$rates[] = $max_distance_rate;
+    	};
+
 		return $rates;
     }
 
      public function get_rates_list($filters = null){
     	$filter_clause = '';
+    	$filter_sql = '';
     	if(is_array($filters)){
     		// start sql with and if there is at least one filter
     		$filter_sql = ' and ';
