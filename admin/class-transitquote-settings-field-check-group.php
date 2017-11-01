@@ -40,10 +40,12 @@ class TransitQuote_Pro_Settings_Field_Check_Group extends TransitQuote_Pro_Setti
     }
 
     private function get_checked_for_option($option_id){
-        foreach ($this->value as $key => $value) {
-            if($value == $option_id){
-                return true;
-            }
+        if(is_array($this->value)){
+            foreach ($this->value as $key => $value) {
+                if($value == $option_id){
+                    return true;
+                }
+            };
         };
         return false;
     }
