@@ -2344,7 +2344,7 @@ class TransitQuote_Pro_Public {
 	 *	 
 	 * @since    1.0.0
 	 */	
-	private function update_payment_status_id($job_id, $payment_status_id){
+	public function update_payment_status_id($job_id, $payment_status_id){
 		if(empty($job_id)){
 			self::debug('update_payment_status_id: No job_id');
 			return false;

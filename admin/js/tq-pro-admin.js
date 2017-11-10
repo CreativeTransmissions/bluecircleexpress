@@ -134,6 +134,15 @@
 						$.data(this, 'current', $(this).val());
 					});
 
+					$('.admin-form table').on('change', 'select.select-payment_status',function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						console.log('change');
+
+						that.selectPaymentStatus(this);
+						$.data(this, 'current', $(this).val());
+					});
+
 					//Filter the list when a checkbox is changed
 					$('#filter_status_types_form').on('click', 'input[type=checkbox]', function(){
 						that.saveFilters('filter_status_types_form');
@@ -1029,6 +1038,16 @@
 
 				},
 
+				selectPaymentStatus: function(select){
+					var value = $(select).val();
+					var row = $(select).closest('tr');
+					var rowId = $(row).attr('data-id');
+					this.updatePaymentStatus({	job_id: rowId,
+												payment_status_id: value});
+					return true;
+
+				},
+
 				setRatesTableFilters: function(){
 					// after saving rates, synch table filters so we can see the changes
 					console.log('this.selectedServiceId: '+ this.selectedServiceId);
@@ -1110,6 +1129,25 @@
 							$('tbody', that.editTable).empty();
 							$('tbody', that.editTable).append(response.html);	
 							//that.initStatusTypes();
+						} else {
+							that.feedbackMessage({header:'Unable to update job status.'});
+						};
+						that.spinner(false);
+					},'json');					
+				},
+
+				updatePaymentStatus: function(data){
+					var that = this;
+					this.spinner(true);
+
+					var data = $.extend({
+					 	action: 'update_payment_status'
+					 }, data);
+
+
+					$.post(ajaxurl, data, function(response) {
+						if(response.success=='true'){
+							console.log('update ok');
 						} else {
 							that.feedbackMessage({header:'Unable to update job status.'});
 						};

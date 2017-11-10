@@ -1,6 +1,6 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE | E_ALL);
- ini_set('display_errors', 1);*/
+error_reporting(E_ERROR | E_PARSE | E_ALL);
+ ini_set('display_errors', 1);
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -911,6 +911,21 @@ class TransitQuote_Pro_Admin {
                     	'msg'=>'Could not update status');
 		}
 		$this->ajax->respond($response);
+	}
+
+	public function update_payment_status_callback(){
+		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
+		$payment_status_id = $this->ajax->param(array('name'=>'payment_status_id', 'optional'=>false));
+		$success = $this->plugin->update_payment_status_id($job_id, $payment_status_id);
+		if($success!==false){
+			$response = array('success' => 'true',
+                                	'msg'=>'Updated status ok');
+		} else {
+			$response = array('success' => 'false',
+                    	'msg'=>'Could not update status');
+		}
+		$this->ajax->respond($response);
+
 	}
 
 	public function save_record_callback(){
