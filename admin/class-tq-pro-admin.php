@@ -402,7 +402,7 @@ class TransitQuote_Pro_Admin {
 	    $customers_table_name = $this->cdb->get_table_full_name('customers');
 	    $quotes_table_name = $this->cdb->get_table_full_name('quotes');
 	    $payment_types = $this->cdb->get_table_full_name('payment_types');
-	    $payment_status_types_table_name = $this->cdb->get_table_full_name('payment_status_types');
+	    $payment_status_types_table_name = $this->cdb->get_table_full_name('payment_statuses');
 	    $status_types_table_name = $this->cdb->get_table_full_name('status_types');
 
     	$sql = "SELECT distinct	jobs.id,
@@ -416,7 +416,8 @@ class TransitQuote_Pro_Admin {
 								jobs.delivery_time,
 								q.total as quote,
 								pt.name as payment_type,
-								pst.description as payment_status
+								/*pst.description as payment_status,*/
+								pst.id as payment_status
 							FROM ".$jobs_table_name." jobs
 								left join ".$journeys_table_name." j 
 									on j.job_id = jobs.id 
@@ -728,7 +729,9 @@ class TransitQuote_Pro_Admin {
 													'delivery_time',
 													'payment_type',
 													'payment_status'),
-									'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime','status_type_id'=>'select'),
+									'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime',
+										'status_type_id'=>array('select'=>'status_types'),
+										'payment_status'=>array('select'=>'payment_statuses')),
 									'inputs'=>false,
 									'table'=>'jobs',
 									'actions'=>array('Delete'),

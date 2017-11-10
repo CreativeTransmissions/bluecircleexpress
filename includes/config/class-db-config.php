@@ -750,9 +750,9 @@ private function config_services(){
 }
 
 
-private function config_payment_status_types(){
+private function config_payment_statuses(){
  return array (
-  'name' => 'payment_status_types',
+  'name' => 'payment_statuses',
   'defaults' => 
   array (
     'fields' => 

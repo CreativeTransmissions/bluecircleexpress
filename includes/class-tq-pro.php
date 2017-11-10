@@ -377,7 +377,7 @@ class TransitQuote_Pro3 {
 		$cdb->define_table($db_config->get_config('services'));
 		$cdb->define_table($db_config->get_config('vehicles'));
 		$cdb->define_table($db_config->get_config('payment_types'));
-		$cdb->define_table($db_config->get_config('payment_status_types'));
+		$cdb->define_table($db_config->get_config('payment_statuses'));
 		$cdb->define_table($db_config->get_config('status_types'));
 		$cdb->define_table($db_config->get_config('table_filters'));
 		$cdb->define_table($db_config->get_config('jobs'));
@@ -499,13 +499,13 @@ class TransitQuote_Pro3 {
 	}
 
 	private function insert_payment_status_types($cdb){
-		if($cdb->get_count('payment_status_types')==0){
+		if($cdb->get_count('payment_statuses')==0){
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
-			$cdb->update_row('payment_status_types', array('name' => 'wating', 'description'=> 'Awaiting Payment', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_status_types', array('name' => 'recieved', 'description'=> 'Payment Recieved', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_status_types', array('name' => 'failed', 'description'=> 'Payment Failed', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_status_types', array('name' => 'pending', 'description'=> 'Payment Approved', 'created'=>$created, 'modified'=>$modified ));					
+			$cdb->update_row('payment_statuses', array('name' => 'Due', 'description'=> 'Due', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_statuses', array('name' => 'Recieved', 'description'=> 'Recieved', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_statuses', array('name' => 'Failed', 'description'=> 'Failed', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_statuses', array('name' => 'Approved', 'description'=> 'Approved', 'created'=>$created, 'modified'=>$modified ));					
 		};
 	}
 

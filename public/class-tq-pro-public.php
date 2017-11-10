@@ -1514,7 +1514,7 @@ class TransitQuote_Pro_Public {
 		};
 
 		$payment_status_id = $job['payment_status_id'];
-		$payment_status = $this->cdb->get_field('payment_status_types', 'description', $payment_status_id);
+		$payment_status = $this->cdb->get_field('payment_statuses', 'description', $payment_status_id);
 		if(empty($payment_status)){
 			return false;
 		} else {
