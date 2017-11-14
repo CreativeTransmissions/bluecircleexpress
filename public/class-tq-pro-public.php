@@ -295,7 +295,7 @@ class TransitQuote_Pro_Public {
 	   	$plugin = new TransitQuote_Pro3();
 		$this->cdb = $plugin->get_custom_db();
     	$all_rates = $this->cdb->get_rows('rates',array(), array(), null, 'distance');
-    	$rates = [];
+    	$rates = array();
     	foreach ($all_rates as $key => $rate) {
     		if($rate['distance']===0){
     			$max_distance_rate = $rate;
