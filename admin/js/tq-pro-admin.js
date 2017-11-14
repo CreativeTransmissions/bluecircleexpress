@@ -1062,6 +1062,7 @@
 						table: 'rates'
 					});
 				},
+				
 				saveRecord: function(form){
 					var that = this;
 					this.spinner(true);
