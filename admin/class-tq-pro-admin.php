@@ -342,58 +342,8 @@ class TransitQuote_Pro_Admin {
 
 	private function get_jobs($filters = null, $params = null){
 
-    	//current and future only
-    	$clauses = array();
-
-		$filter_sql = " where date(jobs.created) <= '".$filters['to_date']."' and date(jobs.created) >= '".$filters['from_date']."'";
-
-		if(!empty($filters)){
-			foreach ($filters as $name => $values) {
-				if(($name!='to_date')&&($name!='from_date')){
-		     		if(strpos($name, '.')==-1){
-		     			//no table specified so filter jobs table
-		    			$clauses[] = 'jobs.'.$name.' IN('.implode(',',$values).')';
-		    		} else {
-		    			if(is_array($values)){
-		    				$clauses[] = $name.' IN('.implode(',',$values).')';
-		    			} else {
-		    				$clauses[] = $name.' IN('.$values.')';
-		    			}
-		    		}
-		    	}
-	    	};
-	    	if(count($clauses)>0){
-	    		$filter_sql .= ' and '.implode(' AND ', $clauses);  		    		
-	    	}
-    	};
-//echo $filter_sql;
-		if (!empty($params)){/***susheel***/
-    		$orderby = $params['orderby'];
-	    	$order   = $params['order'];
-	    	switch ($orderby) {
-			    case "name":
-			        $orderby = 'last_name'; 
-			        break;
-			    case "delivery_time":
-			        $orderby = 'delivery_time'; 
-			        break;
-			    case "pick_up":
-			        $orderby = 'lo.address'; 
-			        break;			    
-			    case "drop_off":
-			        $orderby = 'ld.address'; 
-			        break;			    
-			    case "received":
-			        $orderby = 'received'; 
-			        break;
-			    default:
-			       	$orderby = 'j.job_id'; 
-			}
-
-	    }else{
-	    	$orderby = 'j.job_id'; 
-	    	$order   = 'desc';
-	    }
+    	$filter_sql = self::get_filter_sql($filters);
+    	$order_sql = self::get_order_sql($params);
 
 	    $jobs_table_name = $this->cdb->get_table_full_name('jobs');
 	    $journeys_table_name = $this->cdb->get_table_full_name('journeys');
@@ -458,11 +408,73 @@ class TransitQuote_Pro_Admin {
 								left join ".$status_types_table_name." st 
 									on pst.id = jobs.status_type_id
 			".$filter_sql." 
-			order by ".$orderby." ".$order.";";
+			order by ".$order_sql.";";
 
 		$data = $this->cdb->query($sql);
 		//echo $this->cdb->last_query;
 		return $data;
+    }
+
+    private function get_filter_sql($filters){
+		//current and future only
+    	$clauses = array();
+
+		$filter_sql = " where date(jobs.created) <= '".$filters['to_date']."' and date(jobs.created) >= '".$filters['from_date']."'";
+
+		if(!empty($filters)){
+			foreach ($filters as $name => $values) {
+				if(($name!='to_date')&&($name!='from_date')){
+		     		if(strpos($name, '.')==-1){
+		     			//no table specified so filter jobs table
+		    			$clauses[] = 'jobs.'.$name.' IN('.implode(',',$values).')';
+		    		} else {
+		    			if(is_array($values)){
+		    				$clauses[] = $name.' IN('.implode(',',$values).')';
+		    			} else {
+		    				$clauses[] = $name.' IN('.$values.')';
+		    			}
+		    		}
+		    	}
+	    	};
+	    	if(count($clauses)>0){
+	    		$filter_sql .= ' and '.implode(' AND ', $clauses);  		    		
+	    	}
+    	};
+
+    	return $filter_sql; 	
+    }
+
+    private function get_order_sql($params){
+    	
+    	if(empty($params)){
+    		$orderby = 'j.job_id'; 
+	    	$order   = 'desc';
+    		
+	    } else {
+	    	$orderby = $params['orderby'];
+	    	$order   = $params['order'];
+	    	switch ($orderby) {
+			    case "name":
+			        $orderby = 'last_name'; 
+			        break;
+			    case "delivery_time":
+			        $orderby = 'delivery_time'; 
+			        break;
+			    case "pick_up":
+			        $orderby = 'lo.address'; 
+			        break;			    
+			    case "drop_off":
+			        $orderby = 'ld.address'; 
+			        break;			    
+			    case "received":
+			        $orderby = 'received'; 
+			        break;
+			    default:
+			       	$orderby = 'j.job_id'; 
+			}
+	    };
+
+    	return $orderby." ".$order;
     }
 
 	private function set_filter($filter_name, $values){
