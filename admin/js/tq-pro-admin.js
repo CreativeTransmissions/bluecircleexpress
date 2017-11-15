@@ -951,12 +951,8 @@
 
 					var selector = '[name="'+field.name+'"]';
 					var formEl = $(selector, form);
-
-					//remove disabled element but leave readonly permanatly 
-					if(name!='exit_plaza_id'){ // an exception
-						$(formEl).removeAttr('disabled');		
-					}
-
+					console.log(field);
+					console.log(field.name+' set value: '+value);
 					$(formEl).val(value);
 
 				},
