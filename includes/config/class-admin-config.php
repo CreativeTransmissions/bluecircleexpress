@@ -182,6 +182,12 @@ class Admin_Config {
                                                         'type'=>'input',
                                                         'help'=>'Customers can request one or more destinations as part of the same job. If multiple destinations are allowed you can enter a number to limit the number of stops on one route.',
                                                         'default'=>3),
+                                                      'show_driving_time'=>array(
+                                                        'id'=>'show_driving_time',
+                                                        'label'=>'Show Estimated Travel Time',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will show the driving time for the delivery route as estimated by Google.',
+                                                        'default'=>1),
                                                       'min_notice'=>array(
                                                         'id'=>'min_notice',
                                                         'label'=>'Minimum Notice Period (HH:MM)',

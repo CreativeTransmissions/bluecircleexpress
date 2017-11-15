@@ -600,6 +600,13 @@ class TransitQuote_Pro_Public {
 		$this->pick_start_address = 'true';
 		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
 		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);
+		$this->show_driving_time = (bool)$this->get_setting('','show_driving_time',true);
+		if($this->show_driving_time){
+			$drive_time_hidden_class = '';
+		} else {
+			$drive_time_hidden_class = 'hidden';
+		};
+		
 		//get paths for includes
 		self::get_paths_for_includes();
 
