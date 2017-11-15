@@ -270,19 +270,16 @@
 					// when service is selected, store it as a property
 					$('select[name="service_id"]', this.editForm).on('change', function(){
 						that.selectedServiceId = $(this).val();
-						console.log('selectedServiceId: ' + that.selectedServiceId);
 						that.setRatesTableFilters();
 					});
 				
 					$('select[name="vehicle_id"]', this.editForm).on('change', function(){
 						that.selectedVehicleId = $(this).val();
-						console.log('selectedVehicleId: ' + that.selectedVehicleId);
 						that.setRatesTableFilters();
 					});
 
 					$(this.serviceFilter).on('change', function(){
 						that.selectedServiceFilterId = $(this).val();
-						console.log('selectedServiceFilterId: ' + that.selectedServiceFilterId);
 						
 						that.loadTable({
 							service_id: that.selectedServiceFilterId,
@@ -293,7 +290,6 @@
 
 					$(this.vehicleFilter).on('change', function(){
 						that.selectedVehicleFilterId = $(this).val();
-						console.log('selectedServiceFilterId: ' + that.selectedVehicleFilterId);
 						that.loadTable({
 							service_id: that.selectedServiceFilterId,
 							vehicle_id: that.selectedVehicleFilterId,
