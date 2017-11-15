@@ -66,6 +66,9 @@ class TransitQuote_Pro_Public {
 	}
 
 	public function enqueue_styles() {
+		if(!self::check_shortcode()){
+			return false;
+		}
 		/**
 		 * This function is provided for demonstration purposes only.
 		 *
@@ -95,10 +98,9 @@ class TransitQuote_Pro_Public {
 	 */
 
 	public function enqueue_scripts() {
-		global $add_my_script_flag;
-				$add_my_script_flag = true;
-		if ( ! $add_my_script_flag )
-			return;
+		if(!self::check_shortcode()){
+			return false;
+		}
 		
 		self::get_plugin_settings();
 
@@ -141,6 +143,25 @@ class TransitQuote_Pro_Public {
 		$sandbox = self::get_sandbox();
 		$this->sandbox = self::bool_to_text_sandbox($sandbox);
 		$this->geolocate = self::bool_to_text($geolocate);
+	}
+
+	public function check_shortcode(){
+		global $posts;
+   		
+	    // false because we have to search through the posts first
+	    $found = false;
+	    // search through each post
+	    foreach ($posts as $post) {
+	        // check the post content for the short code
+	        if ( strrpos(strtolower($post->post_content), '[transitquote_pro')>-1){
+	            // we have found a post with the short code
+	           return true;
+	        }
+	          	            
+
+	    };
+	    return false;
+
 	}
 
 	public function get_sandbox(){
