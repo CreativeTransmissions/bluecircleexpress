@@ -688,9 +688,10 @@ class TransitQuote_Pro_Admin {
 				// by default use standard options for table_rows to allow for only returning a single row to ui after an update
 				$defaults = array(
 							'table'=>'rates',
-							'fields'=>array('id', 'distance','amount','unit','hour'),
+							'fields'=>array('id', 'distance','amount','unit','hour', 'vehicle_id', 'service_id'),
 							'inputs'=>false,
-							'actions'=>array('Edit', 'Delete')
+							'actions'=>array('Edit', 'Delete'),
+							'classes'=>array('vehicle_id'=>'hidden', 'service_id'=>'hidden')
 						);
 
 				// if there is no query, ie not an update or is a delete then get the full list
