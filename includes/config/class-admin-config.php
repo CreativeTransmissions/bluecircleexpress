@@ -182,6 +182,14 @@ class Admin_Config {
                                                         'type'=>'input',
                                                         'help'=>'Customers can request one or more destinations as part of the same job. If multiple destinations are allowed you can enter a number to limit the number of stops on one route.',
                                                         'default'=>3),
+                                                  
+                                                      'show_deliver_and_return'=>array(
+                                                        'id'=>'show_deliver_and_return',
+                                                        'label'=>'Deliver and Return',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'Show deliver and return as an option. If customers choose this option they will be also be charged for the journey back from the final drop off address to the collection address.',
+                                                        'default'=>0),
+
                                                       'show_driving_time'=>array(
                                                         'id'=>'show_driving_time',
                                                         'label'=>'Show Estimated Travel Time',

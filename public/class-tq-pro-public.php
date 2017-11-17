@@ -607,9 +607,15 @@ class TransitQuote_Pro_Public {
 			$drive_time_hidden_class = 'hidden';
 		};
 		
+		$this->show_deliver_and_return = (bool)$this->get_setting('','show_deliver_and_return',false);
+		if($this->show_deliver_and_return){
+			$deliver_and_return_hidden_class = '';
+		} else {
+			$deliver_and_return_hidden_class = 'hidden';
+		};
+
 		//get paths for includes
 		self::get_paths_for_includes();
-
 		
 		// added layout option if given and inline then form will  be inline map else admin setting
 		$attributes = shortcode_atts( array(

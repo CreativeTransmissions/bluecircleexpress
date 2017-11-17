@@ -205,6 +205,19 @@ form.tq-form textarea
 {
 	background-color: #fff;
 }
+form.tq-form input[type="radio"] {
+	width: 1.5em;
+    display: inline;
+    margin-right: 0.25em;
+    vertical-align: bottom;
+}
+form.tq-form label.radio-label{
+	margin-right: 2em
+}
+form.tq-form p.radio-group-label{
+	padding-left: 0;
+}
+
 form.tq-form .group,
 form.tq-form .error{
   	color: #fff;

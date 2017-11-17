@@ -59,4 +59,12 @@
 		</div>
 	</div>
 </div>
+<?php if($this->show_deliver_and_return){ ?>
+<div class="tq-row">
+	<div class="tq-row bt-flabels__wrapper">
+		<p class="radio-group-label">Deliver from collection to destination and then return to the collection address</p>
+		    <input type="radio" id="one_way" name="deliver_and_return" value="0" checked="checked"/><label for="one_way" class="radio-label">One Way</label>
+		    <input type="radio" id="deliver_and_return" name="deliver_and_return" value="1"/><label for="deliver_and_return" class="radio-label">Deliver and Return</label>
+	</div>
 </fieldset>
+<?php }; ?>
