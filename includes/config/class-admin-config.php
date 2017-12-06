@@ -176,6 +176,7 @@ class Admin_Config {
                                                         'id_field'=>'id',
                                                         'default'=>18,
                                                         'help'=>'Please select the currency used for quotes and PayPal payments.'),
+
                                                       'max_address_pickers'=>array(
                                                         'id'=>'max_address_pickers',
                                                         'label'=>'Maximum Destinations',
@@ -185,10 +186,11 @@ class Admin_Config {
                                                   
                                                       'show_deliver_and_return'=>array(
                                                         'id'=>'show_deliver_and_return',
-                                                        'label'=>'Deliver and Return',
-                                                        'type'=>'checkbox',
-                                                        'help'=>'Show deliver and return as an option. If customers choose this option they will be also be charged for the journey back from the final drop off address to the collection address.',
-                                                        'default'=>0),
+                                                        'label'=>'Charge for  Return Journey',
+                                                        'type'=>'select',
+                                                        'options'=>array('Always', 'Never', 'Ask'),
+                                                        'help'=>'Choose whether or not to include the return journey from the final drop off address back to the collection address. If Ask is selected customers see deliver and return as an option.',
+                                                        'default'=>'Never'),
 
                                                       'show_driving_time'=>array(
                                                         'id'=>'show_driving_time',
