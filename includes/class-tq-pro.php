@@ -230,6 +230,12 @@ class TransitQuote_Pro3 {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/ct-payment-pp/ct-paypal.php';		
 
+		/**
+		 * The class responsible for Calculation methods
+		 * for the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-calculation.php';
+
 		$this->loader = new TransitQuote_Pro_Loader();
 
 	}
