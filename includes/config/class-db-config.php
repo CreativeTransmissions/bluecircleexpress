@@ -1482,6 +1482,67 @@ private function config_journeys(){
 
 }
 
+
+private function config_journey_lengths(){
+ return array (
+  'name' => 'journey_lengths',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'asc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'distance' => 
+    array (
+      'name' => 'distance',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f'
+    ),
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
+
 private function config_journeys_locations(){
  return array (
   'name' => 'journeys_locations',
@@ -1613,6 +1674,15 @@ private function config_rates(){
       'auto' => '',
       'default' => '1',
       'format' => '%d',
+    ),
+    'journey_length_id'=>
+    array (
+      'name' => 'journey_length_id',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
     ),
     'distance' => 
     array (
