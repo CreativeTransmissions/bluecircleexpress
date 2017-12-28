@@ -2173,6 +2173,18 @@ class TransitQuote_Pro_Public {
 		return $text;
 	}
 
+	public function render_journey_length_options($selected_id = 1){
+		// get list of services from db
+		$journey_lengths = $this->get_journey_lengths();
+		return $this->render_select_options($journey_lengths, $selected_id);
+	}
+
+	public function get_journey_lengths(){
+		//return services which have rates set
+		$journey_lengths = $this->cdb->get_rows('journey_lengths', array(),array('id','distance as name'),array(),array('distance'=>'asc'));
+		return $journey_lengths;
+	}
+	
 	public function render_service_options($selected_id = 1){
 		// get list of services from db
 		$services = $this->get_services();

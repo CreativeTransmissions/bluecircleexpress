@@ -45,6 +45,7 @@ class TransitQuote_Pro_Activator {
 		$cdb = $plugin->get_custom_db();
 		$cdb->create_tables();
 		$plugin->insert_default_data($cdb);
+		$plugin->update_default_data($cdb);
 	}
 
 

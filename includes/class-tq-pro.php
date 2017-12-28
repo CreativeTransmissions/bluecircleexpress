@@ -563,6 +563,27 @@ class TransitQuote_Pro3 {
 		};
 	}
 
+	public function update_default_data($cdb){
+		self::update_default_payment_types($cdb);
+		self::migrate_rates($cdb);
+	}
+
+	public function update_default_payment_types($cdb){
+		if($cdb->get_count('payment_types')>0){
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;
+			$payment_type_rows = $cdb->get_row('payment_types', 'PayPal', 'name');
+			if($payment_type_rows === false){
+				return false;
+			};
+ 
+			if(count($payment_type_rows)>0){
+				$cdb->update_field('payment_types', 'name', 'Pay Online', 'PayPal', 'name');
+
+			};
+		}
+	}
+
 	public function migrate_rates($cdb){
 		if(!$cdb->col_exists('rates','journey_length_id')){
 			$col_def = array('name'=>'journey_length_id',
