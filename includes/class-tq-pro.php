@@ -393,6 +393,7 @@ class TransitQuote_Pro3 {
 		$cdb->define_table($db_config->get_config('quote_surcharges'));
 		$cdb->define_table($db_config->get_config('journeys'));
 		$cdb->define_table($db_config->get_config('journeys_locations'));
+		$cdb->define_table($db_config->get_config('journey_lengths'));
 		$cdb->define_table($db_config->get_config('transactions_paypal'));
 		$cdb->define_table($db_config->get_config('transaction_logs_paypal'));
 		$cdb->define_table($db_config->get_config('rates'));
@@ -486,6 +487,13 @@ class TransitQuote_Pro3 {
 
 	}
 
+	private function insert_journey_lengths($cdb){
+		if($cdb->get_count('journey_lengths')==0){
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;
+			$cdb->update_row('journey_lengths', array('distance' => '0', 'created'=>$created, 'modified'=>$modified ));
+		};
+	}
 
 	private function insert_rates($cdb){
 		if($cdb->get_count('rates')==0){
@@ -553,5 +561,43 @@ class TransitQuote_Pro3 {
 			$modified = $created;
 			$cdb->update_row('vehicles', array('name'=>'Van', 'description' =>'Standard delivery vehicle.', 'amount'=>0,' created'=>$created, 'modified'=>$modified ));
 		};
+	}
+
+	public function migrate_rates($cdb){
+		if(!$cdb->col_exists('rates','journey_length_id')){
+			$col_def = array('name'=>'journey_length_id',
+							'type'=>'int',
+							'null'=>'null',
+							'default'=>'default 1',
+							'after'=>'after vehicle_id');
+			$cdb->add_column('rates',$col_def);
+		}
+		
+		if(!$cdb->col_exists('quotes','rate_tax')){
+			$col_def = array('name'=>'rate_tax',
+							'type'=>'decimal(10,2)',
+							'null'=>'null',
+							'default'=>'default 0',
+							'after'=>'after rate_hour');
+			$cdb->add_column('quotes',$col_def);
+		}
+
+		if(!$cdb->col_exists('quotes','tax_cost')){
+			$col_def = array('name'=>'tax_cost',
+							'type'=>'decimal(10,2)',
+							'null'=>'null',
+							'default'=>'default 0',
+							'after'=>'after notice_cost');
+			$cdb->add_column('quotes',$col_def);
+		}
+
+		if(!$cdb->col_exists('quotes','breakdown')){
+			$col_def = array('name'=>'breakdown',
+							'type'=>'text',
+							'null'=>'null',
+							'default'=>'',
+							'after'=>'after tax_cost');
+			$cdb->add_column('quotes',$col_def);
+		}
 	}
 }

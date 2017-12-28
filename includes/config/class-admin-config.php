@@ -64,6 +64,13 @@ class Admin_Config {
                               'sections'=>array()
                               ),
 
+              'tq_pro_journey_lengths'=>array(
+                              'key'=>'tq_pro_journey_lengths',
+                              'title'=>'Journey Lengths',
+                              'table'=>'journey_lengths',
+                              'sections'=>array()
+                              ),
+
               'tq_pro_form_options'=>array(
                               'key'=>'tq_pro_form_options',
                               'title'=>'Order Form',

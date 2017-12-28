@@ -35,7 +35,7 @@
 							this.initCustomersTabUI();						
 							this.initCustomersTabEvents();
 							this.initEditTableEvents('customers');
-						break;	
+						break;
 						case 'tq_pro_rates':				
 							this.initRatesTabEvents();
 							this.initEditTableEvents('rates');
@@ -49,6 +49,11 @@
 							this.initVehicleTabUI();
 							this.initVehicleTabEvents();
 							this.initEditTableEvents('vehicles');
+						break;
+						case 'tq_pro_journey_lengths':
+							this.initJourneyLengthTabUI();
+							this.initJourneyLengthTabEvents();
+							this.initEditTableEvents('journey_lengths');
 						break;
 						case 'tq_pro_paypal_transactions':
 							this.initPayPayTransactionsTabUI();
@@ -255,53 +260,57 @@
 					// store filter input references
 					this.serviceFilter = $('#table-form select[name="service_id"]');
 					this.vehicleFilter = $('#table-form select[name="vehicle_id"]');
+					this.maxDistanceFilter = $('#table-form select[name="journey_length_id"]');
 
 					// store form select element references
 					this.serviceSelectEl = $('select[name="service_id"]', this.editForm);
 					this.vehicleSelectEl = $('select[name="vehicle_id"]', this.editForm);
+					this.maxDistanceSelectEl = $('select[name="journey_length_id"]', this.editForm);
 
-					//default selected service type
+					//default selected options
 					this.selectedServiceId = this.serviceSelectEl.find("option:first-child").val(); 
 					this.selectedVehicleId = this.vehicleSelectEl.find("option:first-child").val(); 
+					this.selectedMaxDistanceId = this.maxDistanceSelectEl.find("option:first-child").val(); 
 
 					that.selectedServiceFilterId = this.selectedServiceId;
-					that.selectedVehicleFilterId = this.selectedVehicleId
-
+					that.selectedVehicleFilterId = this.selectedVehicleId;
+					that.selectedMaxDistanceFilterId = this.selectedMaxDistanceId;
+					
 					// when service is selected, store it as a property
-					$('select[name="service_id"]', this.editForm).on('change', function(){
+					$(this.serviceSelectEl).on('change', function(){
 						that.selectedServiceId = $(this).val();
+						that.serviceFilter.val(that.selectedServiceId);
 						that.setRatesTableFilters();
 					});
 				
-					$('select[name="vehicle_id"]', this.editForm).on('change', function(){
+					$(this.vehicleSelectEl).on('change', function(){
 						that.selectedVehicleId = $(this).val();
+						that.vehicleFilter.val(that.selectedVehicleId);
+						that.setRatesTableFilters();
+					});
+
+					$(this.maxDistanceSelectEl).on('change', function(){
+						that.selectedMaxDistanceId = $(this).val();
+						that.maxDistanceFilter.val(that.selectedMaxDistanceId);
 						that.setRatesTableFilters();
 					});
 
 					$(this.serviceFilter).on('change', function(){
 						that.selectedServiceFilterId = $(this).val();
-						
-						that.loadTable({
-							service_id: that.selectedServiceFilterId,
-							vehicle_id: that.selectedVehicleFilterId,
-							table: 'rates'
-						});
+						that.loadRatesTable();
 					});
 
 					$(this.vehicleFilter).on('change', function(){
 						that.selectedVehicleFilterId = $(this).val();
-						that.loadTable({
-							service_id: that.selectedServiceFilterId,
-							vehicle_id: that.selectedVehicleFilterId,
-							table: 'rates'
-						});
+						that.loadRatesTable();
 					});
 
-					that.loadTable({
-							service_id: that.selectedServiceFilterId,
-							vehicle_id: that.selectedVehicleFilterId,
-							table: 'rates'
-						});
+					$(this.maxDistanceFilter).on('change', function(){
+						that.selectedMaxDistanceFilterId = $(this).val();
+						that.loadRatesTable();
+					});
+
+					that.loadRatesTable();
 
 					//Clear / New Rate
 					$('#clear_rate').on('click', function(e){
@@ -319,6 +328,15 @@
 					
 				},
 
+				loadRatesTable: function(){
+					this.loadTable({
+						service_id: this.selectedServiceFilterId,
+						vehicle_id: this.selectedVehicleFilterId,
+						journey_length_id: this.selectedMaxDistanceFilterId,
+						table: 'rates'
+					});
+				},
+				
 				initServiceTabUI: function(){
 
 					var that = this;
@@ -366,6 +384,16 @@
 							
 				},
 				
+				initJourneyLengthTabUI: function(){
+
+					var that = this;
+
+					this.loadTable({
+						table: 'journey_lengths'
+					});
+							
+				},
+
 				initPayPayTransactionsTabUI: function(){
 					var that = this;
 					this.initDatePicker();
@@ -473,14 +501,39 @@
 					this.editRecordMessage = 'Editing Vehicle Details';
 					this.newRecordMessage = 'Enter New Vehicle'
 
-					//Clear / New Plaza
+					//Clear / New Vehicle
 					$('#clear_vehicle').on('click', function(e){
 						e.preventDefault();
 						that.clearForm(this);
 						that.updateLegend(that.editForm, that.newRecordMessage);
 					});
 
-					//Save Plaza
+					//Save Vehicle
+					$(this.editForm).on('submit',function(e) {
+					    e.preventDefault();
+					    that.spinner(true);
+					    that.saveRecord(this);
+					});
+					
+				},
+
+				initJourneyLengthTabEvents: function(){
+					var that = this;
+					//set form to read/populate
+					this.editForm = $('#edit_journey_length_form')[0];
+					this.editTable = $('#journey_lengths_table')[0];
+
+					this.editRecordMessage = 'Editing Journey Length';
+					this.newRecordMessage = 'Enter New Journey Length'
+
+					//Clear / New Journeyy Length
+					$('#clear_journy_length').on('click', function(e){
+						e.preventDefault();
+						that.clearForm(this);
+						that.updateLegend(that.editForm, that.newRecordMessage);
+					});
+
+					//Save Journeyy Length
 					$(this.editForm).on('submit',function(e) {
 					    e.preventDefault();
 					    that.spinner(true);
