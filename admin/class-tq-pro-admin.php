@@ -702,7 +702,7 @@ class TransitQuote_Pro_Admin {
 					$rates_data = $this->plugin->get_rates_list($filters);
 					$defaults['data'] = $rates_data; //supply data instead of running a query
 				};
-			break
+			break;
 			case 'customers':
 				$defaults = array(
 					'table'=>'customers',
@@ -878,7 +878,7 @@ class TransitQuote_Pro_Admin {
 		};
 		return $filters;
 	}
-	
+
 	private function render_empty_table($table){
 		switch ($table) {
 			case 'jobs':

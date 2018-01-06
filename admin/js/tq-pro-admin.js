@@ -1095,17 +1095,15 @@
 
 				setRatesTableFilters: function(){
 					// after saving rates, synch table filters so we can see the changes
-					console.log('this.selectedServiceId: '+ this.selectedServiceId);
-					console.log('this.selectedVehicleId: '+ this.selectedVehicleId);
-					this.serviceFilter.val(this.selectedServiceId);
-					this.vehicleFilter.val(this.selectedVehicleId);
+					//console.log('this.selectedServiceId: '+ this.selectedServiceId);
+					//console.log('this.selectedVehicleId: '+ this.selectedVehicleId);
+					//console.log('this.selectedMaxDistanceId: '+ this.selectedMaxDistanceId);
+
 					this.selectedServiceFilterId = this.selectedServiceId;
 					this.selectedVehicleFilterId = this.selectedVehicleId;
-					this.loadTable({
-						service_id: this.selectedServiceFilterId,
-						vehicle_id: this.selectedVehicleFilterId,
-						table: 'rates'
-					});
+					this.selectedMaxDistanceFilterId = this.selectedMaxDistanceId;
+
+					this.loadRatesTable();
 				},
 				
 				saveRecord: function(form){
