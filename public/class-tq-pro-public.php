@@ -332,7 +332,7 @@ class TransitQuote_Pro_Public {
 		return $rates;
     }
 
-     public function get_rates_list($filters = null){
+    public function get_rates_list($filters = null){
     	$filter_clause = '';
     	$filter_sql = '';
     	if(is_array($filters)){

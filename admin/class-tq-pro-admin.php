@@ -702,7 +702,7 @@ class TransitQuote_Pro_Admin {
 					$rates_data = $this->plugin->get_rates_list($filters);
 					$defaults['data'] = $rates_data; //supply data instead of running a query
 				};
-			break;
+			break
 			case 'customers':
 				$defaults = array(
 					'table'=>'customers',
@@ -858,22 +858,27 @@ class TransitQuote_Pro_Admin {
 		// check for filter params
 		$service_id = $this->ajax->param(array('name'=>'service_id'));
 		$vehicle_id = $this->ajax->param(array('name'=>'vehicle_id'));
+		$journey_length_id = $this->ajax->param(array('name'=>'journey_length_id'));
 		
 		// create array if there are either
-		if($service_id || $vehicle_id){
+		if($service_id || $vehicle_id || $journey_length_id){
 			$filters = array();
 		};
 
-		if($service_id){
+		if($service_id !== false){
 			$filters['service_id'] = $service_id;
 		};
 		
-		if($vehicle_id){
+		if($vehicle_id  !== false ){
 			$filters['vehicle_id'] = $vehicle_id;
+		};
+
+		if($journey_length_id  !== false ){
+			$filters['journey_length_id'] = $journey_length_id;
 		};
 		return $filters;
 	}
-
+	
 	private function render_empty_table($table){
 		switch ($table) {
 			case 'jobs':
