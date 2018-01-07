@@ -221,7 +221,6 @@
 					dropOfLat: 'address_1_lat',
 					dropOfLng: 'address_1_lng',
 					afterQuote: function(){
-						$('.tq-row.success.buttons').show();
 						console.log('got distance, getting quote');
 						that.submitForm('get_quote');
 						/*$('.tq-row.buttons').hide();
@@ -469,6 +468,7 @@
 						if(response.data.quote){
 							this.populateQuoteFields(response.data.quote);
 							this.showQuoteFields();
+
 						};
 						
 					break;
@@ -501,9 +501,7 @@
 			showQuoteFields: function(){
 				$('.quote-fields').removeClass('hidden');
 				$('.quote-fields').show();
-				$('button#get_quote').hide();
-				$('button#book_delivery').show();
-				$('.book-delivery-buttons').show();
+				$('.tq-row.success.buttons').show();
 				$('.tq-form-fields-container').show();
 				$('.tq-form-fields-container').removeClass('hidden');
 			},

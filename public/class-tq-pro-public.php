@@ -1093,19 +1093,28 @@ class TransitQuote_Pro_Public {
 		switch ($submit_type) {
 			case 'pay_method_1':
 				// On delivery
-				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
+				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
+				if(empty($job_id)){
+					$job_id = self::save_new_job();;
+				};
 				self::get_job_details_from_id($job_id);
 				$response = self::request_payment_on_delivery($job_id);
 				break;
 			case 'pay_method_2':
 				// PayPal
-				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
+				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
+				if(empty($job_id)){
+					$job_id = self::save_new_job();;
+				};
 				self::get_job_details_from_id($job_id);
 				$response = self::request_payment_paypal($job_id);
 				break;
 			case 'pay_method_3':
 				// Stripe
-				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
+				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
+				if(empty($job_id)){
+					$job_id = self::save_new_job();;
+				};
 				self::get_job_details_from_id($job_id);
 				$response = self::request_payment_stripe($job_id);
 				break;
