@@ -899,6 +899,172 @@ class TransitQuote_Pro_Public {
 	}
 
 	/*** Front end ajax methods ***/
+	public function get_quote(){
+		$this->quote = false;
+		$this->response_msg = 'There was an error calculating the quote'; //default error
+		$this->rate_options = self::get_rate_affecting_options();
+		$this->tax_rate = self::get_tax_rate();
+		if($this->rate_options['distance']>0){
+			$this->quote = self::calc_quote();
+		} else {
+			$this->response_msg = 'Distance must be greater than 0';
+		};
+
+		$response = self::build_get_quote_response();
+		return $response;
+
+	}
+
+	public function get_tax_rate(){
+		return 20;
+	}
+
+	public function calc_quote(){
+		$this->rates = self::get_rates_for_journey_options();
+		if($this->rates === false){
+			return false;
+		};
+
+		$this->calculation = new TransitQuote_Pro3\TQ_Calculation(array('debugging'=>$this->debug,
+																		'rates'=>$this->rates,
+																		'distance'=>$this->rate_options['distance'],
+																		'tax_rate'=>$this->tax_rate,
+																		'tax_name'=>'VAT')); 
+ 
+		$quote = $this->calculation->run();
+		return $quote;
+	}
+
+	private function get_rate_affecting_options(){
+
+		$vehicle_id = $this->ajax->param(array('name'=>'vehicle_id', 'optional'=>true));
+		if(empty($vehicle_id)){
+			$vehicle_id = 1;
+		};
+
+		$service_id = $this->ajax->param(array('name'=>'service_id', 'optional'=>true));
+		if(empty($service_id)){
+			$service_id = 1;
+		};
+
+		$distance = $this->ajax->param(array('name'=>'distance', 'optional'=>true));
+		if(empty($distance)){
+			$distance = 0;
+		};
+
+		$no_destinations = $this->ajax->param(array('name'=>'no_destinations', 'optional'=>true));
+		if(empty($no_destinations)){
+			$no_destinations = 1;
+		};
+
+		return array('vehicle_id'=>$vehicle_id,
+					'service_id'=>$service_id,
+					'distance'=>$distance,
+					'no_destinations'=>$no_destinations);
+	}
+
+	private function get_rates_for_journey_options(){
+		$rates = false;
+		$query = self::get_rates_query_for_journey_options();
+		if($query === false){
+			//echo 'could not get query';
+			return false;
+		}
+		//echo 'rates query';
+		//print_r($query);
+		return $this->cdb->get_rows('rates', $query);
+
+	}
+
+	private function get_rates_query_for_journey_options(){
+		$journey_length_id = self::get_journey_length_id_for_distance();
+		if($journey_length_id === false){
+			//echo 'no journey_length_id.';
+			return false;
+		} else {
+			$rates_query = array('service_id'=>$this->rate_options['service_id'],
+								'vehicle_id'=>$this->rate_options['vehicle_id'],
+								'journey_length_id'=>$journey_length_id);
+		};
+		return $rates_query;
+		
+	}
+
+	private function get_journey_length_id_for_distance(){
+		$this->journey_lengths = self::get_journey_lengths_except_max();
+		$journey_length_id = self::get_range_for_number($this->rate_options['distance'], $this->journey_lengths);
+		if($journey_length_id===false){
+			$journey_length_id = self::get_max_journey_length_id();
+		//	echo ' OVER MAX JL so jlid is: '.$journey_length_id;
+		}
+		return $journey_length_id;
+	}
+
+	private function get_max_journey_length_id(){
+		$query = array('distance'=>0);
+		$journey_lengths = $this->cdb->get_rows('journey_lengths', $query);
+		if(is_array($journey_lengths)){
+			return $journey_lengths[0]['id'];
+		} else {
+			$this->response_msg = 'No range set for longest journeys';
+			return false;
+		}
+
+	}
+
+	public function get_journey_lengths_except_max(){
+		$journey_lengths_table_name = $this->cdb->get_table_full_name('journey_lengths');
+		// get ordered list of rates with distance 0 as the final record
+    	$sql = "select distinct * 
+					from ".$journey_lengths_table_name."
+					where distance > 0
+					order by distance asc;";
+		//echo $sql;
+		$data = $this->cdb->query($sql);
+		return $data;
+	}
+
+	public function get_range_for_number($number, $ranges){
+		$range_lower_limit = 0;
+		foreach ($ranges as $key => $range_limit) {
+			$range_upper_limit = $range_limit['distance'];
+
+			if(self::number_in_range($number,$range_lower_limit,$range_upper_limit)){
+				//echo $number.' is betweeten '.$range_lower_limit.' and '.$range_upper_limit;
+				return $range_limit['id'];
+			} else {
+				//echo $number.' is NOT betweeten '.$range_lower_limit.' and '.$range_upper_limit;
+				$range_lower_limit = $range_upper_limit;
+			}
+		};
+		return false; //not between any range
+	}
+
+	private function number_in_range($number,$range_lower_limit,$range_upper_limit){
+		if ($number>$range_lower_limit && $number<=$range_upper_limit){
+			return true;
+		};
+		return false;
+
+	}
+	
+	private function build_get_quote_response(){
+		if(is_array($this->quote)){
+			$response = array('success'=>'true',
+							  'data'=>array('quote'=>$this->quote,
+							 				'rates'=>$this->rates,
+							 				'rate_options'=>$this->rate_options));
+		
+		} else {
+			$response = array('success'=>'false',
+								'msg'=>$this->response_msg,
+						  		'data'=>array('rates'=>$this->rates,
+						 				'rate_options'=>$this->rate_options));	
+
+		}
+		return $response;
+	}
+
 	public function tq_pro_save_job_callback(){
 		$this->plugin = new TransitQuote_Pro3();	
 		$this->cdb = $this->plugin->get_custom_db();
@@ -907,20 +1073,12 @@ class TransitQuote_Pro_Public {
 		// save job request from customer facing form
 		if($this->log_requests == true){
 			$this->ajax->log_requests();
-		}
-
-
-
-		//get the job id in submitted form, unless it is a quote request submission
-		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
-		if(empty($job_id)){
-			$response = self::save_job();
-			if($response['success'] == true){
-				$job_id = $this->job['id'];
-			}
 		};
-		
-		$response = self::process_payment_method($job_id);
+
+		// get the submit type for the submitted qutoe form
+		$submit_type = $this->ajax->param(array('name'=>'submit_type', 'optional'=>true));
+		$response = self::process_submit_type($submit_type);
+
 
 		if($response === false){
 			$response = array('success'=>false, 
@@ -930,31 +1088,49 @@ class TransitQuote_Pro_Public {
 		$this->ajax->respond($response);		
 	}
 
-	private function process_payment_method($job_id){
-
-		// get the submit type for the submitted qutoe form
-		$submit_type = $this->ajax->param(array('name'=>'submit_type', 'optional'=>true));
-
+	private function process_submit_type($submit_type){
 
 		switch ($submit_type) {
 			case 'pay_method_1':
 				// On delivery
+				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
 				self::get_job_details_from_id($job_id);
 				$response = self::request_payment_on_delivery($job_id);
 				break;
 			case 'pay_method_2':
 				// PayPal
+				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
 				self::get_job_details_from_id($job_id);
 				$response = self::request_payment_paypal($job_id);
 				break;
 			case 'pay_method_3':
 				// Stripe
+				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
 				self::get_job_details_from_id($job_id);
 				$response = self::request_payment_stripe($job_id);
 				break;
-		}
-
+			case 'get_quote': // Payment not required until confirmed by staff
+				$response = self::get_quote();
+				break;
+			case 'book_delivery': // Payment not required until confirmed by staff
+				$job_id = self::save_new_job();
+				self::get_job_details_from_id($job_id);
+				$response = self::request_payment_after_confirmation($job_id);
+				break;
+		};
 		return $response;
+	}
+
+	public function save_new_job(){
+		//get the job id in submitted form, unless it is a quote request submission
+		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
+		if(empty($job_id)){
+			$response = self::save_job();
+			if($response['success'] == true){
+				$job_id = $this->job['id'];
+			}
+		};
+		return $job_id;
 	}
 
 	public function get_job_details_from_id($job_id){

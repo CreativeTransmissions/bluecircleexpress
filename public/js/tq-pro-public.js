@@ -164,6 +164,7 @@
 			},
 
 			initCalculator: function(){
+				var that = this;
 
 				//Initialize Google Maps Quote Calculator jquery plugin
 				this.calculator = $('#map').mapQuoteCalculator({
@@ -220,12 +221,14 @@
 					dropOfLat: 'address_1_lat',
 					dropOfLng: 'address_1_lng',
 					afterQuote: function(){
-						$('.tq-row.success').show();
-						$('.tq-row.buttons').hide();
+						$('.tq-row.success.buttons').show();
+						console.log('got distance, getting quote');
+						that.submitForm('get_quote');
+						/*$('.tq-row.buttons').hide();
 						$('.tq-row.success.buttons').show();
 						$('.tq-form-fields-container').show();
 						$('.tq-form-fields-container').removeClass('hidden');
-						$('.quote-fields').removeClass('hidden');
+						$('.quote-fields').removeClass('hidden');*/
 					},
 
 					callbackChangeVehicleId: function(vehicleId){
@@ -392,9 +395,15 @@
 				$(this.element).on('click','button:submit', function(e){
 					e.preventDefault();
 					var btn = e.target;
-					if($(that.element).parsley().validate()){
-						that.submitForm(btn)
-					};					
+					var submitType = $(btn).val();
+					if(submitType==='get_quote'){
+						that.submitForm(submitType);
+					} else {
+						if($(that.element).parsley().validate()){
+							that.submitForm(submitType)
+						}						
+					}
+		
 				});
 
 				$.listen('parsley:field:error', function(parsleyField) {
@@ -410,34 +419,14 @@
 				return true;
 			},
 
-			submitForm: function(btn){
+			submitForm: function(submitType){
 				var that = this;
-				var submitType = $(btn).val();
 
-				$('.spinner-div').css({
-				    height: $('.spinner-div').parent().height(), 
-				    width: $('.spinner-div').parent().width()
-				});
-
-				//check for total cost element
-				var totalEl = $('input[name="total"]');
-				if(totalEl.length>0){
-					//total cost element is on page so validate it
-					var totalCost = $('input[name="total"]').val();
-					if(!totalCost){
-						invalid = true;		
-					};
-				};
-			
 				$('.failure').hide();
-				this.updateProgressMessage('Sending your request to our staff, please wait a moment...');
+				var progressMessage = this.getProgressMsgForSubmitType(submitType);
+				this.updateProgressMessage(progressMessage);
 				$('.buttons').hide();
 				$('.paypal-msg-failure').hide();
-				$('.spinner-div').css({
-					    height: $('#quote-form').height(), 
-					    width: $('#quote-form').width()
-				});	
-				$('.spinner-div').show();
 
 				//serialize form
 				var data = $(this.element).serialize();
@@ -446,7 +435,7 @@
 
 				$.post(this.settings.ajaxUrl, data, function(response) {
 					if(response.success==='true'){
-						that.submissionSuccess(response);
+						that.submissionSuccess(response, submitType);
 					} else {
 						$('.failure, .progress, .spinner-div').hide();
 						$('.failure .msg').html(response);
@@ -456,23 +445,78 @@
 				}, 'json');
 			},
 
-			submissionSuccess: function(response){
+			getProgressMsgForSubmitType: function(submitType){
+				switch(submitType){
+					case 'get_quote':
+						return 'Calculating Estimated Delivery Cost..';
+					break;
+					case 'book_delivery':
+						return 'Sending your request to our staff..';
+					break;
+					case 'pay_method_1':
+					case 'pay_method_2':
+					case 'pay_method_3':
+					case 'pay_method_4':
+						return 'Processing Payment..';
+					break;
+				}
+			},
+
+			submissionSuccess: function(response, submitType){
 				this.hideStatusMessages();
-				if(response.data.job_id){
-					this.populateFormWithJobId(response);
+				switch(submitType){
+					case 'get_quote':
+						if(response.data.quote){
+							this.populateQuoteFields(response.data.quote);
+							this.showQuoteFields();
+						};
+						
+					break;
+					case 'book_delivery':
+						if(response.data.job_id){
+							this.populateFormWithJobId(response);
+						};
+						$('.on-delivery').show();
+						$('.on-delivery-msg-succcess').html(response.success_message);
+						$('.tq-form-fields-container').hide();
+					break;
+					case 'pay_method_1':
+					case 'pay_method_2':
+					case 'pay_method_3':
+					case 'pay_method_4':
+						this.processPaymentResponse(response);
+					break;
 				};
+			},
+
+			populateQuoteFields: function(quote){
+				$('#totalCost').html(quote.distance_cost);
+				$('.totalCost').val(quote.total);
+				$('.basicCost').val(quote.distance_cost);
+				$('#rate_tax').val(quote.rate_tax);
+				$('#tax_cost').val(quote.tax_cost);
+				$('#breakdown').val(JSON.stringify(quote.breakdown));
+			},
+
+			showQuoteFields: function(){
+				$('.quote-fields').removeClass('hidden');
+				$('.quote-fields').show();
+				$('button#get_quote').hide();
+				$('button#book_delivery').show();
+				$('.book-delivery-buttons').show();
+				$('.tq-form-fields-container').show();
+				$('.tq-form-fields-container').removeClass('hidden');
+			},
+
+			processPaymentResponse: function(response){
 				if(this.hasValidPaymentMethod(response)){
 					var paymentMethod = this.getPaymentMethodFromResponse(response);
-					if(paymentMethod==1){
+						paymentMethod = parseInt(paymentMethod);
+					if(paymentMethod=== 1 ||  paymentMethod === 0){
 						$('.on-delivery-msg-succcess').html(response.success_message);
 					};
 					this.showPaymentButton(paymentMethod);
-				} else {
-					// just returning the quote
-					this.showSuccessMessage();
 				}
-
-
 			},
 
 			hasValidPaymentMethod: function(response){

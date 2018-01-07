@@ -304,7 +304,7 @@ class TransitQuote_Pro3 {
 
 		$this->loader->add_action( 'wp_ajax_tq_pro3_save_job', $plugin_public, 'tq_pro_save_job_callback');	
 		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro3_save_job', $plugin_public, 'tq_pro_save_job_callback');	
-
+		$this->loader->add_action( 'wp_ajax_nopriv_get_quote', $plugin_public, 'tq_pro_save_job_callback' );
 		$this->loader->add_action( 'wp_ajax_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_nopriv_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_execute_paypal_payment', $plugin_public, 'execute_paypal_payment' );
