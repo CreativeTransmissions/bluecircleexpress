@@ -607,7 +607,7 @@ class TransitQuote_Pro_Public {
 			$drive_time_hidden_class = 'hidden';
 		};
 		
-		$this->show_deliver_and_return = (bool)$this->get_setting('','show_deliver_and_return',false);
+		$this->show_deliver_and_return = $this->get_setting('','show_deliver_and_return');
 		if($this->show_deliver_and_return){
 			$deliver_and_return_hidden_class = '';
 		} else {
