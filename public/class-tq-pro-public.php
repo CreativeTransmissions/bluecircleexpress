@@ -904,6 +904,7 @@ class TransitQuote_Pro_Public {
 		$this->response_msg = 'There was an error calculating the quote'; //default error
 		$this->rate_options = self::get_rate_affecting_options();
 		$this->tax_rate = self::get_tax_rate();
+		$this->return_percentage = self::get_return_percentage();
 		if($this->rate_options['distance']>0){
 			$this->quote = self::calc_quote();
 		} else {
@@ -916,7 +917,12 @@ class TransitQuote_Pro_Public {
 	}
 
 	public function get_tax_rate(){
-		return 20;
+		return self::get_setting('', 'tax_rate', 0);
+
+	}
+
+	public function get_return_percentage(){
+		return self::get_setting('', 'return_journey_adjustment', 100);
 	}
 
 	public function calc_quote(){
@@ -927,7 +933,11 @@ class TransitQuote_Pro_Public {
 
 		$this->calculation = new TransitQuote_Pro3\TQ_Calculation(array('debugging'=>$this->debug,
 																		'rates'=>$this->rates,
+																		'include_return_journey'=>(bool)$this->rate_options['deliver_and_return'],
 																		'distance'=>$this->rate_options['distance'],
+																		'return_percentage'=>$this->return_percentage,
+																		'return_distance'=>$this->rate_options['return_distance'],
+																		'return_time'=>$this->rate_options['return_time'],
 																		'tax_rate'=>$this->tax_rate,
 																		'tax_name'=>'VAT')); 
  
@@ -952,6 +962,21 @@ class TransitQuote_Pro_Public {
 			$distance = 0;
 		};
 
+		$return_time = $this->ajax->param(array('name'=>'return_time', 'optional'=>true));
+		if(empty($return_time)){
+			$return_time = 0;
+		};
+
+		$return_distance = $this->ajax->param(array('name'=>'return_distance', 'optional'=>true));
+		if(empty($return_distance)){
+			$return_distance = 0;
+		};
+
+		$deliver_and_return = $this->ajax->param(array('name'=>'deliver_and_return', 'optional'=>true));
+		if(empty($deliver_and_return)){
+			$deliver_and_return = 0;
+		};		
+
 		$no_destinations = $this->ajax->param(array('name'=>'no_destinations', 'optional'=>true));
 		if(empty($no_destinations)){
 			$no_destinations = 1;
@@ -960,6 +985,8 @@ class TransitQuote_Pro_Public {
 		return array('vehicle_id'=>$vehicle_id,
 					'service_id'=>$service_id,
 					'distance'=>$distance,
+					'return_time'=>$return_time,
+					'return_distance'=>$return_distance,
 					'no_destinations'=>$no_destinations);
 	}
 

@@ -71,10 +71,10 @@
 		</div> 
 <?php  	break;
 		case 'Always': ?>
-		<input type="hidden" id="deliver_and_return" name="deliver_and_return" value="deliver_and_return"/>
+		<input type="hidden" id="deliver_and_return" name="deliver_and_return" value="1"/>
 <?php  	break;
 		case 'Never': ?>
-		<input type="hidden" id="deliver_and_return" name="deliver_and_return" value="deliver_and_return"/>
+		<input type="hidden" id="deliver_and_return" name="deliver_and_return" value="0"/>
 <?php  	break;
 	}; ?>
 </fieldset>

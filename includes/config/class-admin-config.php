@@ -184,6 +184,13 @@ class Admin_Config {
                                                         'default'=>18,
                                                         'help'=>'Please select the currency used for quotes and PayPal payments.'),
 
+                                                      'tax_rate'=>array(
+                                                        'id'=>'tax_rate',
+                                                        'label'=>'Tax Rate',
+                                                        'type'=>'input',
+                                                        'default'=>0,
+                                                        'help'=>'Please enter the percentage to add for tax.'),
+
                                                       'max_address_pickers'=>array(
                                                         'id'=>'max_address_pickers',
                                                         'label'=>'Maximum Destinations',
@@ -198,6 +205,13 @@ class Admin_Config {
                                                         'options'=>array('Always', 'Never', 'Ask'),
                                                         'help'=>'Choose whether or not to include the return journey from the final drop off address back to the collection address. If Ask is selected customers see deliver and return as an option.',
                                                         'default'=>'Never'),
+
+                                                      'return_journey_adjustment'=>array(
+                                                        'id'=>'return_journey_adjustment',
+                                                        'label'=>'Return Journey Adjustment',
+                                                        'type'=>'input',
+                                                        'help'=>'Enter a percentage to apply to the return journey cost',
+                                                        'default'=>100),
 
                                                       'show_driving_time'=>array(
                                                         'id'=>'show_driving_time',

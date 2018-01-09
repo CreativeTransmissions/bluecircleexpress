@@ -38,7 +38,7 @@ class TransitQuote_Pro3 {
 	 * @var      TransitQuote_Pro_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
-	const VERSION = '3.0.9';
+	const VERSION = '3.1.0';
 	/**
 	 * The unique identifier of this plugin.
 	 *
@@ -448,6 +448,7 @@ class TransitQuote_Pro3 {
 		self::insert_services($cdb);
 		self::insert_status_types($cdb);
 		self::insert_vehicles($cdb);
+		self::insert_journey_lengths($cdb);
 	}
 
 	private function insert_currencies($cdb){
@@ -499,7 +500,7 @@ class TransitQuote_Pro3 {
 		if($cdb->get_count('rates')==0){
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
-			$cdb->update_row('rates', array('service_type_id'=>1, 'distance' => '0', 'unit'=> '12', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('rates', array('service_type_id'=>1, 'distance' => '0', 'unit'=> '2', 'journey_length_id'=>1, 'created'=>$created, 'modified'=>$modified ));
 		};
 	}
 

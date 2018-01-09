@@ -28,6 +28,11 @@ class TransitQuote_Pro_Settings_Field_Input extends TransitQuote_Pro_Settings_Fi
         $label = $this->config['label'];
         $help = $this->config['help'];
         $value = $this->value;
+        if($value===''){
+        	if(isset($this->config['default'])){
+        		$value = $this->config['default'];
+           	};
+        };
     	echo '<input type="text" name="'.$this->field_name.'" value="'.$value.'"/>';
         echo '<p>'.$this->config['help'].'</p>';
     }

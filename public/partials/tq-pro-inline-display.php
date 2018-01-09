@@ -32,13 +32,9 @@
         <?php include 'form-messages.php';?>
                 
         <div class="clear"></div>    
-        <input type="hidden" name="distance" value=""/>
-        <input class="hours" type="hidden" name="time" value=""/>
-        <input class="noticeCost" type="hidden" name="notice_cost" value=""/>
-        <input class="totalCost" type="hidden" name="total" value=""/>
-        <input class="basicCost" type="hidden" name="distance_cost" value=""/>
-        <input type="hidden" name="action" value="tq_pro3_save_job"/>
-        <input type="hidden" id="delivery_date" name="delivery_date" value=""/>
+        <p class="hidden">
+        <?php include 'hidden_fields.php';?>
+        </p>
     </form>
     <div class="payment-result">
         <div class="on-delivery text-center" style="display: none;">

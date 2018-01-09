@@ -67,8 +67,9 @@
                 </div>
                 <?php include 'form-messages.php';?>
             </div>
-            <input type="hidden" name="action" value="tq_pro3_save_job"/>
-            <input type="hidden" id="delivery_date" name="delivery_date" value=""/>
+            <p class="hidden">
+            <?php include 'hidden_fields.php';?>
+            </p>
             <?php include 'popup-map.php'; ?>
         </form>            
     </div>
