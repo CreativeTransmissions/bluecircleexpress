@@ -89,12 +89,14 @@ class TQ_Calculation {
 		$this->distance_cost = $this->total;
 		if($this->tax_rate>0){
 			self::add_tax();
+		} else {
+			$this->tax_cost = 0;
 		};
 		return self::build_quote();
 	
 	}
 
-	private function set_distance($distance){
+	public function set_distance($distance){
 		if(is_nan($distance)){
 			return false;
 		};

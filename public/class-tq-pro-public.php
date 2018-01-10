@@ -633,7 +633,7 @@ class TransitQuote_Pro_Public {
 		$this->tax_rate = self::get_tax_rate();
 
 		$this->rates_list = new TransitQuote_Pro3\TQ_Rates_List(array(	'cdb'=>$this->cdb, 
-																		'debugging'=>$this->debug,
+																		'debug'=>$this->debug,
 																		'tax_rate'=>$this->tax_rate,
 																		'range_start'=>$range_start,
 																		'range_end'=>$range_end,
@@ -657,6 +657,23 @@ class TransitQuote_Pro_Public {
 		$plugin = new TransitQuote_Pro3();
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+
+		$this->pick_start_address = 'true';
+		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
+		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);
+		$this->show_driving_time = (bool)$this->get_setting('','show_driving_time',true);
+		if($this->show_driving_time){
+			$drive_time_hidden_class = '';
+		} else {
+			$drive_time_hidden_class = 'hidden';
+		};
+		
+		$this->show_deliver_and_return = $this->get_setting('','show_deliver_and_return');
+		if($this->show_deliver_and_return){
+			$deliver_and_return_hidden_class = '';
+		} else {
+			$deliver_and_return_hidden_class = 'hidden';
+		};
 
 		//get paths for includes
 		self::get_paths_for_includes();

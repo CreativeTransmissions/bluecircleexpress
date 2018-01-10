@@ -39,6 +39,7 @@ class TQ_Rates_List {
     public function __construct($config = null) {
         //merge config with defaults so all properties are present
 		$this->config = array_merge($this->default_config, $config);
+		$this->cdb = $this->config['cdb'];
 	}
 
 	public function get_rate_variations(){
@@ -47,7 +48,7 @@ class TQ_Rates_List {
 
 	private function get_all_possible_rate_variations(){
 		$rate_variations_sql = self::get_rate_variations_sql();
-		return $this->cdb->query($sql);
+		return $this->cdb->query($rate_variations_sql);
 	}
 
 	private function get_rate_variations_sql(){
@@ -62,7 +63,7 @@ class TQ_Rates_List {
 
 	private function get_rates_list_for_variation($variation){
 		$results = array();
-		$calculation = self::get_calculation_for_variation();
+		$calculation = self::get_calculation_for_variation($variation);
 		
 		$start_distance = $this->config['range_start'];
 		$end_distance = $this->config['range_end'];
@@ -74,7 +75,7 @@ class TQ_Rates_List {
 				return false;
 			};
 
-			$quote = $this->calculation->run();
+			$quote = $calculation->run();
 			$results[] = array('distance'=>$i,
 							   'quote'=>$quote);
 
@@ -86,10 +87,12 @@ class TQ_Rates_List {
 
 	private function get_calculation_for_variation($variation){
 		$this->rates = self::get_rates_for_variation($variation);
-		$this->calculation = new TransitQuote_Pro3\TQ_Calculation(array('debugging'=>$this->debug,
+		$calculation = new TQ_Calculation(array('debugging'=>$this->config['debug'],
 																		'rates'=>$this->rates,
 																		'include_return_journey'=>false,
-																		'tax_rate'=>$this->config['tax_rate'])); 
+																		'tax_rate'=>$this->config['tax_rate'],
+																		'tax_name'=>'VAT'));
+		return $calculation;
 	}
 
 	private function get_rates_for_variation($variation){
@@ -106,17 +109,14 @@ class TQ_Rates_List {
 	}
 
 	private function get_rates_query_for_journey_options($variation){
-		$journey_length_id = self::get_journey_length_id_for_distance();
-		if($journey_length_id === false){
-			//echo 'no journey_length_id.';
-			return false;
-		} else {
-			$rates_query = array('service_id'=>$variation['service_id'],
-								 'vehicle_id'=>$variation['vehicle_id'],
-								 'journey_length_id'=>$variation['journey_length_id']);
-		};
+
+		$rates_query = array('service_id'=>$variation['service_id'],
+							 'vehicle_id'=>$variation['vehicle_id'],
+							 'journey_length_id'=>$variation['journey_length_id']);
+		
 		return $rates_query;
 		
 	}
+
 }
 

@@ -11,7 +11,7 @@
 ?>
 <div id="feedback"></div>
 <div class="tq-pro-rates-list">
-    <?php $rates_variations = $this->rates_list->get_rates_variations(); ?>
+    <?php $rates_variations = $this->rates_list->get_rate_variations(); ?>
     <?php foreach ($rates_variations as $key => $varaition) {
             $this->rates_list->render_table($varaition); 
 
