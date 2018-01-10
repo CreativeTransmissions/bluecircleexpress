@@ -586,7 +586,7 @@ class TransitQuote_Pro_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function display_TransitQuote_Pro($atts) {
+	public function display_rates_list($atts) {
 		// display the plugin form
 
 		//set flag to include scripts, only include where plugin is used
@@ -613,6 +613,50 @@ class TransitQuote_Pro_Public {
 		} else {
 			$deliver_and_return_hidden_class = 'hidden';
 		};
+
+		//get paths for includes
+		self::get_paths_for_includes();
+		
+		// added layout option if given and inline then form will  be inline map else admin setting
+		$attributes = shortcode_atts( array(
+	        'range_start' => 0,
+	        'range_end' =>100,
+	        'step' => 5
+	    ), $atts );
+
+		$step = $attributes['step'];
+		$range_start = $attributes['range_start'];
+		$range_end = $attributes['range_end'];
+		$this->currency_code = self::get_currency_code();
+		$this->currency_symbol = self::get_currency_symbol();
+		$this->distance_unit = self::get_distance_unit();
+		$this->tax_rate = self::get_tax_rate();
+
+		$this->rates_list = new TransitQuote_Pro3\TQ_Rates_List(array(	'cdb'=>$this->cdb, 
+																		'debugging'=>$this->debug,
+																		'tax_rate'=>$this->tax_rate,
+																		'range_start'=>$range_start,
+																		'range_end'=>$range_end,
+																		'step'=>$step
+																	));
+
+		$this->view = 'partials/tq-pro-rates-list.php';
+		
+		ob_start();
+	   	include $this->view;
+	   	return ob_get_clean();
+	}	
+
+	public function display_TransitQuote_Pro($atts) {
+		// display the plugin form
+
+		//set flag to include scripts, only include where plugin is used
+		global $add_my_script_flag;
+		$add_my_script_flag = true;
+
+		$plugin = new TransitQuote_Pro3();
+		$this->cdb = $plugin->get_custom_db();
+		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 		//get paths for includes
 		self::get_paths_for_includes();

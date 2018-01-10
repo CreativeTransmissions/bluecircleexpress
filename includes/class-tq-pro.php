@@ -236,6 +236,11 @@ class TransitQuote_Pro3 {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-calculation.php';
 
+		/**
+		 * The class responsible for rates list methods
+		 * for the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-rates-list.php';
 		$this->loader = new TransitQuote_Pro_Loader();
 
 	}
@@ -297,6 +302,8 @@ class TransitQuote_Pro3 {
 		$plugin_public = new TransitQuote_Pro_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
 		add_shortcode( 'TransitQuote_Pro', array( $plugin_public, 'display_TransitQuote_Pro' ) );
 		add_shortcode( 'transitquote_pro', array( $plugin_public, 'display_TransitQuote_Pro' ) );
+		add_shortcode( 'tq_pro_display_rates_list', array( $plugin_public, 'display_rates_list' ) );
+
 		add_filter( 'widget_text', 'do_shortcode', 11);
 		$this->loader->add_action( 'init', $plugin_public, 'init_plugin');
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_styles');

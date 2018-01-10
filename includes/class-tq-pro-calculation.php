@@ -94,6 +94,15 @@ class TQ_Calculation {
 	
 	}
 
+	private function set_distance($distance){
+		if(is_nan($distance)){
+			return false;
+		};
+
+		$this->distance = $distance;
+		return true;
+	}
+
 	private function calc_with_final_boundary_rates(){
 
 		$final_rate = false;
