@@ -191,7 +191,7 @@ class TQ_Calculation {
 				$this->units_charged_for = $this->units_charged_for + $miles_remaining_within_boundary;
 			}
 
-			$this->breakdown[] = array(	'distance'=>$rate['distance'],
+			$this->breakdown[] = array(	'distance'=>$this->distance,
 										'units_charged_for'=>$this->units_charged_for,
 										//'miles_remaining_within_boundary'=>$miles_remaining_within_boundary,
 										'type'=>'set amount',
@@ -201,8 +201,12 @@ class TQ_Calculation {
 	}
 
 	private function add_boundary_distance_cost_to_total($rate){
-		$miles_up_to_boundary = $rate['distance'];
-		$cost_of_miles_up_to_boundary = $rate['distance']*$rate['unit'];
+		if($this->distance <  $rate['distance']){
+			$miles_up_to_boundary = $this->distance;
+		} else {
+			$miles_up_to_boundary = $rate['distance'];
+		};
+		$cost_of_miles_up_to_boundary = $miles_up_to_boundary*$rate['unit'];
 		$this->total = $this->total + $cost_of_miles_up_to_boundary;
 		$this->units_charged_for = $this->units_charged_for + $miles_up_to_boundary;
 		$this->breakdown[] = array(	'distance'=>$miles_up_to_boundary,
