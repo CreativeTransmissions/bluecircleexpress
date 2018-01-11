@@ -101,7 +101,7 @@ class TQ_Calculation {
 			return false;
 		};
 
-		$this->distance = $distance;
+		$this->config['distance'] = $distance;
 		return true;
 	}
 
@@ -115,15 +115,15 @@ class TQ_Calculation {
 			};
 			if(self::is_distance_within_boundary($rate)){
 				$this->final_rate = $rate;
-			//	echo $this->distance.' is within '.$rate['distance'];
+				echo $this->distance.' is within '.$rate['distance'];
 				self::add_boundary_set_amount_to_total($rate);
 				break;
 			} else {
-			//	echo $this->distance.' is NOT within '.$rate['distance'];
+				echo $this->distance.' is NOT within '.$rate['distance'];
 				self::add_boundary_set_amount_to_total($rate);
 			}
 		};
-		//echo '*charged for '.$this->units_charged_for.' of '.$this->distance.' units';
+		echo '*charged for '.$this->units_charged_for.' of '.$this->distance.' units';
 		$units_left_to_charge_for = $this->distance - $this->units_charged_for;
 		if($units_left_to_charge_for > 0 ){
 		//	echo ' still to charge for '.$units_left_to_charge_for.' units.';
