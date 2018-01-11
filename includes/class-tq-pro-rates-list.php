@@ -57,8 +57,9 @@ class TQ_Rates_List {
 			 	order by service_id asc, vehicle_id asc, journey_length_id asc";
 	}
 
-	public function render_table($variation){
+	public function render_rates_list($variation){
 		$rates_list = self::get_rates_list_for_variation($variation);
+		self::render_table($rates_list);
 	}
 
 	private function get_rates_list_for_variation($variation){
@@ -69,9 +70,8 @@ class TQ_Rates_List {
 		$end_distance = $this->config['range_end'];
 		$step = $this->config['step'];
 
-		for ($i=$start_distance; $i < $end_distance; $i+=$step) { 
+		for ($i=$start_distance; $i <= $end_distance; $i+=$step) { 
 			if(!$calculation->set_distance($i)){
-				echo 'Invalid distance '.$i;
 				return false;
 			};
 
@@ -82,6 +82,7 @@ class TQ_Rates_List {
 		};
 
 		echo 'Journeys calculated: '.count($results);
+		return $results;
 
 	}
 
@@ -118,5 +119,18 @@ class TQ_Rates_List {
 		
 	}
 
+	private function render_table($rates_list){
+		$journey_rows = array();
+		$header_row = '<tr><th>Distance</th><th>Cost</th><th>Tax</th><th>Total</th></tr><tr>';
+		foreach ($rates_list as $key => $journey) {
+			$journey_rows[] = '<td>'.$journey['distance'].'</td><td>'.$journey['quote']['distance_cost'].'</td><td>'.$journey['quote']['tax_cost'].'</td><td>'.$journey['quote']['total'].'</td>';
+			echo '<pre>';
+			print_r($journey['quote']);
+					echo '</pre>';
+
+		}
+		$html = '<table>'.implode($journey_rows, '</tr><tr>').'</tr></table>';
+		echo $html;
+	}
 }
 

@@ -13,7 +13,7 @@
 <div class="tq-pro-rates-list">
     <?php $rates_variations = $this->rates_list->get_rate_variations(); ?>
     <?php foreach ($rates_variations as $key => $varaition) {
-            $this->rates_list->render_table($varaition); 
+            $this->rates_list->render_rates_list($varaition); 
 
     }; ?>
 </div>
