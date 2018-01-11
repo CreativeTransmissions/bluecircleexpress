@@ -76,7 +76,7 @@ class TQ_Calculation {
 
 	public function run(){
 		self::init_calculation();
-	//	echo 'boundary_mode: '.$this->config['boundary_mode'];
+		//echo 'boundary_mode: '.$this->config['boundary_mode'];
 		switch ($this->config['boundary_mode']) {
 			case 'final':
 				self::calc_with_final_boundary_rates();
@@ -115,41 +115,62 @@ class TQ_Calculation {
 			};
 			if(self::is_distance_within_boundary($rate)){
 				$this->final_rate = $rate;
-				echo $this->distance.' is within '.$rate['distance'];
+				//echo $this->distance.' is within '.$rate['distance'];
 				self::add_boundary_set_amount_to_total($rate);
+				self::add_boundary_distance_cost_to_total($rate);
 				break;
-			} else {
-				echo $this->distance.' is NOT within '.$rate['distance'];
-				self::add_boundary_set_amount_to_total($rate);
-			}
+			};
 		};
 		echo '*charged for '.$this->units_charged_for.' of '.$this->distance.' units';
 		$units_left_to_charge_for = $this->distance - $this->units_charged_for;
 		if($units_left_to_charge_for > 0 ){
-		//	echo ' still to charge for '.$units_left_to_charge_for.' units.';
+			//echo ' still to charge for '.$units_left_to_charge_for.' units.';
 			if($final_rate === false){
-		//		echo ' Using max distance rate for long journey.';
-			};	$final_rate = $this->max_distance_rate;
+				//echo ' Using max distance rate for long journey:';
+				//print_r($this->max_distance_rate);
+				$final_rate = $this->max_distance_rate;
+			}
 
 			self::add_max_distance_cost_to_total($final_rate);
-			
+			self::add_max_distance_set_amount_to_total($final_rate);
 		};
 		
 		
 	}
 
 	private function calc_with_all_boundary_rates(){
+		
+		$final_rate = false;
 		//rates are ordered by distance boundary from 0 to max
 		foreach ($this->rates as $key => $rate) {
+			if($rate['distance']==0){
+				continue;
+			};
 			if(self::is_distance_within_boundary($rate)){
-				self::add_remaining_distance_cost_to_total($rate);
-				exit;
+				$this->final_rate = $rate;
+			//	echo $this->distance.' is within '.$rate['distance'];
+				self::add_boundary_set_amount_to_total($rate);
+				self::add_boundary_distance_cost_to_total($rate);
+				break;
 			} else {
+			//	echo $this->distance.' is NOT within '.$rate['distance'];
 				self::add_boundary_set_amount_to_total($rate);
 				self::add_boundary_distance_cost_to_total($rate);
 			}
-		}
+		};
+		//echo '*charged for '.$this->units_charged_for.' of '.$this->distance.' units';
+		$units_left_to_charge_for = $this->distance - $this->units_charged_for;
+		if($units_left_to_charge_for > 0 ){
+		//	echo ' still to charge for '.$units_left_to_charge_for.' units.';
+			if($final_rate === false){
+		//		echo ' Using max distance rate for long journey.';
+				$final_rate = $this->max_distance_rate;
+			};	
 
+			self::add_max_distance_cost_to_total($final_rate);
+			
+		};
+		
 	}
 
 	private function is_distance_within_boundary($rate){
@@ -210,11 +231,25 @@ class TQ_Calculation {
 		$cost_of_miles_remaining = $miles_remaining*$rate['unit'];
 		$this->total = $this->total + $cost_of_miles_remaining;
 		$this->units_charged_for = $this->units_charged_for + $miles_remaining;
+
 		$this->breakdown[] = array(	'distance'=>$miles_remaining,
 							'type'=>'per distance unit',
 							'rate'=>$rate['unit'],
 							'cost'=>$cost_of_miles_remaining);
 	}
+
+	private function add_max_distance_set_amount_to_total($rate){
+		//echo ', add_max_distance_set_amount_to_total: rate: '.$rate['amount'];
+		$this->total = $this->total + $rate['amount'];
+		$miles_remaining = $this->distance - $this->units_charged_for;
+		$this->units_charged_for = $this->units_charged_for + $miles_remaining;
+		
+		$this->breakdown[] = array(	'distance'=>$miles_remaining,
+							'type'=>'set amount',
+							'rate'=>$rate['amount'],
+							'cost'=>$amount);
+	}
+
 
 	private function add_return_distance_cost_to_total($rate){
 		/*echo ', add_return_distance_cost_to_total: rate: '.$rate['unit'];
