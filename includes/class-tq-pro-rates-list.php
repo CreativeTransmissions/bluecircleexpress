@@ -124,9 +124,9 @@ class TQ_Rates_List {
 		$header_row = '<tr><th>Distance</th><th>Cost</th><th>Tax</th><th>Total</th></tr><tr>';
 		foreach ($rates_list as $key => $journey) {
 			$journey_rows[] = '<td>'.$journey['distance'].'</td><td>'.$journey['quote']['distance_cost'].'</td><td>'.$journey['quote']['tax_cost'].'</td><td>'.$journey['quote']['total'].'</td>';
-			echo '<pre>';
+			/*echo '<pre>';
 			print_r($journey['quote']);
-					echo '</pre>';
+					echo '</pre>';*/
 
 		}
 		$html = '<table>'.implode($journey_rows, '</tr><tr>').'</tr></table>';

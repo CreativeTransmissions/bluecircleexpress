@@ -121,7 +121,7 @@ class TQ_Calculation {
 				break;
 			};
 		};
-		echo '*charged for '.$this->units_charged_for.' of '.$this->distance.' units';
+	//	echo '*charged for '.$this->units_charged_for.' of '.$this->distance.' units';
 		$units_left_to_charge_for = $this->distance - $this->units_charged_for;
 		if($units_left_to_charge_for > 0 ){
 			//echo ' still to charge for '.$units_left_to_charge_for.' units.';
