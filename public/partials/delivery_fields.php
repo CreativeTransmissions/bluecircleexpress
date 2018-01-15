@@ -3,9 +3,10 @@
     $has_vehicles = $this->has_vehicles();
     $using_service_descript = $this->using_service_descript();
     $using_vehicle_descript = $this->using_vehicle_descript();
-?>
+    $hide_all = ''; ?>
 <fieldset class="search-fields">
-<div class="tq-row  <?php echo $hide_section; ?>">
+<? if(($has_services)||($has_vehicles)){ ?>
+<div class="tq-row">
 	<?php if($has_services){ ?>
 	<div class="tq-col48">
 		<div class="tq-row bt-flabels__wrapper">
@@ -45,8 +46,8 @@
 			<?php }; ?>
 		<?php }; ?>
 </div>
+<?php } ?>
 <div class="tq-row">
-	<div>
 		<div class="bt-flabels__wrapper half left">
 			<label for="collection_date">Pick up date</label>
 			<input tabindex="6" data-parsley-trigger="select change" type="text" class="datepicker"  placeholder="Collection Date*"  name="collection_date" id="collection_date" required readonly="">
@@ -57,7 +58,6 @@
 			<input tabindex="7" data-parsley-trigger="select change" type="text" class="timepicker" readonly="" placeholder="Collection Time*" name="delivery_time" id="collection_time" required>
 			<span class="bt-flabels__error-desc">Required / Invalid Pick up time</span>
 		</div>
-	</div>
 </div>
 <?php
 	switch ($this->show_deliver_and_return) {
