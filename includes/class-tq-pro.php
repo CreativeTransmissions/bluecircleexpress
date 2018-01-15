@@ -278,10 +278,10 @@ class TransitQuote_Pro3 {
 		$this->loader->add_filter( 'plugin_action_links_'.$plugin_basename, $plugin_admin, 'add_action_links' );
 
 
-		$this->loader->add_action( 'wp_ajax_tq_pro3_save_record', $plugin_admin, 'save_record_callback' );
+		$this->loader->add_action( 'wp_ajax_tq_pro4_save_record', $plugin_admin, 'save_record_callback' );
 		$this->loader->add_action( 'wp_ajax_delete_record', $plugin_admin, 'delete_record_callback' );
 		$this->loader->add_action( 'wp_ajax_select_options', $plugin_admin, 'select_options_callback' );
-		$this->loader->add_action( 'wp_ajax_tq_pro3_load_table', $plugin_admin, 'load_table_callback' );
+		$this->loader->add_action( 'wp_ajax_tq_pro4_load_table', $plugin_admin, 'load_table_callback' );
 		$this->loader->add_action( 'wp_ajax_load_details', $plugin_admin, 'load_details_callback' );
 		$this->loader->add_action( 'wp_ajax_transactions_paypal', $plugin_admin, 'load_transactions_paypal_callback' );
 		$this->loader->add_action( 'wp_ajax_update_job_status', $plugin_admin, 'update_job_status_callback');
@@ -309,8 +309,8 @@ class TransitQuote_Pro3 {
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_scripts');	
 
-		$this->loader->add_action( 'wp_ajax_tq_pro3_save_job', $plugin_public, 'tq_pro_save_job_callback');	
-		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro3_save_job', $plugin_public, 'tq_pro_save_job_callback');	
+		$this->loader->add_action( 'wp_ajax_tq_pro4_save_job', $plugin_public, 'tq_pro_save_job_callback');	
+		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro4_save_job', $plugin_public, 'tq_pro_save_job_callback');	
 		$this->loader->add_action( 'wp_ajax_nopriv_get_quote', $plugin_public, 'tq_pro_save_job_callback' );
 		$this->loader->add_action( 'wp_ajax_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_nopriv_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
@@ -379,7 +379,7 @@ class TransitQuote_Pro3 {
 
 	public static function get_custom_db(){
 		//define and register tables
-		$cdb = new TransitQuote_Pro3\CT_CDB(array('prefix'=>'tq_pro3'));
+		$cdb = new TransitQuote_Pro3\CT_CDB(array('prefix'=>'tq_pro4'));
 		$db_config = new TransitQuote_Pro3\DB_Config();
 
 		//Define tables from the configs in the DB_Config class

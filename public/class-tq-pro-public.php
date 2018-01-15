@@ -59,7 +59,7 @@ class TransitQuote_Pro_Public {
 		$this->version = $version;
 		$this->debug = false;
 		$this->log_requests = false;
-		$this->prefix = 'tq_pro3';
+		$this->prefix = 'tq_pro4';
 		$this->cdb = TransitQuote_Pro3::get_custom_db();
 		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 

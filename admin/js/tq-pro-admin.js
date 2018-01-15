@@ -952,7 +952,7 @@
 
 					$('#'+tableName+' tbody').empty();
 					var data = $.extend({
-							 	action: 'tq_pro3_load_table',
+							 	action: 'tq_pro4_load_table',
 							 }, options );
 					$.post(this.settings.ajaxUrl, data, function(response) {
 						if(response.success){

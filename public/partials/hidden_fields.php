@@ -6,7 +6,7 @@
 <input class="noticeCost" type="hidden" name="notice_cost" value=""/>
 <input class="totalCost" type="hidden" name="total" value=""/>
 <input class="basicCost" type="hidden" name="distance_cost" value=""/>
-<input type="hidden" name="action" value="tq_pro3_save_job"/>
+<input type="hidden" name="action" value="tq_pro4_save_job"/>
 <input type="hidden" id="delivery_date" name="delivery_date" value=""/>
 <input type="hidden" id="rate_tax" name="rate_tax" value=""/>
 <input type="hidden" id="tax_cost" name="tax_cost" value=""/>

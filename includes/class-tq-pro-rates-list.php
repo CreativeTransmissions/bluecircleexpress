@@ -53,7 +53,7 @@ class TQ_Rates_List {
 
 	private function get_rate_variations_sql(){
 		return "SELECT distinct service_id, vehicle_id, journey_length_id
-					FROM transitquotepro.wp_tq_pro3_rates
+					FROM transitquotepro.wp_tq_pro4_rates
 			 	order by service_id asc, vehicle_id asc, journey_length_id asc";
 	}
 
