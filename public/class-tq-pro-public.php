@@ -2198,9 +2198,13 @@ class TransitQuote_Pro_Public {
 		};
 		return $out;
 	}
+
 	public function format_job($job){
 		$services = self::get_services();
 		$this->services = $this->index_array_by_db_id($services);
+
+		$vehicles = self::get_vehicles();
+		$this->vehicles = $this->index_array_by_db_id($vehicles);
 
 		//format for display in job details view
 		$out = array();
@@ -2217,6 +2221,11 @@ class TransitQuote_Pro_Public {
 				case 'service_id':
 					if(self::using_service_types($value)){
 						$out[] = self::format_service_type($value);
+					};
+					break;
+				case 'vehicle_id':
+					if(self::using_vehicle_types($value)){
+						$out[] = self::format_vehicle_type($value);
 					};
 					break;								
 				default:
@@ -2241,6 +2250,16 @@ class TransitQuote_Pro_Public {
 			$service_name = $this->services[$value]['name'];
 		};
 		$field['value'] = $service_name;
+		return $field;
+	}
+
+	private function format_vehicle_type($value){
+		$field = array('label' => 'Vehicle');
+		$vehicle_name = '';
+		if(isset($this->vehicles[$value])){
+			$vehicle_name = $this->vehicles[$value]['name'];
+		};
+		$field['value'] = $vehicle_name;
 		return $field;
 	}
 
@@ -2368,6 +2387,13 @@ class TransitQuote_Pro_Public {
 	}
 
 	public function using_service_types($value){
+		if(empty($value)){
+			return false;
+		};
+		return true;
+	}
+
+	public function using_vehicle_types($value){
 		if(empty($value)){
 			return false;
 		};
