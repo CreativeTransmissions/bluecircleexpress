@@ -39,6 +39,7 @@ class TQ_Calculation {
 	}
 
 	public function init_calculation(){
+		//print_r($this->config);
 		$this->total = 0;
 		$this->accumulated_total = 0;
 		$this->breakdown = array();
@@ -76,6 +77,7 @@ class TQ_Calculation {
 
 	private function get_outward_distance(){
 		$outward_distance = $this->distance - $this->return_distance;
+		return $outward_distance;
 	}
 
 	private function get_max_distance_rate(){
@@ -124,7 +126,6 @@ class TQ_Calculation {
 	}
 
 	private function calc_with_final_boundary_rates(){
-
 		$this->final_rate = false;
 		//rates are ordered by distance boundary from 0 to max
 		foreach ($this->rates as $key => $rate) {
@@ -137,7 +138,9 @@ class TQ_Calculation {
 				self::add_boundary_set_amount_to_total($rate);
 				self::add_boundary_distance_cost_to_total($rate);
 				break;
-			};
+			}  else {
+				//echo $this->distance.' is NOT within '.$rate['distance'];
+			}
 		};
 	//	echo '*charged for '.$this->units_charged_for.' of '.$this->distance.' units';
 		$units_left_to_charge_for = $this->distance - $this->units_charged_for;
@@ -166,12 +169,12 @@ class TQ_Calculation {
 			};
 			if(self::is_distance_within_boundary($rate)){
 				$this->final_rate = $rate;
-			//	echo $this->distance.' is within '.$rate['distance'];
+				echo $this->distance.' is within '.$rate['distance'];
 				self::add_boundary_set_amount_to_total($rate);
 				self::add_boundary_distance_cost_to_total($rate);
 				break;
 			} else {
-			//	echo $this->distance.' is NOT within '.$rate['distance'];
+				echo $this->distance.' is NOT within '.$rate['distance'];
 				self::add_boundary_set_amount_to_total($rate);
 				self::add_boundary_distance_cost_to_total($rate);
 			}
@@ -293,25 +296,26 @@ class TQ_Calculation {
 	}
 
 	private function apply_return_cost_adjustment($return_cost){
-		if(!empty( $this->config->return_percentage)){
-			$return_percentage = $this->config->return_percentage;
-			$return_cost =($this->return_percentage/100)*$return_cost; 
+		if(!empty( $this->config['return_percentage'])){
+			$return_percentage = $this->config['return_percentage'];
+			$return_cost =($this->config['return_percentage']/100)*$return_cost; 
 		}
 		return $return_cost;
 	}
 
 	private function add_tax(){
 		$this->tax_cost = ($this->tax_rate/100)*$this->total;
+		$this->tax_cost = round($this->tax_cost,2);
 		$this->total = $this->total + $this->tax_cost;
-		$this->breakdown[] = array(	'distance'=>$this->tax_name,
-									'type'=>'percentage',
+		$this->breakdown[] = array(	'distance'=>0,
+									'type'=>$this->tax_name,
 									'rate'=>$this->tax_rate,
 									'cost'=>$this->tax_cost);
 	}
 
 	private function build_quote(){
-		$quote = array('total'=>$this->total,
-						'total_rounded'=>round($this->total,2),
+		$quote = array('total'=>round($this->total,2),
+						'total_before_rounding'=>$this->total,
 						'distance'=>$this->distance,
 						'distance_cost'=>round($this->distance_cost,2),
 						'breakdown'=>$this->breakdown,
