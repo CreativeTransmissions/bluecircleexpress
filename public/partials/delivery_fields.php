@@ -5,7 +5,7 @@
     $using_vehicle_descript = $this->using_vehicle_descript();
     $hide_all = ''; ?>
 <fieldset class="search-fields">
-<? if(($has_services)||($has_vehicles)){ ?>
+<?php if(($has_services)||($has_vehicles)){ ?>
 <div class="tq-row">
 	<?php if($has_services){ ?>
 	<div class="tq-col48">

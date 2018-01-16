@@ -51,16 +51,30 @@ class TQ_Calculation {
 		$this->tax_rate = $this->config['tax_rate'];
 		$this->tax_name = $this->config['tax_name'];
 
-		if($this->config['include_return_journey']===true){
-			if($this->config['return_percentage'] !== 100){
-				// calculate differently for return
-				echo 'calculate differently for return';
+		if(self::including_return_journey()){
+			if(self::using_different_rate_for_return_journey()){
 				$this->distance = self::get_outward_distance();
 			}		
 		}
 	}
 
-	private function get_outwards_distance(){
+	private function including_return_journey(){
+		if($this->config['include_return_journey']===true){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private function using_different_rate_for_return_journey(){
+		if($this->config['return_percentage'] === 100){
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private function get_outward_distance(){
 		$outward_distance = $this->distance - $this->return_distance;
 	}
 
@@ -86,6 +100,10 @@ class TQ_Calculation {
 				break;
 		};
 
+		if((self::including_return_journey())&&(self::using_different_rate_for_return_journey())){
+			self::add_return_distance_cost_to_total($this->final_rate);
+		};
+
 		$this->distance_cost = $this->total;
 		if($this->tax_rate>0){
 			self::add_tax();
@@ -107,7 +125,7 @@ class TQ_Calculation {
 
 	private function calc_with_final_boundary_rates(){
 
-		$final_rate = false;
+		$this->final_rate = false;
 		//rates are ordered by distance boundary from 0 to max
 		foreach ($this->rates as $key => $rate) {
 			if($rate['distance']==0){
@@ -125,14 +143,14 @@ class TQ_Calculation {
 		$units_left_to_charge_for = $this->distance - $this->units_charged_for;
 		if($units_left_to_charge_for > 0 ){
 			//echo ' still to charge for '.$units_left_to_charge_for.' units.';
-			if($final_rate === false){
+			if($this->final_rate === false){
 				//echo ' Using max distance rate for long journey:';
 				//print_r($this->max_distance_rate);
-				$final_rate = $this->max_distance_rate;
+				$this->final_rate = $this->max_distance_rate;
 			}
 
-			self::add_max_distance_cost_to_total($final_rate);
-			self::add_max_distance_set_amount_to_total($final_rate);
+			self::add_max_distance_cost_to_total($this->final_rate);
+			self::add_max_distance_set_amount_to_total($this->final_rate);
 		};
 		
 		
@@ -251,18 +269,18 @@ class TQ_Calculation {
 		$this->breakdown[] = array(	'distance'=>$miles_remaining,
 							'type'=>'set amount',
 							'rate'=>$rate['amount'],
-							'cost'=>$amount);
+							'cost'=>$rate['amount']);
 	}
 
 
 	private function add_return_distance_cost_to_total($rate){
-		/*echo ', add_return_distance_cost_to_total: rate: '.$rate['unit'];
+	/*	echo ', add_return_distance_cost_to_total: rate: '.$rate['unit'];
 		echo ', add_return_distance_cost_to_total: total_distance: '.$this->distance;
 		echo ', add_return_distance_cost_to_total: units_charged_for: '.$this->units_charged_for;*/
-		$return_miles = $this->return_miles;
+		$return_miles = $this->return_distance;
 
 		//echo ', add_max_distance_cost_to_total: miles_remaining: '.$miles_remaining;
-		$return_cost = $miles_remaining*$rate['unit'];
+		$return_cost = $return_miles*$rate['unit'];
 		$return_cost = self::apply_return_cost_adjustment($return_cost);
 
 		$this->total = $this->total + $return_cost;
@@ -270,7 +288,7 @@ class TQ_Calculation {
 		$this->breakdown[] = array(	'distance'=>$return_miles,
 							'type'=>'per distance unit',
 							'rate'=>$rate['unit'],
-							'return_percentage'=>$this->config->return_percentage,
+							'return_percentage'=>$this->config['return_percentage'],
 							'cost'=>$return_cost);
 	}
 
@@ -292,7 +310,8 @@ class TQ_Calculation {
 	}
 
 	private function build_quote(){
-		$quote = array('total'=>round($this->total,2),
+		$quote = array('total'=>$this->total,
+						'total_rounded'=>round($this->total,2),
 						'distance'=>$this->distance,
 						'distance_cost'=>round($this->distance_cost,2),
 						'breakdown'=>$this->breakdown,

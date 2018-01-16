@@ -1,6 +1,6 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE | E_ALL);
- ini_set('display_errors', 1);*/
+error_reporting(E_ERROR | E_PARSE | E_ALL);
+ ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
  *
@@ -1047,6 +1047,7 @@ class TransitQuote_Pro_Public {
 					'service_id'=>$service_id,
 					'distance'=>$distance,
 					'return_time'=>$return_time,
+					'deliver_and_return'=>$deliver_and_return,
 					'return_distance'=>$return_distance,
 					'no_destinations'=>$no_destinations);
 	}
