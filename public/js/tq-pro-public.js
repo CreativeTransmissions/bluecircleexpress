@@ -468,7 +468,6 @@
 						if(response.data.quote){
 							this.populateQuoteFields(response.data.quote);
 							this.showQuoteFields();
-
 						};
 						
 					break;
@@ -484,6 +483,9 @@
 					case 'pay_method_2':
 					case 'pay_method_3':
 					case 'pay_method_4':
+						if(response.data.job_id){
+							this.populateFormWithJobId(response);
+						};
 						this.processPaymentResponse(response);
 					break;
 				};

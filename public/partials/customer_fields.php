@@ -13,7 +13,7 @@
 					</div>
 					<div class="tq-row bt-flabels__wrapper">
 						<label for="phone">Phone Number</label>
-						<input tabindex="3" type="text" data-parsley-type="number" data-parsley-length="[6, 15]" required name="phone" class="phone" placeholder="Phone Number*">
+						<input tabindex="3" type="text" data-parsley-type="number" required name="phone" class="phone" placeholder="Phone Number*">
 						<span class="bt-flabels__error-desc">Required / Invalid Phone Number </span>
 					</div>
 				</div>
