@@ -2370,6 +2370,9 @@ class TransitQuote_Pro_Public {
 		$out = array();
 		foreach ($output_order as $key => $field_name) {
 			//init new field
+			if(!isset($quote[$field_name])){
+				continue;
+			};
 			$field = array();
 			$value = $quote[$field_name];
 			//include only label, value and template_id set to text incase needed for output

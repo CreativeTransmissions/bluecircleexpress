@@ -30,7 +30,7 @@
 			<?php $this->plugin->job_details_table('<h3>Customer Details</h3>',$this->plugin->format_customer($this->job['customer'])); ?>
 		</div>
 		<div class="half job_details_job">
-			<?php $this->plugin->job_details_table('<h3>Delivery Information</h3>',$this->plugin->format_job($this->job)); ?>
+			<?php $this->plugin->job_details_table('<h3>Journey Information</h3>',$this->plugin->format_job($this->job)); ?>
 		</div>
 		<?php }; ?>
 	</div>

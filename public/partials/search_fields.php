@@ -1,6 +1,6 @@
 <fieldset class="search-fields">
     <?php if($this->pick_start_address=='true') { ?>
-    <legend>Delivery Addresses</legend>
+    <legend>Enter Addresses</legend>
         <div class="address-wrap">
             <div class="field bt-flabels__wrapper full-width">
                 <label for="pick_up">Collection Address</label>
