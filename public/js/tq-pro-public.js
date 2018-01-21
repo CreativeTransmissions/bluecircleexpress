@@ -221,13 +221,8 @@
 					dropOfLat: 'address_1_lat',
 					dropOfLng: 'address_1_lng',
 					afterQuote: function(){
-						console.log('got distance, getting quote');
+						//console.log('got distance, getting quote');
 						that.submitForm('get_quote');
-						/*$('.tq-row.buttons').hide();
-						$('.tq-row.success.buttons').show();
-						$('.tq-form-fields-container').show();
-						$('.tq-form-fields-container').removeClass('hidden');
-						$('.quote-fields').removeClass('hidden');*/
 					},
 
 					callbackChangeVehicleId: function(vehicleId){
@@ -492,11 +487,14 @@
 			},
 
 			populateQuoteFields: function(quote){
-				$('#totalCost').html(quote.distance_cost);
-				$('.totalCost').val(quote.total);
-				$('.basicCost').val(quote.distance_cost);
-				$('#rate_tax').val(quote.rate_tax);
-				$('#tax_cost').val(quote.tax_cost);
+				$('.totalCost').html(quote.total);
+				$('.basicCost').html(quote.distance_cost);
+				$('.rateTax').html(quote.rate_tax);
+				$('.taxCost').html(quote.tax_cost);
+				$('input[name="distance_cost"]').val(quote.distance_cost);
+				$('input[name="total"]').val(quote.total);
+				$('input[name="rate_tax"]').val(quote.rate_tax);
+				$('input[name="tax_cost"]').val(quote.tax_cost);
 				$('#breakdown').val(JSON.stringify(quote.breakdown));
 			},
 

@@ -413,6 +413,15 @@ private function config_quotes(){
       'default' => '',
       'format' => '%f'
     ),
+    'rate_tax' => 
+    array (
+      'name' => 'rate_tax',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f'
+    ),
     'distance_cost' => 
     array (
       'name' => 'distance_cost',
@@ -440,6 +449,25 @@ private function config_quotes(){
       'default' => '',
       'format' => '%f'
     ),
+    'tax_cost' => 
+    array (
+      'name' => 'tax_cost',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f'
+    ),
+    'breakdown' => 
+    array (
+      'name' => 'breakdown',
+      'type' => 'text',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+
     'created' => 
     array (
       'name' => 'created',

@@ -189,7 +189,15 @@ class Admin_Config {
                                                         'label'=>'Tax Rate',
                                                         'type'=>'input',
                                                         'default'=>0,
-                                                        'help'=>'Please enter the percentage to add for tax.'),
+                                                        'help'=>'Please enter the percentage to add for tax. Leave this as 0 if you do not wish to add tax to the quote.'),
+
+                                                      'tax_name'=>array(
+                                                        'id'=>'tax_name',
+                                                        'label'=>'Tax Name',
+                                                        'type'=>'input',
+                                                        'default'=>'VAT',
+                                                        'help'=>'Please enter name of the tax to display.'),
+
 
                                                       'max_address_pickers'=>array(
                                                         'id'=>'max_address_pickers',

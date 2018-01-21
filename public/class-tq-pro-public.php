@@ -662,6 +662,9 @@ class TransitQuote_Pro_Public {
 		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
 		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);
 		$this->show_driving_time = (bool)$this->get_setting('','show_driving_time',true);
+		$this->tax_name = $this->get_setting('','tax_name','VAT');
+
+		$this->tax_rate = $this->get_setting('','tax_rate', 0);
 		if($this->show_driving_time){
 			$drive_time_hidden_class = '';
 		} else {
@@ -673,6 +676,13 @@ class TransitQuote_Pro_Public {
 			$deliver_and_return_hidden_class = '';
 		} else {
 			$deliver_and_return_hidden_class = 'hidden';
+		};
+
+		$this->show_tax = ($this->tax_rate > 0);
+		if($this->show_tax){
+			$tax_hidden_class = '';
+		} else {
+			$tax_hidden_class = 'hidden';
 		};
 
 		//get paths for includes
@@ -2356,30 +2366,69 @@ class TransitQuote_Pro_Public {
 			return false;
 		};		
 		$currency = self::get_currency_code();
+		$output_order = array('distance_cost','rate_hour','time_cost','rate_tax','tax_cost','total');
 		$out = array();
-		foreach ($quote as $key => $value) {
+		foreach ($output_order as $key => $field_name) {
 			//init new field
 			$field = array();
+			$value = $quote[$field_name];
 			//include only label, value and template_id set to text incase needed for output
-			switch ($key) {
+			switch ($field_name) {
 				case 'total':
-					$field['label'] = 'Total';
-					$field['value'] = $currency.' '.$value;
+					$field['label'] = 'Total ('.$currency.')';
+					$field['value'] = $value;
+					$field['type'] = 'text';
+					$field['update'] = 'quote';
+					$field['name'] = $field_name;
+					$out[] = $field;
+					break;
+				case 'rate_tax':
+					$field['label'] = 'Tax Rate (%)';
+					$field['value'] = $value;
+					$field['update'] = 'quote';
+					$field['name'] = $field_name;
+					$out[] = $field;
+					break;
+				case 'tax_cost':
+					$field['label'] = 'Tax ('.$currency.')';
+					$field['value'] = $value;
+					$field['type'] = 'text';
+					$field['update'] = 'quote';
+					$field['name'] = $field_name;
 					$out[] = $field;
 					break;
 				case 'rate_per_unit':
 					break;
 				case 'distance_cost':
-					$field['label'] = 'Distance Cost';
-					$field['value'] = $currency.' '.$value;
+					$field['label'] = 'Distance Cost ('.$currency.')';
+					$field['value'] = $value;
+					$field['update'] = 'quote';
+					$field['name'] = $field_name;
 					$out[] = $field;
 					break;
 				case 'notice_cost':
 					if($value!=0){
 						$field['label'] = 'Short Notice Cost';
 						$field['value'] = $currency.' '.$value;
+						$field['update'] = 'quote';
+						$field['name'] = $field_name;
 						$out[] = $field;					
 					}
+					break;
+				case 'rate_hour':
+					$field['label'] = 'Hourly Rate';
+					$field['value'] = $value;
+					$field['update'] = 'quote';
+					$field['name'] = $field_name;
+					$out[] = $field;					
+					break;
+				case 'time_cost':
+					$field['label'] = 'Time Cost  ('.$currency.')';
+					$field['value'] = $value;
+					$field['type'] = 'text';
+					$field['update'] = 'quote';
+					$field['name'] = $field_name;
+					$out[] = $field;
 					break;
 			};
 			

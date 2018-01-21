@@ -16,9 +16,18 @@
             
         </div>
         <div class="field">
-            <label class="" for="totalCost">Estimated Cost:</label>
+            <label class="" for="basicCost">Estimated Cost:</label>
             <span class="sub-total"><?php echo $this->currency_symbol; ?></span>
-            <span class="sub-total quote" id="totalCost"></span>
-        </div>      
+            <span class="basicCost"></span>
+        </div>
+        <div class="field <?php echo $tax_hidden_class; ?>">
+            <label class="" for="hours">Tax</label>
+            <span class="taxCost"></span>
+        </div>
+        <div class="field">
+            <label class="" for="totalCost">Total Cost:</label>
+            <span class="sub-total"><?php echo $this->currency_symbol; ?></span>
+            <span class="totalCost quote" id="totalCost"></span>
+        </div> 
     </fieldset>
 </div>

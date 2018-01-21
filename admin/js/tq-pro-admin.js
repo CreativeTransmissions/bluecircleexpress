@@ -1009,8 +1009,6 @@
 
 					var selector = '[name="'+field.name+'"]';
 					var formEl = $(selector, form);
-					console.log(field);
-					console.log(field.name+' set value: '+value);
 					$(formEl).val(value);
 
 				},
@@ -1054,7 +1052,6 @@
 					data += '&to_date='+$('#to_date_alt').val();
 					data += '&orderby='+$('input[name=orderby]').val();
 					data += '&order='+$('input[name=order]').val();
-					console.log(data)
 					$.post(ajaxurl, data, function(response) {
 						if(response.success=='true'){						
 							//refresh table
@@ -1206,7 +1203,7 @@
 
 					$.post(ajaxurl, data, function(response) {
 						if(response.success=='true'){
-							console.log('update ok');
+							//console.log('update ok');
 						} else {
 							that.feedbackMessage({header:'Unable to update job status.'});
 						};
