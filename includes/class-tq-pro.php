@@ -285,6 +285,7 @@ class TransitQuote_Pro3 {
 		$this->loader->add_action( 'wp_ajax_load_details', $plugin_admin, 'load_details_callback' );
 		$this->loader->add_action( 'wp_ajax_transactions_paypal', $plugin_admin, 'load_transactions_paypal_callback' );
 		$this->loader->add_action( 'wp_ajax_update_job_status', $plugin_admin, 'update_job_status_callback');
+		$this->loader->add_action( 'wp_ajax_update_payment_type', $plugin_admin, 'update_payment_type_callback');
 		$this->loader->add_action( 'wp_ajax_update_payment_status', $plugin_admin, 'update_payment_status_callback');
 		$this->loader->add_action( 'wp_ajax_filter_status_types', $plugin_admin, 'filter_status_types');
 		$this->loader->add_action( 'wp_ajax_test_customer_email', $plugin_admin, 'test_customer_email_callback');

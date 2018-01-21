@@ -139,12 +139,17 @@
 						$.data(this, 'current', $(this).val());
 					});
 
-					$('.admin-form table').on('change', 'select.select-payment_status',function(e) {
+					$('.admin-form table').on('change', 'select.select-payment_status_type_id',function(e) {
 						e.preventDefault();
 						e.stopPropagation();
-						console.log('change');
-
 						that.selectPaymentStatus(this);
+						$.data(this, 'current', $(this).val());
+					});
+
+					$('.admin-form table').on('change', 'select.select-payment_type_id',function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						that.selectPaymentType(this);
 						$.data(this, 'current', $(this).val());
 					});
 
@@ -1093,6 +1098,16 @@
 
 				},
 
+				selectPaymentType: function(select){
+					var value = $(select).val();
+					var row = $(select).closest('tr');
+					var rowId = $(row).attr('data-id');
+					this.updatePaymentType({job_id: rowId,
+											payment_type_id: value});
+					return true;
+
+				},
+
 				setRatesTableFilters: function(){
 					// after saving rates, synch table filters so we can see the changes
 					//console.log('this.selectedServiceId: '+ this.selectedServiceId);
@@ -1194,6 +1209,30 @@
 							console.log('update ok');
 						} else {
 							that.feedbackMessage({header:'Unable to update job status.'});
+						};
+						that.spinner(false);
+					},'json');					
+				},
+
+				updatePaymentType: function(data){
+					var that = this;
+					this.spinner(true);
+
+					var data = $.extend({
+					 	action: 'update_payment_type',
+					 	from_date: $('#from_date_alt').val(),
+						to_date: $('#to_date_alt').val(),
+					 }, data);
+
+
+					$.post(ajaxurl, data, function(response) {
+						if(response.success=='true'){
+							//refresh table
+							$('tbody', that.editTable).empty();
+							$('tbody', that.editTable).append(response.html);	
+							//that.initStatusTypes();
+						} else {
+							that.feedbackMessage({header:'Unable to update payment type.'});
 						};
 						that.spinner(false);
 					},'json');					

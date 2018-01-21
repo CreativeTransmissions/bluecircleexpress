@@ -355,7 +355,7 @@ class TransitQuote_Pro_Admin {
 	    $payment_status_types_table_name = $this->cdb->get_table_full_name('payment_statuses');
 	    $status_types_table_name = $this->cdb->get_table_full_name('status_types');
 
-    	$sql = "SELECT distinct	jobs.id,
+		$sql = "SELECT distinct	jobs.id,
     							jobs.id as job_id,
     							status_type_id,
 								l.address as pick_up,
@@ -366,8 +366,9 @@ class TransitQuote_Pro_Admin {
 								jobs.delivery_time,
 								q.total as quote,
 								pt.name as payment_type,
-								/*pst.description as payment_status,*/
-								pst.id as payment_status
+								payment_type_id,
+								pst.description as payment_status,
+								payment_status_id as payment_status_type_id
 							FROM ".$jobs_table_name." jobs
 								left join ".$journeys_table_name." j 
 									on j.job_id = jobs.id 
@@ -407,8 +408,8 @@ class TransitQuote_Pro_Admin {
 
 								left join ".$status_types_table_name." st 
 									on pst.id = jobs.status_type_id
-			".$filter_sql." 
-			order by ".$order_sql.";";
+		".$filter_sql." 
+		order by ".$order_sql.";";
 
 		$data = $this->cdb->query($sql);
 		//echo $this->cdb->last_query;
@@ -739,11 +740,12 @@ class TransitQuote_Pro_Admin {
 													'l.address as pick_up',
 													'ld.address as drop_off',									
 													'delivery_time',
-													'payment_type',
-													'payment_status'),
+													'payment_type_id',
+													'payment_status_type_id'),
 									'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime',
 										'status_type_id'=>array('select'=>'status_types'),
-										'payment_status'=>array('select'=>'payment_statuses')),
+										'payment_type_id'=>array('select'=>'payment_types'),
+										'payment_status_type_id'=>array('select'=>'payment_statuses')),
 									'inputs'=>false,
 									'table'=>'jobs',
 									'actions'=>array('Delete'),
@@ -955,6 +957,23 @@ class TransitQuote_Pro_Admin {
 		}
 		$this->ajax->respond($response);
 
+	}
+
+	public function update_payment_type_callback(){
+		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));
+		$payment_type_id = $this->ajax->param(array('name'=>'payment_type_id', 'optional'=>false));
+		$success = $this->plugin->update_payment_type_id($job_id, $payment_type_id);
+		if($success!==false){
+			$view = $this->ajax->param(array('name'=>'view', 'optional'=>true));
+			$html = self::load_table('jobs');
+			$response = array('success' => 'true',
+                                	'msg'=>'Updated payment type ok',
+                                	'html'=>$html);
+		} else {
+			$response = array('success' => 'false',
+                    	'msg'=>'Could not update payment type');
+		}
+		$this->ajax->respond($response);
 	}
 
 	public function save_record_callback(){
