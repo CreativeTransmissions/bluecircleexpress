@@ -58,7 +58,13 @@ input.wide {
 	font-size: 14px;
 	font-weight: bold;
 }
-	
+.tq-admin-form  input[type="checkbox"] {
+	float: left;
+    margin-top: 0.1em;
+    margin-right: 0.5em;
+    clear: left;
+}
+
 .tq-admin-form .inline-field input,
 .tq-admin-form .inline-field select {
 	padding: 0.25em;
