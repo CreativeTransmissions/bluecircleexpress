@@ -106,7 +106,7 @@ class TransitQuote_Pro_Public {
 
 		$tq_settings = self::get_settings_for_js();
 
-		//self::dequeue_maps(); // uncomment to debug multiple maps installs
+		self::dequeue_maps(); // uncomment to debug multiple maps installs
 
 		//include dependancies
 		wp_enqueue_script($this->plugin_slug.'-magnific-popup', plugins_url( 'js/jquery-magnific-popup.js', __FILE__ ), '', 1.1, True );
@@ -228,7 +228,8 @@ class TransitQuote_Pro_Public {
 	}
 
 	public function dequeue_maps(){
-		self::inspect_scripts();
+		self::dequeue_script('googlemapapis');
+		//self::inspect_scripts();
 	}
 
 	function  inspect_scripts() {
@@ -238,6 +239,10 @@ class TransitQuote_Pro_Public {
 	    foreach( $wp_scripts->queue as $handle ) :
 	        echo $handle . ' | ';
 	    endforeach;
+	}
+
+	private function dequeue_script($handle){
+		wp_dequeue_script($handle);
 	}
 
 	public function check_payment_config($payment_type_id = null){
