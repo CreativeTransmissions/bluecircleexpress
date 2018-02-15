@@ -225,6 +225,12 @@ class TransitQuote_Pro3 {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/ct-utils/class-ct-ajax.php';
 		
 		/**
+		 * The class responsible for woocommerce payments
+		 * for the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/ct-woocommerce/class-ct-woocommerce.php';
+		
+		/**
 		 * The class responsible for PayPal methods
 		 * for the plugin.
 		 */
@@ -290,6 +296,8 @@ class TransitQuote_Pro3 {
 		$this->loader->add_action( 'wp_ajax_filter_status_types', $plugin_admin, 'filter_status_types');
 		$this->loader->add_action( 'wp_ajax_test_customer_email', $plugin_admin, 'test_customer_email_callback');
 		$this->loader->add_action( 'wp_ajax_test_dispatch_email', $plugin_admin, 'test_dispatch_email_callback');
+		$this->loader->add_action( 'woocommerce_order_status_completed', $plugin_admin, 'woocommerce_order_marked_completed');
+		
 	}
 
 	/**
@@ -317,6 +325,9 @@ class TransitQuote_Pro3 {
 		$this->loader->add_action( 'wp_ajax_nopriv_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_execute_paypal_payment', $plugin_public, 'execute_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_nopriv_execute_paypal_payment', $plugin_public, 'execute_paypal_payment' );
+		
+		$this->loader->add_action( 'woocommerce_product_get_regular_price', $plugin_public, 'set_price_to_woocommerce');
+		$this->loader->add_action( 'woocommerce_product_get_price', $plugin_public, 'set_price_to_woocommerce');
 	}
 
 	/**
@@ -518,7 +529,7 @@ class TransitQuote_Pro3 {
 			$modified = $created;
 			$cdb->update_row('payment_types', array('name' => 'On Delivery', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_types', array('name' => 'Pay Online', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
-			//$cdb->update_row('payment_types', array('name' => 'Stripe', 'available'=>0, 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_types', array('name'=>'WooCommerce', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
 		};
 	}
 
@@ -582,13 +593,15 @@ class TransitQuote_Pro3 {
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
 			$payment_type_rows = $cdb->get_row('payment_types', 'PayPal', 'name');
-			if($payment_type_rows === false){
-				return false;
+			if(is_array($payment_type_rows)){
+				if(count($payment_type_rows)>0){
+					$cdb->update_field('payment_types', 'name', 'Pay Online', 'PayPal', 'name');
+				};
 			};
  
-			if(count($payment_type_rows)>0){
-				$cdb->update_field('payment_types', 'name', 'Pay Online', 'PayPal', 'name');
-
+ 			$woocommerce_payment_type_rows = $cdb->get_row('payment_types', 'WooCommerce', 'name');
+			if($woocommerce_payment_type_rows === false){
+				$cdb->update_row('payment_types', array('name'=>'WooCommerce', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
 			};
 		}
 	}

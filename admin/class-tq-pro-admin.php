@@ -927,6 +927,14 @@ class TransitQuote_Pro_Admin {
 		$this->plugin->test_dispatch_email($job_id);
 		die();
 	}
+	
+	// when order completed updates job status to Approved
+	public function woocommerce_order_marked_completed( $order_id ) {
+		$job_id = get_post_meta($order_id, "job_id", true);
+		if(!empty($job_id)) {
+			$this->plugin->update_payment_status_id($job_id, 4);
+		}
+	}
 
 	public function update_job_status_callback(){
 		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>false));

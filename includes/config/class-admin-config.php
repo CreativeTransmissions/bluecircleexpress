@@ -363,6 +363,19 @@ class Admin_Config {
                                                         'type'=>'checkbox',
                                                         'help'=>'When this box is ticked all payments will be simulated using the PayPal sandbox website.',
                                                         'default'=>1
+                                                     ),
+													 'redirect_page_after_payment'=>array(
+														'id'=>'redirect_page_after_payment',
+														'label'=>'Woocommerce Success Redirect',
+                                                        'type'=>'select',
+														'options'=> self::redirect_page_after_payment_list(),
+                                                        'id_field'=>'ID',
+                                                        'display_field'=>'post_title'
+													 ),
+													 'payment_button_name'=>array(
+                                                        'id'=>'payment_button_name',
+                                                        'label'=>'Woocommerce Payment Button Name',
+                                                        'type'=>'input' 
                                                      )
                                                      )
                                                   )
@@ -378,4 +391,15 @@ class Admin_Config {
       );
   }
 
+  public function redirect_page_after_payment_list(){
+	$page_value = array();
+	$page = get_pages();
+	foreach( $page as $key => $value ){
+		$page_value[$key] = array();
+		$page_value[$key]['ID'] = $value->ID;
+		$page_value[$key]['post_title'] = $value->post_title;
+	}
+	return $page_value;
+  }
+ 
 }?>

@@ -48,4 +48,7 @@
             };
         ?>
     </div>
+	<div id="woocommerce" style="display: none;">
+		
+	</div>
 </div>
