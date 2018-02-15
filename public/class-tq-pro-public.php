@@ -435,7 +435,7 @@ class TransitQuote_Pro_Public {
    
 	
 	//Sets dynamic price to product and adds job id to session
-	public function set_price_to_woocommerce( $price , $product ) {
+	public function set_price_to_woocommerce( $price ) {
 		if (!session_id()) {
 			session_start();
 		}
