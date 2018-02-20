@@ -21,7 +21,7 @@
  * @subpackage TransitQuote_Pro/admin
  * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
-namespace TransitQuote_Pro3;
+namespace TransitQuote_Pro4;
 class TQ_Calculation {
 
  	private $default_config = array('distance'=>0,

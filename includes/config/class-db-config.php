@@ -11,7 +11,7 @@
  * @copyright 2016 Creative Transmissions
  */
 
-namespace TransitQuote_Pro3;
+namespace TransitQuote_Pro4;
 class DB_Config {
 
   public function __construct() {
@@ -62,6 +62,15 @@ private function config_companies(){
       'auto' => '',
       'default' => '',
       'format' => '%s'
+    ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
     array (
@@ -141,6 +150,15 @@ private function config_currencies(){
       'auto' => '',
       'default' => '',
       'format' => '%s'
+    ),
+     'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
     array (
@@ -239,6 +257,15 @@ private function config_contacts(){
       'default' => '',
       'format' => '%s'
     ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -325,6 +352,15 @@ private function config_customers(){
       'auto' => '',
       'default' => '',
       'format' => '%s'
+    ),
+   'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
     array (
@@ -467,7 +503,15 @@ private function config_quotes(){
       'default' => '',
       'format' => '%s'
     ),
-
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -546,6 +590,15 @@ private function config_vehicles(){
       'default' => '',
       'format' => '%f'
     ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -615,6 +668,15 @@ private function config_payment_types(){
       'default' => '0',
       'format' => '%d',
     ),
+   'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -674,6 +736,15 @@ private function config_request_types(){
       'auto' => '',
       'default' => '',
       'format' => '%s'
+    ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
     array (
@@ -753,6 +824,15 @@ private function config_services(){
       'default' => '',
       'format' => '%f'
     ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -823,6 +903,15 @@ private function config_payment_statuses(){
       'default' => '',
       'format' => '%s',
     ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -882,6 +971,15 @@ private function config_status_types(){
       'auto' => '',
       'default' => '',
       'format' => '%s',
+    ),
+   'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
     array (
@@ -951,6 +1049,15 @@ private function config_table_filters(){
       'auto' => '',
       'default' => '',
       'format' => '%s',
+    ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
     array (
@@ -1111,6 +1218,15 @@ private function config_jobs(){
       'default' => '',
       'format' => '%d'
     ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -1261,6 +1377,15 @@ private function config_locations(){
       'default' => '',
       'format' => '%d',
     ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -1329,6 +1454,15 @@ private function config_surcharges(){
       'auto' => '',
       'default' => '',
       'format' => '%f',
+    ),
+   'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
     array (
@@ -1408,6 +1542,15 @@ private function config_quote_surcharges(){
       'default' => '',
       'format' => '%d',
     ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -1486,6 +1629,15 @@ private function config_journeys(){
       'default' => '',
       'format' => '%f',
     ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -1546,6 +1698,15 @@ private function config_journey_lengths(){
       'auto' => '',
       'default' => '',
       'format' => '%f'
+    ),
+   'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
     array (
@@ -1633,6 +1794,15 @@ private function config_journeys_locations(){
       'auto' => '',
       'default' => '',
       'format' => '%s',
+    ),
+   'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
     array (
@@ -1748,6 +1918,15 @@ private function config_rates(){
       'default' => '',
       'format' => '%f',
     ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -1840,6 +2019,15 @@ private function config_transactions_paypal(){
         'auto' => '',
         'default' => '',
         'format' => '%s'
+    ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
       array (
@@ -1952,6 +2140,15 @@ private function config_transaction_logs_paypal(){
         'default' => '',
         'format' => '%d'
     ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
+    ),
     'created' => 
       array (
         'name' => 'created',
@@ -2011,6 +2208,15 @@ private function config_event_logs(){
       'auto' => '',
       'default' => '',
       'format' => '%s',
+    ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
     array (
@@ -2080,6 +2286,15 @@ private function config_event_data(){
       'auto' => '',
       'default' => '',
       'format' => '%s'
+    ),
+    'user_id' => 
+    array (
+      'name' => 'user_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '0',
+      'format' => '%d'
     ),
     'created' => 
     array (

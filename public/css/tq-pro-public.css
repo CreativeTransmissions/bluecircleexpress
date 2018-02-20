@@ -122,7 +122,10 @@ form.tq-form .field {
     width: 100%;
 }
 #map {
+	float: none;
 	height: 20em;
+	width: 95%;
+	margin: 0 auto;
 }
 .quote-form fieldset.quote-fields.block {
 	display: block;
@@ -303,7 +306,9 @@ form.tq-form .ideal-check.checked.focus {
 	text-align: left;
 }
 .tq-form .no-address{
+	font-size: small;
 	float: right;
+	margin-top: 4px;
 }
 #quote-form.tq-form .quote-fields label {
 	font-weight: normal;
@@ -464,11 +469,44 @@ h3.heading-popup{    text-align: center;}
      float: left;
     
 }
-
+#content {
+	background-color: #fff;
+}
 /* mobile */
 
  /* max-width 640px, mobile-only styles, use when QAing mobile issues */
 @media only screen and (max-width: 40em) {
+
+
+	/* for plugin */
+	.tq-address-container {
+		background: transparent;
+		margin: 0;
+	}
+	.add-waypoint{
+		margin: 0.5em 0em;
+	}
+	.requestform {
+		padding: 0em 0.25em 0em 0.25em;
+	}
+	.round {
+	    -webkit-border-radius: 0;
+	    -moz-border-radius: 0;
+    	border-radius: 0;
+	}
+
+	form.tq-form input[type="text"], form.tq-form textarea {
+		margin: 0;
+	}
+	#quote-form.tq-form label.radio-label {
+		display: inline-block;
+		width: 80%;
+		clear:right;
+	}
+	form.tq-form input[type="radio"]{
+		display: inline-block;
+		clear: left;
+	}
 	.quote-form {
 		box-shadow: none;
 		padding: 0 0 3em 0em;
@@ -570,10 +608,6 @@ form.tq-form select option{
 	.tq-col48{
 		width: 100%;
 	}
-	.tq-form .no-address {
-		float: left;
-	}
-
 }
 button.ui-datepicker-current {
 	display: none;

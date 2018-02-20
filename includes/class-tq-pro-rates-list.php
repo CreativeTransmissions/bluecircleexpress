@@ -21,7 +21,7 @@
  * @subpackage TransitQuote_Pro/admin
  * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
-namespace TransitQuote_Pro3;
+namespace TransitQuote_Pro4;
 class TQ_Rates_List {
 
  	private $default_config = array('range_start'=>0,

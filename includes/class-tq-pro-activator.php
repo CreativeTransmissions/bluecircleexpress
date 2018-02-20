@@ -39,7 +39,7 @@ class TransitQuote_Pro_Activator {
 
 	public static function init_database(){
 		//set up custom database on activate 
-		$plugin = new TransitQuote_Pro3(); 
+		$plugin = new TransitQuote_Pro4(); 
 		$plugin->init_settings();
 		$plugin->load_dependencies();
 		$cdb = $plugin->get_custom_db();
