@@ -27,7 +27,7 @@
  * @subpackage TransitQuote_Pro/includes
  * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
-class TransitQuote_Pro3 {
+class TransitQuote_Pro4 {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -380,8 +380,8 @@ class TransitQuote_Pro3 {
 
 	public static function get_custom_db(){
 		//define and register tables
-		$cdb = new TransitQuote_Pro3\CT_CDB(array('prefix'=>'tq_pro4'));
-		$db_config = new TransitQuote_Pro3\DB_Config();
+		$cdb = new TransitQuote_Pro4\CT_CDB(array('prefix'=>'tq_pro4'));
+		$db_config = new TransitQuote_Pro4\DB_Config();
 
 		//Define tables from the configs in the DB_Config class
 		$cdb->define_table($db_config->get_config('companies'));
@@ -427,7 +427,7 @@ class TransitQuote_Pro3 {
 	}
 
 	public function define_tab_config(){
-		return TransitQuote_Pro3\Admin_Config::get_config('tabs');
+		return TransitQuote_Pro4\Admin_Config::get_config('tabs');
 	}
 
 	public function get_tab_defaults($tab){

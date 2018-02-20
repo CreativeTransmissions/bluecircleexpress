@@ -60,8 +60,8 @@ class TransitQuote_Pro_Public {
 		$this->debug = false;
 		$this->log_requests = false;
 		$this->prefix = 'tq_pro4';
-		$this->cdb = TransitQuote_Pro3::get_custom_db();
-		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->cdb = TransitQuote_Pro4::get_custom_db();
+		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 	}
 
@@ -264,9 +264,9 @@ class TransitQuote_Pro_Public {
 
 	public function debug($error){
 		if($this->debug==true){		
-			$plugin = new TransitQuote_Pro3();	
+			$plugin = new TransitQuote_Pro4();	
 			$this->cdb = $plugin->get_custom_db();
-			$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+			$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 			$this->ajax->error_log_request($error, 'log');
 			if(is_array($error)){
 				echo '<pre>';
@@ -281,7 +281,7 @@ class TransitQuote_Pro_Public {
 	}
 
 	public function define_tab_config(){
-		return TransitQuote_Pro3\Admin_Config::get_config('tabs');
+		return TransitQuote_Pro4\Admin_Config::get_config('tabs');
 	}
 
 	public function load_settings(){
@@ -313,7 +313,7 @@ class TransitQuote_Pro_Public {
 	}
 
 	private function get_rates(){
-	   	$plugin = new TransitQuote_Pro3();
+	   	$plugin = new TransitQuote_Pro4();
 		$this->cdb = $plugin->get_custom_db();
     	$all_rates = $this->cdb->get_rows('rates',array(), array(), null, 'distance');
     	$rates = array();
@@ -368,11 +368,11 @@ class TransitQuote_Pro_Public {
     }
 
 	public function init_plugin(){
-		$plugin = new TransitQuote_Pro3();
+		$plugin = new TransitQuote_Pro4();
 		self::load_settings();
 
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 		if(!self::api_keys_are_present()){
 			add_action( 'admin_notices', array($this, 'api_key_notice') );
@@ -484,11 +484,11 @@ class TransitQuote_Pro_Public {
 
     public function execute_paypal_payment(){
 
-    	$plugin = new TransitQuote_Pro3();
+    	$plugin = new TransitQuote_Pro4();
 		self::load_settings();
 
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
     	self::init_paypal();
 
@@ -593,9 +593,9 @@ class TransitQuote_Pro_Public {
 		global $add_my_script_flag;
 		$add_my_script_flag = true;
 
-		$plugin = new TransitQuote_Pro3();
+		$plugin = new TransitQuote_Pro4();
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 		$this->pick_start_address = 'true';
 		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
@@ -632,7 +632,7 @@ class TransitQuote_Pro_Public {
 		$this->distance_unit = self::get_distance_unit();
 		$this->tax_rate = self::get_tax_rate();
 
-		$this->rates_list = new TransitQuote_Pro3\TQ_Rates_List(array(	'cdb'=>$this->cdb, 
+		$this->rates_list = new TransitQuote_Pro4\TQ_Rates_List(array(	'cdb'=>$this->cdb, 
 																		'debug'=>$this->debug,
 																		'tax_rate'=>$this->tax_rate,
 																		'range_start'=>$range_start,
@@ -654,9 +654,9 @@ class TransitQuote_Pro_Public {
 		global $add_my_script_flag;
 		$add_my_script_flag = true;
 
-		$plugin = new TransitQuote_Pro3();
+		$plugin = new TransitQuote_Pro4();
 		$this->cdb = $plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 		$this->pick_start_address = 'true';
 		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
@@ -1002,7 +1002,7 @@ class TransitQuote_Pro_Public {
 			return false;
 		};
 
-		$this->calculation = new TransitQuote_Pro3\TQ_Calculation(array('debugging'=>$this->debug,
+		$this->calculation = new TransitQuote_Pro4\TQ_Calculation(array('debugging'=>$this->debug,
 																		'rates'=>$this->rates,
 																		'include_return_journey'=>(bool)$this->rate_options['deliver_and_return'],
 																		'distance'=>$this->rate_options['distance'],
@@ -1165,9 +1165,9 @@ class TransitQuote_Pro_Public {
 	}
 
 	public function tq_pro_save_job_callback(){
-		$this->plugin = new TransitQuote_Pro3();	
+		$this->plugin = new TransitQuote_Pro4();	
 		$this->cdb = $this->plugin->get_custom_db();
-		$this->ajax = new TransitQuote_Pro3\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 		
 		// save job request from customer facing form
 		if($this->log_requests == true){
@@ -1683,7 +1683,7 @@ class TransitQuote_Pro_Public {
     }
 
 	public function get_job_details($job = null){
-		$plugin = new TransitQuote_Pro3();	
+		$plugin = new TransitQuote_Pro4();	
 		$this->cdb = $plugin->get_custom_db();
 		//add the details to a job record
 
@@ -2018,7 +2018,7 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_payment_buttons(){
-    	$plugin = new TransitQuote_Pro3();
+    	$plugin = new TransitQuote_Pro4();
     	$this->cdb = $plugin->get_custom_db();
     	$methods = $this->cdb->get_rows('payment_types', array('available'=>1), array('id', 'name'), null);
     	if(count($methods)===0){
@@ -2107,7 +2107,7 @@ class TransitQuote_Pro_Public {
     }
 
 	public function get_oldest_job_date(){
-		$plugin = new TransitQuote_Pro3();
+		$plugin = new TransitQuote_Pro4();
 		$this->cdb = $plugin->get_custom_db();
 		$jobs = $this->cdb->get_rows('jobs', array(), array('id', 'created'), null);
 		if(empty($jobs)){

@@ -122,7 +122,10 @@ form.tq-form .field {
     width: 100%;
 }
 #map {
+	float: none;
 	height: 20em;
+	width: 95%;
+	margin: 0 auto;
 }
 .quote-form fieldset.quote-fields.block {
 	display: block;
@@ -466,36 +469,14 @@ h3.heading-popup{    text-align: center;}
      float: left;
     
 }
-
+#content {
+	background-color: #fff;
+}
 /* mobile */
 
  /* max-width 640px, mobile-only styles, use when QAing mobile issues */
 @media only screen and (max-width: 40em) {
 
-	/* for theme */
-	#masthead,
-	#parallax-bg{
-		display: none;
-	}
-	#content{
-		padding: 0;
-	}
-	.inner-wrap {
-		width: 100%;
-	}
-	.entry-title {
-		text-align: center;
-	}
-	.entry-content{
-		margin: 0;
-	}
-	article.hentry {
-		padding: 0;
-	}
-	#secondary,
-	footer {
-		display:  none;
-	}
 
 	/* for plugin */
 	.tq-address-container {
@@ -513,8 +494,6 @@ h3.heading-popup{    text-align: center;}
 	    -moz-border-radius: 0;
     	border-radius: 0;
 	}
-
-
 
 	form.tq-form input[type="text"], form.tq-form textarea {
 		margin: 0;
