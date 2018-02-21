@@ -602,7 +602,7 @@ class TransitQuote_Pro_Public {
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
-		$this->pick_start_address = 'true';
+		$this->pick_start_address = (bool)$this->get_setting('','pick_start_address',true);
 		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
 		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);
 		$this->show_driving_time = (bool)$this->get_setting('','show_driving_time',true);
@@ -663,7 +663,7 @@ class TransitQuote_Pro_Public {
 		$this->cdb = $plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
-		$this->pick_start_address = 'true';
+		$this->pick_start_address = (bool)$this->get_setting('','pick_start_address',true);
 		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
 		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);
 		$this->show_driving_time = (bool)$this->get_setting('','show_driving_time',true);

@@ -155,6 +155,12 @@ class Admin_Config {
                                                       'id'=>'start_location',
                                                       'label'=>'Start Location',
                                                       'type'=>'addresspicker'),
+                                                    'pick_start_address'=>array(
+                                                      'id'=>'pick_start_address',
+                                                      'label'=>'Allow customer to choose collection location',
+                                                      'type'=>'checkbox',
+                                                      'help'=>'When this box is ticked the customer can choose the collection address. Untick to use the same starting address for all jobs. For example: Untick if you are always delivering from your start address to the customers address.',
+                                                      'default'=>1),
                                                     'geolocate'=>array(
                                                       'id'=>'geolocate',
                                                       'label'=>'Geolocation',
