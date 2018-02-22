@@ -249,7 +249,7 @@ class Admin_Config {
                                                         'label'=>'Minimum Price Message',
                                                         'type'=>'textarea',
                                                         'help'=>'This message will be displyed when a customer attempts to book a job below the minimum price.',
-                                                      'default'=>'Sorry, we are unable to accept jobs below our minimum price. Please contact us if you need any further assistance.'),
+                                                        'default'=>'Sorry, we are unable to accept jobs below our minimum price.'),
                                                       'min_distance'=>array(
                                                         'id'=>'min_distance',
                                                         'label'=>'Minimum Distance Accepted',
@@ -260,7 +260,8 @@ class Admin_Config {
                                                         'id'=>'min_distance_message',
                                                         'label'=>'Minimum Distance Message',
                                                         'type'=>'textarea',
-                                                        'help'=>'This message will be displyed when a customer attempts to book a job below the minimum distance.'
+                                                        'help'=>'This message will be displyed when a customer attempts to book a job below the minimum distance.',
+                                                        'default'=>'Sorry, we are unable to accept jobs below our minimum distance.'
                                                       ),
                                                       'max_distance'=>array(
                                                         'id'=>'max_distance',
@@ -274,7 +275,21 @@ class Admin_Config {
                                                         'label'=>'Maximum Distance Message',
                                                         'type'=>'textarea',
                                                         'help'=>'This message will be displyed when a customer attempts to book a job longer than the maximum distance.',
-                                                        'default'=>'Sorry, we are unable to accept jobs over our maximum distance. Please contact us if you need any further assistance.'
+                                                        'default'=>'Sorry, we are unable to accept jobs over our maximum distance.'
+                                                      ),
+                                                       'min_travel_time'=>array(
+                                                        'id'=>'min_travel_time',
+                                                        'label'=>'Minimum Travel Time Accepted (hours)',
+                                                        'type'=>'input',
+                                                        'help'=>'If you do not wish to accept jobs that take less than a specific time, enter the number of hours here and the customer will not be able to make a booking.',
+                                                        'default'=>0
+                                                      ),
+                                                      'min_travel_time_message'=>array(
+                                                        'id'=>'min_travel_time_message',
+                                                        'label'=>'Minimum Travel Time Message',
+                                                        'type'=>'textarea',
+                                                        'help'=>'This message will be displyed when a customer attempts to book a job where the estimated travel time is less than the minimum travel time allowed.',
+                                                        'default'=>'Sorry, we are unable to accept jobs that will take less than our minimum travel time.'
                                                       ),
                                                       'max_travel_time'=>array(
                                                         'id'=>'max_travel_time',
@@ -288,14 +303,15 @@ class Admin_Config {
                                                         'label'=>'Maximum Travel Time Message',
                                                         'type'=>'textarea',
                                                         'help'=>'This message will be displyed when a customer attempts to book a job where the estimated travel time is longer than the maximum travel time allowed.',
-                                                        'default'=>'Sorry, we are unable to accept jobs that will take longer than our maximum travel time. Please contact us if you need any further assistance.'
+                                                        'default'=>'Sorry, we are unable to accept jobs that will take longer than our maximum travel time.'
                                                       ),
                                                       'success_message'=>array(
                                                         'id'=>'success_message',
                                                         'label'=>'Success Message',
                                                         'type'=>'textarea',
                                                         'help'=>'Please enter the message that will be displayed to the customer after their quote has been saved and displayed on screen. This should explain any next steps they must take to confirm their booking.',
-                                                        'default'=>'Thank you for your order. We will be in touch to confirm your order as soon as possible.'),
+                                                        'default'=>'Thank you for your order. We will be in touch to confirm your order as soon as possible.'
+                                                      ),
                                                       'quote_element'=>array(
                                                         'id'=>'quote_element',
                                                         'label'=>'Quote Display Element',

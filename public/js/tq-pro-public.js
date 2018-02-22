@@ -14,7 +14,7 @@
 		defaults = {
 			ajaxUrl: '',
 			customer: false,
-			debug: false,
+			debug: true,
 			quoteResult: 'quote',
 			timepickerSelector: 'collection_time',
 			datepickerSelector: 'collection_date'
@@ -104,6 +104,7 @@
 					return false;
 				};
 				this.initDataMapSettings();
+				this.initDataJourneyRestrictions();
 				this.payPalInitialized = false;
 				return true;
 			},
@@ -155,6 +156,18 @@
 
 			},
 
+			initDataJourneyRestrictions: function(){
+
+				if(this.settings.data.max_distance==0){
+					this.settings.data.max_distance = false;
+				};
+
+				if(this.settings.data.max_travel_time==0){
+					this.settings.data.max_travel_time = false;
+				};
+				
+			},
+
 			initUI: function () {					
 				this.initCalculator();
 				this.initDatePicker();
@@ -191,7 +204,18 @@
 					minNotice: this.settings.data.min_notice,
 					minNoticeCharge: this.settings.data.min_notice_charge,
 					minCost: this.settings.data.min_price,
+
 					minDistance: this.settings.data.min_distance,
+					minDistanceMsg: this.settings.data.min_distance_msg,
+
+					maxDistance: this.settings.data.max_distance,
+					maxDistanceMsg: this.settings.data.max_distance_msg,
+
+					minTravelTime: this.settings.data.min_travel_time,
+					minTravelTimeMsg: this.settings.data.min_travel_time_msg,
+
+					maxTravelTime: this.settings.data.max_travel_time,
+					maxTravelTimeMsg: this.settings.data.max_travel_time_msg,
 
 					/*	
 						The form elements tell the plugin which html inputs are used for 
