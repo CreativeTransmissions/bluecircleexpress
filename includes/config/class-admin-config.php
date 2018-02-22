@@ -260,8 +260,36 @@ class Admin_Config {
                                                         'id'=>'min_distance_message',
                                                         'label'=>'Minimum Distance Message',
                                                         'type'=>'textarea',
-                                                        'help'=>'This message will be displyed when a customer attempts to book a job below the minimum distance.',
-                                                      'default'=>'Sorry, we are unable to accept jobs below our minimum distance. Please contact us if you need any further assistance.'),
+                                                        'help'=>'This message will be displyed when a customer attempts to book a job below the minimum distance.'
+                                                      ),
+                                                      'max_distance'=>array(
+                                                        'id'=>'max_distance',
+                                                        'label'=>'Maximum Distance Accepted',
+                                                        'type'=>'input',
+                                                        'help'=>'If you do not wish to accept jobs longer than a specific distance, enter the distance here and the customer will not be able to make a booking.',
+                                                        'default'=>0
+                                                      ),
+                                                      'max_distance_message'=>array(
+                                                        'id'=>'max_distance_message',
+                                                        'label'=>'Maximum Distance Message',
+                                                        'type'=>'textarea',
+                                                        'help'=>'This message will be displyed when a customer attempts to book a job longer than the maximum distance.',
+                                                        'default'=>'Sorry, we are unable to accept jobs over our maximum distance. Please contact us if you need any further assistance.'
+                                                      ),
+                                                      'max_travel_time'=>array(
+                                                        'id'=>'max_travel_time',
+                                                        'label'=>'Maximum Travel Time Accepted (hours)',
+                                                        'type'=>'input',
+                                                        'help'=>'If you do not wish to accept jobs longer than a specific distance, enter the distance here and the customer will not be able to make a booking.',
+                                                        'default'=>0
+                                                      ),
+                                                      'max_travel_time_message'=>array(
+                                                        'id'=>'max_travel_time_message',
+                                                        'label'=>'Maximum Travel Time Message',
+                                                        'type'=>'textarea',
+                                                        'help'=>'This message will be displyed when a customer attempts to book a job where the estimated travel time is longer than the maximum travel time allowed.',
+                                                        'default'=>'Sorry, we are unable to accept jobs that will take longer than our maximum travel time. Please contact us if you need any further assistance.'
+                                                      ),
                                                       'success_message'=>array(
                                                         'id'=>'success_message',
                                                         'label'=>'Success Message',
@@ -391,15 +419,15 @@ class Admin_Config {
       );
   }
 
-  public function redirect_page_after_payment_list(){
-	$page_value = array();
-	$page = get_pages();
-	foreach( $page as $key => $value ){
-		$page_value[$key] = array();
-		$page_value[$key]['ID'] = $value->ID;
-		$page_value[$key]['post_title'] = $value->post_title;
-	}
-	return $page_value;
+  public static function redirect_page_after_payment_list(){
+  $page_value = array();
+  $page = get_pages();
+  foreach( $page as $key => $value ){
+    $page_value[$key] = array();
+    $page_value[$key]['ID'] = $value->ID;
+    $page_value[$key]['post_title'] = $value->post_title;
+  }
+  return $page_value;
   }
  
 }?>
