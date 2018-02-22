@@ -448,6 +448,11 @@ class TransitQuote_Pro_Public {
 			
 			$_SESSION['dynamic_price'] = $price;
 			$_SESSION['job_id'] = $job_id;
+			$_SESSION['billing_first_name'] = $_POST["billing_first_name"];
+			$_SESSION['billing_last_name'] = $_POST["billing_last_name"];
+			$_SESSION['billing_phone'] = $_POST["billing_phone"];
+			$_SESSION['billing_email'] = $_POST["billing_email"];
+			$_SESSION['order_comments'] = $_POST["order_comments"];
 		}
 		
 		if(isset($_SESSION['dynamic_price'])) {
