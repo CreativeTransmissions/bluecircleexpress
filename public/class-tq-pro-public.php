@@ -62,6 +62,7 @@ class TransitQuote_Pro_Public {
 		$this->prefix = 'tq_pro4';
 		$this->cdb = TransitQuote_Pro4::get_custom_db();
 		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		$this->woocommerce = new CT_WOOCOMMERCE();
 
 	}
 
@@ -264,6 +265,9 @@ class TransitQuote_Pro_Public {
 				self::get_paypal_config();
 				$payment_config_is_ok = self::has_paypal_config();
 				break;
+			case 3: // payment by woocommerce
+				$payment_config_is_ok = true;
+				break;
 		};
 		
 		return $payment_config_is_ok;
@@ -436,6 +440,28 @@ class TransitQuote_Pro_Public {
     	<?php
     }
    
+	
+	//Sets dynamic price to product and adds job id to session
+	public function set_price_to_woocommerce( $price ) {
+		if (!session_id()) {
+			session_start();
+		}
+		
+		if(isset($_GET['dynamic_price'])) {
+			
+			$job_id = $_POST["job_id"];
+			self::get_job_details_from_id($job_id);
+			$price = $this->quote['total'];
+			
+			$_SESSION['dynamic_price'] = $price;
+			$_SESSION['job_id'] = $job_id;
+		}
+		
+		if(isset($_SESSION['dynamic_price'])) {
+			$price = $_SESSION['dynamic_price'];
+		}
+		return $price;
+	}
     
     public function create_paypal_payment(){
     	self::init_paypal();
@@ -1216,13 +1242,13 @@ class TransitQuote_Pro_Public {
 				$response = self::request_payment_paypal($job_id);
 				break;
 			case 'pay_method_3':
-				// Stripe
+				// Woocommerce
 				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
 				if(empty($job_id)){
 					$job_id = self::save_new_job();;
 				};
 				self::get_job_details_from_id($job_id);
-				$response = self::request_payment_stripe($job_id);
+				$response = self::request_payment_woocommerce($job_id);
 				break;
 			case 'get_quote': // Payment not required until confirmed by staff
 				$response = self::get_quote();
@@ -1556,10 +1582,10 @@ class TransitQuote_Pro_Public {
 
 	}
 
-	private function request_payment_stripe($job_id = null){
+	private function request_payment_woocommerce($job_id = null){
 		if(empty($job_id)){
 			return array('success'=>'false',
-							 'msg'=>'No job_id for payment by stripe');
+							 'msg'=>'No job_id for payment by woocommerce');
 		};
 
 		if(!self::update_payment_type_id($job_id, 3)){
@@ -1570,8 +1596,28 @@ class TransitQuote_Pro_Public {
 		//set payment status to 1 = Awaiting Payment
 		if(!self::update_payment_status_id($job_id, 1)){
 			return array('success'=>'false',
-							 'msg'=>'Unable to update job '.$job_id.' to payment by stripe');
+							 'msg'=>'Unable to update job '.$job_id.' to payment by woocommerce');
 		};
+		
+		//send woocommerce product id
+		$args = array(
+		 'post_type' => 'product',
+		 'posts_per_page' => 1);
+		$loop = new WP_Query( $args );
+		while ( $loop->have_posts() ) : $loop->the_post(); global $product; 
+			$product_id .= get_the_id();
+		endwhile;
+		wp_reset_query();
+		
+		return array('success'=>'true',
+					 'msg'=>'Job booked successfully',
+					 'data'=>array('customer_id'=>$this->customer['id'],
+					 				'job_id'=>$this->job['id'],
+					 				'quote_id'=>$this->quote['id'],
+					 				'email'=>$this->customer['email'],
+									'product_id'=>$product_id),
+					 'payment_method'=>3);
+		
 	}
 
 	public function get_record_data($table, $idx = null){
@@ -2042,9 +2088,14 @@ class TransitQuote_Pro_Public {
 		$button_html ='';
 
     	$buttons = array();
+		$options = get_option('tq_pro_paypal_options');
+		
     	foreach ($methods as $key => $payment_method) {
     		if(self::check_payment_config($payment_method['id'])){
     			if(in_array($payment_method['id'], $selected_payment_methods)){
+					if($payment_method['name'] == "WooCommerce" && $options['payment_button_name']!='') {
+						$payment_method['name'] = $options['payment_button_name'];
+					}
 		    		$button_html = '<button id="pay_method_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_method_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
 					array_push($buttons, $button_html);
 				}

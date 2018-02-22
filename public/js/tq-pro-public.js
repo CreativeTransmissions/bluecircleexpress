@@ -515,7 +515,7 @@
 					if(paymentMethod=== 1 ||  paymentMethod === 0){
 						$('.on-delivery-msg-succcess').html(response.success_message);
 					};
-					this.showPaymentButton(paymentMethod);
+					this.showPaymentButton(paymentMethod, response.data);
 				}
 			},
 
@@ -560,7 +560,7 @@
 				$('input[name="job_id"]').val(response.data.job_id);
 			},
 
-			showPaymentButton: function(paymentMethod){
+			showPaymentButton: function(paymentMethod, data){
 				switch(paymentMethod){
 					case 1:
 
@@ -576,6 +576,13 @@
 
 						};
 						
+					break;
+					case 3:
+						var form = $('<form method="post" id="woocommerce_paynow" action="?add-to-cart=' + data.product_id + '&dynamic_price=true">' +
+						  '<input type="hidden" name="job_id" value="' + data.job_id + '" />' +
+						  '</form>');
+						$('#woocommerce').append(form);
+						$('#woocommerce_paynow').submit();
 					break;
 				}
 			},
