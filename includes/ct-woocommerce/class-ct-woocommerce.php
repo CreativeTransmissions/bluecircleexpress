@@ -26,6 +26,7 @@ class CT_WOOCOMMERCE {
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'update_jobid_on_checkout'));
 		add_action( 'woocommerce_payment_complete_order_status', array( $this, 'mark_order_complete'));
 		add_action( 'woocommerce_thankyou', array( $this, 'payment_success_redirect'));
+		add_action( 'woocommerce_before_checkout_form', array( $this, 'woocommerce_checkout_autocomplete'));
 
 	}
 	
@@ -75,4 +76,13 @@ class CT_WOOCOMMERCE {
 		}
 	}
 
+	public function woocommerce_checkout_autocomplete() {
+		if(isset($_SESSION['billing_first_name'])) {
+			$_POST['billing_first_name'] = $_SESSION['billing_first_name'];
+			$_POST['billing_last_name'] = $_SESSION['billing_last_name'];
+			$_POST['billing_phone'] = $_SESSION['billing_phone'];
+			$_POST['billing_email'] = $_SESSION['billing_email'];
+			$_POST['order_comments'] = $_SESSION['order_comments'];
+		}
+	}
 }
