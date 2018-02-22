@@ -128,7 +128,7 @@ class TransitQuote_Pro_Public {
 	public function get_plugin_settings(){
 		$this->start_lat = $this->get_setting('tq_pro_quote_options', 'start_lat','55.870853');
 		$this->start_lng = $this->get_setting('tq_pro_quote_options', 'start_lng', '-4.252036');
-		$this->start_place_name = $this->get_setting('tq_pro_quote_options', 'start_place_name', 'Glasgow');
+		$this->start_place_name = $this->get_setting('tq_pro_quote_options', 'start_location', 'Glasgow');
 		self::get_currency_code();
 		$this->distance_unit = self::get_distance_unit();
 		$this->max_address_pickers = $this->get_setting('tq_pro_quote_options', 'max_address_pickers', '1');
@@ -139,6 +139,7 @@ class TransitQuote_Pro_Public {
 		$this->quote_element = $this->get_setting('tq_pro_quote_options', 'quote_element', 'quote');
 		$this->api_key = self::get_api_key();
 		$this->api_string = self::get_api_string();
+		$this->pick_start_address = (bool)$this->get_setting('','pick_start_address',true);
 		$geolocate = self::get_geolocate();
 		$sandbox = self::get_sandbox();
 		$this->sandbox = self::bool_to_text_sandbox($sandbox);
@@ -208,6 +209,7 @@ class TransitQuote_Pro_Public {
 							'min_notice_charge'=>$this->min_notice_charge,
 							'min_price'=>$this->min_price,
 							'min_distance'=>$this->min_distance,
+							'pick_start_address'=>self::bool_to_text($this->pick_start_address),
 							'quote_element'=>$this->quote_element,
 							'max_address_pickers'=>$this->max_address_pickers,
 							'sandbox'=>$this->sandbox

@@ -14,7 +14,7 @@
 		defaults = {
 			ajaxUrl: '',
 			customer: false,
-			debug: false,
+			debug: true,
 			quoteResult: 'quote',
 			timepickerSelector: 'collection_time',
 			datepickerSelector: 'collection_date'
@@ -192,6 +192,8 @@
 					minNoticeCharge: this.settings.data.min_notice_charge,
 					minCost: this.settings.data.min_price,
 					minDistance: this.settings.data.min_distance,
+					pickStartAddress: this.settings.data.pick_start_address,
+					startPlaceName: this.settings.data.startPlaceName,
 
 					/*	
 						The form elements tell the plugin which html inputs are used for 
