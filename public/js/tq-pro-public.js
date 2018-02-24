@@ -104,6 +104,7 @@
 					return false;
 				};
 				this.initDataMapSettings();
+				this.initDataJourneyRestrictions();
 				this.payPalInitialized = false;
 				return true;
 			},
@@ -155,6 +156,18 @@
 
 			},
 
+			initDataJourneyRestrictions: function(){
+
+				if(this.settings.data.max_distance==0){
+					this.settings.data.max_distance = false;
+				};
+
+				if(this.settings.data.max_travel_time==0){
+					this.settings.data.max_travel_time = false;
+				};
+				
+			},
+
 			initUI: function () {					
 				this.initCalculator();
 				this.initDatePicker();
@@ -191,9 +204,20 @@
 					minNotice: this.settings.data.min_notice,
 					minNoticeCharge: this.settings.data.min_notice_charge,
 					minCost: this.settings.data.min_price,
+
 					minDistance: this.settings.data.min_distance,
+					minDistanceMsg: this.settings.data.min_distance_msg,
+
 					pickStartAddress: this.settings.data.pick_start_address,
 					startPlaceName: this.settings.data.startPlaceName,
+					maxDistance: this.settings.data.max_distance,
+					maxDistanceMsg: this.settings.data.max_distance_msg,
+
+					minTravelTime: this.settings.data.min_travel_time,
+					minTravelTimeMsg: this.settings.data.min_travel_time_msg,
+
+					maxTravelTime: this.settings.data.max_travel_time,
+					maxTravelTimeMsg: this.settings.data.max_travel_time_msg,
 
 					/*	
 						The form elements tell the plugin which html inputs are used for 
@@ -578,9 +602,20 @@
 						
 					break;
 					case 3:
+						var first_name = $(".bt-flabels__wrapper input#first_name").val();
+						var last_name = $(".bt-flabels__wrapper input#last_name").val();
+						var phone = $(".bt-flabels__wrapper input.phone").val();
+						var email = $(".bt-flabels__wrapper input#email").val();
+						var description = $(".bt-flabels__wrapper textarea#description").val();
 						var form = $('<form method="post" id="woocommerce_paynow" action="?add-to-cart=' + data.product_id + '&dynamic_price=true">' +
-						  '<input type="hidden" name="job_id" value="' + data.job_id + '" />' +
-						  '</form>');
+						  '<input type="hidden" name="job_id" value="' + data.job_id + '" />' + 
+						  '<input type="hidden" name="billing_first_name" value="' + first_name + '" />' + 
+						  '<input type="hidden" name="billing_last_name" value="' + last_name + '" />' + 
+						  '<input type="hidden" name="billing_phone" value="' + phone + '" />' + 
+						  '<input type="hidden" name="billing_email" value="' + email + '" />' + 
+						  '<input type="hidden" name="order_comments" value="' + description + '" />' + 
+						  '<input type="hidden" name="autofill" value="true" />' + 
+						  '</form>' );
 						$('#woocommerce').append(form);
 						$('#woocommerce_paynow').submit();
 					break;

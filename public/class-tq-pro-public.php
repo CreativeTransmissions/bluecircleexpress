@@ -1,6 +1,7 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE | E_ALL);
- ini_set('display_errors', 1);*/
+error_reporting(E_ERROR | E_PARSE );
+
+ ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
  *
@@ -137,6 +138,14 @@ class TransitQuote_Pro_Public {
 		$this->min_notice_charge = $this->get_setting('tq_pro_quote_options', 'min_notice_charge', '');
 		$this->min_price = $this->get_setting('', 'min_price');
 		$this->min_distance = $this->get_setting('', 'min_distance');
+		$this->min_distance_msg = self::get_min_distance_msg();
+		$this->max_distance = $this->get_setting('', 'max_distance',0);
+		$this->max_distance_msg = $this->get_setting('', 'max_distance_message');
+		$this->min_travel_time = $this->get_setting('', 'min_travel_time',0);
+		$this->min_travel_time_msg = $this->get_setting('', 'min_travel_time_message');
+		$this->max_travel_time = $this->get_setting('', 'max_travel_time',0);
+		$this->max_travel_time_msg = $this->get_setting('', 'max_travel_time_message');
+
 		$this->quote_element = $this->get_setting('tq_pro_quote_options', 'quote_element', 'quote');
 		$this->api_key = self::get_api_key();
 		$this->api_string = self::get_api_string();
@@ -211,6 +220,12 @@ class TransitQuote_Pro_Public {
 							'min_price'=>$this->min_price,
 							'min_distance'=>$this->min_distance,
 							'pick_start_address'=>self::bool_to_text($this->pick_start_address),
+							'max_distance'=>$this->max_distance,
+							'max_distance_msg'=>$this->max_distance_msg,
+							'min_travel_time'=>$this->min_travel_time,
+							'min_travel_time_msg'=>$this->min_travel_time_msg,
+							'max_travel_time'=>$this->max_travel_time,
+							'max_travel_time_msg'=>$this->max_travel_time_msg,
 							'quote_element'=>$this->quote_element,
 							'max_address_pickers'=>$this->max_address_pickers,
 							'sandbox'=>$this->sandbox
@@ -455,6 +470,11 @@ class TransitQuote_Pro_Public {
 			
 			$_SESSION['dynamic_price'] = $price;
 			$_SESSION['job_id'] = $job_id;
+			$_SESSION['billing_first_name'] = $_POST["billing_first_name"];
+			$_SESSION['billing_last_name'] = $_POST["billing_last_name"];
+			$_SESSION['billing_phone'] = $_POST["billing_phone"];
+			$_SESSION['billing_email'] = $_POST["billing_email"];
+			$_SESSION['order_comments'] = $_POST["order_comments"];
 		}
 		
 		if(isset($_SESSION['dynamic_price'])) {
