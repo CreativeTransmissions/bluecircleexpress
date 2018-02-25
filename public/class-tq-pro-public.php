@@ -2109,14 +2109,12 @@ class TransitQuote_Pro_Public {
 
     	$buttons = array();
 		$options = get_option('tq_pro_paypal_options');
+		$payment_button_name = self::get_setting('tq_pro_paypal_options','payment_button_name','Pay Online');
 		
     	foreach ($methods as $key => $payment_method) {
     		if(self::check_payment_config($payment_method['id'])){
     			if(in_array($payment_method['id'], $selected_payment_methods)){
-					if($payment_method['name'] == "WooCommerce" && $options['payment_button_name']!='') {
-						$payment_method['name'] = $options['payment_button_name'];
-					}
-		    		$button_html = '<button id="pay_method_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_method_'.$payment_method['id'].'">'.$payment_method['name'].'</button>';
+		    		$button_html = '<button id="pay_method_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_method_'.$payment_method['id'].'">'.$payment_button_name.'</button>';
 					array_push($buttons, $button_html);
 				}
 			};
