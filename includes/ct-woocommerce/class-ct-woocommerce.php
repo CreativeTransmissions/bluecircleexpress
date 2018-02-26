@@ -29,6 +29,19 @@ class CT_WOOCOMMERCE {
 		add_action( 'woocommerce_before_checkout_form', array( $this, 'woocommerce_checkout_autocomplete'));
 
 	}
+
+	public function get_product_id(){
+		//send woocommerce product id
+		$args = array(
+		 'post_type' => 'product',
+		 'posts_per_page' => 1);
+		$loop = new WP_Query( $args );
+		while ( $loop->have_posts() ) : $loop->the_post(); global $product; 
+			$product_id .= get_the_id();
+		endwhile;
+		wp_reset_query();
+		return $product_id;
+	}
 	
 	//empty cart before adding product
 	public function woocommerce_single_cart_item( $cart_item_data ) {

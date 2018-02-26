@@ -1608,6 +1608,10 @@ class TransitQuote_Pro_Public {
 							 'msg'=>'No job_id for payment by woocommerce');
 		};
 
+		$this->woocommerce = new CT_WOOCOMMERCE();
+
+		$product_id = $this->woocommerce->get_product_id();
+
 		if(!self::update_payment_type_id($job_id, 3)){
 			self::debug('could not update payment_type');
 			return false;
@@ -1618,16 +1622,6 @@ class TransitQuote_Pro_Public {
 			return array('success'=>'false',
 							 'msg'=>'Unable to update job '.$job_id.' to payment by woocommerce');
 		};
-		
-		//send woocommerce product id
-		$args = array(
-		 'post_type' => 'product',
-		 'posts_per_page' => 1);
-		$loop = new WP_Query( $args );
-		while ( $loop->have_posts() ) : $loop->the_post(); global $product; 
-			$product_id .= get_the_id();
-		endwhile;
-		wp_reset_query();
 		
 		return array('success'=>'true',
 					 'msg'=>'Job booked successfully',
@@ -2109,11 +2103,13 @@ class TransitQuote_Pro_Public {
 
     	$buttons = array();
 		$options = get_option('tq_pro_paypal_options');
-		$payment_button_name = self::get_setting('tq_pro_paypal_options','payment_button_name','Pay Online');
+
+
 		
     	foreach ($methods as $key => $payment_method) {
     		if(self::check_payment_config($payment_method['id'])){
     			if(in_array($payment_method['id'], $selected_payment_methods)){
+    				$payment_button_name = self::get_payment_button_name($payment_method);
 		    		$button_html = '<button id="pay_method_'.$payment_method['id'].'" class="tq-button" type="submit" name="submit" value="pay_method_'.$payment_method['id'].'">'.$payment_button_name.'</button>';
 					array_push($buttons, $button_html);
 				}
@@ -2130,6 +2126,15 @@ class TransitQuote_Pro_Public {
 
     public function get_selected_payment_methods(){
     	return self::get_setting('tq_pro_paypal_options', 'payment_types', array());
+    }
+
+    private function get_payment_button_name($payment_method){
+    	if($payment_method['id'] === 3) {
+			$payment_button_name = self::get_setting('tq_pro_paypal_options','payment_button_name','Pay Online');
+		} else {
+			$payment_button_name = $payment_method['name'];
+		};
+		return $payment_button_name;
     }
 
  	private function get_return(){
