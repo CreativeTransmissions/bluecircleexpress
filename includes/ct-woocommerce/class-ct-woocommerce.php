@@ -30,6 +30,10 @@ class CT_WOOCOMMERCE {
 
 	}
 
+	public function add_transitquote_product(){
+		
+	}
+
 	public function get_product_id(){
 		//send woocommerce product id
 		$args = array(

@@ -402,9 +402,9 @@ class Admin_Config {
                                                   
                                                     'sales_item_description'=>array(
                                                         'id'=>'sales_item_description',
-                                                        'label'=>'PayPal Item Name',
+                                                        'label'=>'Invoice Item Name',
                                                         'type'=>'input',
-                                                        'help'=>'This is the item name that will be be listed against the payment in your customers PayPal account.'
+                                                        'help'=>'This is the item name that will be be listed against the payment in your customers PayPal account or in WooCommerce.'
                                                      ),
                                               
                                                     'sandbox'=>array(

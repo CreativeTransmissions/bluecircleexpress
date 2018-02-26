@@ -63,7 +63,11 @@ class TransitQuote_Pro_Public {
 		$this->prefix = 'tq_pro4';
 		$this->cdb = TransitQuote_Pro4::get_custom_db();
 		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
-		$this->woocommerce = new CT_WOOCOMMERCE();
+		if(self::woocommerce_is_activated()){
+			$sales_item_description = self::get_setting('','sales_item_description','Transportation Fee');
+			$this->woocommerce = new CT_WOOCOMMERCE(array('sales_item_description', $sales_item_description));
+		}
+
 
 	}
 
