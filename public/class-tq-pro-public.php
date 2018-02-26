@@ -281,11 +281,20 @@ class TransitQuote_Pro_Public {
 				$payment_config_is_ok = self::has_paypal_config();
 				break;
 			case 3: // payment by woocommerce
-				$payment_config_is_ok = true;
+				$payment_config_is_ok = self::woocommerce_is_activated();
 				break;
 		};
 		
 		return $payment_config_is_ok;
+	}
+
+	private function woocommerce_is_activated(){
+		if ( class_exists( 'WooCommerce' ) ) {
+			echo 'class exists';
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public function debug($error){
@@ -2104,8 +2113,6 @@ class TransitQuote_Pro_Public {
     	$buttons = array();
 		$options = get_option('tq_pro_paypal_options');
 
-
-		
     	foreach ($methods as $key => $payment_method) {
     		if(self::check_payment_config($payment_method['id'])){
     			if(in_array($payment_method['id'], $selected_payment_methods)){
