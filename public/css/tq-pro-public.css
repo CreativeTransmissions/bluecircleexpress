@@ -344,7 +344,7 @@ form.tq-form .ideal-check.checked.focus {
 }
 .tq-address-container {
 	background: #dddddd;
-	adding: 0.5em;;
+	padding: 0.5em;;
 	margin-top: 1em;
 }
 .tq-form .payment-options{
