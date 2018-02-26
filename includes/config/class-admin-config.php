@@ -414,15 +414,21 @@ class Admin_Config {
                                                         'help'=>'When this box is ticked all payments will be simulated using the PayPal sandbox website.',
                                                         'default'=>1
                                                      ),
-													 'redirect_page_after_payment'=>array(
-														'id'=>'redirect_page_after_payment',
-														'label'=>'Woocommerce Success Redirect',
-                                                        'type'=>'select',
-														'options'=> self::redirect_page_after_payment_list(),
-                                                        'id_field'=>'ID',
-                                                        'display_field'=>'post_title'
-													 ),
-													 'payment_button_name'=>array(
+                          													 'redirect_page_after_payment'=>array(
+                            														'id'=>'redirect_page_after_payment',
+                            														'label'=>'Woocommerce Success Redirect',
+                                                                                    'type'=>'select',
+                            														'options'=> self::redirect_page_after_payment_list(),
+                                                                                    'id_field'=>'ID',
+                                                                                    'display_field'=>'post_title'
+                          													 ),
+                                                     'woo_product_id'=>array(
+                                                        'id'=>'woo_product_id',
+                                                        'label'=>'WooCommerce Product ID',
+                                                        'type'=>'input',
+                                                        'help'=>'This is the WooCommerce product id that will be used to bill your customers. Changing this setting manually is not recommended.'
+                                                     ),
+													                           'payment_button_name'=>array(
                                                         'id'=>'payment_button_name',
                                                         'label'=>'Woocommerce Payment Button Name',
                                                         'type'=>'input' 

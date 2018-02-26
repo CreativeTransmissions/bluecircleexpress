@@ -73,6 +73,7 @@
             <?php include 'popup-map.php'; ?>
         </form>            
     </div>
+    <div id="woocommerce" style="display: none;"></div>
 </div>
 
 

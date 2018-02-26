@@ -64,8 +64,7 @@ class TransitQuote_Pro_Public {
 		$this->cdb = TransitQuote_Pro4::get_custom_db();
 		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 		if(self::woocommerce_is_activated()){
-			$sales_item_description = self::get_setting('','sales_item_description','Transportation Fee');
-			$this->woocommerce = new CT_WOOCOMMERCE(array('sales_item_description', $sales_item_description));
+			self::get_woocommerce_config();
 		}
 
 
@@ -285,6 +284,7 @@ class TransitQuote_Pro_Public {
 				$payment_config_is_ok = self::has_paypal_config();
 				break;
 			case 3: // payment by woocommerce
+				self::get_woocommerce_config();
 				$payment_config_is_ok = self::woocommerce_is_activated();
 				break;
 		};
@@ -294,7 +294,6 @@ class TransitQuote_Pro_Public {
 
 	private function woocommerce_is_activated(){
 		if ( class_exists( 'WooCommerce' ) ) {
-			echo 'class exists';
 			return true;
 		} else {
 			return false;
@@ -334,6 +333,13 @@ class TransitQuote_Pro_Public {
 
 			$this->settings = array_merge($this->settings, $defaults, $saved_options);
 		};
+	}
+
+	public function save_setting($tab_key, $setting_name, $value){
+		self::load_settings();
+		$tab_options = (array) get_option($tab_key, array());
+		$tab_options[$setting_name] = $value;
+		update_option($tab_key, $tab_options);
 	}
 
 	private function get_tab_defaults($tab){
@@ -633,6 +639,24 @@ class TransitQuote_Pro_Public {
 		$payment_cancelled_url = self::get_setting('tq_pro_paypal_options','payment_approved_url','/payment-cancelled');
 		$this->payment_approved_url = $site_url.$payment_approved_url; 
 		$this->payment_cancelled_url = $site_url.$payment_cancelled_url;
+	}
+
+	private function get_woocommerce_config(){
+		if(!self::woocommerce_is_activated()){
+			return false;
+		};
+		if(!isset($this->woocommerce)){
+			$this->woocommerce = new CT_WOOCOMMERCE();
+		};
+		// check we have a woocommerce product and if not we add one
+		$woo_product_id = self::get_setting('tq_pro_paypal_options','woo_product_id');
+		if(empty($woo_product_id)||(!$this->woocommerce->product_exists($woo_product_id))){
+			$sales_item_description = self::get_setting('','sales_item_description','Transportation Fee');
+			$woo_product_id = $this->woocommerce->add_transitquote_product(array('name'=>$sales_item_description));
+			self::save_setting('tq_pro_paypal_options', 'woo_product_id', $woo_product_id);
+		};
+		$this->woo_product_id = $woo_product_id;
+
 	}
 
 	private function has_paypal_config(){
@@ -1621,9 +1645,13 @@ class TransitQuote_Pro_Public {
 							 'msg'=>'No job_id for payment by woocommerce');
 		};
 
-		$this->woocommerce = new CT_WOOCOMMERCE();
+		if(!self::woocommerce_is_activated()){
+			return array('success'=>'false',
+							 'msg'=>'Error: WooCommerce has not been activated.');
+		};
+		self::get_woocommerce_config();
 
-		$product_id = $this->woocommerce->get_product_id();
+		$product_id = $this->woo_product_id;
 
 		if(!self::update_payment_type_id($job_id, 3)){
 			self::debug('could not update payment_type');

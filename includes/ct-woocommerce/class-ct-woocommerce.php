@@ -30,8 +30,50 @@ class CT_WOOCOMMERCE {
 
 	}
 
-	public function add_transitquote_product(){
-		
+	public function add_transitquote_product($product_data){
+		$defaults = array('name'=>'Transportation',
+						  'description'=>'Transportation Fee');
+		$product_data = array_merge($defaults, $product_data);
+		$product_id = self::insert_product($product_data);
+		return $product_id;
+	}
+
+	private function insert_product ($product_data) {
+	    $post = array( // Set up the basic post data to insert for our product
+
+	        'post_author'  => 1,
+	        'post_content' => $product_data['description'],
+	        'post_status'  => 'publish',
+	        'post_title'   => $product_data['name'],
+	        'post_parent'  => '',
+	        'post_type'    => 'product'
+	    );
+
+	    $post_id = wp_insert_post($post); // Insert the post returning the new post id
+
+	    if (!$post_id) // If there is no post id something has gone wrong so don't proceed
+	    {
+	        return false;
+	    }
+
+	   // update_post_meta($post_id, '_sku', $product_data['sku']); // Set its SKU
+	    //update_post_meta( $post_id,'_visibility','visible'); // Set the product to visible, if not it won't show on the front end
+
+	    //wp_set_object_terms($post_id, $product_data['categories'], 'product_cat'); // Set up its categories
+	    wp_set_object_terms($post_id, 'variable', 'product_type'); // Set it to a variable product type
+
+	   //insert_product_attributes($post_id, $product_data['available_attributes'], $product_data['variations']); // Add attributes passing the new post id, attributes & variations
+	   // insert_product_variations($post_id, $product_data['variations']); // Insert variations passing the new post id & variations   
+	    return $post_id;
+	}
+
+	public function product_exists($id){
+	    $product = wc_get_product($id);
+	    if(empty($product)){
+	    	return false;
+	    } else {
+	    	return true;
+	    }
 	}
 
 	public function get_product_id(){
@@ -41,7 +83,7 @@ class CT_WOOCOMMERCE {
 		 'posts_per_page' => 1);
 		$loop = new WP_Query( $args );
 		while ( $loop->have_posts() ) : $loop->the_post(); global $product; 
-			$product_id .= get_the_id();
+			$product_id = get_the_id();
 		endwhile;
 		wp_reset_query();
 		return $product_id;
