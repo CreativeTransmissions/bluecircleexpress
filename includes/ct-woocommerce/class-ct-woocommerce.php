@@ -22,7 +22,7 @@ class CT_WOOCOMMERCE {
 
 		add_action( 'wc_add_to_cart_message_html', '__return_null' );
 		add_action( 'woocommerce_add_to_cart_validation', array( $this, 'woocommerce_single_cart_item' ));
-		add_action( 'woocommerce_add_to_cart_redirect', array( $this, 'skip_woocommerce_cart'));
+		//add_action( 'woocommerce_add_to_cart_redirect', array( $this, 'skip_woocommerce_cart'));
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'update_jobid_on_checkout'));
 		add_action( 'woocommerce_payment_complete_order_status', array( $this, 'mark_order_complete'));
 		add_action( 'woocommerce_thankyou', array( $this, 'payment_success_redirect'));
