@@ -1,8 +1,10 @@
 /* This stylesheet is used to style the public-facing components of the plugin. */
 
-#top fieldset.search-fields {
-	margin-bottom: 0;
-} 
+/* fix for offset dropdown when in use while logged in*/
+body.admin-bar .pac-container {
+	margin-top: -32px;
+}
+
 /* General Purpose Styles */
 
 .full-width {
