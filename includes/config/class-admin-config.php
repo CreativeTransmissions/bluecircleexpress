@@ -129,7 +129,47 @@ class Admin_Config {
                                                         'help'=>'If enabled, this option will display a link to another page on your website which should provide your customer with more information about the selected service.<br/>The link address will be based on the service name as entered on the Service tab with hyphens (-) instead of spaces.<br/>The link will change if the customer changes the service selection drop down.',
                                                         'default'=>0)*/
                                                     )
-                                                )
+                                                ),
+                                                'pro_settings_form_labels'=>array(
+                                                'id'=>'pro_settings_form_labels',
+                                                'title'=>'Labels and Text',
+                                                'fields'=>array(
+                                                                'search_section_title'=>array(
+                                                                  'id'=>'search_section_title',
+                                                                  'label'=>'Search Section Title',
+                                                                  'type'=>'input',
+                                                                  'default'=>'Delivery Addresses',
+                                                                  'help'=>'This will appear as a title above the address search boxes.'
+                                                                ),
+
+                                                                'collection_address_label'=>array(
+                                                                  'id'=>'collection_address_label',
+                                                                  'label'=>'Collection Address Label',
+                                                                  'type'=>'input',
+                                                                  'default'=>'Collection Address',
+                                                                  'help'=>'This label will appears next to the first address search box.'
+                                                                ),
+                                                                
+                                                              'destination_address_label'=>array(
+                                                                  'id'=>'destination_address_label',
+                                                                  'label'=>'Destination Address Label',
+                                                                  'type'=>'input',
+                                                                  'default'=>'Destination Address',
+                                                                  'help'=>'This label will appears next to the destination address search boxes.'
+                                                                
+                                                              ),
+                                                                
+                                                              'map_title'=>array(
+                                                                  'id'=>'map_title',
+                                                                  'label'=>'Map Title',
+                                                                  'type'=>'input',
+                                                                  'default'=>'Address Locations',
+                                                                  'help'=>'This will appear as a title above the map.'
+                                                                
+                                                              )
+
+                                                  )
+                                              )
                                         )
                                 
                ),
