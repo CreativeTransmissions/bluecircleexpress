@@ -219,6 +219,9 @@
 					maxTravelTime: this.settings.data.max_travel_time,
 					maxTravelTimeMsg: this.settings.data.max_travel_time_msg,
 
+					insertDestLinkText: this.settings.data.insert_dest_link_text,
+					removeDestLinkText: this.settings.data.remove_dest_link_text,
+
 					/*	
 						The form elements tell the plugin which html inputs are used for 
 						entering the addresses and diplaying the reuslts 

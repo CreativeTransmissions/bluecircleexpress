@@ -2,7 +2,7 @@
 <div class="clear"></div>
 <div class="tq-form-fields-container <?php echo $hide_section; ?>">
 	<fieldset>
-		<legend>Your Contact Information</legend>
+		<legend><?php echo self::get_setting('tq_pro_form_options','contact_section_title', 'Your Contact Information'); ?></legend>
 		<div class="tq-form-fields-inner">
 			<div class="tq-row">
 				<div class="tq-col48">
@@ -32,7 +32,7 @@
 			</div>
 			<div class="tq-row">
 				<div class="tq-col100 bt-flabels__wrapper">
-					<label for="description">Delivery Details</label>
+					<label for="description"><?php echo self::get_setting('tq_pro_form_options','job_info_label', 'Delivery Details'); ?></label>
 					<textarea tabindex="5" name="description" id="description" cols="30" rows="5" placeholder="Additional Information"></textarea>
 					<span class="bt-flabels__error-desc">Required / Invalid </span>
 				</div>

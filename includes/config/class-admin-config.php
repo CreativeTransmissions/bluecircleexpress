@@ -150,23 +150,83 @@ class Admin_Config {
                                                                   'help'=>'This label will appears next to the first address search box.'
                                                                 ),
                                                                 
-                                                              'destination_address_label'=>array(
-                                                                  'id'=>'destination_address_label',
-                                                                  'label'=>'Destination Address Label',
+                                                                'destination_address_label'=>array(
+                                                                    'id'=>'destination_address_label',
+                                                                    'label'=>'Destination Address Label',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Destination Address',
+                                                                    'help'=>'This label will appears next to the destination address search boxes.'
+                                                                  
+                                                                ),
+                                                                  
+                                                                'insert_destination_link'=>array(
+                                                                    'id'=>'insert_destination_link',
+                                                                    'label'=>'Insert Destination Link Text',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Insert Destination...',
+                                                                    'help'=>'This is the link text for inserting a new destination address picker.'
+                                                                  
+                                                                ),
+
+                                                                'remove_destination_link'=>array(
+                                                                    'id'=>'remove_destination_link',
+                                                                    'label'=>'Remove Destination Link Text',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Remove This Destination',
+                                                                    'help'=>'This is the link text for removing a new destination address picker.'
+                                                                ),
+
+                                                                'collection_date_label'=>array(
+                                                                  'id'=>'collection_date_label',
+                                                                  'label'=>'Collection Date Label',
                                                                   'type'=>'input',
-                                                                  'default'=>'Destination Address',
-                                                                  'help'=>'This label will appears next to the destination address search boxes.'
+                                                                  'default'=>'Collection Date',
+                                                                  'help'=>'This label will appears next to the date field.'
+                                                                ),
                                                                 
-                                                              ),
-                                                                
-                                                              'map_title'=>array(
-                                                                  'id'=>'map_title',
-                                                                  'label'=>'Map Title',
+                                                                'collection_time_label'=>array(
+                                                                  'id'=>'collection_time_label',
+                                                                  'label'=>'Collection Time Label',
                                                                   'type'=>'input',
-                                                                  'default'=>'Address Locations',
-                                                                  'help'=>'This will appear as a title above the map.'
-                                                                
-                                                              )
+                                                                  'default'=>'Collection Time',
+                                                                  'help'=>'This label will appears next to the time field.'
+                                                                ),
+
+                                                                'map_title'=>array(
+                                                                    'id'=>'map_title',
+                                                                    'label'=>'Map Title',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Address Locations',
+                                                                    'help'=>'This will appear as a title above the map.'
+                                                                  
+                                                                ),
+
+                                                                'contact_section_title'=>array(
+                                                                    'id'=>'contact_section_title',
+                                                                    'label'=>'Contact Section Title',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Your Contact Information',
+                                                                    'help'=>'This will appear as a title above the customer contact information fields.'
+                                                                  
+                                                                ),
+
+                                                                'contact_section_title'=>array(
+                                                                    'id'=>'contact_section_title',
+                                                                    'label'=>'Contact Section Title',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Your Contact Information',
+                                                                    'help'=>'This will appear as a title above the customer contact information fields.'
+                                                                  
+                                                                ),
+
+                                                                'job_info_label'=>array(
+                                                                    'id'=>'job_info_label',
+                                                                    'label'=>'Job Information Label',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Delivery Details',
+                                                                    'help'=>'This will be the label for the large field for additional information.'
+                                                                  
+                                                                )
 
                                                   )
                                               )

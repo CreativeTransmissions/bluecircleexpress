@@ -157,6 +157,10 @@ class TransitQuote_Pro_Public {
 		$sandbox = self::get_sandbox();
 		$this->sandbox = self::bool_to_text_sandbox($sandbox);
 		$this->geolocate = self::bool_to_text($geolocate);
+
+		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','Insert Destination...');
+		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','Remove This Destination');
+
 	}
 
 	public function check_shortcode(){
@@ -231,7 +235,9 @@ class TransitQuote_Pro_Public {
 							'max_travel_time_msg'=>$this->max_travel_time_msg,
 							'quote_element'=>$this->quote_element,
 							'max_address_pickers'=>$this->max_address_pickers,
-							'sandbox'=>$this->sandbox
+							'sandbox'=>$this->sandbox,
+							'insert_dest_link_text'=>$this->insert_dest_link_text,
+							'remove_dest_link_text'=>$this->remove_dest_link_text
 							);
 
 		if(!empty($this->api_key)){

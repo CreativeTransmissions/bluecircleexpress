@@ -1,6 +1,6 @@
 <?php
 	echo $message."\r\n\r\n";
-	$this->job_details_list('Contact Details',$this->format_customer($this->job['customer'])); 
+	$this->job_details_list(self::get_setting('tq_pro_form_options','contact_section_title', 'Contact Section Title'),$this->format_customer($this->job['customer'])); 
 	$this->job_details_list('Additional Information',$this->format_job($this->job)); 
 	if(!empty($this->job['payment'])){
 		$this->job_details_list('Payment Information',$this->job['payment']); 
