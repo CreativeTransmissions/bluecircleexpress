@@ -326,8 +326,8 @@ class TransitQuote_Pro4 {
 		$this->loader->add_action( 'wp_ajax_execute_paypal_payment', $plugin_public, 'execute_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_nopriv_execute_paypal_payment', $plugin_public, 'execute_paypal_payment' );
 		
-		$this->loader->add_action( 'woocommerce_product_get_regular_price', $plugin_public, 'set_price_to_woocommerce');
-		$this->loader->add_action( 'woocommerce_product_get_price', $plugin_public, 'set_price_to_woocommerce');
+		$this->loader->add_action( 'woocommerce_product_get_regular_price', $plugin_public, 'set_price_to_woocommerce', 10, 2);
+		$this->loader->add_action( 'woocommerce_product_get_price', $plugin_public, 'set_price_to_woocommerce', 10, 2);
 	}
 
 	/**

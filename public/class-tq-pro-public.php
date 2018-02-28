@@ -482,28 +482,35 @@ class TransitQuote_Pro_Public {
    
 	
 	//Sets dynamic price to product and adds job id to session
-	public function set_price_to_woocommerce( $price ) {
-		if (!session_id()) {
-			session_start();
-		}
+	public function set_price_to_woocommerce( $price, $product ) {
 		
-		if(isset($_GET['dynamic_price'])) {
-			
-			$job_id = $_POST["job_id"];
-			self::get_job_details_from_id($job_id);
-			$price = $this->quote['total'];
-			
-			$_SESSION['dynamic_price'] = $price;
-			$_SESSION['job_id'] = $job_id;
-			$_SESSION['billing_first_name'] = $_POST["billing_first_name"];
-			$_SESSION['billing_last_name'] = $_POST["billing_last_name"];
-			$_SESSION['billing_phone'] = $_POST["billing_phone"];
-			$_SESSION['billing_email'] = $_POST["billing_email"];
-			$_SESSION['order_comments'] = $_POST["order_comments"];
-		}
+		$product_id = $product->get_id();
+		$woo_product_id = self::get_setting('tq_pro_paypal_options','woo_product_id');
 		
-		if(isset($_SESSION['dynamic_price'])) {
-			$price = $_SESSION['dynamic_price'];
+		if($product_id == $woo_product_id) {
+			
+			if (!session_id()) {
+				session_start();
+			}
+			
+			if(isset($_GET['dynamic_price'])) {
+				
+				$job_id = $_POST["job_id"];
+				self::get_job_details_from_id($job_id);
+				$price = $this->quote['total'];
+				
+				$_SESSION['dynamic_price'] = $price;
+				$_SESSION['job_id'] = $job_id;
+				$_SESSION['billing_first_name'] = $_POST["billing_first_name"];
+				$_SESSION['billing_last_name'] = $_POST["billing_last_name"];
+				$_SESSION['billing_phone'] = $_POST["billing_phone"];
+				$_SESSION['billing_email'] = $_POST["billing_email"];
+				$_SESSION['order_comments'] = $_POST["order_comments"];
+			}
+			
+			if(isset($_SESSION['dynamic_price'])) {
+				$price = $_SESSION['dynamic_price'];
+			}
 		}
 		return $price;
 	}
@@ -652,7 +659,10 @@ class TransitQuote_Pro_Public {
 			return false;
 		};
 		if(!isset($this->woocommerce)){
-			$this->woocommerce = new CT_WOOCOMMERCE();
+			$disable_cart = self::get_setting('tq_pro_paypal_options','disable_cart');
+			$redirect_page_after_payment = self::get_setting('tq_pro_paypal_options','redirect_page_after_payment');
+			$woo_product_id = self::get_setting('tq_pro_paypal_options','woo_product_id');
+			$this->woocommerce = new CT_WOOCOMMERCE(array('disable_cart'=>$disable_cart, 'redirect_page_after_payment'=>$redirect_page_after_payment, 'woo_product_id'=>$woo_product_id));
 		};
 		// check we have a woocommerce product and if not we add one
 		$woo_product_id = self::get_setting('tq_pro_paypal_options','woo_product_id');

@@ -120,8 +120,6 @@ class TransitQuote_Pro_Admin {
 		};
 		$this->current_tab = $this->tabs[$this->current_tab_key];
 
-		screen_icon();
-
 		$this->render_settings_page_title();
 		$this->render_admin_tabs_nav();
 		$this->current_tab->render();
