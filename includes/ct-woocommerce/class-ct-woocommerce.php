@@ -26,7 +26,6 @@ class CT_WOOCOMMERCE {
 		add_action( 'woocommerce_add_to_cart_validation', array( $this, 'woocommerce_single_cart_item' ), 10, 2);
 		add_action( 'woocommerce_add_to_cart_redirect', array( $this, 'skip_woocommerce_cart'));
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'update_jobid_on_checkout'));
-		//add_action( 'woocommerce_payment_complete_order_status', array( $this, 'mark_order_complete'));
 		add_action( 'woocommerce_thankyou', array( $this, 'payment_success_redirect'));
 		add_action( 'woocommerce_before_checkout_form', array( $this, 'woocommerce_checkout_autocomplete'));
 
@@ -109,6 +108,9 @@ class CT_WOOCOMMERCE {
 		if($product_id == $this->config['woo_product_id'] && $this->config['disable_cart']) {
 			global $woocommerce;
 			$woocommerce->cart->empty_cart();	 
+		} else if ($product_id == $this->config['woo_product_id']) {
+			$prod_unique_id = WC()->cart->generate_cart_id( $product_id );
+			unset( WC()->cart->cart_contents[$prod_unique_id] );
 		} 
 		return true;
 	}
@@ -134,16 +136,6 @@ class CT_WOOCOMMERCE {
 			$order->update_meta_data( 'job_id', $_SESSION['job_id'] );
 			$order->save();
 		}
-	}
-	
-	//skips order status processing
-	public function mark_order_complete( $order_status, $order_id ) {
- 
-		 $order = new WC_Order( $order_id );
-		 if ( 'processing' == $order_status && ( 'on-hold' == $order->status || 'pending' == $order->status || 'failed' == $order->status ) ) {
-			return 'completed';
-		 }
-		 return $order_status;
 	}
 
 	public function payment_success_redirect( $order_id ){
