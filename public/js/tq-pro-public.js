@@ -403,7 +403,8 @@
 				};
 
 				$(this.element).on('submit', function (e) {
-					e.preventDefault;
+					e.stopPropagation();
+					e.preventDefault();
 				});
 
 				$(this.element).on('click','input:submit', function(e){
