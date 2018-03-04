@@ -769,8 +769,8 @@ class TransitQuote_Pro_Public {
 		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);
 		$this->show_driving_time = (bool)$this->get_setting('','show_driving_time',true);
 		$this->tax_name = $this->get_setting('','tax_name','VAT');
-
 		$this->tax_rate = $this->get_setting('','tax_rate', 0);
+		
 		if($this->show_driving_time){
 			$drive_time_hidden_class = '';
 		} else {
@@ -2184,7 +2184,7 @@ class TransitQuote_Pro_Public {
     }
 
     private function get_payment_button_name($payment_method){
-    	if($payment_method['id'] === 3) {
+    	if($payment_method['id'] == 3) {
 			$payment_button_name = self::get_setting('tq_pro_paypal_options','payment_button_name','Pay Online');
 		} else {
 			$payment_button_name = $payment_method['name'];

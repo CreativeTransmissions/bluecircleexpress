@@ -515,7 +515,7 @@ class Admin_Config {
                                                         'default'=>1
                                                      ),
 													 
-													 'disable_cart'=>array(
+												                          	'disable_cart'=>array(
                                                         'id'=>'disable_cart',
                                                         'label'=>'Disable Cart for Checkout',
                                                         'type'=>'checkbox',
@@ -523,26 +523,27 @@ class Admin_Config {
                                                         'default'=>1
                                                      ),
 													 
-													 'redirect_page_after_payment'=>array(
-															'id'=>'redirect_page_after_payment',
-															'label'=>'Woocommerce Success Redirect',
-															'type'=>'select',
-															'options'=> self::redirect_page_after_payment_list(),
-															'id_field'=>'ID',
-															'display_field'=>'post_title'
-													 ),
-													 
+                          													 'redirect_page_after_payment'=>array(
+                          															'id'=>'redirect_page_after_payment',
+                          															'label'=>'Woocommerce Success Redirect',
+                          															'type'=>'select',
+                          															'options'=> self::redirect_page_after_payment_list(),
+                          															'id_field'=>'ID',
+                          															'display_field'=>'post_title'
+                          													 ),
+                           
                                                      'woo_product_id'=>array(
                                                         'id'=>'woo_product_id',
                                                         'label'=>'WooCommerce Product ID',
                                                         'type'=>'input',
                                                         'help'=>'This is the WooCommerce product id that will be used to bill your customers. Changing this setting manually is not recommended.'
                                                      ),
-													 
-													 'payment_button_name'=>array(
+                          													 
+                          													 'payment_button_name'=>array(
                                                         'id'=>'payment_button_name',
                                                         'label'=>'Woocommerce Payment Button Name',
-                                                        'type'=>'input' 
+                                                        'type'=>'input',
+                                                        'default'=>'Pay Online'
                                                      )
                                                      )
                                                   )

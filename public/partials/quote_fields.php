@@ -15,7 +15,7 @@
             <span class="sub-total noticeCost"></span>
             
         </div>
-        <div class="field">
+        <div class="field <?php echo $tax_hidden_class; ?>">
             <label class="" for="basicCost">Estimated Cost:</label>
             <span class="sub-total"><?php echo $this->currency_symbol; ?></span>
             <span class="basicCost"></span>

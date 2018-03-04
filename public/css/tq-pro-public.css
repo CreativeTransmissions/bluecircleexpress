@@ -1,10 +1,8 @@
 /* This stylesheet is used to style the public-facing components of the plugin. */
 
-/* fix for offset dropdown when in use while logged in*/
-body.admin-bar .pac-container {
-	margin-top: -32px;
+.tq-form fieldset{
+	background-color: transparent;
 }
-
 /* General Purpose Styles */
 
 .full-width {
@@ -345,7 +343,6 @@ form.tq-form .ideal-check.checked.focus {
 	resize: vertical;
 }
 .tq-address-container {
-	background: #dddddd;
 	padding: 0.5em;;
 	margin-top: 1em;
 }
