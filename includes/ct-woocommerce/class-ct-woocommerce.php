@@ -125,6 +125,8 @@ class CT_WOOCOMMERCE {
 			  global $woocommerce;
 			  $checkout_url = wc_get_checkout_url();
 			  return $checkout_url;
+			} else if ($product_id == $this->config['woo_product_id']) {
+				wp_redirect($wc_get_cart_url);
 			}
 			return $wc_get_cart_url;
 	}
