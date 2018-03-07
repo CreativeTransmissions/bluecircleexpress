@@ -2222,6 +2222,9 @@ class TransitQuote_Pro_Public {
     		return false;
     	};
     	$this->currency_code = $this->cdb->get_field('currencies', 'currency_code', $this->currency);
+    	if(($this->currency_code === 'custom')||empty($this->currency_code)){
+    		$this->currency_code = self::get_setting('', 'custom_currency_code');
+    	}
         return $this->currency_code;
     }
 
@@ -2231,6 +2234,9 @@ class TransitQuote_Pro_Public {
     		return false;
     	};
     	$this->currency_symbol = $this->cdb->get_field('currencies', 'symbol', $this->currency);
+    	if(($this->currency_symbol === 'custom')||empty($this->currency_symbol)){
+    		$this->currency_symbol = self::get_setting('', 'custom_currency_symbol');
+    	}
         return $this->currency_symbol;
     }
 

@@ -39,6 +39,12 @@ class TransitQuote_Pro_Settings_Field {
        // echo $this->config['id'].' config value: '.$this->value.'<br/>';
         $this->help = $this->config['help'];
         $this->field_name = $this->page.'['.$this->config['id'].']';
+        $this->css_class = '';
+        if(isset($this->config['cls'])){
+            if(!empty($this->config['cls'])){
+                $this->css_class = ' class="'.$this->config['cls'].'" ';
+            };
+        };
 	}
 
 	public function add_field(){

@@ -59,6 +59,15 @@
 							this.initPayPayTransactionsTabUI();
 							this.initPayPayTransactionsTabEvents();
 						break;
+						case 'tq_pro_quote_options':
+							this.initQuoteOptionsTabUI();
+							this.initQuoteOptionsTabEvents();
+						break;
+						case 'tq_pro_form_options':
+						case 'tq_pro_email_options':
+						case 'tq_pro_paypal_options':
+						break;
+
 						default:
 							this.initJobsTabUI();
 							this.initJobsTabEvents();
@@ -444,6 +453,41 @@
 					});
 
 
+				},
+
+				initQuoteOptionsTabUI: function(){
+					var text = $('select[name="tq_pro_quote_options[currency]"] option:selected').text();
+					if(text==='Custom Currency...'){
+						this.showNewCurrencyOptions();
+					} else {
+						this.hideNewCurrencyOptions();
+					};
+				},
+
+				initQuoteOptionsTabEvents: function(){
+					var that = this;
+					$('select[name="tq_pro_quote_options[currency]"]').on('change',  function(){
+						var text = $('select[name="tq_pro_quote_options[currency]"] option:selected').text();
+						if(text==='Custom Currency...'){
+							that.showNewCurrencyOptions();
+						} else {
+							that.hideNewCurrencyOptions();
+						}
+					});
+				},
+
+				hideNewCurrencyOptions: function(){
+					var newCurrencyCodeInput = $('input[name="tq_pro_quote_options[custom_currency_code]"');
+					$(newCurrencyCodeInput).closest('tr').hide();
+					var newCurrencySymbolInput = $('input[name="tq_pro_quote_options[custom_currency_symbol]"');
+					$(newCurrencySymbolInput).closest('tr').hide();
+				},
+
+				showNewCurrencyOptions: function(){
+					var newCurrencyCodeInput = $('input[name="tq_pro_quote_options[custom_currency_code]"');
+					$(newCurrencyCodeInput).closest('tr').show();
+					var newCurrencySymbolInput = $('input[name="tq_pro_quote_options[custom_currency_symbol]"');
+					$(newCurrencySymbolInput).closest('tr').show();
 				},
 
 				initSurchargeTabEvents : function(){

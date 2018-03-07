@@ -476,8 +476,7 @@ class TransitQuote_Pro4 {
 
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
-			
-		//	$cdb->update_row('currencies', array('name'=>'Nigerian Naira', 'currency_code' => 'NGN', 'symbol'=> '&#8358;', 'created'=>$created, 'modified'=>$modified ));
+
 			$cdb->update_row('currencies', array('name'=>'Australian dollar', 'currency_code' => 'AUD', 'symbol'=> '&#36;', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('currencies', array('name'=>'Brazilian real', 'currency_code' => 'BRL', 'symbol'=> 'BRL', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('currencies', array('name'=>'Canadian dollar', 'currency_code' => 'CAD', 'symbol'=> '&#36;', 'created'=>$created, 'modified'=>$modified ));
@@ -502,9 +501,29 @@ class TransitQuote_Pro4 {
 			$cdb->update_row('currencies', array('name'=>'Swiss franc', 'currency_code' => 'CHF', 'symbol'=> 'CHF', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('currencies', array('name'=>'Thai baht', 'currency_code' => 'THB', 'symbol'=> 'THB', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('currencies', array('name'=>'United States dollar', 'currency_code' => 'USD', 'symbol'=> '&#36;', 'created'=>$created, 'modified'=>$modified ));
-
+			
+			$cdb->update_row('currencies', array('id'=>'9999','name'=>'Custom Currency...', 'currency_code' => '', 'symbol'=> '', 'created'=>$created, 'modified'=>$modified ));
 		}
 
+	}
+
+	public function add_custom_currency_option($cdb){
+		if($cdb->get_count('currencies')>0){
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;
+			$custom_currency_row = $cdb->get_row('currencies', 'Custom Currency...', 'name');
+			if(empty($custom_currency_row)){
+					echo 'adding currecy';
+					$cdb->update_row('currencies', array('name'=>'Custom Currency...', 'currency_code' => '', 'symbol'=> '', 'created'=>$created, 'modified'=>$modified ));
+			} else {
+					echo 'not empty.';
+			};
+ 
+ 			$woocommerce_payment_type_rows = $cdb->get_row('payment_types', 'WooCommerce', 'name');
+			if($woocommerce_payment_type_rows === false){
+				$cdb->update_row('payment_types', array('name'=>'WooCommerce', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
+			};
+		}
 	}
 
 	private function insert_journey_lengths($cdb){
@@ -585,6 +604,7 @@ class TransitQuote_Pro4 {
 
 	public function update_default_data($cdb){
 		self::update_default_payment_types($cdb);
+		self::add_custom_currency_option($cdb);
 		self::migrate_rates($cdb);
 	}
 

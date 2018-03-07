@@ -288,7 +288,19 @@ class Admin_Config {
                                                         'display_field'=>'name',
                                                         'id_field'=>'id',
                                                         'default'=>18,
-                                                        'help'=>'Please select the currency used for quotes and PayPal payments.'),
+                                                        'help'=>'Please select the currency used for quotes and payments.'),
+
+                                                      'custom_currency_code'=>array(
+                                                        'id'=>'custom_currency_code',
+                                                        'label'=>'Custom Currency Code',
+                                                        'type'=>'input',
+                                                        'help'=>'If your currency is not in the above list but you know it is accepted by WooCommerce you can enter the currency code (for example GBP or USD) here and it will be used instead.'),
+
+                                                      'custom_currency_symbol'=>array(
+                                                        'id'=>'custom_currency_symbol',
+                                                        'label'=>'Custom Currency Symbol',
+                                                        'type'=>'input',
+                                                        'help'=>'If your currency is not in the above list but you know it is accepted by WooCommerce you can enter the currency symbol (for example $ or £) here and it will be used instead.'),
 
                                                       'tax_rate'=>array(
                                                         'id'=>'tax_rate',
