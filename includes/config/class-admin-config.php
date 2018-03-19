@@ -78,7 +78,14 @@ class Admin_Config {
                                                 'id'=>'pro_settings_form_options',
                                                 'title'=>'Order Form Options',
                                                 'fields'=>array(
-                                                    
+                                                     'form_theme'=>array(
+                                                        'id'=>'form_theme',
+                                                        'label'=>'Form Theme',
+                                                        'type'=>'select',
+                                                        'options'=>array( 'Classic', 'Light'),
+                                                        'default'=>'Light',
+                                                        'help'=>'Please select a theme to change the appearance of the order form.'),
+
                                                       'form_section_order'=>array(
                                                         'id'=>'form_section_order',
                                                         'label'=>'Form Section Order',
@@ -86,6 +93,7 @@ class Admin_Config {
                                                         'options'=>array( 'Delivery Information', 'Customer Information'),
                                                         'default'=>'Delivery Information',
                                                         'help'=>'Please select the information that the customer will enter first.<br/>If you ask for Delivery Information first the customer will see their quote before having to enter their contact details.'),
+                                                     
 
                                                       'ask_for_postcode'=>array(
                                                         'id'=>'ask_for_postcode',

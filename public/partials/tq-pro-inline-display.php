@@ -12,30 +12,17 @@
 <div id="feedback"></div>
 <div class="requestform round">
     <div class="spinner-div"> </div>
-    <form id="quote-form" class="request-calc-form tq-form" autocomplete="off" data-parsley-errors-messages-disabled>
-            <?php
-                $hide_section = $this->form_includes[0]['hidden'];
-                include $this->form_includes[0]['template'].'.php';
-                $hide_section = $this->form_includes[1]['hidden'];
-                include $this->form_includes[1]['template'].'.php'; ?>
-        <div class="tq-address-container round">
-        <?php   $hide_section = $this->form_includes[2]['hidden']; 
-                include  $this->form_includes[2]['template'].'.php' ;
-                $hide_section = $this->form_includes[3]['hidden']; 
-                include $this->form_includes[3]['template'].'.php';
-                $hide_section = $this->form_includes[4]['hidden']; 
-                include $this->form_includes[4]['template'].'.php';
-        ?>
-        </div>
-
-        
-        <?php include 'form-messages.php';?>
-                
-        <div class="clear"></div>    
-        <p class="hidden">
-        <?php include 'hidden_fields.php';?>
-        </p>
-    </form>
+    <div class="transit_main">
+        <form id="quote-form" class="request-calc-form tq-form" autocomplete="off" data-parsley-errors-messages-disabled>
+            <?php 
+                include( TQ_PLUGIN_PATH."public/themes/classic/form.php" );       
+             ?>
+            <div class="clear"></div>    
+            <p class="hidden">
+            <?php include 'hidden_fields.php';?>
+            </p>
+        </form>
+    </div>
     <div class="payment-result">
         <div class="on-delivery text-center" style="display: none;">
             <div class="on-delivery-msg-succcess on-delivery" style="display: none;"><?php echo $this->success_message; ?></div>

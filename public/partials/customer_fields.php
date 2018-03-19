@@ -25,7 +25,7 @@
 					</div>
 					<div class="tq-row bt-flabels__wrapper">
 						<label for="email">Email Address</label>
-						<input tabindex="4" type="text" name="email" id="email" data-parsley-type="email"  placeholder="Email Address*" required>
+						<input tabindex="4" type="text" name="email" id="email" data-parsley-type="email" required placeholder="Email Address*" >
 						<span class="bt-flabels__error-desc">Required / Invalid Email</span>
 					</div>
 				</div>
@@ -40,4 +40,4 @@
 			<div class="clear"></div>
 		</div>
 	</fieldset>
-</div>
+</div> 

@@ -29,6 +29,9 @@
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
+if ( ! defined( 'TQ_PLUGIN_PATH' ) ) {
+	define( 'TQ_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+}
 
 /**
  * The code that runs during plugin activation.
