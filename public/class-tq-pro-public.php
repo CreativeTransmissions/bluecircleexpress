@@ -161,8 +161,8 @@ class TransitQuote_Pro_Public {
 		$this->sandbox = self::bool_to_text_sandbox($sandbox);
 		$this->geolocate = self::bool_to_text($geolocate);
 
-		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','Insert Destination...');
-		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','Remove This Destination');
+		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','+ Insert Destination');
+		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');
 
 	}
 
@@ -2174,7 +2174,7 @@ class TransitQuote_Pro_Public {
 			};
     	};
 
-    	$button_panel = '<div class="tq-payment-buttons">';
+    	$button_panel = '<div class="tq-payment-buttons btn_wrap">';
     	$button_panel .= implode('', $buttons);
     	$button_panel .= '</div>';
 

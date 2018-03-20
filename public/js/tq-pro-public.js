@@ -531,7 +531,7 @@
 			showQuoteFields: function(){
 				$('.quote-fields').removeClass('hidden');
 				$('.quote-fields').show();
-				$('.tq-row.success.buttons').show();
+				$('.success.buttons').show();
 				$('.tq-form-fields-container').show();
 				$('.tq-form-fields-container').removeClass('hidden');
 			},

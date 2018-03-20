@@ -90,6 +90,14 @@
     font-size: 48px;
     margin: 30px 0;
 }
+
+.transit_main h3 span {
+    color: #3e80fa !important;
+    font-size: 48px !important;
+    margin: 30px 0 !important;
+}
+
+
 .transit_inner.cost .transit_body {text-align: center; padding: 80px 10px;}
 .transit_inner.cost span {
     font-weight: 700;
@@ -108,6 +116,14 @@
     font-size: 18px;
     font-weight: 500;
     padding: 0 20px;
+    position: relative;
+}
+
+.transit_inner.cost .transit_body ul li span {
+    display: inline-block;
+    color: #5e5e5e;
+    font-size: 18px;
+    font-weight: 500;
     position: relative;
 }
 .transit_inner.cost .transit_body  ul li:after {
@@ -242,7 +258,7 @@ select {
     float: left;
     width: 100%;
 }
-.btn_wrap input[type="submit"] {
+.btn_wrap input[type="submit"], .btn_wrap button {
     font-weight: 700;
     background: #3e80fa;
     width: 225px;

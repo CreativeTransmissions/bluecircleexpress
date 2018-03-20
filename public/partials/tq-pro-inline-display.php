@@ -12,6 +12,7 @@
 <div id="feedback"></div>
 <div class="requestform round">
     <div class="spinner-div"> </div>
+
     <div class="transit_main">
         <form id="quote-form" class="request-calc-form tq-form" autocomplete="off" data-parsley-errors-messages-disabled>
             <?php 
@@ -22,18 +23,20 @@
             <?php include 'hidden_fields.php';?>
             </p>
         </form>
-    </div>
-    <div class="payment-result">
-        <div class="on-delivery text-center" style="display: none;">
-            <div class="on-delivery-msg-succcess on-delivery" style="display: none;"><?php echo $this->success_message; ?></div>
+    
+        <div class="payment-result">
+            <div class="on-delivery text-center" style="display: none;">
+                <div class="on-delivery-msg-succcess on-delivery" style="display: none;"><?php echo $this->success_message; ?></div>
+            </div>
         </div>
+        <div id="paypal" style="display: none;">
+            <?php
+                if(self::check_payment_config(2)){  
+                    include $this->paypal_partials_dir.'paypal-button.php';
+                };
+            ?>
+        </div>
+    	<div id="woocommerce" style="display: none;"></div>
     </div>
-    <div id="paypal" style="display: none;">
-        <?php
-            if(self::check_payment_config(2)){  
-                include $this->paypal_partials_dir.'paypal-button.php';
-            };
-        ?>
-    </div>
-	<div id="woocommerce" style="display: none;"></div>
+
 </div>
