@@ -23,7 +23,7 @@
             </div>
             <div class="right bt-flabels__wrapper">
                 <span class="sub_title"><i class="icon icon-icn-email"></i>Email address</span>
-                <input type="text"  id="email" data-parsley-type="email" required placeholder="Enter your email address">
+                <input type="text"  id="email" data-parsley-type="email" name="email" required placeholder="Enter your email address">
                 <span class="bt-flabels__error-desc">Required / Invalid Email</span>
             </div>
         </div>
