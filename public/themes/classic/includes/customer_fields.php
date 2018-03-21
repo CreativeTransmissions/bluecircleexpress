@@ -35,9 +35,5 @@
             <span class="bt-flabels__error-desc">Required / Invalid </span>
         </div>
     </div>
-    <!-- <div class="btn_wrap">
-        <input type="submit" value="Pay On Delivery">
-        <input type="submit" value="Pay Now">
-    </div> -->
 </div> <!-- your contact section end here -->
            

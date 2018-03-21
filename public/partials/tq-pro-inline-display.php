@@ -12,7 +12,6 @@
 <div id="feedback"></div>
 <div class="requestform round">
     <div class="spinner-div"> </div>
-
     <div class="transit_main">
         <form id="quote-form" class="request-calc-form tq-form" autocomplete="off" data-parsley-errors-messages-disabled>
             <?php 
