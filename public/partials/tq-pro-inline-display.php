@@ -15,7 +15,7 @@
     <div class="transit_main">
         <form id="quote-form" class="request-calc-form tq-form" autocomplete="off" data-parsley-errors-messages-disabled>
             <?php 
-                include( TQ_PLUGIN_PATH."public/themes/classic/form.php" );       
+                include( TQ_PLUGIN_PATH."public/themes/".strtolower($this->theme)."/form.php" );       
              ?>
             <div class="clear"></div>    
             <p class="hidden">

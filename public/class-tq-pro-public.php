@@ -821,7 +821,7 @@ class TransitQuote_Pro_Public {
 			$this->build_form_include_list_popup();
 			$this->view = 'partials/tq-pro-popup-view.php';
 		};
-		
+		$this->theme = self::get_setting('tq_pro_form_options', 'form_theme', 'classic');
 		ob_start();
 	   	include $this->view;
 	   	return ob_get_clean();
