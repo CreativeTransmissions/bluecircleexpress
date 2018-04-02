@@ -1021,4 +1021,29 @@ class TransitQuote_Pro_Admin {
 		}
 	}
 
+	public function delete_record_callback(){
+		$table = $this->ajax->param(array('name'=>'update'));
+		$id = $this->ajax->param(array('name'=>'id'));
+		if(self::delete_record(array('table'=>$table, 'id'=>$id))){
+			self::delete_related_records($table);
+			$this->ajax->respond(array('success'=>'true',
+										'msg'=>'Record Deleted'));
+		} else {
+			$this->ajax->respond(array('success'=>'false',
+								 		'msg'=>'Unable to delete record'));
+		}
+	}
+	
+	public function delete_related_records($table){
+		switch ($table) {
+			case 'vehicles':
+				$this->plugin->delete_orphaned_rates();
+				break;
+			case 'services':
+				$this->plugin->delete_orphaned_rates();
+			default:
+				break;
+		}
+	}
+
 }

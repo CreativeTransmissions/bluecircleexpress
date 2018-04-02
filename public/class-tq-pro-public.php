@@ -2931,4 +2931,27 @@ class TransitQuote_Pro_Public {
 		return true;
 
 	}	
+
+	/**
+	 * Delete rates there there is no vehicle or service id
+	 *	 
+	 * @since    4.1.2
+	 */	
+
+	public function delete_orphaned_rates(){
+		$rates_table_name = $this->cdb->get_table_full_name('rates');
+		$services_table_name = $this->cdb->get_table_full_name('services');
+		$vehicle_table_name = $this->cdb->get_table_full_name('vehicles');
+		// get ordered list of rates with distance 0 as the final record
+    	$sql = "delete r
+				 from ".$rates_table_name." r
+					left join ".$vehicle_table_name." v
+						on r.vehicle_id = v.id
+					left join ".$services_table_name." s
+						on r.service_id = s.id
+					where v.id is null or s.id is null;";
+		//echo $sql;
+		$success = $this->cdb->query($sql);
+		return $success;
+	}
 }

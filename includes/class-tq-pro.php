@@ -663,4 +663,8 @@ class TransitQuote_Pro4 {
 			$cdb->add_column('quotes',$col_def);
 		}
 	}
+
+	public function delete_orphaned_rates(){
+		$this->plugin_public->delete_orphaned_rates();
+	}
 }
