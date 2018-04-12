@@ -308,26 +308,26 @@ class TransitQuote_Pro4 {
 	 * @access   private
 	 */
 	private function define_public_hooks() {
-		$plugin_public = new TransitQuote_Pro_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
-		add_shortcode( 'TransitQuote_Pro', array( $plugin_public, 'display_TransitQuote_Pro' ) );
-		add_shortcode( 'transitquote_pro', array( $plugin_public, 'display_TransitQuote_Pro' ) );
-		add_shortcode( 'tq_pro_display_rates_list', array( $plugin_public, 'display_rates_list' ) );
+		$this->plugin_public = new TransitQuote_Pro_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());
+		add_shortcode( 'TransitQuote_Pro', array( $this->plugin_public, 'display_TransitQuote_Pro' ) );
+		add_shortcode( 'transitquote_pro', array( $this->plugin_public, 'display_TransitQuote_Pro' ) );
+		add_shortcode( 'tq_pro_display_rates_list', array( $this->plugin_public, 'display_rates_list' ) );
 
 		add_filter( 'widget_text', 'do_shortcode', 11);
-		$this->loader->add_action( 'init', $plugin_public, 'init_plugin');
-		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_styles');
-		$this->loader->add_action( 'wp_footer', $plugin_public, 'enqueue_scripts');	
+		$this->loader->add_action( 'init', $this->plugin_public, 'init_plugin');
+		$this->loader->add_action( 'wp_footer', $this->plugin_public, 'enqueue_styles');
+		$this->loader->add_action( 'wp_footer', $this->plugin_public, 'enqueue_scripts');	
 
-		$this->loader->add_action( 'wp_ajax_tq_pro4_save_job', $plugin_public, 'tq_pro_save_job_callback');	
-		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro4_save_job', $plugin_public, 'tq_pro_save_job_callback');	
-		$this->loader->add_action( 'wp_ajax_nopriv_get_quote', $plugin_public, 'tq_pro_save_job_callback' );
-		$this->loader->add_action( 'wp_ajax_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
-		$this->loader->add_action( 'wp_ajax_nopriv_create_paypal_payment', $plugin_public, 'create_paypal_payment' );
-		$this->loader->add_action( 'wp_ajax_execute_paypal_payment', $plugin_public, 'execute_paypal_payment' );
-		$this->loader->add_action( 'wp_ajax_nopriv_execute_paypal_payment', $plugin_public, 'execute_paypal_payment' );
+		$this->loader->add_action( 'wp_ajax_tq_pro4_save_job', $this->plugin_public, 'tq_pro_save_job_callback');	
+		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro4_save_job', $this->plugin_public, 'tq_pro_save_job_callback');	
+		$this->loader->add_action( 'wp_ajax_nopriv_get_quote', $this->plugin_public, 'tq_pro_save_job_callback' );
+		$this->loader->add_action( 'wp_ajax_create_paypal_payment', $this->plugin_public, 'create_paypal_payment' );
+		$this->loader->add_action( 'wp_ajax_nopriv_create_paypal_payment', $this->plugin_public, 'create_paypal_payment' );
+		$this->loader->add_action( 'wp_ajax_execute_paypal_payment', $this->plugin_public, 'execute_paypal_payment' );
+		$this->loader->add_action( 'wp_ajax_nopriv_execute_paypal_payment', $this->plugin_public, 'execute_paypal_payment' );
 		
-		$this->loader->add_action( 'woocommerce_product_get_regular_price', $plugin_public, 'set_price_to_woocommerce', 10, 2);
-		$this->loader->add_action( 'woocommerce_product_get_price', $plugin_public, 'set_price_to_woocommerce', 10, 2);
+		$this->loader->add_action( 'woocommerce_product_get_regular_price', $this->plugin_public, 'set_price_to_woocommerce', 10, 2);
+		$this->loader->add_action( 'woocommerce_product_get_price', $this->plugin_public, 'set_price_to_woocommerce', 10, 2);
 	}
 
 	/**
