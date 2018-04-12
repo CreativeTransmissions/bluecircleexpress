@@ -24,7 +24,7 @@ class CT_WOOCOMMERCE {
 		
 		add_action( 'wc_add_to_cart_message_html', array( $this, 'woocommerce_add_to_cart_message' ), 10, 2);
 		add_action( 'woocommerce_add_to_cart_validation', array( $this, 'woocommerce_single_cart_item' ), 10, 2);
-		add_action( 'woocommerce_add_to_cart_redirect', array( $this, 'skip_woocommerce_cart'));
+		add_filter( 'woocommerce_add_to_cart_redirect', array( $this, 'skip_woocommerce_cart'));
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'update_jobid_on_checkout'));
 		add_action( 'woocommerce_thankyou', array( $this, 'payment_success_redirect'));
 		add_action( 'woocommerce_before_checkout_form', array( $this, 'woocommerce_checkout_autocomplete'));
@@ -117,16 +117,20 @@ class CT_WOOCOMMERCE {
 	
 	//skip cart page
 	public function skip_woocommerce_cart($wc_get_cart_url) {
+			global $woocommerce;
+
 			$product_id = 0;
 			if(isset($_GET['add-to-cart'])) {
 				$product_id = (int) apply_filters( 'woocommerce_add_to_cart_product_id', $_GET['add-to-cart'] );
+			    $checkout_url = wc_get_checkout_url();
 			}
+
+	
 			if($product_id == $this->config['woo_product_id'] && $this->config['disable_cart']) {
-			  global $woocommerce;
-			  $checkout_url = wc_get_checkout_url();
-			  return $checkout_url;
+				return $checkout_url;
 			} else if ($product_id == $this->config['woo_product_id']) {
-				wp_redirect($wc_get_cart_url);
+				
+				return wc_get_cart_url();
 			}
 			return $wc_get_cart_url;
 	}
@@ -174,13 +178,18 @@ class CT_WOOCOMMERCE {
 		 */
 		$order->update_status( 'completed' );
 		
-		//redirects to thankyou page on order complete
-		$redirect_page_id = $this->config['redirect_page_after_payment'];
 		
+		$job_id = $order->get_meta('job_id');
+		
+		$site_url = get_permalink($this->config['redirect_page_after_payment']);
+		$site_url .= '?job_id='.$job_id;
+		
+		//redirects to thankyou page on order complete
+		//$redirect_page_id = $this->config['redirect_page_after_payment'];
 		$order = new WC_Order( $order_id );
-		$redirect_page_url = get_permalink($redirect_page_id);
-		if ( $order->status != 'failed' && $redirect_page_url!='') {
-			wp_redirect($redirect_page_url);
+		//$redirect_page_url = get_permalink($redirect_page_id);
+		if ( $order->status != 'failed' && $site_url!='') {
+			wp_redirect($site_url);
 			exit;
 		}
 	}
