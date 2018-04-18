@@ -16,7 +16,7 @@
  * Plugin Name:       TransitQuote Pro
  * Plugin URI:        http://transitquote.co.uk
  * Description:       Automatic Transportation Quote Calculator For WordPress
- * Version:           4.1.2
+ * Version:           4.1.3
  * Author:            Creative Transmissions
  * Author URI:        http://creativetransmissions.com/
  * License:           GPL-2.0+

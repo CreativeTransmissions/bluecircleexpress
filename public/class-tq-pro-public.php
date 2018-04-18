@@ -2934,7 +2934,7 @@ class TransitQuote_Pro_Public {
 	/**
 	 * Delete rates there there is no vehicle or service id
 	 *	 
-	 * @since    4.1.2
+	 * @since    4.1.3
 	 */	
 
 	public function delete_orphaned_rates(){
