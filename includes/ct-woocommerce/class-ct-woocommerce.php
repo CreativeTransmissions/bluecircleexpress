@@ -62,6 +62,8 @@ class CT_WOOCOMMERCE {
 
 	    //wp_set_object_terms($post_id, $product_data['categories'], 'product_cat'); // Set up its categories
 	    wp_set_object_terms($post_id, 'simple', 'product_type'); // Set it to a simple product type
+		update_post_meta( $post_id, '_price', "1" );
+		update_post_meta( $post_id, '_regular_price', "1" );
 		update_post_meta( $post_id, '_virtual', 'yes');
 		update_post_meta( $post_id, '_sold_individually', 'yes' );
 		//Set product hidden: 
