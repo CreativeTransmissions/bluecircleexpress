@@ -15,7 +15,7 @@ namespace TransitQuote_Pro4;
 class DB_Config {
 
   public function __construct() {
-    $this->debugging = true;
+    $this->debugging = false;
   }
 
   public function get_config($table){

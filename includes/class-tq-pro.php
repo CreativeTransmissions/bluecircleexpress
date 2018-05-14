@@ -513,10 +513,7 @@ class TransitQuote_Pro4 {
 			$modified = $created;
 			$custom_currency_row = $cdb->get_row('currencies', 'Custom Currency...', 'name');
 			if(empty($custom_currency_row)){
-					echo 'adding currecy';
 					$cdb->update_row('currencies', array('name'=>'Custom Currency...', 'currency_code' => '', 'symbol'=> '', 'created'=>$created, 'modified'=>$modified ));
-			} else {
-					echo 'not empty.';
 			};
  
  			$woocommerce_payment_type_rows = $cdb->get_row('payment_types', 'WooCommerce', 'name');
@@ -547,7 +544,7 @@ class TransitQuote_Pro4 {
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
 			$cdb->update_row('payment_types', array('name' => 'On Delivery', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_types', array('name' => 'Pay Online', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_types', array('name' => 'Pay Online', 'available'=>0, 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_types', array('name'=>'WooCommerce', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
 		};
 	}

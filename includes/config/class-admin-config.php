@@ -15,7 +15,7 @@ namespace TransitQuote_Pro4;
 class Admin_Config {
 
   public function __construct() {
-    //$this->debugging = true;
+    $this->debugging = false;
   }
 
   public static function get_config($config_name){
