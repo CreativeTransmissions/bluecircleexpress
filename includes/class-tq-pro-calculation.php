@@ -303,6 +303,17 @@ class TQ_Calculation {
 		return $return_cost;
 	}
 
+	private function add_hourly_amount_to_total($rate){
+		print_r($rate);
+		$this->time_hours = $this->config['time_mins'] / 60;
+		$this->time_cost = $this->time_hours * $rate['hour'];
+		$this->total = $this->total + $this->time_cost;
+		$this->breakdown[] = array(	'hours'=>$this->time_hours,
+									'type'=>'hourly cost',
+									'rate'=>$rate['hour'],
+									'cost'=>$this->time_cost);
+	}
+
 	private function add_tax(){
 		$this->tax_cost = ($this->tax_rate/100)*$this->total;
 		$this->tax_cost = round($this->tax_cost,2);
