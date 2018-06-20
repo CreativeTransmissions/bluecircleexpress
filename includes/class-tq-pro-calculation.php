@@ -106,6 +106,10 @@ class TQ_Calculation {
 			self::add_return_distance_cost_to_total($this->final_rate);
 		};
 
+		if($this->final_rate['hour']>0){
+			self::add_hourly_amount_to_total($this->final_rate);			
+		};
+
 		$this->distance_cost = $this->total;
 		if($this->tax_rate>0){
 			self::add_tax();
@@ -304,7 +308,6 @@ class TQ_Calculation {
 	}
 
 	private function add_hourly_amount_to_total($rate){
-		print_r($rate);
 		$this->time_hours = $this->config['time_mins'] / 60;
 		$this->time_cost = $this->time_hours * $rate['hour'];
 		$this->total = $this->total + $this->time_cost;
