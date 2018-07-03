@@ -264,31 +264,45 @@
 				});
 			},
 
+
+			dateConverter:function(UNIX_timestamp){
+			  var a = new Date(UNIX_timestamp);
+			  var year = a.getFullYear();
+			  var month = a.getMonth()+1;
+			  var day = a.getDate();
+			  var date = day + '-' + month + '-' + year;
+			  return date;
+			},
+
+
 			initDatePicker: function(){
 				var that = this;
-				$('#'+this.settings.datepickerSelector).datepicker({
-					dateFormat: 'dd / mm / yy',
-					altField:'#delivery_date',
-					altFormat:'dd-mm-yy',
-					minDate: 0,
-					onSelect: function(){
-						$('#'+that.settings.datepickerSelector).change();
-						that.calculator.updateQuote();
-					}
-				});
-				$('#'+this.settings.datepickerSelector).datepicker('setDate', new Date());
-
+				var $input = $('#'+this.settings.datepickerSelector).pickadate({
+					formatSubmit: 'dd-mm-yyyy',
+					format:'dd / mm / yyyy',
+		            min: new Date(),
+		            onSet: function(context) {
+		            	var date = that.dateConverter(context.select);
+		            	$('#delivery_date').val(date);
+		            	that.calculator.updateQuote();
+				  	}
+		        });
+			    var picker = $input.pickadate('picker');
 			},
 
 			initTimePicker: function(){
 				var that = this;
-				$('#'+this.settings.timepickerSelector).timepicker({
-					useLocalTimezone: true,
-					onSelect: function(){
-					 	that.calculator.updateQuote();
-					}
-				});	
-				$('#'+this.settings.timepickerSelector).timepicker('setTime', new Date());
+				var today = new Date();
+				today.setTime(today.getTime() + (1*60*60*1000));
+				var $input = $( '#'+this.settings.timepickerSelector ).pickatime({
+					min: today,
+					format:'HH:i',
+					interval: 30,
+					onSet: function(context) {
+				    	that.calculator.updateQuote();
+				  	}
+				})
+				var picker = $input.pickatime('picker');
 			},
 
 			initPayPal: function(){
