@@ -7,32 +7,32 @@
     </span>
     <div class="address-wrap">
         <span class="transit_noadress"><a href="#" class="no-address no-address-0">I can&apos;t find my address</a></span>
-        <div class="full bt-flabels__wrapper">
+        <div class="bt-flabels__wrapper">
             <input tabindex="10" class="text addresspicker" required type="text" name="address_0_address" id="address_0" value="" autocomplete="false"/>
             <span class="bt-flabels__error-desc">Required: Collection Address</span>
         </div>
-        <div class="half bt-flabels__wrapper">
-        <?php if($this->ask_for_unit_no){ ?>            
-                <input class="left" type="text" id="address_0_appartment_no" name="address_0_appartment_no" placeholder="Unit" value=""/>            
+        <?php if(($this->ask_for_unit_no)&&($this->ask_for_unit_no)){ ?>   
+            <div class="half bt-flabels__wrapper">
+            <?php if($this->ask_for_unit_no){ ?>            
+                    <input class="left" type="text" id="address_0_appartment_no" name="address_0_appartment_no" placeholder="Unit" value=""/>            
+            <?php } ?>
+            <?php if($this->ask_for_postcode){ ?>        
+                <input class="postcode right" type="text" id="address_0_postal_code" name="address_0_postal_code" placeholder="Postcode" value=""/>        
+            <?php } ?>
+            </div>
         <?php } ?>
-        <?php if($this->ask_for_postcode){ ?>        
-            <input class="postcode right" type="text" id="address_0_postal_code" name="address_0_postal_code" placeholder="Postcode" value=""/>        
-        <?php } ?>
-        </div>
     </div>
 </div>
 
 
         <div class="destination_wrap_sub">
             <div class="destination_wrap">
-                <div class="destination_title_wrap">
-                    <span class="sub_title">
-                        <i class="icon icon-icn-collection-address"></i><?php echo self::get_setting('tq_pro_form_options','destination_address_label', 'Destination Address'); ?>
-                    </span>
+                <span class="sub_title">
+                    <i class="icon icon-icn-collection-address"></i><?php echo self::get_setting('tq_pro_form_options','destination_address_label', 'Destination Address'); ?>
+                </span>
                     
                     <a href="#" class="transit_noadress no-address no-address-1">I can&apos;t find my address</a>
-                </div>
-                <div class="full bt-flabels__wrapper">
+                <div class="bt-flabels__wrapper">
                     <input  tabindex="11" class="text addresspicker" required type="text" name="address_1_address" id="address_1" value="" autocomplete="false"/>
                     <span class="bt-flabels__error-desc">Required: <?php echo self::get_setting('tq_pro_form_options','destination_address_label', 'Destination Address'); ?></span>
                 </div>
