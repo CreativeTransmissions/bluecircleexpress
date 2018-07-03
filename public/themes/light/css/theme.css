@@ -70,7 +70,10 @@
     content: "\6b";
 }
 /*Font Integration*/
-
+.tq-form .remove-address{
+    display: inline-block;
+    margin-left: 1em;
+}
 .transit_main {
     font-family: 'Lato', sans-serif;
     font-weight: 700;

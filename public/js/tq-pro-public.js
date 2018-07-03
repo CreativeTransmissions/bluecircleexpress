@@ -196,6 +196,8 @@
 					
 					showRoute: true,
 
+					askForUnitNo: this.settings.data.ask_for_unit_no,
+					askForPostCode: this.settings.data.ask_for_postcode,
 					units: this.settings.data.distance_unit, // imperial or metric
 					geolocate: this.geolocate,
 					// Google Map Options

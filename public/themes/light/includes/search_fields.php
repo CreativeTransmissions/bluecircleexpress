@@ -19,9 +19,6 @@
             <input class="postcode right" type="text" id="address_0_postal_code" name="address_0_postal_code" placeholder="Postcode" value=""/>        
         <?php } ?>
         </div>
-        <!-- DATE FIELDS STARTS -->
-        <?php include( "date_time.php" );?>
-        <!-- DATE FIELDS STARTS --> 
     </div>
 </div>
 
@@ -50,12 +47,12 @@
             </div>
         </div>
  
-
+        <!-- DATE FIELDS STARTS -->
+        <?php include( "date_time.php" );?>
+        <!-- DATE FIELDS STARTS --> 
 
 <?php } else {?>
-    <!-- DATE FIELDS STARTS -->
-    <?php include( "date_time.php" );?>
-    <!-- DATE FIELDS STARTS --> 
+
     <div class="address-wrap">
         <div class="destination_wrap_sub">
             <div class="destination_wrap">
@@ -76,7 +73,9 @@
             </div>    
         </div>    
     </div>    
-
+    <!-- DATE FIELDS STARTS -->
+    <?php include( "date_time.php" );?>
+    <!-- DATE FIELDS STARTS --> 
 <?php }?>
 
 </div>
