@@ -225,17 +225,18 @@ input:focus, select, textarea{ outline: none;}
 }
 .half {
     margin-bottom: 1.75%;
-    width: 100%;
+    width: 49%;
     float: left;
 }
-.half .left {
-    width: 49%;
+ .left {
     float: left;
     box-sizing: border-box;
 }
-.half .right {
-    width: 49%;
+.right {
     float: right;
+}
+.half-field {
+    width: 49%;
     box-sizing: border-box;
 }
 
@@ -359,7 +360,11 @@ select {
     .select-wrap:after{top: 11px;}
     .coll_date_wrap:after, .coll_time_wrap:after {top: 10px;}
     .coll_date_wrap { width: 100%;}
-    .coll_time_wrap { float: left; width: 100%;}   
+    .coll_time_wrap { float: left; width: 100%;}  
+    .half {
+        width: 100%;
+    }
+
 }
 /*Media query end*/
 

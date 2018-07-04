@@ -5,9 +5,9 @@ $using_service_descript = $this->using_service_descript();
 $using_vehicle_descript = $this->using_vehicle_descript();
 $hide_all = '';
 if(($has_services)||($has_vehicles)){ ?>
-	<div class="half">
+	<div class="service-vehicle-wrap">
 		<?php if($has_services){ ?>
-		<div class="left">
+		<div class="left half">
 			<span class="sub_title"><i class="icon icon-icn-service"></i>Service</span>
 			<div class="bt-flabels__wrapper select-wrap">
 				<select tabindex="7" name="service_id" id="service_id">
@@ -15,7 +15,7 @@ if(($has_services)||($has_vehicles)){ ?>
 				</select>
 			</div>
 		</div>
-		<div class="right">
+		<div class="right half">
 			<span class="sub_title"><i class="icon icon-icn-vehicle"></i>Vehicle</span>
 			<div class="bt-flabels__wrapper select-wrap">
 				<select tabindex="8" name="vehicle_id" id="vehicle_id">
@@ -25,7 +25,7 @@ if(($has_services)||($has_vehicles)){ ?>
 		</div>
 		<?php } else { ?>
 			<?php if($has_vehicles){ ?>
-					<div class="left">
+					<div class="left half">
 						<span class="sub_title"><i class="icon icon-icn-vehicle"></i>Vehicle</span>
 						<div class="bt-flabels__wrapper">
 							<label for="vehicle_id">Vehicle</label>
@@ -34,7 +34,7 @@ if(($has_services)||($has_vehicles)){ ?>
 							</select>
 						</div>
 					</div>
-					<div class="right">
+					<div class="right half">
 						<div class="bt-flabels__wrapper select-wrap">
 							<?php 
 								if($using_vehicle_descript){
