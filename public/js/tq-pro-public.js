@@ -277,32 +277,57 @@
 
 			initDatePicker: function(){
 				var that = this;
-				var $input = $('#'+this.settings.datepickerSelector).pickadate({
+				var arrayOfNumbers = TransitQuoteProSettings.blocked_dates.map(function(t){
+					return new Date(t[0]); 
+				});
+				var interval = TransitQuoteProSettings.time_interval;
+				
+				var $inputDate =$('#'+this.settings.datepickerSelector).pickadate({
 					formatSubmit: 'dd-mm-yyyy',
+					disable : arrayOfNumbers,
 					format:'dd / mm / yyyy',
 		            min: new Date(),
 		            onSet: function(context) {
 		            	var date = that.dateConverter(context.select);
 		            	$('#delivery_date').val(date);
 		            	that.calculator.updateQuote();
-				  	}
+
+		            	var selectedDate = date;
+		            	var today = that.dateConverter(new Date());
+
+		            	var inputTime = $('#'+that.settings.timepickerSelector).pickatime();
+		            	var timePickerObj = inputTime.pickatime('picker');
+
+		            	if(selectedDate == today){ 
+		            		// if dates are equal then time should be start from now not begining of the day
+		            		var todayDate = new Date();
+							todayDate.setTime(todayDate.getTime() + (1*60*60*1000)); //add one hour	            			
+	            			timePickerObj.set('min', todayDate).clear(); //clear suppose if prev time selected
+
+		            	} else {
+		            		// casue prev dates are disabled
+		            		timePickerObj.set('min', false);
+		            	}
+				  	},
+				  
 		        });
-			    var picker = $input.pickadate('picker');
+		        var datePickerObj = $inputDate.pickadate('picker');
 			},
 
 			initTimePicker: function(){
 				var that = this;
+				var interval = TransitQuoteProSettings.time_interval;
 				var today = new Date();
-				today.setTime(today.getTime() + (1*60*60*1000));
+				today.setTime(today.getTime() + (1*60*60*1000)); //add one hour
 				var $input = $( '#'+this.settings.timepickerSelector ).pickatime({
 					min: today,
 					format:'HH:i',
-					interval: 30,
+					interval: parseInt(interval),
 					onSet: function(context) {
 				    	that.calculator.updateQuote();
 				  	}
-				})
-				var picker = $input.pickatime('picker');
+				});
+				var timePickerObj = $input.pickatime('picker');
 			},
 
 			initPayPal: function(){

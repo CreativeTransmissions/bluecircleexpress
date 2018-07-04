@@ -41,7 +41,12 @@ class Admin_Config {
                               'table'=>'customers',
                               'sections'=>array()
                               ),
-
+              'tq_pro_blocked_dates'=>array( 
+                              'key'=>'tq_pro_blocked_dates',
+                              'title'=>'Blocked Dates',
+                              'table'=>'blocked_dates',
+                              'sections'=>array()
+                              ),
               'tq_pro_rates'=>array(
                               'key'=>'tq_pro_rates',
                               'title'=>'Rates',
@@ -85,6 +90,13 @@ class Admin_Config {
                                                         'options'=>array( 'Classic', 'Light'),
                                                         'default'=>'Light',
                                                         'help'=>'Please select a theme to change the appearance of the order form.'),
+                                                     'time_interval'=>array(
+                                                        'id'=>'time_interval',
+                                                        'label'=>'Time Picker Interval (min)',
+                                                        'type'=>'select',
+                                                        'options'=>array( 15, 30, 45, 60),
+                                                        'default'=> 30,
+                                                        'help'=>'Please select time interval for timepicker.'),
 
                                                       'form_section_order'=>array(
                                                         'id'=>'form_section_order',
