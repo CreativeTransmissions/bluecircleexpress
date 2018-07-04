@@ -215,7 +215,8 @@ class TransitQuote_Pro_Public {
 		//get varibles to pass to JS
 		// $holidays = self::get_holidays();
 		$rates = self::get_rates_list();
-	
+		$blocked_dates = self::get_blocked_dates();
+		$time_interval = self::get_setting('tq_pro_form_options', 'time_interval', 30);
 		// $surcharges = self::get_service_surcharges();
 		$ajax_url = admin_url( 'admin-ajax.php' );
 
@@ -247,7 +248,9 @@ class TransitQuote_Pro_Public {
 							'max_address_pickers'=>$this->max_address_pickers,
 							'sandbox'=>$this->sandbox,
 							'insert_dest_link_text'=>$this->insert_dest_link_text,
-							'remove_dest_link_text'=>$this->remove_dest_link_text
+							'remove_dest_link_text'=>$this->remove_dest_link_text,
+							'blocked_dates'=> $blocked_dates,
+							'time_interval'=> $time_interval
 							);
 
 		if(!empty($this->api_key)){
@@ -264,6 +267,28 @@ class TransitQuote_Pro_Public {
 		return $tq_settings;
 	}
 
+	private function get_blocked_dates(){
+	   	$plugin = new TransitQuote_Pro4();
+		$this->cdb = $plugin->get_custom_db();
+		$today = date('Y-m-d');
+    	$all_blocked_dates = $this->cdb->get_rows('blocked_dates',array("CAST(end_date as DATE) >" =>  $today), array(), null, false);
+    	$blocked_dates_array = array();
+    	
+    	foreach ($all_blocked_dates as $key => $blocked_dates) {
+    		$start_date = $blocked_dates['start_date'];
+    		$sdate = $blocked_dates['start_date'];
+    		$end_date = $blocked_dates['end_date'];
+    		if($end_date == $start_date){
+    			$blocked_dates_array[] = array(date("Y-m-d", strtotime($start_date)));
+    		} else {
+				while (strtotime($sdate) <= strtotime($end_date)) {	
+					$blocked_dates_array[] = array(date("Y-m-d", strtotime($sdate)));			
+					$sdate = date("Y-m-d", strtotime("+1 day", strtotime($sdate)));
+				}
+    		}
+    	};
+    	return $blocked_dates_array;
+    }
 	public function dequeue_maps(){
 		self::dequeue_script('googlemapapis');
 		//self::inspect_scripts();

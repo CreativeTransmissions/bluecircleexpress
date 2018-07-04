@@ -63,6 +63,12 @@
 							this.initQuoteOptionsTabUI();
 							this.initQuoteOptionsTabEvents();
 						break;
+						case 'tq_pro_blocked_dates':
+							this.initBlockedDatesTabUI();
+							this.initBlockedDatesTabEvents();
+							this.initEditTableEvents('blocked_dates');
+						break;
+
 						case 'tq_pro_form_options':
 						case 'tq_pro_email_options':
 						case 'tq_pro_paypal_options':
@@ -78,12 +84,6 @@
 
 				initDatePicker: function(){
 					var that = this;
-					/*
-					if(this.settings.data.oldestJobDate){
-						var oldestJobDate = new Date(this.settings.data.oldestJobDate);
-					} else {
-						var oldestJobDate =  new Date();
-					};*/
 					var d = new Date();
 					d.setMonth( d.getMonth( ) - 1 );
 					$('.datepicker').datepicker();
@@ -95,7 +95,79 @@
 					$('#to_date').datepicker('setDate', new Date());
 
 				},
+				initBlockedDatesTabUI: function(){
+					var that = this;
+					this.initRangeDatepicker();
+					this.loadTable({
+						table: 'blocked_dates'
+					});
+							
+				},
 
+				initRangeDatepicker:function(){
+					var that = this;
+					var dateFormat = 'mm/dd/yy';
+					start_date = $( "#start_date" ).datepicker({
+						defaultDate: "+1d",
+						changeMonth: true,
+						numberOfMonths: 1,
+						minDate:0,
+						dateFormat:dateFormat,
+						setDate: new Date()
+					}).on( "change", function() {
+						end_date.datepicker( "option", "minDate", that.getDate( this ) );
+					}),
+					end_date = $( "#end_date" ).datepicker({
+						defaultDate: "+1d",
+						changeMonth: true,
+						dateFormat:dateFormat,
+						numberOfMonths: 1,
+						setDate: new Date()
+					}).on( "change", function() {
+						start_date.datepicker( "option", "maxDate", that.getDate( this ) );
+					});
+
+				},
+
+				getDate:function( element ) {
+					var date;
+					var dateFormat = 'mm/dd/yy'
+					try {
+						date = $.datepicker.parseDate( dateFormat, element.value );
+						
+					} catch( error ) {
+						console.log(error)
+						date = null;
+					}
+					return date;
+				},
+
+				initBlockedDatesTabEvents: function(){
+									
+					var that = this;
+
+					//set form to read/populate
+					this.editForm = $('#edit_blocked_dates_form')[0];
+					this.editTable = $('#blocked_dates_table')[0];
+
+					// set form status message
+					this.editRecordMessage = 'Editing blocked dates';
+					this.newRecordMessage = 'Enter New blocked dates'
+
+					
+					$('#clear_blocked_date').on('click', function(e){
+						e.preventDefault();
+						that.clearForm(this);
+						that.updateLegend(that.editForm, that.newRecordMessage);
+					});
+
+					
+					$(this.editForm).on('submit',function(e) {
+					    e.preventDefault();
+					    that.spinner(true);
+					    that.saveRecord(this);
+					});					
+				},
 				initJobsTabEvents: function(){
 					var that = this;
 

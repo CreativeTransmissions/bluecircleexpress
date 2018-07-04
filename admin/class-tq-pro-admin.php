@@ -788,6 +788,15 @@ class TransitQuote_Pro_Admin {
 					'actions'=>array('Edit','Delete')
 				);
 			break;
+			case 'blocked_dates':
+				$defaults = array(
+					'table'=>'blocked_dates',
+					'formats'=>array('start_date'=>'usdate', 'end_date'=>'usdate'),
+					'fields'=>array('id','start_date', 'end_date'),
+					'inputs'=>false,
+					'actions'=>array('Edit','Delete')
+				);
+			break;
 		};
 
 		if(is_array($defaults)){
@@ -904,6 +913,10 @@ class TransitQuote_Pro_Admin {
 			case 'journey_lengths':
 				$empty_colspan = 1;
 				$table_output_name = 'journey lengths';
+				break;
+			case 'blocked_dates':
+				$empty_colspan = 1;
+				$table_output_name = 'blocked dates';
 				break;
 			default:
 				$empty_colspan = 999;

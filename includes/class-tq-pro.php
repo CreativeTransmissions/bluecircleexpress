@@ -419,6 +419,7 @@ class TransitQuote_Pro4 {
 		$cdb->define_table($db_config->get_config('request_types'));
 		$cdb->define_table($db_config->get_config('event_logs')); 
 		$cdb->define_table($db_config->get_config('event_data'));
+		$cdb->define_table($db_config->get_config('blocked_dates'));
 		
 		return $cdb;
 	}
