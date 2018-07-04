@@ -519,32 +519,12 @@ class Admin_Config {
                                                         'type'=>'checkgroup',
                                                         'help'=>'Your customers will only be able to select the payment methods that are selected above.'
                                                      ),
-                                                    'application_client_id'=>array(
-                                                        'id'=>'application_client_id',
-                                                        'label'=>'PayPal Application Client ID',
-                                                        'type'=>'input',
-                                                        'help'=>'Log into PayPal and Create An App to Get This ID.'
-                                                     ),
-                                                    'application_client_secret'=>array(
-                                                        'id'=>'application_client_secret',
-                                                        'label'=>'PayPal Application Client Secret',
-                                                        'type'=>'input',
-                                                        'help'=>'Log into PayPal and Create An App to Get This Code.'
-                                                     ),
-                                                  
+                                                   
                                                     'sales_item_description'=>array(
                                                         'id'=>'sales_item_description',
                                                         'label'=>'Invoice Item Name',
                                                         'type'=>'input',
                                                         'help'=>'This is the item name that will be be listed against the payment in your customers PayPal account or in WooCommerce.'
-                                                     ),
-                                              
-                                                    'sandbox'=>array(
-                                                        'id'=>'sandbox',
-                                                        'label'=>'Use Sandbox/Testing Mode',
-                                                        'type'=>'checkbox',
-                                                        'help'=>'When this box is ticked all payments will be simulated using the PayPal sandbox website.',
-                                                        'default'=>1
                                                      ),
 													 
 												                          	'disable_cart'=>array(
@@ -580,13 +560,7 @@ class Admin_Config {
                                                      )
                                                   )
                                           )
-                              ),
-
-              'tq_pro_paypal_transactions'=>array(
-                              'key'=>'tq_pro_paypal_transactions',
-                              'title'=>'PayPal Transactions',
-                              'sections'=>array()
-                             )
+                              )
 
       );
   }

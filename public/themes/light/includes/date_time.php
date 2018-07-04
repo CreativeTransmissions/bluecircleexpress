@@ -1,4 +1,4 @@
-<div class="half">
+<div class="date-wrap">
     <div class="coll_date_wrap bt-flabels__wrapper">
     	<input name="collection_date" id="collection_date" data-parsley-trigger="select change" required readonly="" class="left collection_date dateclass placeholderclass datepicker" type="text" placeholder="<?php echo self::get_setting('tq_pro_form_options','collection_date_label', 'Collection Date'); ?>">
     	<span class="bt-flabels__error-desc">Required / Invalid <?php echo self::get_setting('tq_pro_form_options','collection_date_label', 'Collection Date'); ?></span>

@@ -220,7 +220,12 @@ class TransitQuote_Pro_Public {
 		// $surcharges = self::get_service_surcharges();
 		$ajax_url = admin_url( 'admin-ajax.php' );
 
+		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
+		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);		
+
 		$tq_settings = array('ajaxurl' => $ajax_url,
+							'ask_for_unit_no'=>self::bool_to_text($this->ask_for_unit_no),
+							'ask_for_postcode'=>self::bool_to_text($this->ask_for_postcode),
 							'geolocate'=>$this->geolocate,
 							'imgurl'=> plugins_url( 'assets/images/', __FILE__ ),
 							'distance_unit'=>$this->distance_unit,

@@ -70,7 +70,11 @@
     content: "\6b";
 }
 /*Font Integration*/
-
+.tq-form .remove-address{
+    display: inline-block;
+    margin-left: 1em;
+    margin-top: 0.8em;
+}
 .transit_main {
     font-family: 'Lato', sans-serif;
     font-weight: 700;
@@ -146,6 +150,10 @@
     width: 100%;
     margin-bottom: 30px;
 }
+.tq-form .add-waypoint {
+    display: inline-block;
+    margin-top: 2em;
+}
 .transit_body {padding:1.75% 2%;background-color: #fbfbfb; float: left; width: 100%; box-sizing: border-box; -webkit-box-sizing: border-box;}
 .transit_body .sub_title {
     color: #3e80fa;
@@ -153,7 +161,6 @@
     display: block;
     margin: 1% 0;
     float: left;
-    width: 100%;
 }
 .transit_body .sub_title i {
     margin-right: 12px;
@@ -218,17 +225,18 @@ input:focus, select, textarea{ outline: none;}
 }
 .half {
     margin-bottom: 1.75%;
-    width: 100%;
+    width: 49%;
     float: left;
 }
-.half .left {
-    width: 49%;
+ .left {
     float: left;
     box-sizing: border-box;
 }
-.half .right {
-    width: 49%;
+.right {
     float: right;
+}
+.half-field {
+    width: 49%;
     box-sizing: border-box;
 }
 
@@ -329,7 +337,8 @@ select {
 }
 @media screen and (max-width:767px) {
     .transit_main h2 {font-size: 1.2em;}
-    .transit_noadress {font-size: 1em; text-align: left;margin-bottom: 2%;}
+    .transit_noadress {font-size: 1em; text-align: left;margin-bottom: 2%;display: block;
+    clear: left;}
     .half .left {width: 100%;margin-bottom: 1.75%;}
     .half .right {width: 100%;float: left;}
     .destination_title_wrap .sub_title {margin-top: 3%; display: block;}
@@ -351,7 +360,11 @@ select {
     .select-wrap:after{top: 11px;}
     .coll_date_wrap:after, .coll_time_wrap:after {top: 10px;}
     .coll_date_wrap { width: 100%;}
-    .coll_time_wrap { float: left; width: 100%;}   
+    .coll_time_wrap { float: left; width: 100%;}  
+    .half {
+        width: 100%;
+    }
+
 }
 /*Media query end*/
 
