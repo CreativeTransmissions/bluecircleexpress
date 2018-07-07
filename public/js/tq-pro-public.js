@@ -465,7 +465,7 @@
 						that.submitForm(submitType);
 					} else {
 						if($(that.element).parsley().validate()){
-							that.submitForm(submitType)
+							that.submitForm(submitType);
 						}						
 					}
 		
