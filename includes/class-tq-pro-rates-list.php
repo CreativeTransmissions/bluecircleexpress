@@ -71,13 +71,15 @@ class TQ_Rates_List {
 		$step = $this->config['step'];
 
 		for ($i=$start_distance; $i <= $end_distance; $i+=$step) { 
-			if(!$calculation->set_distance($i)){
-				return false;
-			};
+			if($i>0){
+				if(!$calculation->set_distance($i)){
+					return false;
+				};
 
-			$quote = $calculation->run();
-			$results[] = array('distance'=>$i,
-							   'quote'=>$quote);
+				$quote = $calculation->run();
+				$results[] = array('distance'=>$i,
+								   'quote'=>$quote);
+			};
 
 		};
 
