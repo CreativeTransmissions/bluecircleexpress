@@ -1335,39 +1335,68 @@ class TransitQuote_Pro_Public {
 				// On delivery
 				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
 				if(empty($job_id)){
-					$job_id = self::save_new_job();;
+					if(self::job_data_is_valid()){
+						$job_id = self::save_new_job();
+						self::get_job_details_from_id($job_id);
+						$response = self::request_payment_on_delivery($job_id);
+					} else {
+						$response = self::build_invalid_job_response();
+					};
 				};
-				self::get_job_details_from_id($job_id);
-				$response = self::request_payment_on_delivery($job_id);
 				break;
 			case 'pay_method_2':
 				// PayPal
 				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
 				if(empty($job_id)){
-					$job_id = self::save_new_job();;
+					if(self::job_data_is_valid()){
+						$job_id = self::save_new_job();						
+						self::get_job_details_from_id($job_id);
+						$response = self::request_payment_paypal($job_id);
+					} else {
+						$response = self::build_invalid_job_response();
+					};
 				};
-				self::get_job_details_from_id($job_id);
-				$response = self::request_payment_paypal($job_id);
 				break;
 			case 'pay_method_3':
 				// Woocommerce
 				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
 				if(empty($job_id)){
-					$job_id = self::save_new_job();;
+					if(self::job_data_is_valid()){
+						$job_id = self::save_new_job();						
+						self::get_job_details_from_id($job_id);
+						$response = self::request_payment_woocommerce($job_id);
+					} else {
+						$response = self::build_invalid_job_response();
+					};
 				};
-				self::get_job_details_from_id($job_id);
-				$response = self::request_payment_woocommerce($job_id);
+
 				break;
 			case 'get_quote': // Payment not required until confirmed by staff
 				$response = self::get_quote();
 				break;
 			case 'book_delivery': // Payment not required until confirmed by staff
-				$job_id = self::save_new_job();
-				self::get_job_details_from_id($job_id);
-				$response = self::request_payment_after_confirmation($job_id);
+				if(self::job_data_is_valid()){
+					$job_id = self::save_new_job();
+					self::get_job_details_from_id($job_id);
+					$response = self::request_payment_after_confirmation($job_id);					
+				} else {
+					$response = self::build_invalid_job_response();
+				};
+
 				break;
 		};
 		return $response;
+	}
+
+	public function job_data_is_valid(){
+		$this->invalid_fields = array();
+		$required_customer_fields = array('first_name, last_name, email');
+		return true;
+	}
+
+	public function build_invalid_job_response(){
+		return array('success'=>'false',
+						'msg'=>'Invalid job data');
 	}
 
 	public function save_new_job(){
