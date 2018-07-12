@@ -38,7 +38,7 @@ class TransitQuote_Pro4 {
 	 * @var      TransitQuote_Pro_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
-	const VERSION = '4.2.0';
+	const VERSION = '4.2.1';
 	/**
 	 * The unique identifier of this plugin.
 	 *
@@ -74,7 +74,7 @@ class TransitQuote_Pro4 {
 
 		$this->plugin_name = 'TransitQuote Pro';
 		$this->plugin_slug = 'tq-pro';
-		$this->version = '4.2.0';
+		$this->version = '4.2.1';
 
 		$this->load_dependencies();
 		$this->set_locale();
