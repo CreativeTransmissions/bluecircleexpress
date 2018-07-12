@@ -5,7 +5,7 @@
 	<div class="failure" style="display:none;">
 		<h2>Something went wrong.</h2><p>Sorry we were unable to save your request, please contact us for assistance with the error message below.</p>
 		<p class="msg"></p>
-	</div
+	</div>
 	<div class="success buttons" style="display:none;">
 		<?php echo self::get_payment_buttons(); ?>
 		<input type="hidden" name="job_id" value="<?php echo self::get_job_id(); ?>"/>
