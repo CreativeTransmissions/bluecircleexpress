@@ -1337,8 +1337,12 @@ class TransitQuote_Pro_Public {
 				if(empty($job_id)){
 					if(self::job_data_is_valid()){
 						$job_id = self::save_new_job();
-						self::get_job_details_from_id($job_id);
-						$response = self::request_payment_on_delivery($job_id);
+						if(empty($job_id)){
+							$response = array('success'=>'false',
+							 					'msg'=>'No job_id for payment on delivery');
+						} else {							
+							$response = self::request_payment_on_delivery($job_id);
+						}				
 					} else {
 						$response = self::build_invalid_job_response();
 					};
@@ -1362,9 +1366,15 @@ class TransitQuote_Pro_Public {
 				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
 				if(empty($job_id)){
 					if(self::job_data_is_valid()){
-						$job_id = self::save_new_job();						
-						self::get_job_details_from_id($job_id);
-						$response = self::request_payment_woocommerce($job_id);
+						$job_id = self::save_new_job();	
+						if(empty($job_id)){
+							$response = array('success'=>'false',
+							 					'msg'=>'No job_id for payment by WooCommerce');
+						} else {
+							self::get_job_details_from_id($job_id);
+							$response = self::request_payment_woocommerce($job_id);							
+						}					
+
 					} else {
 						$response = self::build_invalid_job_response();
 					};
@@ -1390,8 +1400,18 @@ class TransitQuote_Pro_Public {
 
 	public function job_data_is_valid(){
 		$this->invalid_fields = array();
-		$required_customer_fields = array('first_name, last_name, email');
-		return true;
+		$required_customer_fields = array('first_name', 'last_name', 'email');
+		foreach ($required_customer_fields as $key => $field_name) {
+			if(!$this->ajax->param_check(array('name'=>$field_name, 'optional'=>false))){
+				array_push($this->invalid_fields, $field_name);
+			};
+		};
+
+		$journey_order = self::get_journey_order_from_post_data();
+		if(count($journey_order)>2){
+			array_push($this->invalid_fields, 'journey');
+		};
+		return (count($this->invalid_fields)===0);
 	}
 
 	public function build_invalid_job_response(){
@@ -1402,11 +1422,8 @@ class TransitQuote_Pro_Public {
 	public function save_new_job(){
 		//get the job id in submitted form, unless it is a quote request submission
 		$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
-		if(empty($job_id)){
-			$response = self::save_job();
-			if($response['success'] == true){
-				$job_id = $this->job['id'];
-			}
+		if(empty($job_id)){ //save and return job id
+			return self::save_job();
 		};
 		return $job_id;
 	}
@@ -1438,6 +1455,7 @@ class TransitQuote_Pro_Public {
 	}
 
 	public function save_job(){
+		$success = 'true';
 		//get email for notification
 		$email = $this->ajax->param(array('name'=>'email'));
 
@@ -1463,8 +1481,12 @@ class TransitQuote_Pro_Public {
 
 		$this->save_journey();
 		$this->journey_order = $this->get_journey_order_from_post_data();
-		$this->save_locations();
+		if(!$this->save_locations()){
+			$success = 'false';
+			$message = 'Unable to save locations';
+		};
 		if(!$this->save_journeys_locations()){
+			$success = 'false';
 			$message = 'Unable to save route information';
 		};
 
@@ -1475,16 +1497,20 @@ class TransitQuote_Pro_Public {
 			$this->job = self::get_job_details($this->job);
 		};
 
-		
-		$email = self::email_dispatch('New Job Booking - ref: '.$this->job['id']." ".$this->customer['first_name']." ".$this->customer['last_name']);
-		$customer_email = self::email_customer();
 
-		return array('success'=>'true',
-							 'msg'=>$message,
-							 'data'=>array('customer_id'=>$this->customer['id'],
-							 				'job_id'=>$this->job['id']));
-		
 
+		$this->save_job_response = array('success'=>$success,
+										 'msg'=>$message,
+										 'data'=>array('customer_id'=>$this->customer['id'],
+										 				'job_id'=>$this->job['id']));
+
+		if($success==='true'){
+			$email = self::email_dispatch('New Job Booking - ref: '.$this->job['id']." ".$this->customer['first_name']." ".$this->customer['last_name']);
+			$customer_email = self::email_customer();
+			return $this->job['id'];		
+		} else {
+			return false;
+		}
 	}
 
 	private function save_journey(){
@@ -1529,6 +1555,20 @@ class TransitQuote_Pro_Public {
 		return $this->cdb->get_row('locations', $location_id);
 	}
 
+	private function get_locations_from_post_data(){
+		// save all locations in journey
+		$this->locations_in_journey_order = array();
+		foreach ($this->journey_order as $key => $address_index) {
+			// store ids in array ready for save
+			$this->locations_in_journey_order[$key] = array('journey_id' => $this->journey['id'],
+															'location_id'=> $location['id'],
+															'journey_order'=>$key,
+															'created'=>date('Y-m-d G:i:s'),
+															'modified'=>date('Y-m-d G:i:s'));
+		};
+
+	}
+
 	private function save_locations(){
 		// save all locations in journey
 		$this->locations_in_journey_order = array();
@@ -1551,6 +1591,9 @@ class TransitQuote_Pro_Public {
 	private function save_location($address_index){
 
 		$record_data = self::get_location_record_data('locations', $address_index);
+		if(empty($record_data['lat'])||empty($record_data['lng'])||empty($record_data['address'])){
+			return false;
+		};
 		$location_id = self::get_location_by_address($record_data);
 		if(empty($location_id)){
 			//no match, create new location in database
