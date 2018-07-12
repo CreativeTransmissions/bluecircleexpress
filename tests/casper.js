@@ -1,5 +1,5 @@
-casper.test.begin('TransitQuote Premium Tests', 1, function suite(test) {
-    casper.start('http://localhost/demo/transitquote-premium-demo', function() {
+casper.test.begin('TransitQuote Pro Tests', 1, function suite(test) {
+    casper.start('http://localhost/pro', function() {
 
     	testExistenceOfElements();
 
