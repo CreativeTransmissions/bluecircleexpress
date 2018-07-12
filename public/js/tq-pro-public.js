@@ -503,7 +503,7 @@
 						that.submissionSuccess(response, submitType);
 					} else {
 						$('.failure, .progress, .spinner-div').hide();
-						$('.failure .msg').html(response);
+						$('.failure .msg').html(response.msg);
 						$('.failure, .buttons').show();
 					};
 					$('.spinner-div').hide();

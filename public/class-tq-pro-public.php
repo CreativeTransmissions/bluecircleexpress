@@ -57,7 +57,7 @@ class TransitQuote_Pro_Public {
 		$this->plugin_name = $plugin_name;
 		$this->plugin_slug = $plugin_slug;
 		$this->version = $version;
-		$this->debug = false;
+		$this->debug = true;
 		$this->log_requests = false;
 		$this->prefix = 'tq_pro4';
 		$this->cdb = TransitQuote_Pro4::get_custom_db();
@@ -1369,11 +1369,11 @@ class TransitQuote_Pro_Public {
 						$job_id = self::save_new_job();	
 						if(empty($job_id)){
 							$response = array('success'=>'false',
-							 					'msg'=>'No job_id for payment by WooCommerce');
+							 					'msg'=>'No job id for payment with WooCommerce');
 						} else {
 							self::get_job_details_from_id($job_id);
 							$response = self::request_payment_woocommerce($job_id);							
-						}					
+						};					
 
 					} else {
 						$response = self::build_invalid_job_response();
@@ -1392,7 +1392,6 @@ class TransitQuote_Pro_Public {
 				} else {
 					$response = self::build_invalid_job_response();
 				};
-
 				break;
 		};
 		return $response;
@@ -1403,20 +1402,50 @@ class TransitQuote_Pro_Public {
 		$required_customer_fields = array('first_name', 'last_name', 'email');
 		foreach ($required_customer_fields as $key => $field_name) {
 			if(!$this->ajax->param_check(array('name'=>$field_name, 'optional'=>false))){
-				array_push($this->invalid_fields, $field_name);
+				array_push($this->invalid_fields, array('name'=>str_replace('_', ' ', $field_name),
+														'error'=>'empty'));
 			};
 		};
 
 		$journey_order = self::get_journey_order_from_post_data();
-		if(count($journey_order)>2){
-			array_push($this->invalid_fields, 'journey');
+		if(count($journey_order)<2){
+			array_push($this->invalid_fields, array('name'=>$field_name,
+														'error'=>'Less than 2 addresses'));
+
 		};
+
+		foreach ($journey_order as $key => $address_index) {
+			$record_data = self::get_location_record_data('locations', $address_index);
+			$location_name = 'location '.$address_index;
+			if(empty($record_data['lat'])){
+				$field_name = $location_name.'.lat';
+				array_push($this->invalid_fields, array('name'=>$field_name,
+														'error'=>'empty'));
+			};
+			if(empty($record_data['lng'])){
+				$field_name = $location_name.'.lng';
+				array_push($this->invalid_fields, array('name'=>$field_name,
+														'error'=>'empty'));
+			};
+			if(empty($record_data['address'])){
+				$field_name = $location_name.'.address';
+				array_push($this->invalid_fields, array('name'=>$field_name,
+														'error'=>'empty'));
+			};
+		};
+
 		return (count($this->invalid_fields)===0);
 	}
 
 	public function build_invalid_job_response(){
+		$error_list = '';
+		foreach ($this->invalid_fields as $key => $invalid_field) {
+			$error_list .= $invalid_field['name'].' - '.$invalid_field['error'].'<br/>';
+		}
+
 		return array('success'=>'false',
-						'msg'=>'Invalid job data');
+						'msg'=>'Invalid information recieved:<br/>'.$error_list,
+						'invalid_fields'=>$this->invalid_fields);
 	}
 
 	public function save_new_job(){
@@ -1456,6 +1485,9 @@ class TransitQuote_Pro_Public {
 
 	public function save_job(){
 		$success = 'true';
+		//default message
+		$message ='Request booked successfully';
+
 		//get email for notification
 		$email = $this->ajax->param(array('name'=>'email'));
 
@@ -1489,21 +1521,11 @@ class TransitQuote_Pro_Public {
 			$success = 'false';
 			$message = 'Unable to save route information';
 		};
-
-		//default message
-		$message ='Request booked successfully';
-		
 		if(self::job_is_available()){
 			$this->job = self::get_job_details($this->job);
 		};
 
-
-
-		$this->save_job_response = array('success'=>$success,
-										 'msg'=>$message,
-										 'data'=>array('customer_id'=>$this->customer['id'],
-										 				'job_id'=>$this->job['id']));
-
+		//echo 'success: '.$success.' '.$message;
 		if($success==='true'){
 			$email = self::email_dispatch('New Job Booking - ref: '.$this->job['id']." ".$this->customer['first_name']." ".$this->customer['last_name']);
 			$customer_email = self::email_customer();
@@ -1585,6 +1607,8 @@ class TransitQuote_Pro_Public {
 															'created'=>date('Y-m-d G:i:s'),
 															'modified'=>date('Y-m-d G:i:s'));
 		};
+
+		return true;
 
 	}
 
@@ -1703,7 +1727,8 @@ class TransitQuote_Pro_Public {
 									'data'=>$step));
 				return false;
 			}
-		}				
+		}
+		return true;	
 	}
 	/*
 		Payment Methods After Recieving Quote 
@@ -1765,7 +1790,7 @@ class TransitQuote_Pro_Public {
 	private function request_payment_woocommerce($job_id = null){
 		if(empty($job_id)){
 			return array('success'=>'false',
-							 'msg'=>'No job_id for payment by woocommerce');
+							 'msg'=>'request_payment_woocommerce: No job_id for payment by woocommerce');
 		};
 
 		if(!self::woocommerce_is_activated()){
