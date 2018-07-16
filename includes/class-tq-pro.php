@@ -545,9 +545,9 @@ class TransitQuote_Pro4 {
 		if($cdb->get_count('payment_types')==0){
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
-			$cdb->update_row('payment_types', array('name' => 'On Delivery', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_types', array('name' => 'Pay Online', 'available'=>0, 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_types', array('name'=>'WooCommerce', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_types', array('id'=>1, 'name' => 'On Delivery', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_types', array('id'=>2, 'name' => 'Pay Online', 'available'=>0, 'created'=>$created, 'modified'=>$modified )); //was paypal
+			$cdb->update_row('payment_types', array('id'=>4, 'name'=>'WooCommerce', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
 		};
 	}
 

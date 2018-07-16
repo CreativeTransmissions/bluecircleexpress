@@ -695,6 +695,12 @@ class TransitQuote_Pro_Public {
 		};
 		if(!isset($this->woocommerce)){
 			$disable_cart = self::get_setting('tq_pro_paypal_options','disable_cart');
+			if($disable_cart=='true'){
+				$this->add_to_cart_redirect_url = wc_get_cart_url();
+			} else {
+				$this->add_to_cart_redirect_url = wc_get_checkout_url();
+			};
+
 			$redirect_page_after_payment = self::get_setting('tq_pro_paypal_options','redirect_page_after_payment');
 			$woo_product_id = self::get_setting('tq_pro_paypal_options','woo_product_id');
 			$this->woocommerce = new CT_WOOCOMMERCE(array('disable_cart'=>$disable_cart, 'redirect_page_after_payment'=>$redirect_page_after_payment, 'woo_product_id'=>$woo_product_id));
@@ -1341,7 +1347,28 @@ class TransitQuote_Pro_Public {
 		if(self::job_data_is_valid()){
 			$job_id = self::save_new_job();
 			self::get_job_details_from_id($job_id);
-			$response = self::request_payment_after_confirmation($job_id);					
+			if(self::is_woocommerce_request()){
+				self::get_woocommerce_config();
+				if(!self::update_payment_type_id($job_id, 3)){
+					$response = array('success'=>'false',
+									 'msg'=>'Unable to update job '.$job_id.' to payment by woocommerce');
+					$this->ajax->respond($response);
+				};
+
+				//set payment status to 1 = Awaiting Payment
+				if(!self::update_payment_status_id($job_id, 1)){
+					$response = array('success'=>'false',
+									 'msg'=>'Unable to update job '.$job_id.' to payment by woocommerce');
+					$this->ajax->respond($response);		
+				};
+
+				$response = self::build_response_save_job_for_woocommerce($job_id);	
+
+			} else {
+
+				$response = self::build_response_save_job($job_id);					
+
+			}
 		} else {
 			$response = self::build_invalid_job_response();
 		}
@@ -1352,6 +1379,16 @@ class TransitQuote_Pro_Public {
 		};
 
 		$this->ajax->respond($response);		
+	}
+
+	private function is_woocommerce_request(){
+		$submit_type = $this->ajax->param(array('name'=>'submit_type', 'optional'=>true));
+		if(($submit_type === 'pay_method_3')||($submit_type === 'pay_method_4')){
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 	private function process_submit_type($submit_type){
@@ -1479,6 +1516,31 @@ class TransitQuote_Pro_Public {
 		};
 		return $job_id;
 	}
+
+
+	private function build_response_save_job($job_id = null){
+	
+		return array(	'success'=>'true',
+						'success_message'=>'Your job was recieved successfully<br/>The delivery reference number is: '.$job_id.'</p>',
+						'data'=>array('customer_id'=>$this->customer['id'],
+					 				'job_id'=>$job_id,
+					 				'quote_id'=>$this->quote['id'],
+					 				'email'=>$this->customer['email']));
+
+	}
+
+	private function build_response_save_job_for_woocommerce($job_id = null){
+	
+		return array(	'success'=>'true',
+						'success_message'=>'Your job was recieved successfully<br/>The delivery reference number is: '.$job_id.'</p>',
+						'data'=>array('customer_id'=>$this->customer['id'],
+					 				'job_id'=>$job_id,
+					 				'quote_id'=>$this->quote['id'],
+					 				'email'=>$this->customer['email'],
+					 				'product_id'=>$this->woo_product_id,
+					 				'add_to_cart_redirect_url'=>$this->add_to_cart_redirect_url));
+
+	}		
 
 	public function get_job_details_from_id($job_id){
 
@@ -1756,6 +1818,24 @@ class TransitQuote_Pro_Public {
 	/*
 		Payment Methods After Recieving Quote 
 	*/
+	
+
+	private function request_payment_after_confirmation($job_id = null){
+		if(empty($job_id)){
+			return array('success'=>'false',
+							 'msg'=>'No job_id for payment on delivery');
+		};
+
+		return array(	'success'=>'true',
+						'success_message'=>'Your job was recieved successfully<br/>The delivery reference number is: '.$job_id.'</p>',
+						'data'=>array('customer_id'=>$this->customer['id'],
+					 				'job_id'=>$job_id,
+					 				'quote_id'=>$this->quote['id'],
+					 				'email'=>$this->customer['email']),
+					 	'payment_method'=>1);
+
+	}
+
 	private function request_payment_on_delivery($job_id = null){
 		if(empty($job_id)){
 			return array('success'=>'false',

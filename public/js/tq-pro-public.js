@@ -253,6 +253,7 @@
 					dropOfLng: 'address_1_lng',
 					afterQuote: function(){
 						//console.log('got distance, getting quote');
+						that.updateFormAction('tq_pro4_get_quote');
 						that.submitForm('get_quote');
 					},
 
@@ -481,8 +482,9 @@
 			onClickSubmitButton: function(btn){
 				var submitType = $(btn).val();
 				switch(submitType){
-					case 'get_quote'
+					case 'get_quote':
 						this.updateFormAction('tq_pro4_get_quote');
+						this.submitForm(submitType);
 						break;
 					case 'pay_method_1':
 					case 'pay_method_2':
@@ -491,7 +493,7 @@
 							this.updateFormAction('tq_pro4_save_job');
 							this.submitForm(submitType);
 						};
-					}			
+					break;			
 				}
 			},
 
@@ -542,30 +544,101 @@
 				this.hideStatusMessages();
 				switch(submitType){
 					case 'get_quote':
-						if(response.data.quote){
-							this.populateQuoteFields(response.data.quote);
-							this.showQuoteFields();
-						};
-						
+						this.processSubmissionSuccessResponseGetQuote(response);
 					break;
 					case 'book_delivery':
-						if(response.data.job_id){
-							this.populateFormWithJobId(response);
-						};
-						$('.on-delivery').show();
-						$('.on-delivery-msg-succcess').html(response.success_message);
-						$('.tq-form-fields-container').hide();
+						this.processSubmissionSuccessResponseOnDelivery(response);
+						
 					break;
 					case 'pay_method_1':
+						this.processSubmissionSuccessResponseOnDelivery(response);
 					case 'pay_method_2':
 					case 'pay_method_3':
 					case 'pay_method_4':
-						if(response.data.job_id){
-							this.populateFormWithJobId(response);
-						};
-						this.processPaymentResponse(response);
+						this.processSubmissionSuccessWooCommerce(response);
 					break;
 				};
+			},
+
+			processSubmissionSuccessResponseGetQuote: function(response){
+				if(response.data.quote){
+					this.populateQuoteFields(response.data.quote);
+					this.showQuoteFields();
+				} else {
+					$('.failure .msg').html('Unable to calculate quote.');
+					$('.failure').show();
+				}
+			},
+
+
+			processSubmissionSuccessResponseOnDelivery: function(response){
+				if(response.data.job_id){
+					this.populateFormWithJobId(response);
+					$('.on-delivery').show();
+					$('.on-delivery-msg-succcess').html(response.success_message);
+					$('.tq-form-fields-container').hide();							
+				} else {
+					$('.failure .msg').html('Unable to book your job.');
+					$('.failure').show();
+				}
+			},	
+
+			processSubmissionSuccessWooCommerce: function(response){
+				if(response.data.job_id){
+					this.populateFormWithJobId(response);
+					var paymentMethod = this.getPaymentMethodFromResponse(response);
+					var wooCommerceFormData = this.getWooCommerceFormData(response.data);
+					console.log(wooCommerceFormData);
+					if(this.haveRequiredWooCommerceData(wooCommerceFormData)){
+						this.createHiddenWooCommerceForm(wooCommerceFormData);
+						console.log('perparing to submit to woocommerce');
+						this.submitHiddenWooCommerceForm();
+					};
+				};
+			},
+
+			haveRequiredWooCommerceData: function(wooCommerceFormData) {
+				if( (wooCommerceFormData.productId) &&
+					(wooCommerceFormData.jobId) &&
+					(wooCommerceFormData.firstName) &&
+					(wooCommerceFormData.lastName) &&
+					(wooCommerceFormData.email)) {
+					return true;
+				} else {
+					console.log('missing data for wooCommerceFormData submission');
+					return false;
+				}
+			},
+
+			getWooCommerceFormData: function(responseData){
+				// init non required proerties to to empty string
+				var formData = {phone: '',
+								description: '',
+								addToCardRedirectUrl:''};
+
+					formData.firstName = $(".bt-flabels__wrapper input#first_name").val();
+					formData.lastName = $(".bt-flabels__wrapper input#last_name").val();
+					formData.phone = $(".bt-flabels__wrapper input.phone").val();
+					formData.email = $(".bt-flabels__wrapper input#email").val();
+					formData.description = $(".bt-flabels__wrapper textarea#description").val();
+
+					if(responseData.product_id){
+						formData.productId = responseData.product_id;						
+					};
+					if(responseData.job_id){
+						formData.jobId = responseData.job_id;		
+					};
+					if(responseData.add_to_cart_redirect_url){
+						formData.addToCardRedirectUrl = responseData.add_to_cart_redirect_url;						
+					};
+
+				return formData;
+			},
+
+
+			submitHiddenWooCommerceForm(){
+				debugger;
+				$('#woocommerce_paynow').submit();						
 			},
 
 			populateQuoteFields: function(quote){
@@ -588,14 +661,12 @@
 				$('.tq-form-fields-container').removeClass('hidden');
 			},
 
-			processPaymentResponse: function(response){
+			getPaymentMethodFromResponse: function(response){
 				if(this.hasValidPaymentMethod(response)){
 					var paymentMethod = this.getPaymentMethodFromResponse(response);
-						paymentMethod = parseInt(paymentMethod);
-					if(paymentMethod=== 1 ||  paymentMethod === 0){
-						$('.on-delivery-msg-succcess').html(response.success_message);
-					};
-					this.showPaymentButton(paymentMethod, response.data);
+						return parseInt(paymentMethod);
+				} else {
+					return false;
 				}
 			},
 
@@ -640,6 +711,20 @@
 				$('input[name="job_id"]').val(response.data.job_id);
 			},
 
+			createHiddenWooCommerceForm: function(data){
+			
+				var form = $('<form method="post" id="woocommerce_paynow" action="'+data.addToCardRedirectUrl+'?add-to-cart=' + data.productId + '&dynamic_price=true">' +
+				  '<input type="hidden" name="job_id" value="' + data.jobId + '" />' + 
+				  '<input type="hidden" name="billing_first_name" value="' + data.firstName + '" />' + 
+				  '<input type="hidden" name="billing_last_name" value="' + data.lastName + '" />' + 
+				  '<input type="hidden" name="billing_phone" value="' + data.phone + '" />' + 
+				  '<input type="hidden" name="billing_email" value="' + data.email + '" />' + 
+				  '<input type="hidden" name="order_comments" value="' + data.description + '" />' + 
+				  '<input type="hidden" name="autofill" value="true" />' + 
+				  '</form>' );
+				$('#woocommerce').append(form);
+			},
+
 			showPaymentButton: function(paymentMethod, data){
 				switch(paymentMethod){
 					case 1:
@@ -658,23 +743,7 @@
 						
 					break;
 					case 3:
-						var first_name = $(".bt-flabels__wrapper input#first_name").val();
-						var last_name = $(".bt-flabels__wrapper input#last_name").val();
-						var phone = $(".bt-flabels__wrapper input.phone").val();
-						var email = $(".bt-flabels__wrapper input#email").val();
-						var description = $(".bt-flabels__wrapper textarea#description").val();
-						var form = $('<form method="post" id="woocommerce_paynow" action="?add-to-cart=' + data.product_id + '&dynamic_price=true">' +
-						  '<input type="hidden" name="job_id" value="' + data.job_id + '" />' + 
-						  '<input type="hidden" name="billing_first_name" value="' + first_name + '" />' + 
-						  '<input type="hidden" name="billing_last_name" value="' + last_name + '" />' + 
-						  '<input type="hidden" name="billing_phone" value="' + phone + '" />' + 
-						  '<input type="hidden" name="billing_email" value="' + email + '" />' + 
-						  '<input type="hidden" name="order_comments" value="' + description + '" />' + 
-						  '<input type="hidden" name="autofill" value="true" />' + 
-						  '</form>' );
-						$('#woocommerce').append(form);
-						debugger;
-						$('#woocommerce_paynow').submit();
+						
 					break;
 				}
 			},
