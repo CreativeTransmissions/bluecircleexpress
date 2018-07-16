@@ -320,7 +320,8 @@ class TransitQuote_Pro4 {
 
 		$this->loader->add_action( 'wp_ajax_tq_pro4_save_job', $this->plugin_public, 'tq_pro_save_job_callback');	
 		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro4_save_job', $this->plugin_public, 'tq_pro_save_job_callback');	
-		$this->loader->add_action( 'wp_ajax_nopriv_get_quote', $this->plugin_public, 'tq_pro_save_job_callback' );
+		$this->loader->add_action( 'wp_ajax_tq_pro4_get_quote', $this->plugin_public, 'tq_pro_get_quote_callback' );
+		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro4_get_quote', $this->plugin_public, 'tq_pro_get_quote_callback' );
 		$this->loader->add_action( 'wp_ajax_create_paypal_payment', $this->plugin_public, 'create_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_nopriv_create_paypal_payment', $this->plugin_public, 'create_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_execute_paypal_payment', $this->plugin_public, 'execute_paypal_payment' );

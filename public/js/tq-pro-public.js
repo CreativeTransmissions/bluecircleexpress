@@ -460,14 +460,8 @@
 				$(this.element).on('click','button:submit', function(e){
 					e.preventDefault();
 					var btn = e.target;
-					var submitType = $(btn).val();
-					if(submitType==='get_quote'){
-						that.submitForm(submitType);
-					} else {
-						if($(that.element).parsley().validate()){
-							that.submitForm(submitType);
-						}						
-					}
+	
+					that.onClickSubmitButton(btn);
 		
 				});
 
@@ -482,6 +476,23 @@
 					}*/
 				});
 				return true;
+			},
+
+			onClickSubmitButton: function(btn){
+				var submitType = $(btn).val();
+				switch(submitType){
+					case 'get_quote'
+						this.updateFormAction('tq_pro4_get_quote');
+						break;
+					case 'pay_method_1':
+					case 'pay_method_2':
+					case 'pay_method_3':
+						if($(this.element).parsley().validate()){
+							this.updateFormAction('tq_pro4_save_job');
+							this.submitForm(submitType);
+						};
+					}			
+				}
 			},
 
 			submitForm: function(submitType){
@@ -662,6 +673,7 @@
 						  '<input type="hidden" name="autofill" value="true" />' + 
 						  '</form>' );
 						$('#woocommerce').append(form);
+						debugger;
 						$('#woocommerce_paynow').submit();
 					break;
 				}
@@ -700,6 +712,10 @@
 
 				//check if route is now available
 				this.calculator.checkForRoute();	
+			},
+
+			updateFormAction: function(formAction){
+				$('form.tq-form input[name="action"]').val(formAction);
 			},
 
 			updateProgressMessage: function(msg){

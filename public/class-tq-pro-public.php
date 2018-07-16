@@ -1,6 +1,6 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE );
- ini_set('display_errors', 1);*/
+error_reporting(E_ERROR | E_PARSE );
+ ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
  *
@@ -1305,7 +1305,7 @@ class TransitQuote_Pro_Public {
 		return $response;
 	}
 
-	public function tq_pro_save_job_callback(){
+	public function tq_pro_get_quote_callback(){
 		$this->plugin = new TransitQuote_Pro4();	
 		$this->cdb = $this->plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
@@ -1317,8 +1317,34 @@ class TransitQuote_Pro_Public {
 
 		// get the submit type for the submitted qutoe form
 		$submit_type = $this->ajax->param(array('name'=>'submit_type', 'optional'=>true));
-		$response = self::process_submit_type($submit_type);
+		$response = self::get_quote($submit_type);
 
+
+		if($response === false){
+			$response = array('success'=>false, 
+								'msg'=>'Sorry, an error occured and we are unable to process this request.');
+		};
+
+		$this->ajax->respond($response);		
+	}	
+
+	public function tq_pro_save_job_callback(){
+		$this->plugin = new TransitQuote_Pro4();	
+		$this->cdb = $this->plugin->get_custom_db();
+		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		
+		// save job request from customer facing form
+		if($this->log_requests == true){
+			$this->ajax->log_requests();
+		};
+
+		if(self::job_data_is_valid()){
+			$job_id = self::save_new_job();
+			self::get_job_details_from_id($job_id);
+			$response = self::request_payment_after_confirmation($job_id);					
+		} else {
+			$response = self::build_invalid_job_response();
+		}
 
 		if($response === false){
 			$response = array('success'=>false, 
@@ -1380,9 +1406,6 @@ class TransitQuote_Pro_Public {
 					};
 				};
 
-				break;
-			case 'get_quote': // Payment not required until confirmed by staff
-				$response = self::get_quote();
 				break;
 			case 'book_delivery': // Payment not required until confirmed by staff
 				if(self::job_data_is_valid()){
