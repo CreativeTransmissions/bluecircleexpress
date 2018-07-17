@@ -1390,35 +1390,27 @@ class TransitQuote_Pro_Public {
 		if(self::job_data_is_valid()){
 			$job_id = self::save_new_job();
 			self::get_job_details_from_id($job_id);
-			if(self::is_woocommerce_request()){
-				self::get_woocommerce_config();
-				if(!self::update_payment_type_id($job_id, 3)){
-					$response = array('success'=>'false',
-									 'msg'=>'Unable to update job '.$job_id.' to payment by woocommerce');
-					$this->ajax->respond($response);
-				};
 
-				//set payment status to 1 = Awaiting Payment
-				if(!self::update_payment_status_id($job_id, 1)){
-					$response = array('success'=>'false',
-									 'msg'=>'Unable to update job '.$job_id.' to payment by woocommerce');
-					$this->ajax->respond($response);		
-				};
+			if(!self::update_payment_type_id($job_id, 1)){
+				$response = array('success'=>'false',
+									 'msg'=>'Unable to update job '.$job_id.' to payment on delivery');
+				$this->ajax->respond($response);		
+				return false;
+			};
 
-				$response = self::build_response_save_job_for_woocommerce($job_id);	
 
-			} else {
+			//set payment status to 1 = Awaiting Payment
+			if(!self::update_payment_status_id($job_id, 1)){
+				return array('success'=>'false',
+								 'msg'=>'Unable to update job '.$job_id.' to awaiting payment');
+				$this->ajax->respond($response);
+				return false;
+			};
+			
+			$response = self::build_response_save_job($job_id);					
 
-				$response = self::build_response_save_job($job_id);					
-
-			}
 		} else {
 			$response = self::build_invalid_job_response();
-		}
-
-		if($response === false){
-			$response = array('success'=>false, 
-								'msg'=>'Sorry, an error occured and we are unable to process this request.');
 		};
 
 		$this->ajax->respond($response);		

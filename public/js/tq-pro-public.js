@@ -293,6 +293,7 @@
 		            onSet: function(context) {
 		            	var date = that.dateConverter(context.select);
 		            	$('#delivery_date').val(date);
+		            	that.updateFormAction('tq_pro4_get_quote');
 		            	that.calculator.updateQuote();
 
 		            	var selectedDate = date;
@@ -327,6 +328,7 @@
 					format:'HH:i',
 					interval: parseInt(interval),
 					onSet: function(context) {
+						that.updateFormAction('tq_pro4_get_quote');
 				    	that.calculator.updateQuote();
 				  	}
 				});
@@ -453,7 +455,7 @@
 					e.preventDefault();
 					var btn = e.target;
 					if($(that.element).parsley().validate()){
-						that.submitForm(btn)
+						that.onClickSubmitButton(btn);
 					};
 					
 				});
@@ -461,7 +463,6 @@
 				$(this.element).on('click','button:submit', function(e){
 					e.preventDefault();
 					var btn = e.target;
-	
 					that.onClickSubmitButton(btn);
 		
 				});
@@ -487,10 +488,16 @@
 						this.submitForm(submitType);
 						break;
 					case 'pay_method_1':
-					case 'pay_method_2':
-					case 'pay_method_3':
 						if($(this.element).parsley().validate()){
 							this.updateFormAction('tq_pro4_save_job');
+							this.submitForm(submitType);
+						};
+						break;
+					case 'pay_method_2':
+					case 'pay_method_3':
+					case 'pay_method_4':
+						if($(this.element).parsley().validate()){
+							this.updateFormAction('tq_pro4_pay_now');
 							this.submitForm(submitType);
 						};
 					break;			
