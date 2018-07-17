@@ -695,10 +695,10 @@ class TransitQuote_Pro_Public {
 		};
 		if(!isset($this->woocommerce)){
 			$disable_cart = self::get_setting('tq_pro_paypal_options','disable_cart');
-			if($disable_cart=='true'){
-				$this->add_to_cart_redirect_url = wc_get_cart_url();
-			} else {
+			if($disable_cart){
 				$this->add_to_cart_redirect_url = wc_get_checkout_url();
+			} else {
+				$this->add_to_cart_redirect_url = wc_get_cart_url();
 			};
 
 			$redirect_page_after_payment = self::get_setting('tq_pro_paypal_options','redirect_page_after_payment');

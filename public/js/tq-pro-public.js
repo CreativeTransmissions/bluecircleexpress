@@ -637,7 +637,6 @@
 
 
 			submitHiddenWooCommerceForm(){
-				debugger;
 				$('#woocommerce_paynow').submit();						
 			},
 
