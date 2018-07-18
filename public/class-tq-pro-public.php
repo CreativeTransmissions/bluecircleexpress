@@ -1843,6 +1843,11 @@ class TransitQuote_Pro_Public {
 		//get parameters
 		foreach ($fields as $key => $field) {
 			switch($field){
+				case 'start_date':
+				case 'end_date':					
+					$chosen_date = $this->ajax->param(array('name'=>$field, 'optional'=>false));
+					$record_data[$field] = date('Y-m-d H:i:s',strtotime($chosen_date));
+					break;
 				case 'created':
 				case 'modified':
 				case 'purchase_date':
