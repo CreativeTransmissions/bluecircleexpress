@@ -124,7 +124,10 @@ class TQ_Calculation {
 		if(is_nan($distance)){
 			return false;
 		};
-
+		if($distance == 0){
+			return false;
+		};
+		
 		$this->config['distance'] = $distance;
 		return true;
 	}

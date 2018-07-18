@@ -465,7 +465,7 @@
 						that.submitForm(submitType);
 					} else {
 						if($(that.element).parsley().validate()){
-							that.submitForm(submitType)
+							that.submitForm(submitType);
 						}						
 					}
 		
@@ -503,7 +503,7 @@
 						that.submissionSuccess(response, submitType);
 					} else {
 						$('.failure, .progress, .spinner-div').hide();
-						$('.failure .msg').html(response);
+						$('.failure .msg').html(response.msg);
 						$('.failure, .buttons').show();
 					};
 					$('.spinner-div').hide();

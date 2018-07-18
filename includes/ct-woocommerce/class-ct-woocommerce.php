@@ -119,22 +119,20 @@ class CT_WOOCOMMERCE {
 	
 	//skip cart page
 	public function skip_woocommerce_cart($wc_get_cart_url) {
-			global $woocommerce;
+		global $woocommerce;
 
-			$product_id = 0;
-			if(isset($_GET['add-to-cart'])) {
-				$product_id = (int) apply_filters( 'woocommerce_add_to_cart_product_id', $_GET['add-to-cart'] );
-			    $checkout_url = wc_get_checkout_url();
-			}
+		$product_id = 0;
+		if(isset($_GET['add-to-cart'])) {
+			$product_id = (int) apply_filters( 'woocommerce_add_to_cart_product_id', $_GET['add-to-cart'] );
+		};
 
-	
-			if($product_id == $this->config['woo_product_id'] && $this->config['disable_cart']) {
-				return $checkout_url;
-			} else if ($product_id == $this->config['woo_product_id']) {
-				
-				return wc_get_cart_url();
-			}
-			return $wc_get_cart_url;
+		if($product_id == $this->config['woo_product_id'] && $this->config['disable_cart']) {
+			$checkout_url = wc_get_checkout_url();
+			return $checkout_url;
+		} else if ($product_id == $this->config['woo_product_id']) {
+			
+			return wc_get_cart_url();
+		}
 	}
 	
 	//sets jobid to order meta
