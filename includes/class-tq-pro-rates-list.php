@@ -47,14 +47,27 @@ class TQ_Rates_List {
 	}
 
 	private function get_all_possible_rate_variations(){
-		$rate_variations_sql = self::get_rate_variations_sql();
+		$rate_variations_sql = self::get_rates_varations_sql();
 		return $this->cdb->query($rate_variations_sql);
 	}
 
-	private function get_rate_variations_sql(){
-		return "SELECT distinct service_id, vehicle_id, journey_length_id
-					FROM transitquotepro.wp_tq_pro4_rates
-			 	order by service_id asc, vehicle_id asc, journey_length_id asc";
+	private function get_rates_varations_sql(){
+		$rates_table_name = $this->cdb->get_table_full_name('rates');
+		$services_table_name = $this->cdb->get_table_full_name('services');
+		$vehicles_table_name = $this->cdb->get_table_full_name('vehicles');
+		$journey_lengths_table_name = $this->cdb->get_table_full_name('journey_lengths');
+
+		$sql = "SELECT distinct service_id, s.name as service_name, vehicle_id, v.name as vehicle_name, journey_length_id, jl.distance
+					FROM ".$rates_table_name." r
+						left join ".$services_table_name." s 
+							on r.service_id = s.id 
+				        left join ".$vehicles_table_name." v
+							on r.vehicle_id = v.id
+				        left join ".$journey_lengths_table_name." jl
+							on r.journey_length_id = jl.id 
+				        order by service_id asc,vehicle_id asc,journey_length_id asc";
+		
+		return $sql;
 	}
 
 	public function render_rates_list($variation){
@@ -65,7 +78,6 @@ class TQ_Rates_List {
 	private function get_rates_list_for_variation($variation){
 		$results = array();
 		$calculation = self::get_calculation_for_variation($variation);
-		
 		$start_distance = $this->config['range_start'];
 		$end_distance = $this->config['range_end'];
 		$step = $this->config['step'];
@@ -80,6 +92,7 @@ class TQ_Rates_List {
 				$results[] = array('distance'=>$i,
 								   'quote'=>$quote);
 			};
+			
 
 		};
 
@@ -126,11 +139,7 @@ class TQ_Rates_List {
 		$header_row = '<tr><th>Distance</th><th>Cost</th><th>Tax</th><th>Total</th></tr><tr>';
 		foreach ($rates_list as $key => $journey) {
 			$journey_rows[] = '<td>'.$journey['distance'].'</td><td>'.$journey['quote']['distance_cost'].'</td><td>'.$journey['quote']['tax_cost'].'</td><td>'.$journey['quote']['total'].'</td>';
-		/*	echo '<pre>';
-			print_r($journey['quote']);
-					echo '</pre>';*/
-
-		}
+		};
 		$html = '<table>'.$header_row.implode($journey_rows, '</tr><tr>').'</tr></table>';
 		echo $html;
 	}

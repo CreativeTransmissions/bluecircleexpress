@@ -93,7 +93,7 @@ class TransitQuote_Pro_Public {
 		wp_enqueue_style( $this->plugin_slug . '-timepicker-styles', plugins_url( 'css/jquery-ui-timepicker-addon.css', __FILE__ ), array(), $this->version );
 
 		wp_enqueue_style( $this->plugin_slug . '-datetimepicker-styles', plugins_url( 'css/datetimepicker.css', __FILE__ ), array(), $this->version );
-		
+		wp_enqueue_style( $this->plugin_slug . '-shared-plugin-styles', plugins_url( 'css/shared.css', __FILE__ ), array(), $this->version );		
 		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugin_dir_url( __FILE__ ) . 'themes/'.strtolower($this->theme).'/css/theme.css', array(), $this->version );
 
 		wp_enqueue_style( $this->plugin_slug . '-parsley-styles', plugin_dir_url( __FILE__ ) . 'css/parsley.css', array(), $this->version );
@@ -177,6 +177,10 @@ class TransitQuote_Pro_Public {
 	    foreach ($posts as $post) {
 	        // check the post content for the short code
 	        if ( strrpos(strtolower($post->post_content), '[transitquote_pro')>-1){
+	            // we have found a post with the short code
+	           return true;
+	        };
+	        if ( strrpos(strtolower($post->post_content), '[tq_pro_display_rates_list')>-1){
 	            // we have found a post with the short code
 	           return true;
 	        }
