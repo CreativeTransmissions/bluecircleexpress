@@ -595,10 +595,8 @@
 					this.populateFormWithJobId(response);
 					var paymentMethod = this.getPaymentMethodFromResponse(response);
 					var wooCommerceFormData = this.getWooCommerceFormData(response.data);
-					console.log(wooCommerceFormData);
 					if(this.haveRequiredWooCommerceData(wooCommerceFormData)){
 						this.createHiddenWooCommerceForm(wooCommerceFormData);
-						console.log('perparing to submit to woocommerce');
 						this.submitHiddenWooCommerceForm();
 					};
 				};
@@ -612,7 +610,6 @@
 					(wooCommerceFormData.email)) {
 					return true;
 				} else {
-					console.log('missing data for wooCommerceFormData submission');
 					return false;
 				}
 			},

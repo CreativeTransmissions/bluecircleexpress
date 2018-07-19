@@ -19,3 +19,8 @@ div.rates-list {
 .hidden {
 	display: none;
 }
+.tq-form .progress {
+    background: transparent;
+    background-image: none;
+    box-shadow: none;
+}

@@ -57,7 +57,7 @@ class TQ_Rates_List {
 		$vehicles_table_name = $this->cdb->get_table_full_name('vehicles');
 		$journey_lengths_table_name = $this->cdb->get_table_full_name('journey_lengths');
 
-		$sql = "SELECT distinct service_id, s.name as service_name, vehicle_id, v.name as vehicle_name, journey_length_id, jl.distance
+		$sql = "SELECT distinct service_id, s.name as service_name, vehicle_id, v.name as vehicle_name, journey_length_id, jl.distance, r.amount, r.unit, r.hour
 					FROM ".$rates_table_name." r
 						left join ".$services_table_name." s 
 							on r.service_id = s.id 

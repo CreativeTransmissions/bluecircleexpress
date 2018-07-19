@@ -69,6 +69,20 @@
 .icon-icn-vehicle:before {
     content: "\6b";
 }
+
+.tq-form i.icon {
+    width: auto;
+    height: auto;
+    line-height: auto;
+    margin-left: auto;
+    margin-bottom: 0.25em !important;
+}
+.tq-form .datepicker {
+    left: auto;
+    position: relative;
+    opacity: 1;
+    z-index: 0;    
+}
 /*Font Integration*/
 .tq-form .remove-address{
     display: inline-block;
@@ -152,7 +166,6 @@
 }
 .tq-form .add-waypoint {
     display: inline-block;
-    margin-top: 2em;
 }
 .transit_body {padding:1.75% 2%;background-color: #fbfbfb; float: left; width: 100%; box-sizing: border-box; -webkit-box-sizing: border-box;}
 .transit_body .sub_title {
@@ -165,6 +178,7 @@
 .transit_body .sub_title i {
     margin-right: 12px;
     display: inline-block;
+    margin-bottom: 0.25em;    
     vertical-align: middle;
     font-size: 28px;
 }
@@ -218,13 +232,19 @@ textarea:-ms-input-placeholder {color: #c5d0df;}
 
 input:focus, select, textarea{ outline: none;}
 
+.bt-flabels__wrapper {
+    margin-bottom: 1.75%;
+}
+.tq-form .search-fields,
+.tq-form .delivery-fields {
+    clear: left;
+}
 .full {
     margin-bottom: 1.75%;
     width: 100%;
     float: left;
 }
 .half {
-    margin-bottom: 1.75%;
     width: 49%;
     float: left;
 }
@@ -310,6 +330,9 @@ select {
     position: relative; 
     float: left; 
     width: 100%;
+}
+.select-wrap {
+    margin-top: 0.5em;
 }
 .coll_date_wrap {width: 49%; }
 .coll_date_wrap .left {width: 100%;}
