@@ -640,7 +640,7 @@
 			},
 
 
-			submitHiddenWooCommerceForm(){
+			submitHiddenWooCommerceForm: function(){
 				$('#woocommerce_paynow').submit();						
 			},
 
