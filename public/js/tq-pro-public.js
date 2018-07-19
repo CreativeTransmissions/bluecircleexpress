@@ -70,24 +70,6 @@
 					    }
 					}
 		        });
-		        
-
-				var that = this;
-				$('input[name=service_id]').on('change', function() {
-					if($('input[name=service_id]:checked').val()==1){
-						$('#business-size').attr('required', true).show();
-						$('#business-size').removeAttr('disabled');
-
-						$('#domestic-house-size').attr('required', false).hide().removeAttr('data-parsley-id').removeClass('parsley-error');
-						$('#domestic-house-size').attr('disabled', true);
-					} else{
-						$('#business-size').attr('required', false).hide().removeAttr('data-parsley-id').removeClass('parsley-error');
-						$('#business-size').attr('disabled', true);
-						
-						$('#domestic-house-size').attr('required', true).show();
-						$('#domestic-house-size').removeAttr('disabled');
-					}
-				});
 
 
 				$('#address-popup input[name="addresses-ok"]').on('click', function(){
