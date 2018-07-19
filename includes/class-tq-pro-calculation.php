@@ -331,10 +331,12 @@ class TQ_Calculation {
 	}
 
 	private function build_quote(){
-		$quote = array('total'=>round($this->total,2),
+		$rounded_distance_cost = round($this->distance_cost,2);
+		$rounded_total_cost = round($this->total,2);
+		$quote = array('total'=> number_format((float)$rounded_total_cost, 2, '.', ''),
 						'total_before_rounding'=>$this->total,
 						'distance'=>$this->distance,
-						'distance_cost'=>round($this->distance_cost,2),
+						'distance_cost'=>number_format((float)$rounded_distance_cost, 2, '.', ''),
 						'breakdown'=>$this->breakdown,
 						'rate_tax'=>$this->tax_rate,
 						'tax_cost'=>$this->tax_cost);

@@ -411,6 +411,7 @@
 				$('a.no-address').on('click', function(e){
 					e.preventDefault();
 					e.stopPropagation();
+					that.scrollToMap();					
 					var clsParts = this.className.split('-');
 					var locNo = clsParts.pop();
 					that.calculator.pickLocation(locNo);
@@ -460,6 +461,13 @@
 					}*/
 				});
 				return true;
+			},
+
+			scrollToMap: function(){
+					console.log('scrollToMap');
+					$('html, body').animate({
+					    scrollTop: ($('#map').offset().top)
+					},500);
 			},
 
 			onClickSubmitButton: function(btn){
