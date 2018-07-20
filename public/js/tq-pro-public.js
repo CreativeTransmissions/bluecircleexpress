@@ -235,8 +235,11 @@
 					dropOfLng: 'address_1_lng',
 					afterQuote: function(){
 						//console.log('got distance, getting quote');
-						that.updateFormAction('tq_pro4_get_quote');
-						that.submitForm('get_quote');
+						if(that.validateGetQuote()){
+							that.updateFormAction('tq_pro4_get_quote');
+							that.submitForm('get_quote');
+						};						
+
 					},
 
 					callbackChangeVehicleId: function(vehicleId){
@@ -474,8 +477,10 @@
 				var submitType = $(btn).val();
 				switch(submitType){
 					case 'get_quote':
-						this.updateFormAction('tq_pro4_get_quote');
-						this.submitForm(submitType);
+						if(this.validateGetQuote()){
+							this.updateFormAction('tq_pro4_get_quote');
+							this.submitForm(submitType);
+						};
 						break;
 					case 'pay_method_1':
 						if($(this.element).parsley().validate()){
@@ -492,6 +497,21 @@
 						};
 					break;			
 				}
+			},
+
+			validateGetQuote: function(){
+				// if journey fails checkjourneyRestrictions distance will be blank or 0
+				var distance = $('input[name="distance"]').val();
+				if(isNaN(distance)){
+					return false;
+				};
+				if(distance == 0){
+					return false;
+				};
+				if(distance === ''){
+					return false;
+				};				
+				return true;
 			},
 
 			submitForm: function(submitType){

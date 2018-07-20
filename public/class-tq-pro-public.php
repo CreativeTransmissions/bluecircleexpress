@@ -2260,7 +2260,7 @@ class TransitQuote_Pro_Public {
 		include 'partials/emails/email_customer.php'; 
 		$html_email = ob_get_clean();
 
-		//add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
+	//	add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
 		//$this->ajax->set_email_debug(true);
 		$email = $this->ajax->send_notification($to,
 										$from,
@@ -2268,7 +2268,7 @@ class TransitQuote_Pro_Public {
 										$subject,
 										$html_email, $headers);
 
-		//remove_filter( 'wp_mail_content_type', 'set_html_content_type' );
+	//	remove_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
 
 		return $html_email;
 	}
@@ -2301,7 +2301,7 @@ class TransitQuote_Pro_Public {
 		include 'partials/emails/email_job_details.php'; 
 		$html_email = ob_get_clean();
 
-		//add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
+	//	add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
 		//$this->ajax->set_email_debug(true);
 		$email = $this->ajax->send_notification($to,
 										$from,
@@ -2309,7 +2309,7 @@ class TransitQuote_Pro_Public {
 										$subject,
 										$html_email, $headers);
 
-		//remove_filter( 'wp_mail_content_type', 'set_html_content_type' );
+	//	remove_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
 
 		return $email;
 	}
@@ -3022,6 +3022,10 @@ class TransitQuote_Pro_Public {
 		self::email_dispatch($subject, $notify);
 
 		return true;
+	}
+
+	function set_content_type($content_type){
+		return 'text/html';
 	}
 
 	private function get_status_subject($status_type_id = null, $job_id = null){
