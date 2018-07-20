@@ -1351,6 +1351,12 @@ class TransitQuote_Pro_Public {
 		if(self::job_data_is_valid()){
 			
 			$job_id = self::save_new_job();
+			if(empty($job_id)){
+				$response = array('success'=>'false',
+									 'msg'=>'Unable to save new job');
+				$this->ajax->respond($response);		
+				return false;
+			};			
 			self::get_job_details_from_id($job_id);
 			self::get_woocommerce_config();
 			if(!self::update_payment_type_id($job_id, 3)){
@@ -1393,6 +1399,12 @@ class TransitQuote_Pro_Public {
 
 		if(self::job_data_is_valid()){
 			$job_id = self::save_new_job();
+			if(empty($job_id)){
+				$response = array('success'=>'false',
+									 'msg'=>'Unable to save new job');
+				$this->ajax->respond($response);		
+				return false;
+			};
 			self::get_job_details_from_id($job_id);
 
 			if(!self::update_payment_type_id($job_id, 1)){
@@ -1418,16 +1430,6 @@ class TransitQuote_Pro_Public {
 		};
 
 		$this->ajax->respond($response);		
-	}
-
-	private function is_woocommerce_request(){
-		$submit_type = $this->ajax->param(array('name'=>'submit_type', 'optional'=>true));
-		if(($submit_type === 'pay_method_3')||($submit_type === 'pay_method_4')){
-			return true;
-		} else {
-			return false;
-		}
-
 	}
 
 	public function job_data_is_valid(){
@@ -1635,29 +1637,19 @@ class TransitQuote_Pro_Public {
 		return $this->cdb->get_row('locations', $location_id);
 	}
 
-	private function get_locations_from_post_data(){
-		// save all locations in journey
-		$this->locations_in_journey_order = array();
-		foreach ($this->journey_order as $key => $address_index) {
-			// store ids in array ready for save
-			$this->locations_in_journey_order[$key] = array('journey_id' => $this->journey['id'],
-															'location_id'=> $location['id'],
-															'journey_order'=>$key,
-															'created'=>date('Y-m-d G:i:s'),
-															'modified'=>date('Y-m-d G:i:s'));
-		};
-
-	}
-
 	private function save_locations(){
 		// save all locations in journey
 		$this->locations_in_journey_order = array();
 		foreach ($this->journey_order as $key => $address_index) {
 			$location = $this->save_location($address_index);
-			if($location === false){
+			if(empty($location)){
 				self::debug('Unable to save location: '.$address_index);
 				return false;
 			};
+			if($location['id']==0){
+				self::debug('Unable to save location: '.$address_index);
+				return false;
+			};			
 			// store ids in array ready for save
 			$this->locations_in_journey_order[$key] = array('journey_id' => $this->journey['id'],
 															'location_id'=> $location['id'],
@@ -1671,7 +1663,6 @@ class TransitQuote_Pro_Public {
 	}
 
 	private function save_location($address_index){
-
 		$record_data = self::get_location_record_data('locations', $address_index);
 		if(empty($record_data['lat'])||empty($record_data['lng'])||empty($record_data['address'])){
 			return false;
@@ -1680,7 +1671,7 @@ class TransitQuote_Pro_Public {
 		if(empty($location_id)){
 			//no match, create new location in database
 			$location_id = self::save_record('locations', $record_data);
-			if($location_id===false){
+			if(empty($location_id)){
 				return false;
 			};
 			// add new id to array of location details
@@ -2192,7 +2183,7 @@ class TransitQuote_Pro_Public {
 		////Save the main event record
 	//	$prefix = $this->cdb->get_prefix();
 	//	$this->ajax->pa(array('prefix'=>$prefix));
-
+		$success= false;
 		//save or update
 		$rec_id = $this->cdb->update_row($table, $record_data);
 		if($rec_id === false){

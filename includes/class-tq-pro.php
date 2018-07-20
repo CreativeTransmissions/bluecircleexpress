@@ -612,6 +612,7 @@ class TransitQuote_Pro4 {
 		self::update_default_payment_types($cdb);
 		self::add_custom_currency_option($cdb);
 		self::migrate_rates($cdb);
+		self::update_appartment_no_column_size($cdb);
 	}
 
 	public function update_default_payment_types($cdb){
@@ -668,6 +669,15 @@ class TransitQuote_Pro4 {
 							'after'=>'after tax_cost');
 			$cdb->add_column('quotes',$col_def);
 		}
+	}
+
+	private function update_appartment_no_column_size($cdb){
+		$col_def = array('name' => 'appartment_no',
+					     'type' => 'varchar(20)',
+					     'null' => 'null',
+					     'auto' => '',
+					     'default' => '');
+		$cdb->update_column('locations',$col_def);
 	}
 
 	public function delete_orphaned_rates(){
