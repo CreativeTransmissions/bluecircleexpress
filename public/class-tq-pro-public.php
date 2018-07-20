@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ERROR | E_PARSE );
+/*error_reporting(E_ERROR | E_PARSE );
  ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
@@ -1428,72 +1428,6 @@ class TransitQuote_Pro_Public {
 			return false;
 		}
 
-	}
-
-	private function process_submit_type($submit_type){
-
-		switch ($submit_type) {
-			case 'pay_method_1':
-				// On delivery
-				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
-				if(empty($job_id)){
-					if(self::job_data_is_valid()){
-						$job_id = self::save_new_job();
-						if(empty($job_id)){
-							$response = array('success'=>'false',
-							 					'msg'=>'No job_id for payment on delivery');
-						} else {							
-							$response = self::request_payment_on_delivery($job_id);
-						}				
-					} else {
-						$response = self::build_invalid_job_response();
-					};
-				};
-				break;
-			case 'pay_method_2':
-				// PayPal
-				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
-				if(empty($job_id)){
-					if(self::job_data_is_valid()){
-						$job_id = self::save_new_job();						
-						self::get_job_details_from_id($job_id);
-						$response = self::request_payment_paypal($job_id);
-					} else {
-						$response = self::build_invalid_job_response();
-					};
-				};
-				break;
-			case 'pay_method_3':
-				// Woocommerce
-				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
-				if(empty($job_id)){
-					if(self::job_data_is_valid()){
-						$job_id = self::save_new_job();	
-						if(empty($job_id)){
-							$response = array('success'=>'false',
-							 					'msg'=>'No job id for payment with WooCommerce');
-						} else {
-							self::get_job_details_from_id($job_id);
-							$response = self::request_payment_woocommerce($job_id);							
-						};					
-
-					} else {
-						$response = self::build_invalid_job_response();
-					};
-				};
-
-				break;
-			case 'book_delivery': // Payment not required until confirmed by staff
-				if(self::job_data_is_valid()){
-					$job_id = self::save_new_job();
-					self::get_job_details_from_id($job_id);
-					$response = self::request_payment_after_confirmation($job_id);					
-				} else {
-					$response = self::build_invalid_job_response();
-				};
-				break;
-		};
-		return $response;
 	}
 
 	public function job_data_is_valid(){
