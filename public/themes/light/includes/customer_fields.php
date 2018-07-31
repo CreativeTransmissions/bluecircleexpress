@@ -6,24 +6,24 @@
         <div class="full">
             <div class="left half bt-flabels__wrapper">
                 <span class="sub_title"><i class="icon icon-icn-name"></i>First Name</span>
-                <input type="text" name="first_name" id="first_name" required placeholder="Enter first name">
+                <input type="text" name="first_name" id="first_name" required data-parsley-maxlength="45" placeholder="Enter first name">
                 <span class="bt-flabels__error-desc">Required / Invalid First Name</span>
             </div>
             <div class="right half bt-flabels__wrapper">
                 <span class="sub_title"><i class="icon icon-icn-name"></i>Last Name</span>
-                <input type="text" name="last_name" id="last_name" required  placeholder="Enter last name">
+                <input type="text" name="last_name" id="last_name" required  data-parsley-maxlength="45" placeholder="Enter last name">
                 <span class="bt-flabels__error-desc">Required / Invalid Last Name </span>
             </div>
         </div>
         <div class="full">
             <div class="left half bt-flabels__wrapper">
                 <span class="sub_title"><i class="icon icon-icn-phone-number"></i>Phone Number</span>
-                <input type="text" data-parsley-type="number" required name="phone" class="phone"  placeholder="Enter your phone number">
+                <input type="text" data-parsley-type="number" required name="phone" class="phone" data-parsley-maxlength="45" placeholder="Enter your phone number">
                 <span class="bt-flabels__error-desc">Required / Invalid Phone Number </span>
             </div>
             <div class="right half bt-flabels__wrapper">
                 <span class="sub_title"><i class="icon icon-icn-email"></i>Email address</span>
-                <input type="text"  id="email" data-parsley-type="email" name="email" required placeholder="Enter your email address">
+                <input type="text"  id="email" data-parsley-type="email" name="email" required data-parsley-maxlength="128" placeholder="Enter your email address">
                 <span class="bt-flabels__error-desc">Required / Invalid Email</span>
             </div>
         </div>

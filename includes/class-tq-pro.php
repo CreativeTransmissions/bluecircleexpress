@@ -38,7 +38,7 @@ class TransitQuote_Pro4 {
 	 * @var      TransitQuote_Pro_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
-	const VERSION = '4.2.1';
+	const VERSION = '4.2.2';
 	/**
 	 * The unique identifier of this plugin.
 	 *
@@ -74,7 +74,7 @@ class TransitQuote_Pro4 {
 
 		$this->plugin_name = 'TransitQuote Pro';
 		$this->plugin_slug = 'tq-pro';
-		$this->version = '4.2.1';
+		$this->version = '4.2.2';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -319,10 +319,18 @@ class TransitQuote_Pro4 {
 		$this->loader->add_action( 'wp_footer', $this->plugin_public, 'enqueue_scripts');	
 
 		$this->loader->add_action( 'wp_ajax_tq_pro4_save_job', $this->plugin_public, 'tq_pro_save_job_callback');	
-		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro4_save_job', $this->plugin_public, 'tq_pro_save_job_callback');	
-		$this->loader->add_action( 'wp_ajax_nopriv_get_quote', $this->plugin_public, 'tq_pro_save_job_callback' );
+		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro4_save_job', $this->plugin_public, 'tq_pro_save_job_callback');
+
+		$this->loader->add_action( 'wp_ajax_tq_pro4_get_quote', $this->plugin_public, 'tq_pro_get_quote_callback' );
+		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro4_get_quote', $this->plugin_public, 'tq_pro_get_quote_callback' );
+
+		$this->loader->add_action( 'wp_ajax_tq_pro4_pay_now', $this->plugin_public, 'tq_pro_pay_now_callback' );
+		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro4_pay_now', $this->plugin_public, 'tq_pro_pay_now_callback' );
+
+
 		$this->loader->add_action( 'wp_ajax_create_paypal_payment', $this->plugin_public, 'create_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_nopriv_create_paypal_payment', $this->plugin_public, 'create_paypal_payment' );
+
 		$this->loader->add_action( 'wp_ajax_execute_paypal_payment', $this->plugin_public, 'execute_paypal_payment' );
 		$this->loader->add_action( 'wp_ajax_nopriv_execute_paypal_payment', $this->plugin_public, 'execute_paypal_payment' );
 		
@@ -546,7 +554,7 @@ class TransitQuote_Pro4 {
 			$modified = $created;
 			$cdb->update_row('payment_types', array('name' => 'On Delivery', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_types', array('name' => 'Pay Online', 'available'=>0, 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_types', array('name'=>'WooCommerce', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_types', array('name' =>'WooCommerce', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
 		};
 	}
 
@@ -604,6 +612,7 @@ class TransitQuote_Pro4 {
 		self::update_default_payment_types($cdb);
 		self::add_custom_currency_option($cdb);
 		self::migrate_rates($cdb);
+		self::update_appartment_no_column_size($cdb);
 	}
 
 	public function update_default_payment_types($cdb){
@@ -660,6 +669,15 @@ class TransitQuote_Pro4 {
 							'after'=>'after tax_cost');
 			$cdb->add_column('quotes',$col_def);
 		}
+	}
+
+	private function update_appartment_no_column_size($cdb){
+		$col_def = array('name' => 'appartment_no',
+					     'type' => 'varchar(20)',
+					     'null' => 'null',
+					     'auto' => '',
+					     'default' => '');
+		$cdb->update_column('locations',$col_def);
 	}
 
 	public function delete_orphaned_rates(){

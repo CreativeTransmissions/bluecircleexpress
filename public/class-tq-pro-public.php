@@ -1,6 +1,6 @@
 <?php
 /*error_reporting(E_ERROR | E_PARSE );
- ini_set('display_errors', 1);*/
+ ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
  *
@@ -93,7 +93,7 @@ class TransitQuote_Pro_Public {
 		wp_enqueue_style( $this->plugin_slug . '-timepicker-styles', plugins_url( 'css/jquery-ui-timepicker-addon.css', __FILE__ ), array(), $this->version );
 
 		wp_enqueue_style( $this->plugin_slug . '-datetimepicker-styles', plugins_url( 'css/datetimepicker.css', __FILE__ ), array(), $this->version );
-		
+		wp_enqueue_style( $this->plugin_slug . '-shared-plugin-styles', plugins_url( 'css/shared.css', __FILE__ ), array(), $this->version );		
 		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugin_dir_url( __FILE__ ) . 'themes/'.strtolower($this->theme).'/css/theme.css', array(), $this->version );
 
 		wp_enqueue_style( $this->plugin_slug . '-parsley-styles', plugin_dir_url( __FILE__ ) . 'css/parsley.css', array(), $this->version );
@@ -177,6 +177,10 @@ class TransitQuote_Pro_Public {
 	    foreach ($posts as $post) {
 	        // check the post content for the short code
 	        if ( strrpos(strtolower($post->post_content), '[transitquote_pro')>-1){
+	            // we have found a post with the short code
+	           return true;
+	        };
+	        if ( strrpos(strtolower($post->post_content), '[tq_pro_display_rates_list')>-1){
 	            // we have found a post with the short code
 	           return true;
 	        }
@@ -695,6 +699,12 @@ class TransitQuote_Pro_Public {
 		};
 		if(!isset($this->woocommerce)){
 			$disable_cart = self::get_setting('tq_pro_paypal_options','disable_cart');
+			if($disable_cart){
+				$this->add_to_cart_redirect_url = wc_get_checkout_url();
+			} else {
+				$this->add_to_cart_redirect_url = wc_get_cart_url();
+			};
+
 			$redirect_page_after_payment = self::get_setting('tq_pro_paypal_options','redirect_page_after_payment');
 			$woo_product_id = self::get_setting('tq_pro_paypal_options','woo_product_id');
 			$this->woocommerce = new CT_WOOCOMMERCE(array('disable_cart'=>$disable_cart, 'redirect_page_after_payment'=>$redirect_page_after_payment, 'woo_product_id'=>$woo_product_id));
@@ -1305,7 +1315,7 @@ class TransitQuote_Pro_Public {
 		return $response;
 	}
 
-	public function tq_pro_save_job_callback(){
+	public function tq_pro_get_quote_callback(){
 		$this->plugin = new TransitQuote_Pro4();	
 		$this->cdb = $this->plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
@@ -1317,8 +1327,57 @@ class TransitQuote_Pro_Public {
 
 		// get the submit type for the submitted qutoe form
 		$submit_type = $this->ajax->param(array('name'=>'submit_type', 'optional'=>true));
-		$response = self::process_submit_type($submit_type);
+		$response = self::get_quote($submit_type);
 
+
+		if($response === false){
+			$response = array('success'=>false, 
+								'msg'=>'Sorry, an error occured and we are unable to process this request.');
+		};
+
+		$this->ajax->respond($response);		
+	}	
+
+	public function tq_pro_pay_now_callback(){
+		$this->plugin = new TransitQuote_Pro4();	
+		$this->cdb = $this->plugin->get_custom_db();
+		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		
+		// save job request from customer facing form
+		if($this->log_requests == true){
+			$this->ajax->log_requests();
+		};
+
+		if(self::job_data_is_valid()){
+			
+			$job_id = self::save_new_job();
+			if(empty($job_id)){
+				$response = array('success'=>'false',
+									 'msg'=>'Unable to save new job');
+				$this->ajax->respond($response);		
+				return false;
+			};			
+			self::get_job_details_from_id($job_id);
+			self::get_woocommerce_config();
+			if(!self::update_payment_type_id($job_id, 3)){
+				$response = array('success'=>'false',
+								 'msg'=>'Unable to update job '.$job_id.' to payment by woocommerce');
+				$this->ajax->respond($response);
+			};
+
+			//set payment status to 1 = Awaiting Payment
+			if(!self::update_payment_status_id($job_id, 1)){
+				$response = array('success'=>'false',
+								 'msg'=>'Unable to update job '.$job_id.' to payment by woocommerce');
+				$this->ajax->respond($response);		
+			};
+
+			$response = self::build_response_save_job_for_woocommerce($job_id);	
+
+		
+		} else {
+			$response = self::build_invalid_job_response();
+		}
 
 		if($response === false){
 			$response = array('success'=>false, 
@@ -1328,73 +1387,49 @@ class TransitQuote_Pro_Public {
 		$this->ajax->respond($response);		
 	}
 
-	private function process_submit_type($submit_type){
-
-		switch ($submit_type) {
-			case 'pay_method_1':
-				// On delivery
-				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
-				if(empty($job_id)){
-					if(self::job_data_is_valid()){
-						$job_id = self::save_new_job();
-						if(empty($job_id)){
-							$response = array('success'=>'false',
-							 					'msg'=>'No job_id for payment on delivery');
-						} else {							
-							$response = self::request_payment_on_delivery($job_id);
-						}				
-					} else {
-						$response = self::build_invalid_job_response();
-					};
-				};
-				break;
-			case 'pay_method_2':
-				// PayPal
-				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
-				if(empty($job_id)){
-					if(self::job_data_is_valid()){
-						$job_id = self::save_new_job();						
-						self::get_job_details_from_id($job_id);
-						$response = self::request_payment_paypal($job_id);
-					} else {
-						$response = self::build_invalid_job_response();
-					};
-				};
-				break;
-			case 'pay_method_3':
-				// Woocommerce
-				$job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
-				if(empty($job_id)){
-					if(self::job_data_is_valid()){
-						$job_id = self::save_new_job();	
-						if(empty($job_id)){
-							$response = array('success'=>'false',
-							 					'msg'=>'No job id for payment with WooCommerce');
-						} else {
-							self::get_job_details_from_id($job_id);
-							$response = self::request_payment_woocommerce($job_id);							
-						};					
-
-					} else {
-						$response = self::build_invalid_job_response();
-					};
-				};
-
-				break;
-			case 'get_quote': // Payment not required until confirmed by staff
-				$response = self::get_quote();
-				break;
-			case 'book_delivery': // Payment not required until confirmed by staff
-				if(self::job_data_is_valid()){
-					$job_id = self::save_new_job();
-					self::get_job_details_from_id($job_id);
-					$response = self::request_payment_after_confirmation($job_id);					
-				} else {
-					$response = self::build_invalid_job_response();
-				};
-				break;
+	public function tq_pro_save_job_callback(){
+		$this->plugin = new TransitQuote_Pro4();	
+		$this->cdb = $this->plugin->get_custom_db();
+		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+		
+		// save job request from customer facing form
+		if($this->log_requests == true){
+			$this->ajax->log_requests();
 		};
-		return $response;
+
+		if(self::job_data_is_valid()){
+			$job_id = self::save_new_job();
+			if(empty($job_id)){
+				$response = array('success'=>'false',
+									 'msg'=>'Unable to save new job');
+				$this->ajax->respond($response);		
+				return false;
+			};
+			self::get_job_details_from_id($job_id);
+
+			if(!self::update_payment_type_id($job_id, 1)){
+				$response = array('success'=>'false',
+									 'msg'=>'Unable to update job '.$job_id.' to payment on delivery');
+				$this->ajax->respond($response);		
+				return false;
+			};
+
+
+			//set payment status to 1 = Awaiting Payment
+			if(!self::update_payment_status_id($job_id, 1)){
+				return array('success'=>'false',
+								 'msg'=>'Unable to update job '.$job_id.' to awaiting payment');
+				$this->ajax->respond($response);
+				return false;
+			};
+			
+			$response = self::build_response_save_job($job_id);					
+
+		} else {
+			$response = self::build_invalid_job_response();
+		};
+
+		$this->ajax->respond($response);		
 	}
 
 	public function job_data_is_valid(){
@@ -1456,6 +1491,31 @@ class TransitQuote_Pro_Public {
 		};
 		return $job_id;
 	}
+
+
+	private function build_response_save_job($job_id = null){
+	
+		return array(	'success'=>'true',
+						'success_message'=>'Your job was recieved successfully<br/>The delivery reference number is: '.$job_id.'</p>',
+						'data'=>array('customer_id'=>$this->customer['id'],
+					 				'job_id'=>$job_id,
+					 				'quote_id'=>$this->quote['id'],
+					 				'email'=>$this->customer['email']));
+
+	}
+
+	private function build_response_save_job_for_woocommerce($job_id = null){
+	
+		return array(	'success'=>'true',
+						'success_message'=>'Your job was recieved successfully<br/>The delivery reference number is: '.$job_id.'</p>',
+						'data'=>array('customer_id'=>$this->customer['id'],
+					 				'job_id'=>$job_id,
+					 				'quote_id'=>$this->quote['id'],
+					 				'email'=>$this->customer['email'],
+					 				'product_id'=>$this->woo_product_id,
+					 				'add_to_cart_redirect_url'=>$this->add_to_cart_redirect_url));
+
+	}		
 
 	public function get_job_details_from_id($job_id){
 
@@ -1577,29 +1637,19 @@ class TransitQuote_Pro_Public {
 		return $this->cdb->get_row('locations', $location_id);
 	}
 
-	private function get_locations_from_post_data(){
-		// save all locations in journey
-		$this->locations_in_journey_order = array();
-		foreach ($this->journey_order as $key => $address_index) {
-			// store ids in array ready for save
-			$this->locations_in_journey_order[$key] = array('journey_id' => $this->journey['id'],
-															'location_id'=> $location['id'],
-															'journey_order'=>$key,
-															'created'=>date('Y-m-d G:i:s'),
-															'modified'=>date('Y-m-d G:i:s'));
-		};
-
-	}
-
 	private function save_locations(){
 		// save all locations in journey
 		$this->locations_in_journey_order = array();
 		foreach ($this->journey_order as $key => $address_index) {
 			$location = $this->save_location($address_index);
-			if($location === false){
+			if(empty($location)){
 				self::debug('Unable to save location: '.$address_index);
 				return false;
 			};
+			if($location['id']==0){
+				self::debug('Unable to save location: '.$address_index);
+				return false;
+			};			
 			// store ids in array ready for save
 			$this->locations_in_journey_order[$key] = array('journey_id' => $this->journey['id'],
 															'location_id'=> $location['id'],
@@ -1613,7 +1663,6 @@ class TransitQuote_Pro_Public {
 	}
 
 	private function save_location($address_index){
-
 		$record_data = self::get_location_record_data('locations', $address_index);
 		if(empty($record_data['lat'])||empty($record_data['lng'])||empty($record_data['address'])){
 			return false;
@@ -1622,7 +1671,7 @@ class TransitQuote_Pro_Public {
 		if(empty($location_id)){
 			//no match, create new location in database
 			$location_id = self::save_record('locations', $record_data);
-			if($location_id===false){
+			if(empty($location_id)){
 				return false;
 			};
 			// add new id to array of location details
@@ -1733,6 +1782,24 @@ class TransitQuote_Pro_Public {
 	/*
 		Payment Methods After Recieving Quote 
 	*/
+	
+
+	private function request_payment_after_confirmation($job_id = null){
+		if(empty($job_id)){
+			return array('success'=>'false',
+							 'msg'=>'No job_id for payment on delivery');
+		};
+
+		return array(	'success'=>'true',
+						'success_message'=>'Your job was recieved successfully<br/>The delivery reference number is: '.$job_id.'</p>',
+						'data'=>array('customer_id'=>$this->customer['id'],
+					 				'job_id'=>$job_id,
+					 				'quote_id'=>$this->quote['id'],
+					 				'email'=>$this->customer['email']),
+					 	'payment_method'=>1);
+
+	}
+
 	private function request_payment_on_delivery($job_id = null){
 		if(empty($job_id)){
 			return array('success'=>'false',
@@ -2121,7 +2188,7 @@ class TransitQuote_Pro_Public {
 		////Save the main event record
 	//	$prefix = $this->cdb->get_prefix();
 	//	$this->ajax->pa(array('prefix'=>$prefix));
-
+		$success= false;
 		//save or update
 		$rec_id = $this->cdb->update_row($table, $record_data);
 		if($rec_id === false){
@@ -2198,7 +2265,7 @@ class TransitQuote_Pro_Public {
 		include 'partials/emails/email_customer.php'; 
 		$html_email = ob_get_clean();
 
-		//add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
+	//	add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
 		//$this->ajax->set_email_debug(true);
 		$email = $this->ajax->send_notification($to,
 										$from,
@@ -2206,7 +2273,7 @@ class TransitQuote_Pro_Public {
 										$subject,
 										$html_email, $headers);
 
-		//remove_filter( 'wp_mail_content_type', 'set_html_content_type' );
+	//	remove_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
 
 		return $html_email;
 	}
@@ -2239,7 +2306,7 @@ class TransitQuote_Pro_Public {
 		include 'partials/emails/email_job_details.php'; 
 		$html_email = ob_get_clean();
 
-		//add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
+	//	add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
 		//$this->ajax->set_email_debug(true);
 		$email = $this->ajax->send_notification($to,
 										$from,
@@ -2247,7 +2314,7 @@ class TransitQuote_Pro_Public {
 										$subject,
 										$html_email, $headers);
 
-		//remove_filter( 'wp_mail_content_type', 'set_html_content_type' );
+	//	remove_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
 
 		return $email;
 	}
@@ -2960,6 +3027,10 @@ class TransitQuote_Pro_Public {
 		self::email_dispatch($subject, $notify);
 
 		return true;
+	}
+
+	function set_content_type($content_type){
+		return 'text/html';
 	}
 
 	private function get_status_subject($status_type_id = null, $job_id = null){

@@ -24,7 +24,6 @@ class CT_WOOCOMMERCE {
 		
 		add_action( 'wc_add_to_cart_message_html', array( $this, 'woocommerce_add_to_cart_message' ), 10, 2);
 		add_action( 'woocommerce_add_to_cart_validation', array( $this, 'woocommerce_single_cart_item' ), 10, 2);
-		add_filter( 'woocommerce_add_to_cart_redirect', array( $this, 'skip_woocommerce_cart'));
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'update_jobid_on_checkout'));
 		add_action( 'woocommerce_thankyou', array( $this, 'payment_success_redirect'));
 		add_action( 'woocommerce_before_checkout_form', array( $this, 'woocommerce_checkout_autocomplete'));
@@ -117,23 +116,6 @@ class CT_WOOCOMMERCE {
 		return true;
 	}
 	
-	//skip cart page
-	public function skip_woocommerce_cart($wc_get_cart_url) {
-		global $woocommerce;
-
-		$product_id = 0;
-		if(isset($_GET['add-to-cart'])) {
-			$product_id = (int) apply_filters( 'woocommerce_add_to_cart_product_id', $_GET['add-to-cart'] );
-		};
-
-		if($product_id == $this->config['woo_product_id'] && $this->config['disable_cart']) {
-			$checkout_url = wc_get_checkout_url();
-			return $checkout_url;
-		} else if ($product_id == $this->config['woo_product_id']) {
-			
-			return wc_get_cart_url();
-		}
-	}
 	
 	//sets jobid to order meta
 	public function update_jobid_on_checkout ( $order_id ) {

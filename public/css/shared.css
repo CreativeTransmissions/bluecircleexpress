@@ -1,0 +1,26 @@
+
+div.rates-list {
+    display: inline-block;
+    float: left;
+    border: solid black 1px;
+    margin-left: 1em;
+    margin-bottom: 1em;
+    padding: 1em;
+}
+
+.rates-list table {
+	border-collapse: collapse;
+}
+.rates-list table th,
+.rates-list table td {
+	border: solid 1px;
+	padding: 0.25em;
+}
+.hidden {
+	display: none;
+}
+.tq-form .progress {
+    background: transparent;
+    background-image: none;
+    box-shadow: none;
+}

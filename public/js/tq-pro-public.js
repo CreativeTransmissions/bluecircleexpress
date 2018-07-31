@@ -70,24 +70,6 @@
 					    }
 					}
 		        });
-		        
-
-				var that = this;
-				$('input[name=service_id]').on('change', function() {
-					if($('input[name=service_id]:checked').val()==1){
-						$('#business-size').attr('required', true).show();
-						$('#business-size').removeAttr('disabled');
-
-						$('#domestic-house-size').attr('required', false).hide().removeAttr('data-parsley-id').removeClass('parsley-error');
-						$('#domestic-house-size').attr('disabled', true);
-					} else{
-						$('#business-size').attr('required', false).hide().removeAttr('data-parsley-id').removeClass('parsley-error');
-						$('#business-size').attr('disabled', true);
-						
-						$('#domestic-house-size').attr('required', true).show();
-						$('#domestic-house-size').removeAttr('disabled');
-					}
-				});
 
 
 				$('#address-popup input[name="addresses-ok"]').on('click', function(){
@@ -253,7 +235,11 @@
 					dropOfLng: 'address_1_lng',
 					afterQuote: function(){
 						//console.log('got distance, getting quote');
-						that.submitForm('get_quote');
+						if(that.validateGetQuote()){
+							that.updateFormAction('tq_pro4_get_quote');
+							that.submitForm('get_quote');
+						};						
+
 					},
 
 					callbackChangeVehicleId: function(vehicleId){
@@ -292,6 +278,7 @@
 		            onSet: function(context) {
 		            	var date = that.dateConverter(context.select);
 		            	$('#delivery_date').val(date);
+		            	that.updateFormAction('tq_pro4_get_quote');
 		            	that.calculator.updateQuote();
 
 		            	var selectedDate = date;
@@ -326,6 +313,7 @@
 					format:'HH:i',
 					interval: parseInt(interval),
 					onSet: function(context) {
+						that.updateFormAction('tq_pro4_get_quote');
 				    	that.calculator.updateQuote();
 				  	}
 				});
@@ -426,6 +414,7 @@
 				$('a.no-address').on('click', function(e){
 					e.preventDefault();
 					e.stopPropagation();
+					that.scrollToMap();					
 					var clsParts = this.className.split('-');
 					var locNo = clsParts.pop();
 					that.calculator.pickLocation(locNo);
@@ -452,7 +441,7 @@
 					e.preventDefault();
 					var btn = e.target;
 					if($(that.element).parsley().validate()){
-						that.submitForm(btn)
+						that.onClickSubmitButton(btn);
 					};
 					
 				});
@@ -460,14 +449,7 @@
 				$(this.element).on('click','button:submit', function(e){
 					e.preventDefault();
 					var btn = e.target;
-					var submitType = $(btn).val();
-					if(submitType==='get_quote'){
-						that.submitForm(submitType);
-					} else {
-						if($(that.element).parsley().validate()){
-							that.submitForm(submitType);
-						}						
-					}
+					that.onClickSubmitButton(btn);
 		
 				});
 
@@ -481,6 +463,54 @@
 					$("input[name=field2]").focus();
 					}*/
 				});
+				return true;
+			},
+
+			scrollToMap: function(){
+					console.log('scrollToMap');
+					$('html, body').animate({
+					    scrollTop: ($('#map').offset().top)
+					},500);
+			},
+
+			onClickSubmitButton: function(btn){
+				var submitType = $(btn).val();
+				switch(submitType){
+					case 'get_quote':
+						if(this.validateGetQuote()){
+							this.updateFormAction('tq_pro4_get_quote');
+							this.submitForm(submitType);
+						};
+						break;
+					case 'pay_method_1':
+						if($(this.element).parsley().validate()){
+							this.updateFormAction('tq_pro4_save_job');
+							this.submitForm(submitType);
+						};
+						break;
+					case 'pay_method_2':
+					case 'pay_method_3':
+					case 'pay_method_4':
+						if($(this.element).parsley().validate()){
+							this.updateFormAction('tq_pro4_pay_now');
+							this.submitForm(submitType);
+						};
+					break;			
+				}
+			},
+
+			validateGetQuote: function(){
+				// if journey fails checkjourneyRestrictions distance will be blank or 0
+				var distance = $('input[name="distance"]').val();
+				if(isNaN(distance)){
+					return false;
+				};
+				if(distance == 0){
+					return false;
+				};
+				if(distance === ''){
+					return false;
+				};				
 				return true;
 			},
 
@@ -531,30 +561,97 @@
 				this.hideStatusMessages();
 				switch(submitType){
 					case 'get_quote':
-						if(response.data.quote){
-							this.populateQuoteFields(response.data.quote);
-							this.showQuoteFields();
-						};
-						
+						this.processSubmissionSuccessResponseGetQuote(response);
 					break;
 					case 'book_delivery':
-						if(response.data.job_id){
-							this.populateFormWithJobId(response);
-						};
-						$('.on-delivery').show();
-						$('.on-delivery-msg-succcess').html(response.success_message);
-						$('.tq-form-fields-container').hide();
+						this.processSubmissionSuccessResponseOnDelivery(response);
+						
 					break;
 					case 'pay_method_1':
+						this.processSubmissionSuccessResponseOnDelivery(response);
 					case 'pay_method_2':
 					case 'pay_method_3':
 					case 'pay_method_4':
-						if(response.data.job_id){
-							this.populateFormWithJobId(response);
-						};
-						this.processPaymentResponse(response);
+						this.processSubmissionSuccessWooCommerce(response);
 					break;
 				};
+			},
+
+			processSubmissionSuccessResponseGetQuote: function(response){
+				if(response.data.quote){
+					this.populateQuoteFields(response.data.quote);
+					this.showQuoteFields();
+				} else {
+					$('.failure .msg').html('Unable to calculate quote.');
+					$('.failure').show();
+				}
+			},
+
+
+			processSubmissionSuccessResponseOnDelivery: function(response){
+				if(response.data.job_id){
+					this.populateFormWithJobId(response);
+					$('.on-delivery').show();
+					$('.on-delivery-msg-succcess').html(response.success_message);
+					$('.tq-form-fields-container').hide();							
+				} else {
+					$('.failure .msg').html('Unable to book your job.');
+					$('.failure').show();
+				}
+			},	
+
+			processSubmissionSuccessWooCommerce: function(response){
+				if(response.data.job_id){
+					this.populateFormWithJobId(response);
+					var paymentMethod = this.getPaymentMethodFromResponse(response);
+					var wooCommerceFormData = this.getWooCommerceFormData(response.data);
+					if(this.haveRequiredWooCommerceData(wooCommerceFormData)){
+						this.createHiddenWooCommerceForm(wooCommerceFormData);
+						this.submitHiddenWooCommerceForm();
+					};
+				};
+			},
+
+			haveRequiredWooCommerceData: function(wooCommerceFormData) {
+				if( (wooCommerceFormData.productId) &&
+					(wooCommerceFormData.jobId) &&
+					(wooCommerceFormData.firstName) &&
+					(wooCommerceFormData.lastName) &&
+					(wooCommerceFormData.email)) {
+					return true;
+				} else {
+					return false;
+				}
+			},
+
+			getWooCommerceFormData: function(responseData){
+				// init non required proerties to to empty string
+				var formData = {phone: '',
+								description: '',
+								addToCardRedirectUrl:''};
+
+					formData.firstName = $(".bt-flabels__wrapper input#first_name").val();
+					formData.lastName = $(".bt-flabels__wrapper input#last_name").val();
+					formData.phone = $(".bt-flabels__wrapper input.phone").val();
+					formData.email = $(".bt-flabels__wrapper input#email").val();
+					formData.description = $(".bt-flabels__wrapper textarea#description").val();
+
+					if(responseData.product_id){
+						formData.productId = responseData.product_id;						
+					};
+					if(responseData.job_id){
+						formData.jobId = responseData.job_id;		
+					};
+					if(responseData.add_to_cart_redirect_url){
+						formData.addToCardRedirectUrl = responseData.add_to_cart_redirect_url;						
+					};
+
+				return formData;
+			},
+
+
+			submitHiddenWooCommerceForm: function(){
+				$('#woocommerce_paynow').submit();						
 			},
 
 			populateQuoteFields: function(quote){
@@ -577,14 +674,12 @@
 				$('.tq-form-fields-container').removeClass('hidden');
 			},
 
-			processPaymentResponse: function(response){
+			getPaymentMethodFromResponse: function(response){
 				if(this.hasValidPaymentMethod(response)){
 					var paymentMethod = this.getPaymentMethodFromResponse(response);
-						paymentMethod = parseInt(paymentMethod);
-					if(paymentMethod=== 1 ||  paymentMethod === 0){
-						$('.on-delivery-msg-succcess').html(response.success_message);
-					};
-					this.showPaymentButton(paymentMethod, response.data);
+						return parseInt(paymentMethod);
+				} else {
+					return false;
 				}
 			},
 
@@ -629,6 +724,20 @@
 				$('input[name="job_id"]').val(response.data.job_id);
 			},
 
+			createHiddenWooCommerceForm: function(data){
+			
+				var form = $('<form method="post" id="woocommerce_paynow" action="'+data.addToCardRedirectUrl+'?add-to-cart=' + data.productId + '&dynamic_price=true">' +
+				  '<input type="hidden" name="job_id" value="' + data.jobId + '" />' + 
+				  '<input type="hidden" name="billing_first_name" value="' + data.firstName + '" />' + 
+				  '<input type="hidden" name="billing_last_name" value="' + data.lastName + '" />' + 
+				  '<input type="hidden" name="billing_phone" value="' + data.phone + '" />' + 
+				  '<input type="hidden" name="billing_email" value="' + data.email + '" />' + 
+				  '<input type="hidden" name="order_comments" value="' + data.description + '" />' + 
+				  '<input type="hidden" name="autofill" value="true" />' + 
+				  '</form>' );
+				$('#woocommerce').append(form);
+			},
+
 			showPaymentButton: function(paymentMethod, data){
 				switch(paymentMethod){
 					case 1:
@@ -647,22 +756,7 @@
 						
 					break;
 					case 3:
-						var first_name = $(".bt-flabels__wrapper input#first_name").val();
-						var last_name = $(".bt-flabels__wrapper input#last_name").val();
-						var phone = $(".bt-flabels__wrapper input.phone").val();
-						var email = $(".bt-flabels__wrapper input#email").val();
-						var description = $(".bt-flabels__wrapper textarea#description").val();
-						var form = $('<form method="post" id="woocommerce_paynow" action="?add-to-cart=' + data.product_id + '&dynamic_price=true">' +
-						  '<input type="hidden" name="job_id" value="' + data.job_id + '" />' + 
-						  '<input type="hidden" name="billing_first_name" value="' + first_name + '" />' + 
-						  '<input type="hidden" name="billing_last_name" value="' + last_name + '" />' + 
-						  '<input type="hidden" name="billing_phone" value="' + phone + '" />' + 
-						  '<input type="hidden" name="billing_email" value="' + email + '" />' + 
-						  '<input type="hidden" name="order_comments" value="' + description + '" />' + 
-						  '<input type="hidden" name="autofill" value="true" />' + 
-						  '</form>' );
-						$('#woocommerce').append(form);
-						$('#woocommerce_paynow').submit();
+						
 					break;
 				}
 			},
@@ -700,6 +794,10 @@
 
 				//check if route is now available
 				this.calculator.checkForRoute();	
+			},
+
+			updateFormAction: function(formAction){
+				$('form.tq-form input[name="action"]').val(formAction);
 			},
 
 			updateProgressMessage: function(msg){

@@ -4,7 +4,7 @@
     $using_service_descript = $this->using_service_descript();
     $using_vehicle_descript = $this->using_vehicle_descript();
     $hide_all = ''; ?>
-<fieldset class="search-fields">
+<fieldset class="delivery-fields">
 <?php if(($has_services)||($has_vehicles)){ ?>
 <div class="tq-row">
 	<?php if($has_services){ ?>
