@@ -441,7 +441,7 @@ class Admin_Config {
                                                         'id'=>'round_of_currency',
                                                         'label'=>'Round off Currency',
                                                         'type'=>'select',
-                                                        'options'=>array('Round to 2 decimal points','Round to 1 decimal points','Rounded to integer','Rounded to nearest 10','Rounded to nearest 100'),
+                                                        'options'=>array('Round to 2 decimal points','Round to 1 decimal points','Round to integer','Round to nearest 10','Round to nearest 100'),
                                                         'help'=>'Option to choose how much to round the currency.Default is 2 decimal points',
                                                         'default'=>'Round to 2 decimal points')
 														)
