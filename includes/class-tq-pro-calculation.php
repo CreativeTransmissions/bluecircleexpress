@@ -323,9 +323,9 @@ class TQ_Calculation {
 					$price = round($price,1);
 				}elseif($round_of_currency == 'Rounded to integer'){
 					$price = round($price,0);
-				}elseif($round_of_currency == 'Rounded to nearest 10'){
+				}elseif($round_of_currency == 'Round to nearest 10'){
 					$price = round($price / 10) * 10;
-				}elseif($round_of_currency == 'Rounded to nearest 100'){
+				}elseif($round_of_currency == 'Round to nearest 100'){
 					$price = round($price / 100) * 100;
 				}else{
 					$price = round($price,2);
