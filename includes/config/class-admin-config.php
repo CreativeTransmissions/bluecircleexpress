@@ -551,12 +551,18 @@ class Admin_Config {
                                                         'help'=>'This is the WooCommerce product id that will be used to bill your customers. Changing this setting manually is not recommended.'
                                                      ),
                           													 
-                          													 'payment_button_name'=>array(
+													 'payment_button_name'=>array(
                                                         'id'=>'payment_button_name',
                                                         'label'=>'Woocommerce Payment Button Name',
                                                         'type'=>'input',
                                                         'default'=>'Pay Online'
-                                                     )
+                                                     ),
+													 'payment_button_on_delivery_name'=>array(
+                                                        'id'=>'payment_button_on_delivery_name',
+                                                        'label'=>'On Delivery Payment Button Name',
+                                                        'type'=>'input',
+                                                        'default'=>'On Delivery'
+                                                     ),
                                                      )
                                                   )
                                           )

@@ -2186,7 +2186,9 @@ class TransitQuote_Pro_Public {
     private function get_payment_button_name($payment_method){
     	if($payment_method['id'] == 3) {
 			$payment_button_name = self::get_setting('tq_pro_paypal_options','payment_button_name','Pay Online');
-		} else {
+		}elseif($payment_method['id'] == 1) {
+			$payment_button_name = self::get_setting('tq_pro_paypal_options','payment_button_on_delivery_name','On Delivery');
+		}else {
 			$payment_button_name = $payment_method['name'];
 		};
 		return $payment_button_name;
