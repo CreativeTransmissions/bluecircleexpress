@@ -435,7 +435,15 @@ class Admin_Config {
                                                         'label'=>'Quote Display Element',
                                                         'help'=>'Please enter the class or id of the html element in which to display the final quote.<br/>Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.',
                                                         'type'=>'input',
-                                                        'default'=>'quote')
+                                                        'default'=>'quote'
+														),
+														'round_of_currency'=>array(
+                                                        'id'=>'round_of_currency',
+                                                        'type'=>'select',
+                                                        'options'=>array('Round to 2 decimal points','Round to 1 decimal points','Rounded to integer','Rounded to nearest 10','Rounded to nearest 100'),
+                                                        'help'=>'Option to choose how much to round the currency.Default is 2 decimal points',
+                                                        'default'=>'Round to 2 decimal points')
+														)
                                                     )
                                                 )
 

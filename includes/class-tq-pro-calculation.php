@@ -314,7 +314,23 @@ class TQ_Calculation {
 	}
 
 	private function build_quote(){
-		$quote = array('total'=>round($this->total,2),
+		$round_of_currency_array = get_option('tq_pro_quote_options');
+		$round_of_currency = $round_of_currency_array['round_of_currency'];
+				$price =$this->total;
+				if($round_of_currency == 'Round to 2 decimal points'){
+					$price = round($price,2);
+				}elseif($round_of_currency == 'Round to 1 decimal points'){
+					$price = round($price,1);
+				}elseif($round_of_currency == 'Rounded to integer'){
+					$price = round($price,0);
+				}elseif($round_of_currency == 'Rounded to nearest 10'){
+					$price = round($price / 10) * 10;
+				}elseif($round_of_currency == 'Rounded to nearest 100'){
+					$price = round($price / 100) * 100;
+				}else{
+					$price = round($price,2);
+				}
+		$quote = array('total'=>$price,
 						'total_before_rounding'=>$this->total,
 						'distance'=>$this->distance,
 						'distance_cost'=>round($this->distance_cost,2),
