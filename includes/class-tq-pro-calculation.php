@@ -315,7 +315,9 @@ class TQ_Calculation {
 
 	private function build_quote(){
 		$round_of_currency_array = get_option('tq_pro_quote_options');
-		$round_of_currency = $round_of_currency_array['round_of_currency'];
+		if(isset($round_of_currency_array['round_of_currency'])){
+			$round_of_currency = $round_of_currency_array['round_of_currency'];
+		
 				$price =$this->total;
 				if($round_of_currency == 'Round to 2 decimal points'){
 					$price = round($price,2);
@@ -330,6 +332,9 @@ class TQ_Calculation {
 				}else{
 					$price = round($price,2);
 				}
+		}else{
+			$price = round($price,2);
+		}
 		$quote = array('total'=>$price,
 						'total_before_rounding'=>$this->total,
 						'distance'=>$this->distance,
