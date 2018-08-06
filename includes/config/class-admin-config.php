@@ -455,7 +455,16 @@ class Admin_Config {
                                                         'label'=>'Quote Display Element',
                                                         'help'=>'Please enter the class or id of the html element in which to display the final quote.<br/>Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.',
                                                         'type'=>'input',
-                                                        'default'=>'quote')
+                                                        'default'=>'quote'
+														),
+														'round_of_currency'=>array(
+                                                        'id'=>'round_of_currency',
+                                                        'label'=>'Round off Currency',
+                                                        'type'=>'select',
+                                                        'options'=>array('Round to 2 decimal points','Round to 1 decimal points','Round to integer','Round to nearest 10','Round to nearest 100'),
+                                                        'help'=>'Option to choose how much to round the currency.Default is 2 decimal points',
+                                                        'default'=>'Round to 2 decimal points')
+														)
                                                     )
                                                 )
 
@@ -551,12 +560,18 @@ class Admin_Config {
                                                         'help'=>'This is the WooCommerce product id that will be used to bill your customers. Changing this setting manually is not recommended.'
                                                      ),
                           													 
-                          													 'payment_button_name'=>array(
+													 'payment_button_name'=>array(
                                                         'id'=>'payment_button_name',
                                                         'label'=>'Woocommerce Payment Button Name',
                                                         'type'=>'input',
                                                         'default'=>'Pay Online'
-                                                     )
+                                                     ),
+													 'payment_button_on_delivery_name'=>array(
+                                                        'id'=>'payment_button_on_delivery_name',
+                                                        'label'=>'On Delivery Payment Button Name',
+                                                        'type'=>'input',
+                                                        'default'=>'On Delivery'
+                                                     ),
                                                      )
                                                   )
                                           )
