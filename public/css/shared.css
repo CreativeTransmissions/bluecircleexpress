@@ -24,3 +24,9 @@ div.rates-list {
     background-image: none;
     box-shadow: none;
 }
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
