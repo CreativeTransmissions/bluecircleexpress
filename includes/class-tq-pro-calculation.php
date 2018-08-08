@@ -40,7 +40,9 @@ class TQ_Calculation {
 
 	public function init_calculation(){
 		//print_r($this->config);
+		$this->total_before_tax = 0;
 		$this->total = 0;
+		$this->set_amount = 0;
 		$this->accumulated_total = 0;
 		$this->breakdown = array();
 		$this->rates = $this->config['rates'];
@@ -110,7 +112,8 @@ class TQ_Calculation {
 			self::add_hourly_amount_to_total($this->final_rate);			
 		};
 
-		$this->distance_cost = $this->total;
+		$this->basic_cost = $this->total; // hourly amount + set amount + distance cost
+
 		if($this->tax_rate>0){
 			self::add_tax();
 		} else {
@@ -212,6 +215,7 @@ class TQ_Calculation {
 	private function add_boundary_set_amount_to_total($rate){
 		if($rate['amount']>0){
 			$this->total = $this->total + $rate['amount'];
+			$this->set_amount = $rate['amount'];
 			if($rate['distance'] < $this->distance){
 				$this->units_charged_for = $this->units_charged_for + $rate['distance'];		
 			} else {
@@ -362,6 +366,7 @@ class TQ_Calculation {
 						'total_before_rounding'=>$this->total,
 						'distance'=>$this->distance,
 						'distance_cost'=>number_format((float)$rounded_distance_cost, 2, '.', ''),
+						'basic_cost'=>$this->basic_cost,
 						'breakdown'=>$this->breakdown,
 						'rate_tax'=>$this->tax_rate,
 						'tax_cost'=>$this->tax_cost);

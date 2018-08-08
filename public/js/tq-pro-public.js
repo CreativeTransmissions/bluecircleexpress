@@ -656,7 +656,7 @@
 
 			populateQuoteFields: function(quote){
 				$('.totalCost').html(quote.total);
-				$('.basicCost').html(quote.distance_cost);
+				$('.basicCost').html(quote.basic_cost);
 				$('.rateTax').html(quote.rate_tax);
 				$('.taxCost').html(quote.tax_cost);
 				$('input[name="distance_cost"]').val(quote.distance_cost);
