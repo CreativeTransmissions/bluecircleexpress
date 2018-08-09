@@ -27,13 +27,14 @@ if(($has_services)||($has_vehicles)){ ?>
 			<?php if($has_vehicles){ ?>
 					<div class="left half">
 						<span class="sub_title"><i class="icon icon-icn-vehicle"></i>Vehicle</span>
-						<div class="bt-flabels__wrapper">
-							<label for="vehicle_id">Vehicle</label>
+						<div class="bt-flabels__wrapper select-wrap">
 							<select tabindex="8" name="vehicle_id" id="vehicle_id">
 							<?php $this->render_vehicle_options_with_rates(); ?>
 							</select>
 						</div>
 					</div>
+			<?php }; ?>
+			<?php if($has_services){ ?>					
 					<div class="right half">
 						<div class="bt-flabels__wrapper select-wrap">
 							<?php 

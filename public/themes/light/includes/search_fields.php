@@ -69,10 +69,16 @@
                     <input tabindex="10" class="left text addresspicker" required type="text" name="address_1_address" id="address_1" value="" autocomplete="false"/>
                     <span class="bt-flabels__error-desc">Required: <?php echo self::get_setting('tq_pro_form_options','destination_address_label', 'Destination Address'); ?></span>
                 </div>
-                <div class="bt-flabels__wrapper half">
-                    <input class="left" type="text" id="address_1_appartment_no" name="address_1_appartment_no" placeholder="Unit" value=""/>
-                    <input class="postcode right" type="text" id="address_1_postal_code" name="address_1_postal_code" placeholder="Postcode" value=""/>
-                </div>        
+                <?php if($this->ask_for_unit_no){ ?>
+                <div class="inline-block bt-flabels__wrapper half left">   
+                    <input class="left" type="text" id="address_1_appartment_no" data-parsley-maxlength="20" name="address_1_appartment_no" placeholder="Unit" value=""/>
+                </div>
+                <?php } ?>
+                <?php if($this->ask_for_postcode){ ?>
+                <div class="inline-block bt-flabels__wrapper half right last-address-field">
+                    <input class="postcode right" type="text" id="address_1_postal_code"  data-parsley-maxlength="16" name="address_1_postal_code" placeholder="Postcode" value=""/>
+                </div>
+                <?php } ?>
             </div>    
         </div>    
     </div>    
