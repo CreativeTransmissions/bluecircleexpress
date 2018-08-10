@@ -2926,34 +2926,15 @@ class TransitQuote_Pro_Public {
 		}
 	}
 
-	public function render_vehicle_descriptions(){
-		// render all vehicle descriptions so they can be hidden or shown as option changes
-
-		$descriptions_html = '';
-		$style_attribute = '';
-		$vehicles = $this->cdb->get_rows('vehicles');
-		foreach ($vehicles as $key => $vehicle) {
-			if($key>0){
-				$style_attribute = ' style="display: none;" ';
-			};
-			$descriptions_html .= '<p class="select-desc v-desc-'.$vehicle['id'].'" '.$style_attribute.'>'.$vehicle['description'];
-			if(self::using_vehicle_links()){
-				$vehicle_link = self::build_vehicle_link($vehicle);
-				if(empty($vehicle['description'])){
-					$descriptions_html .= $vehicle_link;
-				} else {
-					$descriptions_html .= ' '.$vehicle_link;
-				};
-				
-			};
-			$descriptions_html .= '</p>';
-		}
-
-		echo $descriptions_html;
-	}
-
 	private function using_vehicle_links(){
 		$using_link = self::get_setting('tq_pro_form_options', 'show_vehicle_link', false);
+		if($using_link == 1){
+			return true;
+		};
+		return false;
+	}
+	private function using_service_links(){
+		$using_link = self::get_setting('tq_pro_form_options', 'show_service_link', false);
 		if($using_link == 1){
 			return true;
 		};
@@ -2979,6 +2960,13 @@ class TransitQuote_Pro_Public {
 	private function build_vehicle_link($vehicle){
 		$page_name = self::format_string_for_url($vehicle['name']);
 		$link_text = 'View vehicle..';
+		return '<a target="_blank" href="/'.$page_name.'">'.$link_text.'</a>';
+
+	}
+	
+	private function build_service_link($service){
+		$page_name = self::format_string_for_url($service['name']);
+		$link_text = 'View Service..';
 		return '<a target="_blank" href="/'.$page_name.'">'.$link_text.'</a>';
 
 	}
