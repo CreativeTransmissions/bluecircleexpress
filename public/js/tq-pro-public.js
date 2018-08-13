@@ -241,11 +241,18 @@
 						};						
 
 					},
+					
+					callbackChangeServiceId: function(serviceId){
+						// UI changes on vehicle selection
+						$('.service.select-desc').hide();
+						var descToShowSelector = '.service.v-desc-'+String(serviceId);
+						$(descToShowSelector).show();
+					},
 
 					callbackChangeVehicleId: function(vehicleId){
 						// UI changes on vehicle selection
-						$('.select-desc').hide();
-						var descToShowSelector = '.v-desc-'+String(vehicleId);
+						$('.vehicle.select-desc').hide();
+						var descToShowSelector = '.vehicle.v-desc-'+String(vehicleId);
 						$(descToShowSelector).show();
 					}
 
@@ -656,7 +663,7 @@
 
 			populateQuoteFields: function(quote){
 				$('.totalCost').html(quote.total);
-				$('.basicCost').html(quote.basic_cost);
+				$('.basicCost').html(quote.distance_cost);
 				$('.rateTax').html(quote.rate_tax);
 				$('.taxCost').html(quote.tax_cost);
 				$('input[name="distance_cost"]').val(quote.distance_cost);
