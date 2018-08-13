@@ -3,6 +3,9 @@ $has_services = $this->has_services();
 $has_vehicles = $this->has_vehicles();
 $using_service_descript = $this->using_service_descript();
 $using_vehicle_descript = $this->using_vehicle_descript();
+$using_vehicle_links = $this->using_vehicle_links();
+$using_service_links = $this->using_service_links();
+
 $hide_all = '';
 if(($has_services) && ($has_vehicles)){ ?>
 	<div class="service-vehicle-wrap">
