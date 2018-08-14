@@ -3,7 +3,7 @@
 	if(!empty($map_title)){ ?>
     	<legend><?php echo $map_title; ?></legend>
 	<?php }; ?>
-	 <div id="feedback" class="tq-feedback" style="display: none;"></div>
+	 <div id="feedback" class="tq-feedback text-center" style="display: none;"></div>
     <div id="map" class="map">
     	<a href="//transitquote.co.uk/" target="_blank">Powered by TransitQuote</a>
     </div>

@@ -14,7 +14,7 @@
 		defaults = {
 			ajaxUrl: '',
 			customer: false,
-			debug: true,
+			debug: false,
 			quoteResult: 'quote',
 			timepickerSelector: 'collection_time',
 			datepickerSelector: 'collection_date'

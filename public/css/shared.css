@@ -15,8 +15,7 @@ div.rates-list {
 	border: solid 1px;
 	padding: 0.25em;
 }
-.tq-form .hidden,
-.transit_inner.cost .transit_body ul li.hidden{
+.tq-form .hidden {
 	display: none;
 }
 
@@ -29,9 +28,22 @@ div.rates-list {
     background-image: none;
     box-shadow: none;
 }
+.tq-form .tq-feedback {
+    padding: 0em 1em;
+    color: #F22;
+}
 .left {
     float: left;
 }
 .right {
     float: right;
+}
+.text-left {
+    text-align: left;
+}
+.text-right {
+    text-align: right;
+}
+.text-center {
+    text-align: center;
 }
