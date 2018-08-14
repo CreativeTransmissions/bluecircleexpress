@@ -361,7 +361,8 @@ class TQ_Calculation {
 				}
 		}else{
 			$price = round($price,2);
-		}
+		};
+		
 		$quote = array('total'=>$price,
 						'total_before_rounding'=>$this->total,
 						'distance'=>$this->distance,
