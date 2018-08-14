@@ -20,6 +20,10 @@ div.rates-list {
 	display: none;
 }
 
+.tq-form legend {
+    border-bottom: none;
+}
+
 .tq-form .progress {
     background: transparent;
     background-image: none;

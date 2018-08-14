@@ -31,7 +31,8 @@ class TQ_Calculation {
  									'time_mins'=>0,
  									'rates'=>array(),
  									'include_return_journey'=>false,
- 									'boundary_mode'=>'final');  // final or all
+ 									'boundary_mode'=>'final',
+ 									'rouunding_type'=>'Round to 2 decimal points');  // final or all
 
     public function __construct($config = null) {
         //merge config with defaults so all properties are present
@@ -107,7 +108,7 @@ class TQ_Calculation {
 		if((self::including_return_journey())&&(self::using_different_rate_for_return_journey())){
 			self::add_return_distance_cost_to_total($this->final_rate);
 		};
-
+		$this->distance_cost = $this->total;
 		if($this->final_rate['hour']>0){
 			self::add_hourly_amount_to_total($this->final_rate);			
 		};
@@ -335,38 +336,40 @@ class TQ_Calculation {
 	}
 
 	private function build_quote(){
-		$round_of_currency_array = get_option('tq_pro_quote_options');
-		if(isset($round_of_currency_array['round_of_currency'])){
-			$round_of_currency = $round_of_currency_array['round_of_currency'];
-			
-				$price =$this->total;
-				if($round_of_currency == 'Round to 2 decimal points'){
-					$price = round($price,2);
-				}elseif($round_of_currency == 'Round to 1 decimal points'){
-					$price = round($price,1);
-				}elseif($round_of_currency == 'Round to integer'){
-					$price = round($price,0);
-				}elseif($round_of_currency == 'Round to nearest 10'){
-					$price = round($price / 10) * 10;
-					if($price == 0 ){
-						$price = 10;
-					}
-				}elseif($round_of_currency == 'Round to nearest 100'){
-					$price = round($price / 100) * 100;
-					if($price == 0 ){
-						$price = 100;
-					}
-				}else{
-					$price = round($price,2);
+
+		$total_rounded =$this->total;
+
+		switch ($this->config['rouunding_type']) {
+			case 'Round to 2 decimal points':
+				$total_rounded = round($total_rounded,2);
+				break;
+			case 'Round to 1 decimal points':
+				$total_rounded = round($total_rounded,1);
+				break;
+			case 'Round to integer':
+				$total_rounded = round($total_rounded,0);
+				break;
+			case 'Round to nearest 10':
+				$total_rounded = round($total_rounded / 10) * 10;
+				if($total_rounded == 0 ){
+					$total_rounded = 10;
 				}
-		}else{
-			$price = round($price,2);
+				break;
+			case 'Round to nearest 100':
+				$total_rounded = round($total_rounded / 100) * 100;
+					if($total_rounded == 0 ){
+						$total_rounded = 100;
+					}
+				break;				
+			default: //'Round to 2 decimal points':
+				$total_rounded = round($total_rounded,2);
+				break;
 		};
-		
-		$quote = array('total'=>$price,
+
+		$quote = array('total'=>$total_rounded,
 						'total_before_rounding'=>$this->total,
 						'distance'=>$this->distance,
-						'distance_cost'=>number_format((float)$rounded_distance_cost, 2, '.', ''),
+						'distance_cost'=>number_format((float)$this->distance_cost, 2, '.', ''),
 						'basic_cost'=>$this->basic_cost,
 						'breakdown'=>$this->breakdown,
 						'rate_tax'=>$this->tax_rate,

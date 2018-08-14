@@ -1,5 +1,5 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE );
+error_reporting(E_ERROR | E_PARSE );
  ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
@@ -782,7 +782,7 @@ class TransitQuote_Pro_Public {
 		$this->currency_symbol = self::get_currency_symbol();
 		$this->distance_unit = self::get_distance_unit();
 		$this->tax_rate = self::get_tax_rate();
-
+		$this->rounding_type = self::get_rounding_type();
 		$this->rates_list = new TransitQuote_Pro4\TQ_Rates_List(array(	'cdb'=>$this->cdb, 
 																		'debug'=>$this->debug,
 																		'tax_rate'=>$this->tax_rate,
@@ -1126,6 +1126,7 @@ class TransitQuote_Pro_Public {
 		$this->response_msg = 'There was an error calculating the quote'; //default error
 		$this->rate_options = self::get_rate_affecting_options();
 		$this->tax_rate = self::get_tax_rate();
+		$this->rounding_type = self::get_rounding_type();		
 		$this->return_percentage = self::get_return_percentage();
 		if($this->rate_options['distance']>0){
 			$this->quote = self::calc_quote();
@@ -1140,6 +1141,11 @@ class TransitQuote_Pro_Public {
 
 	public function get_tax_rate(){
 		return self::get_setting('', 'tax_rate', 0);
+
+	}
+
+	public function get_rounding_type(){
+		return self::get_setting('', 'rounding_type', 'Round to 2 decimal points');
 
 	}
 
@@ -1161,7 +1167,8 @@ class TransitQuote_Pro_Public {
 																		'return_distance'=>$this->rate_options['return_distance'],
 																		'return_time'=>$this->rate_options['return_time'],
 																		'tax_rate'=>$this->tax_rate,
-																		'tax_name'=>'VAT')); 
+																		'tax_name'=>'VAT',
+																		'rounding_type'=>$this->rounding_type)); 
  
 		$quote = $this->calculation->run();
 		return $quote;
