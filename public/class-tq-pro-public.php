@@ -1655,7 +1655,9 @@ class TransitQuote_Pro_Public {
 															'location_id'=> $location['id'],
 															'journey_order'=>$key,
 															'created'=>date('Y-m-d G:i:s'),
-															'modified'=>date('Y-m-d G:i:s'));
+															'modified'=>date('Y-m-d G:i:s'),
+															'contact_name'=>$_POST['address_'.$key.'_contact_name'],
+															'contact_phone'=>$_POST['address_'.$key.'_contact_phone']);
 		};
 
 		return true;
@@ -2069,7 +2071,9 @@ class TransitQuote_Pro_Public {
 										'country',
 										'postal_code',
 										'lat',
-										'lng'),
+										'lng',
+										'contact_name',
+										'contact_phone'),
 						    		array(
 					    				array('journeys_locations',
 					    					'location_id',
@@ -2080,7 +2084,7 @@ class TransitQuote_Pro_Public {
 						    			array('journey_order'=>'asc')
 						    		);
     }
-
+	
 	public function get_job_date($job = null){
 		//get date and time for job in separate  array elements
 		if(empty($job)){
@@ -2854,6 +2858,12 @@ class TransitQuote_Pro_Public {
 		$html .='<li>Address: '.stripslashes($waypoint['address']).'</li>';
 		if(!empty($waypoint['postal_code'])){
 			$html .='<li>Postcode: '.$waypoint['postal_code'].'</li>';
+		};
+		if(!empty($waypoint['contact_name'])){
+			$html .='<li>Contact Name: '.$waypoint['contact_name'].'</li>';
+		};
+		if(!empty($waypoint['contact_phone'])){
+			$html .='<li>Contact Phone: '.$waypoint['contact_phone'].'</li>';
 		};
 		$html .='</ul>';
 

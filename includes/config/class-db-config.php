@@ -1651,6 +1651,24 @@ private function config_journeys_locations(){
       'auto' => '',
       'default' => '',
       'format' => '%s',
+    ),
+	'contact_name' => 
+    array (
+      'name' => 'contact_name',
+      'type' => 'varchar(128)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+	'contact_phone' => 
+    array (
+      'name' => 'contact_phone',
+      'type' => 'varchar(45)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
     )
   ),
   'pk' => 'id',
