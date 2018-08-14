@@ -154,6 +154,7 @@
 				this.initCalculator();
 				this.initDatePicker();
 				this.initTimePicker();
+				this.initParsleyValidation();
 				$('.notice-field').hide();
 				return true;				
 			},
@@ -325,6 +326,46 @@
 				  	}
 				});
 				var timePickerObj = $input.pickatime('picker');
+			},
+
+			initParsleyValidation: function(){
+				var that = this;
+
+				$('#quote-form').parsley({
+				  	inputs: 'input, textarea, select, input[type=hidden], :hidden',
+				  	excluded: 'input[type=button], input[type=submit], input[type=reset]'
+				});
+
+				$('#quote-form').parsley().on('form:error', function () {
+					$.each(this.fields, function (key, field) {
+		                if (field.validationResult !== true) {
+		                    field.$element.closest('.bt-flabels__wrapper').addClass('bt-flabels__error');
+		                }
+		            });
+		        });
+		        $('#quote-form').parsley().on('field:validated', function () {
+		            if (this.validationResult === true) {
+		                this.$element.closest('.bt-flabels__wrapper').removeClass('bt-flabels__error');
+		            } else {
+		                this.$element.closest('.bt-flabels__wrapper').addClass('bt-flabels__error');
+		            }
+		        });
+
+		        $('#quote-form').parsley().on('field:error', function () {
+		        	var elName = this.$element[0].name;
+
+		        	if(elName.indexOf('address_')!==-1){
+		        		that.handleMissingAddressErrors(elName);
+		        	};
+		        	
+		        });	
+			},
+
+			handleMissingAddressErrors: function(hiddenFieldName){
+				var validationTargetInputName = hiddenFieldName.replace('country','address');
+				var selector = 'input[name="'+validationTargetInputName+'"]';
+				$(selector).closest('.bt-flabels__wrapper').addClass('bt-flabels__error');
+				this.scrollToEl(selector);
 			},
 
 			initPayPal: function(){
