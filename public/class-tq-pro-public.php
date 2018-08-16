@@ -2079,10 +2079,10 @@ class TransitQuote_Pro_Public {
 										'postal_code',
 										'lat',
 										'lng',
-										'contact_name',
-										'contact_phone'),
+										'jl.contact_name as contact_name',
+										'jl.contact_phone as contact_phone'),
 						    		array(
-					    				array('journeys_locations',
+					    				array('journeys_locations jl',
 					    					'location_id',
 					    					'id',
 					    					'journey_id = '.$journey_id,
