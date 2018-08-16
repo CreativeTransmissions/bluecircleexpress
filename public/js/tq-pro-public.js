@@ -234,6 +234,36 @@
 
 					dropOfLat: 'address_1_lat',
 					dropOfLng: 'address_1_lng',
+
+					//This will override the template in map-quote-calculator.js and can be used to change the html for dynamically added destinations
+					addressPickerTemplate: function(data){
+						if(!data.idx){
+							return false;
+						};
+
+						var idx = data.idx;
+						var html  = '<div class="address-wrap">';
+							html += '	<div class="field bt-flabels__wrapper full-width full">';
+                        	html += '		<span class="sub_title"><i class="icon icon-icn-collection-address"></i><label for="address_'+idx+'">Destination Address</label></span><a href="#" class="remove-address no-address-'+idx+'">'+data.removeDestLinkText+'</a>';
+                        	html += '		<span class="transit_noadress"><a href="#" class="no-address no-address-'+idx+'">I can&apos;t find my address</a></span>';
+                        	html += '		<input class="text addresspicker" required type="text" name="address_'+idx+'_address" id="address_'+idx+'" value="" autocomplete="false"/>';
+                        	html += '		<span class="bt-flabels__error-desc">Required</span>';
+							html += '	</div>';
+							if(data.askForUnitNo === 'true'){
+	                    		html += '	<div class="inline-block bt-flabels__wrapper half left">';
+	                        	html += '		<input class="inline-block half-field" type="text" id="address_'+idx+'_appartment_no" name="address_'+idx+'_appartment_no" placeholder="Unit" value=""/>';
+								html += '	</div>';
+							};
+							if(data.askForPostCode === 'true'){
+	                    		html += '	<div class="inline-block bt-flabels__wrapper half right last-address-field">';
+	                        	html += '		<input class="inline-block postcode half-field half-field-right" id="address_'+idx+'_postal_code" name="address_'+idx+'_postal_code" placeholder="Postcode" value=""/>';
+	                    		html += '	</div>';
+	                    	};
+                    		html += '</div>';
+
+						return html;
+					},
+
 					afterQuote: function(){
 						//console.log('got distance, getting quote');
 						if(that.validateGetQuote()){
