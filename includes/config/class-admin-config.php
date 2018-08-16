@@ -571,7 +571,7 @@ class Admin_Config {
                                                         'id'=>'payment_button_on_delivery_name',
                                                         'label'=>'On Delivery Payment Button Name',
                                                         'type'=>'input',
-                                                        'default'=>'On Delivery'
+                                                        'default'=>'Book Now'
                                                      ),
                                                      )
                                                   )

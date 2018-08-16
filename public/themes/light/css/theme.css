@@ -87,7 +87,7 @@
 .tq-form .remove-address{
     display: inline-block;
     margin-left: 1em;
-    margin-top: 1em;
+    margin-top: 1.6em;
 }
 .transit_main {
     font-family: 'Lato', sans-serif;
@@ -357,6 +357,10 @@ select {
 }
 .coll_date_wrap:after {content: "\62";}
 .coll_time_wrap:after {content: "\6a";}
+
+.transit_inner.cost .transit_body ul li.hidden{
+    display: none;
+}
 /*Media query start*/
 @media screen and (max-width:991px){
     .half .left .sub_title, .half .right .sub_title {margin-bottom: 5px; margin-top: 20px;}

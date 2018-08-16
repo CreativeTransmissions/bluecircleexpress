@@ -1,3 +1,63 @@
+/***************** Reserved CSS Rules ***************
+Please do not change or override these rules 
+If an element already has one of these classes,
+please add a new class and use that for any changes.
+Feel free to use them for the intended purpose
+****************************************************/
+.tq-form .left {
+    float: left;
+}
+.tq-form .right {
+    float: right;
+}
+.tq-form  .text-left {
+    text-align: left;
+}
+.tq-form .text-right {
+    text-align: right;
+}
+.tq-form .text-center {
+    text-align: center;
+}
+.tq-form .half {
+    width: 49.5%;
+}
+.tq-form .hidden {
+    display: none;
+}
+.tq-form .inline-block {
+    display: inline-block;
+}
+.tq-form .inline{
+    display: inline;
+}
+
+.tq-form .tq-row {
+    display: block;
+    width: 100%;
+}
+
+/************************* Reserved CSS Classes ***********************
+Never use these classes for styling!! They are for use by jQuery code
+They should only appear as demonstrated in the html snippets
+Add a new class if the same element needs styling
+********************************************************************/
+.tq-form-fields-container{
+    /* used to make sections appear and dissapear */
+}
+.address-wrap{
+    /* used to dynamically copy sections and append Remove Destination links */
+}
+.no-address {
+    /* used for click method of no address link */
+}
+.feedback {
+    /* used to contain map feedback messages and also to hide and show the messages */
+}
+
+
+/** the styles below can be overridden in required **/
+
 div.rates-list {
     display: inline-block;
     float: left;
@@ -8,16 +68,17 @@ div.rates-list {
 }
 
 .rates-list table {
-	border-collapse: collapse;
+    border-collapse: collapse;
 }
 .rates-list table th,
 .rates-list table td {
-	border: solid 1px;
-	padding: 0.25em;
+    border: solid 1px;
+    padding: 0.25em;
 }
-.tq-form .hidden,
-.transit_inner.cost .transit_body ul li.hidden{
-	display: none;
+
+
+.tq-form legend {
+    border-bottom: none;
 }
 
 .tq-form .progress {
@@ -25,9 +86,7 @@ div.rates-list {
     background-image: none;
     box-shadow: none;
 }
-.left {
-    float: left;
-}
-.right {
-    float: right;
+.tq-form .tq-feedback {
+    padding: 0em 1em;
+    color: #F22;
 }
