@@ -18,12 +18,16 @@
                 <input class="inline-block postcode half-field half-field-right" type="text" id="address_0_postal_code" data-parsley-maxlength="16" name="address_0_postal_code" placeholder="Postcode" value=""/>
             </div>
             <?php } ?>
-			<div class="inline-block bt-flabels__wrapper half left">
-                <input class="inline-block half-field" type="text" id="address_0_contact_name" data-parsley-maxlength="128" name="address_0_contact_name" placeholder="Contact Name" value=""/>
-            </div>
+			 <?php if($this->show_contact_name){ ?>
+				<div class="inline-block bt-flabels__wrapper half left">
+					<input class="inline-block half-field" type="text" id="address_0_contact_name" data-parsley-maxlength="128" name="address_0_contact_name" placeholder="Contact Name" value=""/>
+				</div>
+			 <?php } ?>
+			  <?php if($this->show_contact_number){ ?>
 			<div class="inline-block bt-flabels__wrapper half right last-address-field">
                 <input class="inline-block postcode half-field half-field-right" type="text" id="address_0_contact_phone" data-parsley-maxlength="45" name="address_0_contact_phone" placeholder="Contact Phone" value=""/>
             </div>
+				 <?php } ?>
         </div>
         <div class="address-wrap">
             <div class="field bt-flabels__wrapper full-width">
@@ -36,18 +40,22 @@
             <div class="inline-block bt-flabels__wrapper half left">
                 <input class="inline-block half-field " type="text" id="address_1_appartment_no" name="address_1_appartment_no" data-parsley-maxlength="20" placeholder="Unit" value=""/>
             </div>
-            <?php } ?>
-            <?php if($this->ask_for_postcode){ ?>
-            <div class="inline-block bt-flabels__wrapper half right last-address-field">
-                <input class="inline-block postcode half-field half-field-right" type="text" id="address_1_postal_code" data-parsley-maxlength="16" name="address_1_postal_code" placeholder="Postcode" value=""/>
-            </div>
-            <?php } ?>
-			<div class="inline-block bt-flabels__wrapper half left">
-                <input class="inline-block half-field" type="text" id="address_1_contact_name" data-parsley-maxlength="128" name="address_1_contact_name" placeholder="Contact Name" value=""/>
-            </div>
-			<div class="inline-block bt-flabels__wrapper half right last-address-field">
-                <input class="inline-block postcode half-field half-field-right" type="text" id="address_1_contact_phone" data-parsley-maxlength="45" name="address_1_contact_phone" placeholder="Contact Phone" value=""/>
-            </div>
+			<?php } ?>
+			<?php if($this->ask_for_postcode){ ?>
+				<div class="inline-block bt-flabels__wrapper half right last-address-field">
+					<input class="inline-block postcode half-field half-field-right" type="text" id="address_1_postal_code" data-parsley-maxlength="16" name="address_1_postal_code" placeholder="Postcode" value=""/>
+				</div>
+			<?php } ?>
+			<?php if($this->show_contact_name){ ?>
+				<div class="inline-block bt-flabels__wrapper half left">
+					<input class="inline-block half-field" type="text" id="address_1_contact_name" data-parsley-maxlength="128" name="address_1_contact_name" placeholder="Contact Name" value=""/>
+				</div>
+			<?php } ?>
+			<?php if($this->show_contact_number){ ?>
+				<div class="inline-block bt-flabels__wrapper half right last-address-field">
+					<input class="inline-block postcode half-field half-field-right" type="text" id="address_1_contact_phone" data-parsley-maxlength="45" name="address_1_contact_phone" placeholder="Contact Phone" value=""/>
+				</div>
+			<?php } ?>
         </div>
     <?php } else { ?>
         <legend><?php echo self::get_setting('tq_pro_form_options','search_section_title', 'Enter Addresses'); ?></legend>
@@ -64,6 +72,16 @@
             <div class="inline-block bt-flabels__wrapper half right last-address-field">
                 <input class="inline-block postcode right half-field half-field-right" type="text" id="address_1_postal_code" data-parsley-maxlength="16"  name="address_1_postal_code" placeholder="Postcode" value=""/>
             </div>
+			<?php if($this->show_contact_name){ ?>
+				<div class="inline-block bt-flabels__wrapper half left">
+					<input class="inline-block half-field" type="text" id="address_1_contact_name" data-parsley-maxlength="128" name="address_1_contact_name" placeholder="Contact Name" value=""/>
+				</div>
+			<?php } ?>
+			<?php if($this->show_contact_number){ ?>
+				<div class="inline-block bt-flabels__wrapper half right last-address-field">
+					<input class="inline-block postcode half-field half-field-right" type="text" id="address_1_contact_phone" data-parsley-maxlength="45" name="address_1_contact_phone" placeholder="Contact Phone" value=""/>
+				</div>
+			<?php } ?>
         </div>    
     <?php }; ?>
 </fieldset>

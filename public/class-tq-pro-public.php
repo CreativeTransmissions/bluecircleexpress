@@ -128,6 +128,7 @@ class TransitQuote_Pro_Public {
 
 		wp_enqueue_script( $this->plugin_slug.'-map-quote-calculator', plugins_url( 'js/js-transitquote/js/map-quote-calculator.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
 		wp_enqueue_script($this->plugin_slug . '-tq-pro', plugins_url('js/tq-pro-public.js', __FILE__ ), array($this->plugin_slug.'-map-quote-calculator'), $this->version, true);
+		wp_localize_script( $this->plugin_slug . '-tq-pro', 'TransitQuoteProSettings', $tq_settings);
 
 		wp_enqueue_script( $this->plugin_slug . '-parsley-script', plugins_url( 'js/parsley.js', __FILE__ ), array( $this->plugin_slug . '-tq-pro' ), $this->version, true );	
 		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public-main.js', __FILE__ ), array( $this->plugin_slug . '-tq-pro' ), $this->version, true );
@@ -226,10 +227,15 @@ class TransitQuote_Pro_Public {
 
 		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
 		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);		
+		$this->show_contact_name = (bool)$this->get_setting('','show_contact_name',false);		
+		$this->show_contact_number = (bool)$this->get_setting('','show_contact_number',false);
+		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');		
 
 		$tq_settings = array('ajaxurl' => $ajax_url,
 							'ask_for_unit_no'=>self::bool_to_text($this->ask_for_unit_no),
 							'ask_for_postcode'=>self::bool_to_text($this->ask_for_postcode),
+							'show_contact_name'=>self::bool_to_text($this->show_contact_name),
+							'show_contact_number'=>self::bool_to_text($this->show_contact_number),
 							'geolocate'=>$this->geolocate,
 							'imgurl'=> plugins_url( 'assets/images/', __FILE__ ),
 							'distance_unit'=>$this->distance_unit,
@@ -751,6 +757,8 @@ class TransitQuote_Pro_Public {
 		$this->pick_start_address = (bool)$this->get_setting('','pick_start_address',true);
 		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
 		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);
+		$this->show_contact_number = (bool)$this->get_setting('','show_contact_number',false);
+		$this->show_contact_name = (bool)$this->get_setting('','show_contact_name',false);
 		$this->show_driving_time = (bool)$this->get_setting('','show_driving_time',true);
 		if($this->show_driving_time){
 			$drive_time_hidden_class = '';
@@ -812,6 +820,8 @@ class TransitQuote_Pro_Public {
 		$this->pick_start_address = (bool)$this->get_setting('','pick_start_address',true);
 		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
 		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);
+		$this->show_contact_name = (bool)$this->get_setting('','show_contact_name',false);
+		$this->show_contact_number = (bool)$this->get_setting('','show_contact_number',false);
 		$this->show_driving_time = (bool)$this->get_setting('','show_driving_time',true);
 		$this->tax_name = $this->get_setting('','tax_name','VAT');
 		$this->tax_rate = $this->get_setting('','tax_rate', 0);
