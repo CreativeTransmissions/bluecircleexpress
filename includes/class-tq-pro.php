@@ -669,6 +669,24 @@ class TransitQuote_Pro4 {
 							'after'=>'after tax_cost');
 			$cdb->add_column('quotes',$col_def);
 		}
+		
+		if(!$cdb->col_exists('journeys_locations','contact_name')){
+			$col_def = array('name'=>'contact_name',
+							'type'=>'varchar(128)',
+							'null'=>'null',
+							'default'=>'',
+							'after'=>'after modified');
+			$cdb->add_column('journeys_locations',$col_def);
+		}
+		
+		if(!$cdb->col_exists('journeys_locations','contact_phone')){
+			$col_def = array('name'=>'contact_phone',
+							'type'=>'varchar(45)',
+							'null'=>'null',
+							'default'=>'',
+							'after'=>'after contact_name');
+			$cdb->add_column('journeys_locations',$col_def);
+		}
 	}
 
 	private function update_appartment_no_column_size($cdb){
