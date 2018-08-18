@@ -852,6 +852,7 @@ class TransitQuote_Pro_Public {
 		// added layout option if given and inline then form will  be inline map else admin setting
 		$attributes = shortcode_atts( array(
 	        'layout' => '',
+	        'service' => '',
 	    ), $atts );
 		
 	    if ($attributes['layout'] == 'inline'){
@@ -878,6 +879,27 @@ class TransitQuote_Pro_Public {
 	   	include $this->view;
 	   	return ob_get_clean();
 	}	
+	public function get_services_with_rates_by_id($id){
+		//return services which have rates set
+		$services = $this->cdb->get_rows('rates',
+										array('service_id' => $id), 
+										array(),
+										null,
+										array()
+										);
+		return $services;
+	
+	}
+	public function get_services_by_id($id){
+		$services = $this->cdb->get_rows('services',
+											array('id' => $id), 
+											array(),
+											null,
+											array()
+											);
+		return $services;
+	}
+
 
 	public function build_form_include_list(){
 		$this->form_includes = array();
