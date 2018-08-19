@@ -297,6 +297,7 @@ class TransitQuote_Pro4 {
 		$this->loader->add_action( 'wp_ajax_test_customer_email', $plugin_admin, 'test_customer_email_callback');
 		$this->loader->add_action( 'wp_ajax_test_dispatch_email', $plugin_admin, 'test_dispatch_email_callback');
 		$this->loader->add_action( 'woocommerce_order_status_completed', $plugin_admin, 'woocommerce_order_marked_completed');
+		$this->loader->add_action( 'plugins_loaded', $plugin_admin, 'is_transitteam_active' );
 		
 	}
 
@@ -336,6 +337,7 @@ class TransitQuote_Pro4 {
 		
 		$this->loader->add_action( 'woocommerce_product_get_regular_price', $this->plugin_public, 'set_price_to_woocommerce', 10, 2);
 		$this->loader->add_action( 'woocommerce_product_get_price', $this->plugin_public, 'set_price_to_woocommerce', 10, 2);
+		$this->loader->add_filter( 'return_main_cdb_config', $this->plugin_public, 'return_main_cdb_config' );
 	}
 
 	/**
@@ -428,9 +430,14 @@ class TransitQuote_Pro4 {
 		$cdb->define_table($db_config->get_config('event_logs')); 
 		$cdb->define_table($db_config->get_config('event_data'));
 		$cdb->define_table($db_config->get_config('blocked_dates'));
-		
+
+		// apply filter to use added extenstion tables	
+
+		$cdb = apply_filters('override_cdb_config', $cdb);
+
 		return $cdb;
 	}
+
 
 	public function init_settings(){
 		$this->tabs_config = $this->define_tab_config();
