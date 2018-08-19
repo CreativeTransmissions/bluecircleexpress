@@ -56,6 +56,7 @@ class TransitQuote_Pro_Admin {
 		$this->version = $version;
 		$this->plugin = new TransitQuote_Pro_Public($plugin_name,  $version, $plugin_slug);
 		$this->prefix = $this->plugin->get_prefix();
+		$this->is_transitteam_active = $this->is_transitteam_active();
 	}
 
 	/**
@@ -353,6 +354,16 @@ class TransitQuote_Pro_Admin {
 	    $payment_status_types_table_name = $this->cdb->get_table_full_name('payment_statuses');
 	    $status_types_table_name = $this->cdb->get_table_full_name('status_types');
 
+	    $driver_sql = '';
+	    $driver_sql_field = '';
+
+	    if($this->is_transitteam_active){
+		    $drivers_table_name = $this->cdb->get_table_full_name('drivers');
+			$jobs_assignment_table_name = $this->cdb->get_table_full_name('job_assignments');
+			$driver_sql_field = ', d.id as driver_id ';
+			$driver_sql = " left join ".$jobs_assignment_table_name." ja on jobs.id = ja.job_id left join ".$drivers_table_name." d on d.id = ja.driver_id ";
+	    }
+
 		$sql = "SELECT distinct	jobs.id,
     							jobs.id as job_id,
     							status_type_id,
@@ -366,7 +377,8 @@ class TransitQuote_Pro_Admin {
 								pt.name as payment_type,
 								payment_type_id,
 								pst.description as payment_status,
-								payment_status_id as payment_status_type_id
+								payment_status_id as payment_status_type_id 
+								" .$driver_sql_field. "
 							FROM ".$jobs_table_name." jobs
 								left join ".$journeys_table_name." j 
 									on j.job_id = jobs.id 
@@ -393,8 +405,8 @@ class TransitQuote_Pro_Admin {
 									on ld.id = last_stop.last_loc_id
 
 								left join ".$customers_table_name." c 
-									on c.id = jobs.customer_id 
-	
+									on c.id = jobs.customer_id
+
 								left join ".$quotes_table_name." q 
 									on q.id = jobs.accepted_quote_id
 
@@ -403,6 +415,8 @@ class TransitQuote_Pro_Admin {
 
 								left join ".$payment_status_types_table_name." pst 
 									on pst.id = jobs.payment_status_id
+								
+								". $driver_sql."	
 
 								left join ".$status_types_table_name." st 
 									on pst.id = jobs.status_type_id
@@ -410,7 +424,7 @@ class TransitQuote_Pro_Admin {
 		order by ".$order_sql.";";
 
 		$data = $this->cdb->query($sql);
-		//echo $this->cdb->last_query;
+		//$this->cdb->last_query;
 		return $data;
     }
 
@@ -729,9 +743,10 @@ class TransitQuote_Pro_Admin {
 					$params = self::get_sort_params();
 					
 					$job_data = $this->get_jobs($filters, $params);
+					
 					$defaults = array(
 									'data'=>$job_data,
-									'fields'=>array(/*'move_type',*/
+									'fields'=>array(
 													'status_type_id',
 													'id as job_id',
 													'created',
@@ -740,17 +755,47 @@ class TransitQuote_Pro_Admin {
 													'ld.address as drop_off',									
 													'delivery_time',
 													'payment_type_id',
-													'payment_status_type_id'),
-									'formats'=>array('created'=>'ukdatetime', 'delivery_time'=>'ukdatetime',
-										'status_type_id'=>array('select'=>'status_types'),
-										'payment_type_id'=>array('select'=>'payment_types'),
-										'payment_status_type_id'=>array('select'=>array('select_table'=>'payment_statuses',
-																						'text_name'=>'description'))),
+													'payment_status_type_id'
+													),
+									'formats'=>array(
+										'created'=>'ukdatetime', 
+										'delivery_time'=>'ukdatetime',
+										'status_type_id'=>array(
+											'select'=>'status_types'
+										),
+										'payment_type_id'=>array(
+											'select'=>'payment_types'
+										),
+										'payment_status_type_id'=>array(
+											'select'=>array(
+												'select_table'=>'payment_statuses',
+											)
+										)
+										
+									),
 									'inputs'=>false,
 									'table'=>'jobs',
 									'actions'=>array('Delete'),
 									'tpl_row'=>'<tr class="expand"></tr>'
 								);
+					
+					if($this->is_transitteam_active){
+						array_push($defaults['fields'], 'd.id as driver_id');						
+						$driver_format = array('driver_id'=>array('select'=> array(
+												'select_table'=>'drivers',
+												'text_field'=>'first_name'
+											)
+										)
+						);
+						$defaults['formats'] = array_merge($defaults['formats'] ,$driver_format);
+						
+						if(!empty($defaults['no_default'])){
+							array_push($defaults['no_default'], 'drivers');
+						} else {
+							$defaults['no_default'] = array('drivers');
+						}
+					}
+					
 			break;
 			case 'services':
 				$defaults = array(
@@ -1045,6 +1090,21 @@ class TransitQuote_Pro_Admin {
 				$this->plugin->delete_orphaned_rates();
 			default:
 				break;
+		}
+	}
+
+	/**
+	 * Check if transitteam is active/installed
+	 *	 
+	 * @since    4.2.2
+	 */	
+	public function is_transitteam_active() {
+		if( class_exists( 'TransitTeam' ) ) {
+			$this->is_transitteam_active = true;
+			return true;
+		} else {
+			$this->is_transitteam_active = false;
+			return false;
 		}
 	}
 

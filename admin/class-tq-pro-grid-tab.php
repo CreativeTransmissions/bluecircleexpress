@@ -24,12 +24,16 @@
 class TransitQuote_Pro_Grid_Tab extends TransitQuote_Pro_Tab {
 
     public function filter_bar(){
-        $defaults = $this->admin->get_job_filters();
+    	$defaults = $this->admin->get_job_filters();
         echo $this->dbui->filter_bar(array('table' =>'status_types',
                                             'name_col'=>'name',
                                             'value_col'=>'id',
                                             'title'=>'<legend>Display jobs with status:</legend>',
                                             'defaults'=>$defaults['status_type_id']));
+    }
+
+    public function is_transitteam_active($value='') {
+    	return $this->admin->is_transitteam_active();
     }
 
 }

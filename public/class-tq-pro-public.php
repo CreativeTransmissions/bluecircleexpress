@@ -525,7 +525,7 @@ class TransitQuote_Pro_Public {
     	<?php
     }
    
-	
+
 	//Sets dynamic price to product and adds job id to session
 	public function set_price_to_woocommerce( $price, $product ) {
 		
@@ -3198,4 +3198,13 @@ class TransitQuote_Pro_Public {
 		$success = $this->cdb->query($sql);
 		return $success;
 	}
+
+	/*
+		Return cdb config to be used in any extentions if added
+	*/
+	public function return_main_cdb_config($cdb){
+		$cdb->tables = array_merge($cdb->tables, $this->cdb->tables);
+		return $cdb;
+	}
+
 }

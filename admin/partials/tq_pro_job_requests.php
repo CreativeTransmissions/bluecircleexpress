@@ -1,3 +1,4 @@
+<?php $is_transitteam_active =  $this->is_transitteam_active(); ?>
 	<input type="hidden" name="orderby" value=''/>
 	<input type="hidden" name="order" value=''/>
 	<fieldset class="date-filters">
@@ -28,6 +29,9 @@
 			<th data-sortby='delivery_time' data-order='ASC'>Pick Up Time<span class="sorting"></span></th>
 			<th data-sortby='payment_method' data-order='ASC'>Payment Method<span class="sorting"></span></th>
 			<th data-sortby='payment_status' data-order='ASC'>Payment Status<span class="sorting"></span></th>
+			<?php if ($is_transitteam_active){?>
+				<th data-sortby='driver_id' data-order='ASC'>Drivers<span class="sorting"></span></th>
+			<?php }?>
 		</tr>
 		</thead>
 		<tbody>
