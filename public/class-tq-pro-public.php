@@ -1676,7 +1676,7 @@ class TransitQuote_Pro_Public {
 		return $this->cdb->get_row('locations', $location_id);
 	}
 
-	private function save_locations(){
+private function save_locations(){
 		// save all locations in journey
 		$this->locations_in_journey_order = array();
 		foreach ($this->journey_order as $key => $address_index) {
@@ -1688,19 +1688,40 @@ class TransitQuote_Pro_Public {
 			if($location['id']==0){
 				self::debug('Unable to save location: '.$address_index);
 				return false;
-			};			
+			};
+
+			$journey_order_rec = array('journey_id' => $this->journey['id'],
+										'location_id'=> $location['id'],
+										'journey_order'=>$key,
+										'created'=>date('Y-m-d G:i:s'),
+										'modified'=>date('Y-m-d G:i:s'));
+
+			$journey_order_optional_fields = self::get_journey_order_optional_fields($key);
+			$journey_order_rec = array_merge($journey_order_rec, $journey_order_optional_fields);
+
 			// store ids in array ready for save
-			$this->locations_in_journey_order[$key] = array('journey_id' => $this->journey['id'],
-															'location_id'=> $location['id'],
-															'journey_order'=>$key,
-															'created'=>date('Y-m-d G:i:s'),
-															'modified'=>date('Y-m-d G:i:s'),
-															'contact_name'=>$_POST['address_'.$key.'_contact_name'],
-															'contact_phone'=>$_POST['address_'.$key.'_contact_phone']);
+			$this->locations_in_journey_order[$key] = $journey_order_rec;
 		};
 
 		return true;
 
+	}
+
+	private function get_journey_order_optional_fields($idx){
+		$journey_order_optional_fields = array();
+
+		$contact_name_field_name = 'address_'.$idx.'_contact_name';
+		$contact_name = $this->ajax->param(array('name'=>$contact_name_field_name, 'optional'=>true));
+		if(!empty($contact_name)){
+			$journey_order_optional_fields['contact_name'] = $contact_name;
+		};
+
+		$contact_phone_field_name = 'address_'.$idx.'_contact_name';
+		$contact_phone = $this->ajax->param(array('name'=>$contact_phone_field_name, 'optional'=>true));		
+		if(!empty($contact_name)){
+			$journey_order_optional_fields['contact_phone'] = $contact_phone;
+		};
+		return $journey_order_optional_fields;
 	}
 
 	private function save_location($address_index){
