@@ -312,6 +312,7 @@ class TransitQuote_Pro4 {
 		add_shortcode( 'TransitQuote_Pro', array( $this->plugin_public, 'display_TransitQuote_Pro' ) );
 		add_shortcode( 'transitquote_pro', array( $this->plugin_public, 'display_TransitQuote_Pro' ) );
 		add_shortcode( 'tq_pro_display_rates_list', array( $this->plugin_public, 'display_rates_list' ) );
+		add_shortcode( 'my_booking', array($this->plugin_public, 'display_quote_page' ) );
 
 		add_filter( 'widget_text', 'do_shortcode', 11);
 		$this->loader->add_action( 'init', $this->plugin_public, 'init_plugin');
