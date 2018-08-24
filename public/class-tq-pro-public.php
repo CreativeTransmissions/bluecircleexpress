@@ -3418,4 +3418,38 @@ class TransitQuote_Pro_Public {
 		$success = $this->cdb->query($sql);
 		return $success;
 	}
+	public function booking_details_add_my_account_orders_column( $columns ) {
+		$form_section_order = self::get_setting('pro_settings_quote_options', 'select_page_my_quotes', 'post_title');
+		$new_columns = array();
+
+		foreach ( $columns as $key => $name ) {
+			$new_columns[ $key ] = $name;
+
+			// add ship-to after order status column
+			if ( 'order-status' === $key ) {
+				$new_columns['booking_details'] = __( 'Booking Details', 'textdomain' );
+			}
+			
+		}
+		if($form_section_order !== "post_title"){
+			return $new_columns;
+		}
+	}
+	public function booking_details_to_column( $order ) {
+	
+		$order_id = $order->get_id();
+		$order = wc_get_order( $order_id );
+		$job_id = $order->get_meta('job_id');
+		if ( ! $job_id ) {
+			return;
+		}
+		$form_section_order = self::get_setting('pro_settings_quote_options', 'select_page_my_quotes', 'post_title');
+	
+		$site_url = get_permalink($form_section_order);
+		$site_url .= '?job_id='.$job_id;
+		
+		$html = '<a href="%s">%s</a>';
+		echo sprintf($html, $site_url, $site_url);
+
+	}
 }
