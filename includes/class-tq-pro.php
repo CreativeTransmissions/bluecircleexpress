@@ -313,6 +313,7 @@ class TransitQuote_Pro4 {
 		add_shortcode( 'TransitQuote_Pro', array( $this->plugin_public, 'display_TransitQuote_Pro' ) );
 		add_shortcode( 'transitquote_pro', array( $this->plugin_public, 'display_TransitQuote_Pro' ) );
 		add_shortcode( 'tq_pro_display_rates_list', array( $this->plugin_public, 'display_rates_list' ) );
+		add_shortcode( 'my_booking', array($this->plugin_public, 'display_quote_page' ) );
 
 		add_filter( 'widget_text', 'do_shortcode', 11);
 		$this->loader->add_action( 'init', $this->plugin_public, 'init_plugin');
@@ -338,6 +339,8 @@ class TransitQuote_Pro4 {
 		$this->loader->add_action( 'woocommerce_product_get_regular_price', $this->plugin_public, 'set_price_to_woocommerce', 10, 2);
 		$this->loader->add_action( 'woocommerce_product_get_price', $this->plugin_public, 'set_price_to_woocommerce', 10, 2);
 		$this->loader->add_filter( 'return_main_cdb_config', $this->plugin_public, 'return_main_cdb_config' );
+		$this->loader->add_filter( 'woocommerce_my_account_my_orders_columns', $this->plugin_public, 'booking_details_add_my_account_orders_column', 10, 1);
+		$this->loader->add_action( 'woocommerce_my_account_my_orders_column_booking_details', $this->plugin_public, 'booking_details_to_column', 10, 1);
 	}
 
 	/**

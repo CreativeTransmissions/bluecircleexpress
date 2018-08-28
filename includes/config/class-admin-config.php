@@ -470,16 +470,24 @@ class Admin_Config {
                                                         'help'=>'Please enter the class or id of the html element in which to display the final quote.<br/>Note that by specifying a class you can have the quote amount appear in multiple elements such as a visible element for displaying to the customer and a hidden form element for saving the amount.',
                                                         'type'=>'input',
                                                         'default'=>'quote'
-														                          ),
-														                          'round_of_currency'=>array(
+													  ),
+													  'round_of_currency'=>array(
                                                         'id'=>'round_of_currency',
                                                         'label'=>'Round off Currency',
                                                         'type'=>'select',
                                                         'options'=>array('Round to 2 decimal points','Round to 1 decimal points','Round to integer','Round to nearest 10','Round to nearest 100'),
                                                         'help'=>'Option to choose how much to round the currency.Default is 2 decimal points',
                                                         'default'=>'Round to 2 decimal points'
-                                                      )
-														                      )
+                                                      ),
+													   'select_page_my_quotes'=>array(
+															'id'=>'select_page_my_quotes',
+															'label'=>'Select My Quote Page',
+															'type'=>'select',
+															'options'=> self::redirect_page_after_payment_list(),
+															'id_field'=>'ID',
+															'display_field'=>'post_title'
+													 )
+													)
                                                     )
                                                 )
 

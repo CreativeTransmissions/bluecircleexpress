@@ -524,7 +524,213 @@ class TransitQuote_Pro_Public {
     	</div>
     	<?php
     }
-   
+	public function display_quote_page($atts) {
+		// display the quote and payment page
+		global $add_my_script_flag;
+		$add_my_script_flag = true;
+
+		$plugin = new TransitQuote_Pro4();
+		$this->cdb = $plugin->get_custom_db();
+		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+
+		//get paths for includes
+		self::get_paths_for_includes();
+
+		$this->job_id = $this->ajax->param(array('name'=>'job_id', 'optional'=>true));
+		if(empty($this->job_id)){
+			return '';
+		} else {
+			self::get_job_details_from_id($this->job_id);
+			$this->currency_code = self::get_currency_code();
+			$this->currency_symbol = self::get_currency_symbol();
+			$this->distance_unit = self::get_distance_unit();
+			$this->success_message = self::get_success_message();
+			$this->confirm_quote_before_sending = true;
+
+			$this->distance = $this->job['journey']['distance'];
+			$this->time = $this->job['journey']['time'];
+
+			$this->distance_cost = $this->job['quote']['distance_cost'];
+			$this->time_cost = $this->job['quote']['time_cost'];
+
+			$this->rate_hour = $this->job['quote']['rate_hour'];
+
+			$this->total_cost = $this->job['quote']['total'];
+			$this->view = 'partials/tq-quote-page.php';
+			
+			ob_start();
+		   	include $this->view;
+		   	return ob_get_clean();
+		}
+	}
+		public function job_details_quote_table($header, $data){
+		$html = '';
+		$rows = array();
+		foreach ($data as $field) {
+			$type_attribute = '';
+			if(isset($field['type'])){
+				$type_attribute = ' data-type="'.$field['type'].'" ';
+			}
+
+			$name_attribute = '';
+			if(isset($field['name'])){
+				$name_attribute = ' data-name="'.$field['name'].'" ';
+			};
+
+			$edit_attribute = '';
+			if(isset($field['editable'])){
+				$edit_attribute = ' class="tq-editable" ';
+			};
+
+			$click_attribute = '';
+			if(isset($field['clickable'])){
+				$click_attribute = ' class="tq-clickable" ';
+			}
+
+			$update_attribute = '';
+			if(isset($field['update'])){
+				$update_attribute = ' data-update="'.$field['update'].'" ';
+			};
+
+			$surcharge_attribute = '';
+			if(isset($field['surcharge_id'])){
+				$surcharge_attribute = ' data-id="'.$field['surcharge_id'].'" ';
+			};
+
+			if(empty($field['label'])){
+				$row = '<tr><td>'.$field['value'].'</td></tr>';
+
+				$html = '<table><tr><th colspan="1">'.$header.'</th></tr>';
+			} else {
+				$row = '<tr><td>'.$field['label'].'</td><td>'.$field['value'].'</td></tr>';
+
+				$html = '<table><tr><th colspan="2">'.$header.'</th></tr>';
+			}
+			
+			$rows[] = $row;
+		};
+			if(count($rows)===0){
+				$html = '';
+			} else {
+				$html .= implode('', $rows);
+				$html .= '</table>';
+			}
+			echo $html;
+		}
+	public function route_details_table($html = false){
+		$route_row_data = self::get_route_list();
+		return $this->web_details_list('Route',$route_row_data);
+	}
+
+	public function web_details_list($header, $data){
+		//return job details info in list for text email
+		$html = '<table><tr><th colspan="1">'.$header.'</th></tr>';
+
+		$rows = array();
+		foreach ($data as $field) {
+			if(!empty($field['value'])){
+				if(empty($field['label'])){
+					$rows[] = '<tr><td>'.$field['value'].'</td></tr>';
+				} else {
+					$rows[] = '<tr><td>'.$field['label'].'</td><td>'.$field['value'].'</td></tr>';
+				}
+			}
+		};
+		$html .= implode('', $rows);
+		$html .= '</table>';
+		echo $html;
+
+	}
+	private function get_route_list(){
+		$route_row_data = array();
+		foreach ($this->locations_in_journey_order as $key => $waypoint) {
+			switch ($waypoint['journey_order']) {
+				case '0':
+					$route_row_data[] = array('value'=>'Collect From:');
+					$route_row_data[] = array('value'=>$this->format_waypoint_list($waypoint, true));
+					break;
+				default:
+					$route_row_data[] = array('value'=>'Drop Off:');
+					$route_row_data[] = array('value'=>$this->format_waypoint_list($waypoint, true));
+					break;
+			}
+			
+		};
+		return $route_row_data;
+	}
+	
+	public function format_surcharges_web($surcharge = null){
+		//format for display in job details view
+		if(empty($surcharge)){
+			return false;
+		};		
+		$currency = self::get_currency_code();
+		$out = array();
+		foreach ($surcharge as $key => $surcharge) {
+			//init new field
+			$field = array();
+			//include only label, value and template_id set to text incase needed for output
+			switch ($surcharge['name']) {
+				case 'Add Surcharge..':
+					break;
+				default:
+					$field['label'] = $surcharge['name'].'<span style="display: inline-block; float: right;">£</span>';
+					$field['value'] = $surcharge['amount'];
+					$field['name'] = 'amount';
+					$out[] = $field;
+
+					break;
+			};
+			
+		};
+		return $out;
+	}
+	public function format_quote_web($quote = null){
+		//format for display in job details view
+		if(empty($quote)){
+			return false;
+		};		
+		$currency = self::get_currency_code();
+		$out = array();
+		$output_order = array('distance_cost','tax_cost','total');
+
+		foreach ($output_order as $key => $field_name) {
+			//init new field
+			$field = array();
+			$value = $quote[$field_name];
+
+			//include only label, value and template_id set to text incase needed for output
+			switch ($field_name) {
+				case 'distance_cost':
+					$field['label'] = 'Delivery Cost <span style="display: inline-block; float: right;">£</span>';
+					$field['value'] = $value;
+					$field['update'] = 'quote';
+					$field['name'] = $field_name;
+					$out[] = $field;
+					break;
+				case 'tax_cost':
+					$field['label'] = 'VAT <span style="display: inline-block; float: right;">£</span>';
+					$field['value'] = $value;
+					$field['type'] = 'text';
+					$field['editable'] = false;
+					$field['update'] = 'quote';
+					$field['name'] = $field_name;
+					$out[] = $field;
+					break;
+				case 'total':
+					$field['label'] = 'Total Including VAT <span style="display: inline-block; float: right;">£</span>';
+					$field['value'] = $value;
+					$field['type'] = 'text';
+					$field['editable'] = true;
+					$field['update'] = 'quote';
+					$field['name'] = $field_name;
+					$out[] = $field;
+					break;
+			};
+			
+		};
+		return $out;
+	}
 
 	//Sets dynamic price to product and adds job id to session
 	public function set_price_to_woocommerce( $price, $product ) {
@@ -1668,7 +1874,9 @@ class TransitQuote_Pro_Public {
 															'location_id'=> $journey_stop['location_id'],
 															'journey_order'=>$key,
 															'created'=>date('Y-m-d G:i:s'),
-															'modified'=>date('Y-m-d G:i:s'));
+															'modified'=>date('Y-m-d G:i:s'),
+															'contact_name'=>$journey_stop['contact_name'],
+															'contact_phone'=>$journey_stop['contact_phone']);
 		};
 	}
 
@@ -2628,7 +2836,6 @@ private function save_locations(){
 
 		$vehicles = self::get_vehicles();
 		$this->vehicles = $this->index_array_by_db_id($vehicles);
-
 		//format for display in job details view
 		$out = array();
 		foreach ($job as $key => $value) {
@@ -2639,7 +2846,9 @@ private function save_locations(){
 				case 'description':
 					$field['label'] = 'Information';
 					$field['value'] = $value;
-					$out[] = $field;
+					if($field['value'] != ''){
+						$out[] = $field;
+					}
 					break;
 				case 'service_id':
 					if(self::using_service_types($value)){
@@ -2880,11 +3089,11 @@ private function save_locations(){
 			switch ($waypoint['journey_order']) {
 				case '0':
 					$route_row_data[] = array('value'=>'Collect From:');
-					$route_row_data[] = array('value'=>$this->format_waypoint_list($waypoint['location']));
+					$route_row_data[] = array('value'=>$this->format_waypoint_list($waypoint));
 					break;
 				default:
 					$route_row_data[] = array('value'=>'Drop Off:');
-					$route_row_data[] = array('value'=>$this->format_waypoint_list($waypoint['location']));
+					$route_row_data[] = array('value'=>$this->format_waypoint_list($waypoint));
 					break;
 			}
 			
@@ -2930,14 +3139,25 @@ private function save_locations(){
 		return $html;
 	}
 
-	private function format_waypoint_list($waypoint){
+	private function format_waypoint_list($waypoint, $html = false){
+		if($html===true){
+			$line_ending = "<br/><br/>";
+		} else {
+			$line_ending = "\r\n";
+		}
 		$text ="";
-		if(!empty($waypoint['appartment_no'])){
-			$text .="Unit: ".$waypoint['appartment_no']."\r\n";
+		if(!empty($waypoint['location']['appartment_no'])){
+			$text .="Unit: ".$waypoint['location']['appartment_no'].$line_ending;
 		};
-		$text .="Address: ".stripslashes($waypoint['address'])."\r\n";
-		if(!empty($waypoint['postal_code'])){
-			$text .="Postcode: ".$waypoint['postal_code']."\r\n";
+		$text .="Address: ".stripslashes($waypoint['location']['address']).$line_ending;
+		if(!empty($waypoint['location']['postal_code'])){
+			$text .="Postcode: ".$waypoint['location']['postal_code'].$line_ending;
+		};	
+		if(!empty($waypoint['contact_name'])){
+			$text .="Contact Name: ".$waypoint['contact_name'].$line_ending;
+		};	
+		if(!empty($waypoint['contact_phone'])){
+			$text .="Contact Phone: ".$waypoint['contact_phone'].$line_ending;
 		};
 
 		return $text;
@@ -3218,6 +3438,40 @@ private function save_locations(){
 		//echo $sql;
 		$success = $this->cdb->query($sql);
 		return $success;
+	}
+	public function booking_details_add_my_account_orders_column( $columns ) {
+		$form_section_order = self::get_setting('pro_settings_quote_options', 'select_page_my_quotes', 'post_title');
+		$new_columns = array();
+
+		foreach ( $columns as $key => $name ) {
+			$new_columns[ $key ] = $name;
+
+			// add ship-to after order status column
+			if ( 'order-status' === $key ) {
+				$new_columns['booking_details'] = __( 'Booking Details', 'textdomain' );
+			}
+			
+		}
+		if($form_section_order !== "post_title"){
+			return $new_columns;
+		}
+	}
+	public function booking_details_to_column( $order ) {
+	
+		$order_id = $order->get_id();
+		$order = wc_get_order( $order_id );
+		$job_id = $order->get_meta('job_id');
+		if ( ! $job_id ) {
+			return;
+		}
+		$form_section_order = self::get_setting('pro_settings_quote_options', 'select_page_my_quotes', 'post_title');
+	
+		$site_url = get_permalink($form_section_order);
+		$site_url .= '?job_id='.$job_id;
+		
+		$html = '<a href="%s">%s</a>';
+		echo sprintf($html, $site_url, $site_url);
+
 	}
 
 	/*
