@@ -303,7 +303,7 @@ p.radio-group-label {
     border-color: #3e80fa;
     border-width: 4px;
 }
-.tq-form .transit_main input[type="radio"] {
+.tq-form input[type="radio"] {
     width: auto;
     height: auto;
     box-shadow: none;
