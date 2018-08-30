@@ -3326,7 +3326,7 @@ private function save_locations(){
 			//job id not valide
 			return false;
 		};
-
+		$this->status_types = self::get_status_types();
 		$status_type_rec = self::get_status_type($status_type_id);
    		if(empty($status_type_rec)){
    			//status type
