@@ -1117,7 +1117,7 @@ class TransitQuote_Pro_Public {
 		       		array(	'template'=>'delivery_fields',
 		       				'hidden'=>''),
 		       		array(	'template'=>'map',
-		       				'hidden'=>''),
+		       				'hidden'=>''),		       		
 		       		array(	'template'=>'quote_fields',
 		       				'hidden'=>'hidden'),
 		       		array(	'template'=>'customer_fields',
@@ -1134,7 +1134,7 @@ class TransitQuote_Pro_Public {
 		       		array(	'template'=>'search_fields',
 		       				'hidden'=>''),
 		       		array(	'template'=>'map',
-		       				'hidden'=>''),
+		       				'hidden'=>''),		       		
 		       		array(	'template'=>'quote_fields',
 		       				'hidden'=>'hidden')
 				);

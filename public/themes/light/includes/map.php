@@ -7,4 +7,7 @@
     <div id="map" class="map">
     	<a href="//transitquote.co.uk/" target="_blank">Powered by TransitQuote</a>
     </div>
+    <?php  
+		include( "route_options.php" );
+	?>
 </div>

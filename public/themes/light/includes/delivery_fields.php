@@ -1,12 +1,8 @@
-<div class="search-fields">
+<div class="tq-row">
 	<?php  
 		include( "service_vehicle.php" );
-		include( "deliver_return.php" );
 	?>
 </div>
-
-
-
 
 
 
