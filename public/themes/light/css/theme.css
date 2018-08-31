@@ -83,12 +83,14 @@
     opacity: 1;
     z-index: 0;    
 }
-/*Font Integration*/
+
 .tq-form .remove-address{
     display: inline-block;
     margin-left: 1em;
-    margin-top: 1.6em;
+    margin-top: 1.1em;
 }
+
+/*Font Integration*/
 .transit_main {
     font-family: 'Lato', sans-serif;
     font-weight: 700;
