@@ -274,7 +274,6 @@
 					},
 
 					afterQuote: function(){
-						//console.log('got distance, getting quote');
 						if(that.validateGetQuote()){
 							that.updateFormAction('tq_pro4_get_quote');
 							that.submitForm('get_quote');
@@ -554,7 +553,6 @@
 			},
 
 			scrollToMap: function(){
-					console.log('scrollToMap');
 					$('html, body').animate({
 					    scrollTop: ($('#map').offset().top)
 					},500);

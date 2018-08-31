@@ -36,6 +36,10 @@ Feel free to use them for the intended purpose
     display: block;
     width: 100%;
 }
+.tq-form .map-ctr{
+    clear: left;
+    display: block;
+}
 
 /************************* Reserved CSS Classes ***********************
 Never use these classes for styling!! They are for use by jQuery code
