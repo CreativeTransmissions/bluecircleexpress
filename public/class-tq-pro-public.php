@@ -1191,6 +1191,14 @@ class TransitQuote_Pro_Public {
 		return $this->get_setting('', 'min_distance_message');
 	}
 
+	public function get_max_price_msg(){
+		return $this->get_setting('', 'max_price_message');
+	}
+
+	public function get_max_distance_msg(){
+		return $this->get_setting('', 'max_distance_message');
+	}
+
 	private function get_result_class($payment_status_type_id = null){
 		$payment_status_type_id = self::check_payment_status_type_id($payment_status_type_id);
 

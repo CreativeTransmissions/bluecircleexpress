@@ -9,7 +9,10 @@
 	 </fieldset>
 </div>
 <div class="tq-row failure" style="display:none;">
-		<h2>Error!</h2><p>Sorry we were unable to save your request, please contact us above for assistance.</p>
+	<h2>Error!</h2><p>Sorry we were unable to save your request, please contact us above for assistance.</p>
 </div>
-<p class="min-cost-msg tq-warning" style="display: none;"><?php echo self::get_min_price_msg(); ?></p>
-<p class="min-distance-msg tq-warning" style="display: none;"><?php echo self::get_min_distance_msg(); ?></p>
+<div class="tq-warning">
+	<p class="min-cost-msg" style="display: none;"><?php echo self::get_min_price_msg(); ?></p>
+	<p class="min-distance-msg" style="display: none;"><?php echo self::get_min_distance_msg(); ?></p>
+	<p class="max-distance-msg" style="display: none;"><?php echo self::get_max_distance_msg(); ?></p>	
+</div>
