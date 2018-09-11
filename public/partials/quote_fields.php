@@ -6,8 +6,8 @@
             <span class="sub-total" id="distance"></span>
         </div>
         <div class="field <?php echo $drive_time_hidden_class; ?>">
-            <label class="" for="hours">Estimated Travel Time:</label>
-            <span class="sub-total" id="hours"></span>
+            <label class="" for="time">Estimated Travel Time:</label>
+            <span class="sub-total" id="time"></span>
         </div>
         <div class="field notice-field">
             <label class="" for="notice">Short Notice Cost:</label>

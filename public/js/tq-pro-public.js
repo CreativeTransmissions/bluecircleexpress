@@ -279,25 +279,24 @@
 							that.submitForm('get_quote');
 						};						
 
-					},
-					
-					callbackChangeServiceId: function(serviceId){
-						// UI changes on vehicle selection
-						$('.service.select-desc').hide();
-						var descToShowSelector = '.service.v-desc-'+String(serviceId);
-						$(descToShowSelector).show();
-					},
-
-					callbackChangeVehicleId: function(vehicleId){
-						// UI changes on vehicle selection
-						$('.vehicle.select-desc').hide();
-						var descToShowSelector = '.vehicle.v-desc-'+String(vehicleId);
-						$(descToShowSelector).show();
 					}
 
 				});
 			},
+					
+			callbackChangeServiceId: function(serviceId){
+				// UI changes on vehicle selection
+				$('.service.select-desc').hide();
+				var descToShowSelector = '.service.v-desc-'+String(serviceId);
+				$(descToShowSelector).show();
+			},
 
+			callbackChangeVehicleId: function(vehicleId){
+				// UI changes on vehicle selection
+				$('.vehicle.select-desc').hide();
+				var descToShowSelector = '.vehicle.v-desc-'+String(vehicleId);
+				$(descToShowSelector).show();
+			},
 
 			dateConverter:function(UNIX_timestamp){
 			  var a = new Date(UNIX_timestamp);
@@ -518,6 +517,20 @@
 					});
 				};
 
+
+				$('select[name="service_id"]').on('change', function(e){
+					var serviceId = $(this).val();
+					that.callbackChangeServiceId(serviceId);					
+					that.calculator.updateQuote();
+				});
+				
+				$('select[name="vehicle_id"]').on('change', function(e){
+					var vehicleId = $(this).val();
+					that.callbackChangeVehicleId(vehicleId);
+					that.calculator.updateQuote();
+				});
+
+
 				$(this.element).on('submit', function (e) {
 					e.stopPropagation();
 					e.preventDefault();
@@ -545,9 +558,7 @@
 				       	parsleyField.validationResult = true;
 				        return true;
 			    	}
-				/*	if (parsleyField.$element.attr('name') === 'field1') {
-					$("input[name=field2]").focus();
-					}*/
+
 				});
 				return true;
 			},
