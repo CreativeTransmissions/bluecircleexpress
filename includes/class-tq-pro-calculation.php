@@ -100,20 +100,15 @@ class TQ_Calculation {
 			case 'final':
 				self::calc_with_final_boundary_rates();
 				break;
-			case 'all':
-				self::calc_with_all_boundary_rates();
-				break;
 		};
 
 		if((self::including_return_journey())&&(self::using_different_rate_for_return_journey())){
-			self::add_return_distance_cost_to_total($this->final_rate);
+			self::add_return_distance_cost_to_distance_cost($this->final_rate);
 		};
-		$this->distance_cost = $this->total;
-		if($this->final_rate['hour']>0){
-			self::add_hourly_amount_to_total($this->final_rate);			
-		};
+		self::calc_time_cost($this->final_rate);
 
-		$this->basic_cost = $this->total; // hourly amount + set amount + distance cost
+		$this->basic_cost = $this->time_cost + $this->distance_cost;
+		
 
 		if($this->tax_rate>0){
 			self::add_tax();
@@ -146,8 +141,8 @@ class TQ_Calculation {
 			if(self::is_distance_within_boundary($rate)){
 				$this->final_rate = $rate;
 				//echo $this->distance.' is within '.$rate['distance'];
-				self::add_boundary_set_amount_to_total($rate);
-				self::add_boundary_distance_cost_to_total($rate);
+				self::add_boundary_set_amount_to_distance_cost($rate);
+				self::add_boundary_distance_cost_to_distance_cost($rate);
 				break;
 			}  else {
 				//echo $this->distance.' is NOT within '.$rate['distance'];
@@ -163,45 +158,10 @@ class TQ_Calculation {
 				$this->final_rate = $this->max_distance_rate;
 			}
 
-			self::add_max_distance_cost_to_total($this->final_rate);
-			self::add_max_distance_set_amount_to_total($this->final_rate);
+			self::add_max_distance_cost_to_distance_cost($this->final_rate);
+			self::add_max_distance_set_amount_to_distance_cost($this->final_rate);
 		};
 		
-		
-	}
-
-	private function calc_with_all_boundary_rates(){
-		
-		$final_rate = false;
-		//rates are ordered by distance boundary from 0 to max
-		foreach ($this->rates as $key => $rate) {
-			if($rate['distance']==0){
-				continue;
-			};
-			if(self::is_distance_within_boundary($rate)){
-				$this->final_rate = $rate;
-				echo $this->distance.' is within '.$rate['distance'];
-				self::add_boundary_set_amount_to_total($rate);
-				self::add_boundary_distance_cost_to_total($rate);
-				break;
-			} else {
-				echo $this->distance.' is NOT within '.$rate['distance'];
-				self::add_boundary_set_amount_to_total($rate);
-				self::add_boundary_distance_cost_to_total($rate);
-			}
-		};
-		//echo '*charged for '.$this->units_charged_for.' of '.$this->distance.' units';
-		$units_left_to_charge_for = $this->distance - $this->units_charged_for;
-		if($units_left_to_charge_for > 0 ){
-		//	echo ' still to charge for '.$units_left_to_charge_for.' units.';
-			if($final_rate === false){
-		//		echo ' Using max distance rate for long journey.';
-				$final_rate = $this->max_distance_rate;
-			};	
-
-			self::add_max_distance_cost_to_total($final_rate);
-			
-		};
 		
 	}
 
@@ -213,9 +173,9 @@ class TQ_Calculation {
 		}
 	}
 
-	private function add_boundary_set_amount_to_total($rate){
+	private function add_boundary_set_amount_to_distance_cost($rate){
 		if($rate['amount']>0){
-			$this->total = $this->total + $rate['amount'];
+			$this->distance_cost = $this->distance_cost + $rate['amount'];
 			$this->set_amount = $rate['amount'];
 			if($rate['distance'] < $this->distance){
 				$this->units_charged_for = $this->units_charged_for + $rate['distance'];		
@@ -225,6 +185,7 @@ class TQ_Calculation {
 			}
 
 			$this->breakdown[] = array(	'distance'=>$this->distance,
+										'distance_cost'=>$this->distance_cost,
 										'units_charged_for'=>$this->units_charged_for,
 										//'miles_remaining_within_boundary'=>$miles_remaining_within_boundary,
 										'type'=>'set amount',
@@ -233,16 +194,17 @@ class TQ_Calculation {
 		}
 	}
 
-	private function add_boundary_distance_cost_to_total($rate){
+	private function add_boundary_distance_cost_to_distance_cost($rate){
 		if($this->distance <  $rate['distance']){
 			$miles_up_to_boundary = $this->distance;
 		} else {
 			$miles_up_to_boundary = $rate['distance'];
 		};
 		$cost_of_miles_up_to_boundary = $miles_up_to_boundary*$rate['unit'];
-		$this->total = $this->total + $cost_of_miles_up_to_boundary;
+		$this->distance_cost = $this->distance_cost + $cost_of_miles_up_to_boundary;
 		$this->units_charged_for = $this->units_charged_for + $miles_up_to_boundary;
 		$this->breakdown[] = array(	'distance'=>$miles_up_to_boundary,
+									'distance_cost'=>$this->distance_cost,
 									'type'=>'per distance unit',
 									'rate'=>$rate['unit'],
 									'cost'=>$cost_of_miles_up_to_boundary);
@@ -259,52 +221,55 @@ class TQ_Calculation {
 							'cost'=>$cost_of_miles_remaining_within_boundary);
 	}
 
-	private function add_max_distance_cost_to_total($rate){
-		/*echo ', add_max_distance_cost_to_total: rate: '.$rate['unit'];
-		echo ', add_max_distance_cost_to_total: total_distance: '.$this->distance;
-		echo ', add_max_distance_cost_to_total: units_charged_for: '.$this->units_charged_for;*/
+	private function add_max_distance_cost_to_distance_cost($rate){
+		/*echo ', add_max_distance_cost_to_distance_cost: rate: '.$rate['unit'];
+		echo ', add_max_distance_cost_to_distance_cost: total_distance: '.$this->distance;
+		echo ', add_max_distance_cost_to_distance_cost: units_charged_for: '.$this->units_charged_for;*/
 		$miles_remaining = $this->distance - $this->units_charged_for;
-		//echo ', add_max_distance_cost_to_total: miles_remaining: '.$miles_remaining;
+		//echo ', add_max_distance_cost_to_distance_cost: miles_remaining: '.$miles_remaining;
 		$cost_of_miles_remaining = $miles_remaining*$rate['unit'];
-		$this->total = $this->total + $cost_of_miles_remaining;
+		$this->distance_cost = $this->distance_cost + $cost_of_miles_remaining;
 		$this->units_charged_for = $this->units_charged_for + $miles_remaining;
 
 		$this->breakdown[] = array(	'distance'=>$miles_remaining,
-							'type'=>'per distance unit',
-							'rate'=>$rate['unit'],
-							'cost'=>$cost_of_miles_remaining);
+									'distance_cost'=>$this->distance_cost,
+									'type'=>'per distance unit',
+									'rate'=>$rate['unit'],
+									'cost'=>$cost_of_miles_remaining);
 	}
 
-	private function add_max_distance_set_amount_to_total($rate){
-		//echo ', add_max_distance_set_amount_to_total: rate: '.$rate['amount'];
-		$this->total = $this->total + $rate['amount'];
+	private function add_max_distance_set_amount_to_distance_cost($rate){
+		//echo ', add_max_distance_set_amount_to_distance_cost: rate: '.$rate['amount'];
+		$this->distance_cost = $this->distance_cost + $rate['amount'];
 		$miles_remaining = $this->distance - $this->units_charged_for;
 		$this->units_charged_for = $this->units_charged_for + $miles_remaining;
 		
 		$this->breakdown[] = array(	'distance'=>$miles_remaining,
-							'type'=>'set amount',
-							'rate'=>$rate['amount'],
-							'cost'=>$rate['amount']);
+									'distance_cost'=>$this->distance_cost,
+									'type'=>'set amount',
+									'rate'=>$rate['amount'],
+									'cost'=>$rate['amount']);
 	}
 
 
-	private function add_return_distance_cost_to_total($rate){
-	/*	echo ', add_return_distance_cost_to_total: rate: '.$rate['unit'];
-		echo ', add_return_distance_cost_to_total: total_distance: '.$this->distance;
-		echo ', add_return_distance_cost_to_total: units_charged_for: '.$this->units_charged_for;*/
+	private function add_return_distance_cost_to_distance_cost($rate){
+	/*	echo ', add_return_distance_cost_to_distance_cost: rate: '.$rate['unit'];
+		echo ', add_return_distance_cost_to_distance_cost: total_distance: '.$this->distance;
+		echo ', add_return_distance_cost_to_distance_cost: units_charged_for: '.$this->units_charged_for;*/
 		$return_miles = $this->return_distance;
 
-		//echo ', add_max_distance_cost_to_total: miles_remaining: '.$miles_remaining;
+		//echo ', add_max_distance_cost_to_distance_cost: miles_remaining: '.$miles_remaining;
 		$return_cost = $return_miles*$rate['unit'];
 		$return_cost = self::apply_return_cost_adjustment($return_cost);
 
-		$this->total = $this->total + $return_cost;
+		$this->distance_cost = $this->distance_cost + $return_cost;
 		$this->units_charged_for = $this->units_charged_for + $return_miles;
 		$this->breakdown[] = array(	'distance'=>$return_miles,
-							'type'=>'per distance unit',
-							'rate'=>$rate['unit'],
-							'return_percentage'=>$this->config['return_percentage'],
-							'cost'=>$return_cost);
+									'distance_cost'=>$this->distance_cost,
+									'type'=>'per distance unit',
+									'rate'=>$rate['unit'],
+									'return_percentage'=>$this->config['return_percentage'],
+									'cost'=>$return_cost);
 	}
 
 	private function apply_return_cost_adjustment($return_cost){
@@ -314,64 +279,65 @@ class TQ_Calculation {
 		}
 		return $return_cost;
 	}
-
-	private function add_hourly_amount_to_total($rate){
-		$this->time_hours = $this->config['time_mins'] / 60;
+	private function calc_time_cost($rate){
+		$this->time_hours = $this->config['hours'];
 		$this->time_cost = $this->time_hours * $rate['hour'];
-		$this->total = $this->total + $this->time_cost;
-		$this->breakdown[] = array(	'hours'=>$this->time_hours,
-									'type'=>'hourly cost',
-									'rate'=>$rate['hour'],
-									'cost'=>$this->time_cost);
 	}
 
 	private function add_tax(){
-		$this->tax_cost = ($this->tax_rate/100)*$this->total;
+		$this->tax_cost = ($this->tax_rate/100)*$this->basic_cost;
 		$this->tax_cost = round($this->tax_cost,2);
-		$this->total = $this->total + $this->tax_cost;
-		$this->breakdown[] = array(	'distance'=>0,
+		$this->total = $this->basic_cost + $this->tax_cost;
+		$this->breakdown[] = array(	'basic_cost'=>$this->basic_cost,
+									'total'=>$this->total,
 									'type'=>$this->tax_name,
 									'rate'=>$this->tax_rate,
 									'cost'=>$this->tax_cost);
 	}
 
-	private function build_quote(){
-
-		$total_rounded =$this->total;
-
+	private function apply_rounding($num){
 		switch ($this->config['rouunding_type']) {
 			case 'Round to 2 decimal points':
-				$total_rounded = round($total_rounded,2);
+				$num = number_format((float)$num, 2, '.', '');
 				break;
 			case 'Round to 1 decimal points':
-				$total_rounded = round($total_rounded,1);
+				$num = round($num,1);
 				break;
 			case 'Round to integer':
-				$total_rounded = round($total_rounded,0);
+				$num = round($num,0);
 				break;
 			case 'Round to nearest 10':
-				$total_rounded = round($total_rounded / 10) * 10;
-				if($total_rounded == 0 ){
-					$total_rounded = 10;
+				$num = round($num / 10) * 10;
+				if($num == 0 ){
+					$num = 10;
 				}
 				break;
 			case 'Round to nearest 100':
-				$total_rounded = round($total_rounded / 100) * 100;
-					if($total_rounded == 0 ){
-						$total_rounded = 100;
+				$num = round($num / 100) * 100;
+					if($num == 0 ){
+						$num = 100;
 					}
 				break;				
 			default: //'Round to 2 decimal points':
-				$total_rounded = round($total_rounded,2);
+				$num = number_format((float)$num, 2, '.', '');
 				break;
-		};
+		};	
+		return $num;	
+	}
+
+	private function build_quote(){
+
+		$total_rounded = $this->apply_rounding($this->total);
+		$basic_cost_rounded = $this->apply_rounding($this->basic_cost);
 
 		$quote = array('total'=>$total_rounded,
 						'total_before_rounding'=>$this->total,
 						'distance'=>$this->distance,
 						'distance_cost'=>number_format((float)$this->distance_cost, 2, '.', ''),
-						'basic_cost'=>$this->basic_cost,
+						'basic_cost'=>$basic_cost_rounded,
 						'breakdown'=>$this->breakdown,
+						'rate_hour'=>$this->final_rate['hour'],
+						'time_cost'=>$this->time_cost,
 						'rate_tax'=>$this->tax_rate,
 						'tax_cost'=>$this->tax_cost);
 		return $quote;
