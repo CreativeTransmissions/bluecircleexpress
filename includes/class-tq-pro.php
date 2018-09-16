@@ -644,6 +644,25 @@ class TransitQuote_Pro4 {
 	}
 
 	public function migrate_rates($cdb){
+
+		if(!$cdb->col_exists('table_filters','wp_user_id')){
+			$col_def = array('name'=>'wp_user_id',
+							'type'=>'int',
+							'null'=>'null',
+							'default'=>'',
+							'after'=>'after filter_values');
+			$cdb->add_column('table_filters',$col_def);
+		}
+
+		if(!$cdb->col_exists('customers','wp_user_id')){
+			$col_def = array('name'=>'wp_user_id',
+							'type'=>'int',
+							'null'=>'null',
+							'default'=>'',
+							'after'=>'after id');
+			$cdb->add_column('customers',$col_def);
+		}		
+
 		if(!$cdb->col_exists('rates','journey_length_id')){
 			$col_def = array('name'=>'journey_length_id',
 							'type'=>'int',
@@ -679,6 +698,37 @@ class TransitQuote_Pro4 {
 							'after'=>'after tax_cost');
 			$cdb->add_column('quotes',$col_def);
 		}
+
+		if(!$cdb->col_exists('quotes','basic_cost')){
+			$col_def = array('name'=>'basic_cost',
+							'type'=>'decimal(10,2)',
+							'null'=>'null',
+							'default'=>'default 0',
+							'after'=>'after notice_cost');
+			$cdb->add_column('quotes',$col_def);
+		}
+
+		if(!$cdb->col_exists('journeys','optimize_route')){
+			$col_def = array('name'=>'optimize_route',
+						     'type' => 'tinyint(1)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+						     'format' => '%d',
+							'after'=>'after time');
+			$cdb->add_column('journeys',$col_def);
+		}
+
+		if(!$cdb->col_exists('journeys','deliver_and_return')){
+			$col_def = array('name'=>'deliver_and_return',
+						     'type' => 'tinyint(1)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+						     'format' => '%d',
+							'after'=>'after time');
+			$cdb->add_column('journeys',$col_def);
+		}
 		
 		if(!$cdb->col_exists('journeys_locations','contact_name')){
 			$col_def = array('name'=>'contact_name',
@@ -697,7 +747,19 @@ class TransitQuote_Pro4 {
 							'after'=>'after contact_name');
 			$cdb->add_column('journeys_locations',$col_def);
 		}
+
+		if(!$cdb->col_exists('journeys_locations','location_status_id')){
+			$col_def = array('name' => 'location_status_id',
+						     'type' => 'int',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							'after'=>'after journey_id');
+			$cdb->add_column('journeys_locations',$col_def);
+		}
+		
 	}
+
 
 	private function update_appartment_no_column_size($cdb){
 		$col_def = array('name' => 'appartment_no',
