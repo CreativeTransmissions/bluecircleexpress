@@ -47,7 +47,7 @@
 		</tr>
 		</thead>
 		<tbody>
-		<tr><td colspan="4" class="empty-table"><div class="spinner"></div><?php echo $this->get_empty_message(); ?></td></tr>
+		<tr><td colspan="2" class="empty-table"><div class="spinner"></div><?php echo $this->get_empty_message(); ?></td></tr>
 		</tbody>
 	</table>
 </form>

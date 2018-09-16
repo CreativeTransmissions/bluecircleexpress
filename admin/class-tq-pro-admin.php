@@ -960,7 +960,7 @@ class TransitQuote_Pro_Admin {
 				$table_output_name = 'journey lengths';
 				break;
 			case 'blocked_dates':
-				$empty_colspan = 1;
+				$empty_colspan = 2;
 				$table_output_name = 'blocked dates';
 				break;
 			default:
