@@ -395,15 +395,6 @@ private function config_quotes(){
       'default' => '',
       'format' => '%f'
     ),
-  'rate_amount' => 
-    array (
-      'name' => 'rate_amount',
-      'type' => 'decimal(10,2)',
-      'null' => 'null',
-      'auto' => '',
-      'default' => '',
-      'format' => '%f'
-    ),
   'rate_hour' => 
     array (
       'name' => 'rate_hour',
@@ -412,7 +403,7 @@ private function config_quotes(){
       'auto' => '',
       'default' => '',
       'format' => '%f'
-    ),
+    ),      
     'rate_tax' => 
     array (
       'name' => 'rate_tax',
@@ -422,6 +413,15 @@ private function config_quotes(){
       'default' => '',
       'format' => '%f'
     ),
+    'basic_cost' => 
+    array (
+      'name' => 'basic_cost',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f'
+    ),    
     'distance_cost' => 
     array (
       'name' => 'distance_cost',

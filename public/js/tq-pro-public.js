@@ -16,8 +16,8 @@
 			customer: false,
 			debug: false,
 			quoteResult: 'quote',
-			timepickerSelector: 'collection_time',
-			datepickerSelector: 'collection_date'
+			timepickerSelector: '#collection_time',
+			datepickerSelector: '#collection_date'
 		};
 
 		// The actual plugin constructor
@@ -32,7 +32,7 @@
 		Plugin.prototype = {
 			/* initialization code */
 			init: function () {	
-				this.initRequestForms();				
+			
 				if(!this.initData()){
 					return false;
 				};
@@ -45,39 +45,6 @@
 				};
 
 			},
-			initRequestForms: function(){
-				var that = this;
-
-				//init popup 
-				$('.popup-with-form').magnificPopup({
-		          type: 'inline',
-    	          items: [					     
-				      {
-				        src: '#address-popup', // CSS selector of an element on page that should be used as a popup
-				        type: 'inline'
-				      }
-				    ],
-				    callbacks: {
-					    open: function() {
-					    	var map_id = window[$('#map').attr('id')];
-					    	google.maps.event.trigger(map_id, 'resize');						    	
-					    },
-					    close: function() {
-					      // Will fire when popup is closed
-					      //Copy addresses to main form feilds for validation
-					      $('input[name="moving_from"]').val($('#address_0').val());
-					      $('input[name="moving_to"]').val($('#address_1').val());
-					    }
-					}
-		        });
-
-
-				$('#address-popup input[name="addresses-ok"]').on('click', function(){
-					$.magnificPopup.close();
-				});
-
-			}, 
-
 
 			initData: function(){
 				this.log('initData');
@@ -289,13 +256,34 @@
 				$('.service.select-desc').hide();
 				var descToShowSelector = '.service.v-desc-'+String(serviceId);
 				$(descToShowSelector).show();
+
+				if(this.calculator){
+					this.calculator.filterAvailableVehicles();
+					this.calculator.updateQuote();
+				} else {
+					if(this.validateGetQuote()){
+						this.updateFormAction('tq_pro4_get_quote');
+						this.submitForm('get_quote');
+					};	
+				}
 			},
 
-			callbackChangeVehicleId: function(vehicleId){
+			callbackChangeVehicleId: function(el){
+				var vehicleId = $(el).val();
 				// UI changes on vehicle selection
 				$('.vehicle.select-desc').hide();
 				var descToShowSelector = '.vehicle.v-desc-'+String(vehicleId);
 				$(descToShowSelector).show();
+				var vehicleText = $('option:selected', el).text();
+				$('.vehicle-selected').html(vehicleText);
+				if(this.calculator){
+					this.calculator.updateQuote();
+				} else {
+					if(this.validateGetQuote()){
+						this.updateFormAction('tq_pro4_get_quote');
+						this.submitForm('get_quote');
+					};	
+				}
 			},
 
 			dateConverter:function(UNIX_timestamp){
@@ -310,59 +298,66 @@
 
 			initDatePicker: function(){
 				var that = this;
-				var arrayOfNumbers = TransitQuoteProSettings.blocked_dates.map(function(t){
-					return new Date(t[0]); 
-				});
+				
 				var interval = TransitQuoteProSettings.time_interval;
 				
-				var $inputDate =$('#'+this.settings.datepickerSelector).pickadate({
+				var dateRangeToDisable = this.getInitialDateRangeToDisable();
+				
+				var $inputDate = $( this.settings.datepickerSelector ).pickadate({						
+					disable : dateRangeToDisable,
 					formatSubmit: 'dd-mm-yyyy',
-					disable : arrayOfNumbers,
-					format:'dd / mm / yyyy',
+		            hiddenPrefix: '',
+					hiddenSuffix: '',
 		            min: new Date(),
+		            hiddenName:false,
 		            onSet: function(context) {
-		            	var date = that.dateConverter(context.select);
-		            	$('#delivery_date').val(date);
-		            	that.updateFormAction('tq_pro4_get_quote');
-		            	that.calculator.updateQuote();
-
-		            	var selectedDate = date;
-		            	var today = that.dateConverter(new Date());
-
-		            	var inputTime = $('#'+that.settings.timepickerSelector).pickatime();
-		            	var timePickerObj = inputTime.pickatime('picker');
-
-		            	if(selectedDate == today){ 
-		            		// if dates are equal then time should be start from now not begining of the day
-		            		var todayDate = new Date();
-							todayDate.setTime(todayDate.getTime() + (1*60*60*1000)); //add one hour	            			
-	            			timePickerObj.set('min', todayDate).clear(); //clear suppose if prev time selected
-
-		            	} else {
-		            		// casue prev dates are disabled
-		            		timePickerObj.set('min', false);
+		            	if(context.select){ // if its the selected date that has changed
+		            		
 		            	}
 				  	},
-				  
-		        });
+				  	onClose: function() {
+					    $('.timepicker').blur();
+					    $('.datepicker').blur();
+					    $('.picker').blur();
+					}
+		        });				
+				
 		        var datePickerObj = $inputDate.pickadate('picker');
+			},
+
+			getInitialDateRangeToDisable: function(){
+				var dateRangeToDisable = TransitQuoteProSettings.blocked_dates.map(function(t){
+					return new Date(t[0]); 
+				});
+
+				return dateRangeToDisable;
 			},
 
 			initTimePicker: function(){
 				var that = this;
-				var interval = TransitQuoteProSettings.time_interval;
-				var today = new Date();
-				today.setTime(today.getTime() + (1*60*60*1000)); //add one hour
-				var $input = $( '#'+this.settings.timepickerSelector ).pickatime({
-					min: today,
-					format:'HH:i',
-					interval: parseInt(interval),
+
+				var interval = TransitQuoteProSettings.time_interval;								
+				var $input = $( this.settings.timepickerSelector ).pickatime({
+					min: '7:00 AM',
+					max: '5:00 PM',
+					interval: 30,
+					editable:true,
 					onSet: function(context) {
-						that.updateFormAction('tq_pro4_get_quote');
-				    	that.calculator.updateQuote();
-				  	}
+						
+				  	},
+				  	onClose: function() {
+					    $('.timepicker').blur();
+					    $('.datepicker').blur();
+					    $('.picker').blur();
+					}
+				})
+
+				var picker = $input.pickatime('picker');
+
+				$( this.settings.timepickerSelector ).on('click', function(){
+					picker.open();
 				});
-				var timePickerObj = $input.pickatime('picker');
+				console.log($input);
 			},
 
 			initParsleyValidation: function(){
@@ -517,20 +512,6 @@
 					});
 				};
 
-
-				$('select[name="service_id"]').on('change', function(e){
-					var serviceId = $(this).val();
-					that.callbackChangeServiceId(serviceId);					
-					that.calculator.updateQuote();
-				});
-				
-				$('select[name="vehicle_id"]').on('change', function(e){
-					var vehicleId = $(this).val();
-					that.callbackChangeVehicleId(vehicleId);
-					that.calculator.updateQuote();
-				});
-
-
 				$(this.element).on('submit', function (e) {
 					e.stopPropagation();
 					e.preventDefault();
@@ -558,10 +539,34 @@
 				       	parsleyField.validationResult = true;
 				        return true;
 			    	}
-
 				});
+
+				this.addEventHandlerChangeVehicle();
+				this.addEventHandlerChangeService();				
 				return true;
 			},
+
+
+			addEventHandlerChangeVehicle: function(){
+				var that = this;				
+				$('select[name="vehicle_id"]').on('change', function(e){
+
+					// call callback for UI updates if one exists
+					that.callbackChangeVehicleId(this);
+				});
+			},
+
+			addEventHandlerChangeService: function(){			
+				var that = this;
+				$('select[name="service_id"]').on('change', function(e){
+					that.log('change: service_id');
+					var val = $(this).val();
+
+					// call callback for UI updates if one exists
+					that.callbackChangeServiceId(val);
+				});
+
+			},					
 
 			scrollToMap: function(){
 					$('html, body').animate({
@@ -752,13 +757,15 @@
 
 			populateQuoteFields: function(quote){
 				$('.totalCost').html(quote.total);
-				$('.basicCost').html(quote.distance_cost);
+				$('.basicCost').html(quote.basic_cost);
 				$('.rateTax').html(quote.rate_tax);
 				$('.taxCost').html(quote.tax_cost);
+				$('.hourCost').val(quote.time_cost);				
 				$('input[name="distance_cost"]').val(quote.distance_cost);
 				$('input[name="total"]').val(quote.total);
 				$('input[name="rate_tax"]').val(quote.rate_tax);
 				$('input[name="tax_cost"]').val(quote.tax_cost);
+				$('input[name="basic_cost"]').val(quote.basic_cost);
 				$('#breakdown').val(JSON.stringify(quote.breakdown));
 			},
 
