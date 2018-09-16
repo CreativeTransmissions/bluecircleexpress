@@ -21,7 +21,7 @@
             <span class="basicCost"></span>
         </div>
         <div class="field <?php echo $tax_hidden_class; ?>">
-            <label class="" for="hours">Tax</label>
+            <label class="" for="taxCost"><?php echo $this->tax_name; ?></label>
             <span class="taxCost"></span>
         </div>
         <div class="field">

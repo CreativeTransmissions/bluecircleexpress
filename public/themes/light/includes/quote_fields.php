@@ -10,7 +10,7 @@
             <li class="<?php echo $drive_time_hidden_class; ?>">Estimated Travel Time: <span id="hours"></span></li>
             <li class="hidden">Short Notice Cost: <?php echo $this->currency_symbol; ?><span class="noticeCost"></span></li>
             <li class="field">Delivery Cost: <?php echo $this->currency_symbol; ?><span class="basicCost"></span></li>
-            <li class="<?php echo $tax_hidden_class; ?>">Tax: <?php echo $this->currency_symbol; ?><span class="taxCost"></span></li>
+            <li class="<?php echo $tax_hidden_class; ?>"><?php echo $this->tax_name; ?>: <?php echo $this->currency_symbol; ?><span class="taxCost"></span></li>
         </ul>
 
     </div>
