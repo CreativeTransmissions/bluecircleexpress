@@ -25,6 +25,7 @@ namespace TransitQuote_Pro4;
 class TQ_Calculation {
 
  	private $default_config = array('distance'=>0,
+ 									'hours'=>0,
  									'return_distance'=>0,
  									'return_percentage'=>100,
  									'return_time'=>0,
@@ -41,6 +42,8 @@ class TQ_Calculation {
 
 	public function init_calculation(){
 		//print_r($this->config);
+		$this->distance_cost = 0;
+		$this->basic_cost = 0;
 		$this->total_before_tax = 0;
 		$this->total = 0;
 		$this->set_amount = 0;
