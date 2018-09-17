@@ -3,9 +3,9 @@
  * Represents the view for the public-facing component of the plugin.
  *
  * @package   TransitQuote
- * @author    Andrew van Duivenbode <hq@customgooglemaptools.com>
+ * @author    Andrew van Duivenbode <hq@transitquote.co.uk>
  * @license   GPL-2.0+
- * @link      http://customgooglemaptools.com
+ * @link      http://transitquote.co.uk
  * @copyright 2015 Creative Transmissions
  */
 

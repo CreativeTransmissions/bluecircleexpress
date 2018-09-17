@@ -1,6 +1,6 @@
 /*	Google Places Place Selector
 *	jQuery Plugin from Custom Google Map Tools
-*	http://www.customgooglemaptools.com
+*	http://www.transitquote.co.uk
 *	Author: Andrew van Duivenbode
 * 	Liscence: MIT Liscence - See liscence.txt
 */

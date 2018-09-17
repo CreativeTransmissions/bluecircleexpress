@@ -25,7 +25,7 @@
  * @since      1.0.0
  * @package    TransitQuote_Pro
  * @subpackage TransitQuote_Pro/includes
- * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
+ * @author     Andrew van Duivenbode <hq@transitquote.co.uk>
  */
 class TransitQuote_Pro4 {
 
@@ -38,7 +38,7 @@ class TransitQuote_Pro4 {
 	 * @var      TransitQuote_Pro_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
-	const VERSION = '4.2.4';
+	const VERSION = '4.2.5';
 	/**
 	 * The unique identifier of this plugin.
 	 *
@@ -74,7 +74,7 @@ class TransitQuote_Pro4 {
 
 		$this->plugin_name = 'TransitQuote Pro';
 		$this->plugin_slug = 'tq-pro';
-		$this->version = '4.2.4';
+		$this->version = '4.2.5';
 
 		$this->load_dependencies();
 		$this->set_locale();

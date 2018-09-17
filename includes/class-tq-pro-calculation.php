@@ -19,7 +19,7 @@
  * @since      3.0.0
  * @package    TQ_Calculation
  * @subpackage TransitQuote_Pro/admin
- * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
+ * @author     Andrew van Duivenbode <hq@transitquote.co.uk>
  */
 namespace TransitQuote_Pro4;
 class TQ_Calculation {

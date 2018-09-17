@@ -19,7 +19,7 @@ error_reporting(E_ERROR | E_PARSE );
  *
  * @package    TransitQuote_Pro
  * @subpackage TransitQuote_Pro/admin
- * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
+ * @author     Andrew van Duivenbode <hq@transitquote.co.uk>
  */
 class TransitQuote_Pro_Admin {
 
@@ -1096,7 +1096,7 @@ class TransitQuote_Pro_Admin {
 	/**
 	 * Check if transitteam is active/installed
 	 *	 
-	 * @since    4.2.4
+	 * @since    4.2.5
 	 */	
 	public function is_transitteam_active() {
 		if( class_exists( 'TransitTeam' ) ) {

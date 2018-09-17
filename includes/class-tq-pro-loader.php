@@ -19,7 +19,7 @@
  *
  * @package    TransitQuote_Pro
  * @subpackage TransitQuote_Pro/includes
- * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
+ * @author     Andrew van Duivenbode <hq@transitquote.co.uk>
  */
 class TransitQuote_Pro_Loader {
 

@@ -19,7 +19,7 @@ error_reporting(E_ERROR | E_PARSE );
  *
  * @package    TransitQuote_Pro
  * @subpackage TransitQuote_Pro/public
- * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
+ * @author     Andrew van Duivenbode <hq@transitquote.co.uk>
  */
 class TransitQuote_Pro_Public {
 

@@ -19,7 +19,7 @@
  * @since      1.0.0
  * @package    TransitQuote_Pro
  * @subpackage TransitQuote_Pro/admin
- * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
+ * @author     Andrew van Duivenbode <hq@transitquote.co.uk>
  */
 class TransitQuote_Pro_Settings_Field_Radio {
 
