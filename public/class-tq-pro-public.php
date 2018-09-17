@@ -227,13 +227,15 @@ class TransitQuote_Pro_Public {
 
 		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
 		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);		
-		$this->show_contact_name = (bool)$this->get_setting('','show_contact_name',false);		
+		$this->show_contact_name = (bool)$this->get_setting('','show_contact_name',false);
+		$this->destination_address_label = $this->get_setting('','destination_address_label','Destination Address');
 		$this->show_contact_number = (bool)$this->get_setting('','show_contact_number',false);
 		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');		
 
 		$tq_settings = array('ajaxurl' => $ajax_url,
 							'ask_for_unit_no'=>self::bool_to_text($this->ask_for_unit_no),
 							'ask_for_postcode'=>self::bool_to_text($this->ask_for_postcode),
+							'destinationAddressLabel'=>$this->destination_address_label,
 							'show_contact_name'=>self::bool_to_text($this->show_contact_name),
 							'show_contact_number'=>self::bool_to_text($this->show_contact_number),
 							'geolocate'=>$this->geolocate,

@@ -244,12 +244,21 @@ class Admin_Config {
                                                                   
                                                                 ),
 
-                                                                'contact_section_title'=>array(
-                                                                    'id'=>'contact_section_title',
-                                                                    'label'=>'Contact Section Title',
+                                                                'quote_section_title'=>array(
+                                                                    'id'=>'quote_section_title',
+                                                                    'label'=>'Quote Section Title',
                                                                     'type'=>'input',
-                                                                    'default'=>'Your Contact Information',
-                                                                    'help'=>'This will appear as a title above the customer contact information fields.'
+                                                                    'default'=>'Delivery Cost',
+                                                                    'help'=>'This will appear as the title for the quote section.'
+                                                                  
+                                                                ),
+
+                                                                'quote_label'=>array(
+                                                                    'id'=>'quote_label',
+                                                                    'label'=>'Quote Label',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Our Quote',
+                                                                    'help'=>'This will appear next above the total amount in the quote section.'
                                                                   
                                                                 ),
 

@@ -1,6 +1,6 @@
 <div class="tq-row success  <?php echo $hide_section; ?> quote-fields" >
     <fieldset>
-        <legend>Delivery Cost</legend>
+        <legend><?php echo self::get_setting('tq_pro_form_options','quote_section_title', 'Delivery Cost'); ?></legend>
         <div class="field">
             <label class="" for="distance">Distance (<?php echo $this->distance_unit; ?>s):</label>
             <span class="sub-total" id="distance"></span>

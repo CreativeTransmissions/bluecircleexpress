@@ -1,9 +1,9 @@
 <div class="transit_inner cost <?php echo $hide_section; ?> quote-fields"> <!-- Estimate cost section start here -->
     <div class="transit_header">   <!-- Delivery Address section start here -->
-        <h2>Delivery Cost</h2>
+        <h2><?php echo self::get_setting('tq_pro_form_options','quote_section_title', 'Delivery Cost'); ?></h2>
     </div>
     <div class="transit_body quote-success">
-        <span>Our Quote</span>
+        <span><?php echo self::get_setting('tq_pro_form_options','quote_label', 'Our Quote'); ?></span>
         <h3><?php echo $this->currency_symbol; ?><span class="totalCost" ></span></h3>
         <ul>
             <li>Distance (<?php echo $this->distance_unit; ?>s): <span id="distance"></span></li>
