@@ -358,7 +358,6 @@
 				$( this.settings.timepickerSelector ).on('click', function(){
 					picker.open();
 				});
-				console.log($input);
 			},
 
 			initParsleyValidation: function(){
