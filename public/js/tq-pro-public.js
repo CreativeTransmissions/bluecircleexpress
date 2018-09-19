@@ -16,8 +16,8 @@
 			customer: false,
 			debug: false,
 			quoteResult: 'quote',
-			timepickerSelector: '#collection_time',
-			datepickerSelector: '#collection_date'
+			timepickerSelector: '#delivery_time',
+			datepickerSelector: '#delivery_date'
 		};
 
 		// The actual plugin constructor
@@ -303,7 +303,7 @@
 				var interval = TransitQuoteProSettings.time_interval;
 				
 				var dateRangeToDisable = this.getInitialDateRangeToDisable();
-				
+				console.log('initDatePicker');
 				var $inputDate = $( this.settings.datepickerSelector ).pickadate({						
 					disable : dateRangeToDisable,
 					formatSubmit: 'dd-mm-yyyy',

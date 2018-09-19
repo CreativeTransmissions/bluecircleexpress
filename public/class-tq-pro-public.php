@@ -117,16 +117,21 @@ class TransitQuote_Pro_Public {
 
 		self::dequeue_maps(); // uncomment to debug multiple maps installs
 
-		//include dependancies
-		wp_enqueue_script($this->plugin_slug.'-magnific-popup', plugins_url( 'js/jquery-magnific-popup.js', __FILE__ ), '', 1.1, True );
+
 		wp_enqueue_script($this->plugin_slug.'-gmapsapi', '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
 		wp_enqueue_script($this->plugin_slug.'-jqui', '//code.jquery.com/ui/1.10.4/jquery-ui.js', '', 1.10, True );
 		
 		wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'js/jquery.ui.map.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True ); //was commented
-		wp_enqueue_script( $this->plugin_slug.'-jqui-timepicker', plugins_url( 'js/jquery-ui-timepicker-addon.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-gmapsapi'), '', True );
-		wp_enqueue_script( $this->plugin_slug.'-datetimepicker', plugins_url( 'js/datetimepicker.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-gmapsapi'), '', True );
+		
+		wp_enqueue_script( $this->plugin_slug.'-picker', plugins_url( 'js/picker.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-gmapsapi'), '', True );
+		wp_enqueue_script( $this->plugin_slug.'-picker-date', plugins_url( 'js/picker.date.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-picker'), '', True );
+		wp_enqueue_script( $this->plugin_slug.'-picker-time', plugins_url( 'js/picker.time.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-picker-date'), '', True );	
+		wp_enqueue_script( $this->plugin_slug.'-picker-legacy', plugins_url( 'js/legacy.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-picker-time'), '', True );
+
+		wp_enqueue_script( $this->plugin_slug.'-addresspicker', plugins_url( 'js/js-transitquote/js/tq-address-picker.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
 
 		wp_enqueue_script( $this->plugin_slug.'-map-quote-calculator', plugins_url( 'js/js-transitquote/js/map-quote-calculator.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
+
 		wp_enqueue_script($this->plugin_slug . '-tq-pro', plugins_url('js/tq-pro-public.js', __FILE__ ), array($this->plugin_slug.'-map-quote-calculator'), $this->version, true);
 		wp_localize_script( $this->plugin_slug . '-tq-pro', 'TransitQuoteProSettings', $tq_settings);
 
