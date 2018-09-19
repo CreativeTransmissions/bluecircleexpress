@@ -128,8 +128,6 @@ class TransitQuote_Pro_Public {
 		wp_enqueue_script( $this->plugin_slug.'-picker-time', plugins_url( 'js/picker.time.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-picker-date'), '', True );	
 		wp_enqueue_script( $this->plugin_slug.'-picker-legacy', plugins_url( 'js/legacy.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-picker-time'), '', True );
 
-		wp_enqueue_script( $this->plugin_slug.'-addresspicker', plugins_url( 'js/js-transitquote/js/tq-address-picker.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
-
 		wp_enqueue_script( $this->plugin_slug.'-map-quote-calculator', plugins_url( 'js/js-transitquote/js/map-quote-calculator.js', __FILE__ ), array( 'jquery',$this->plugin_slug.'-jqui',$this->plugin_slug.'-jqui-maps'), '', True );
 
 		wp_enqueue_script($this->plugin_slug . '-tq-pro', plugins_url('js/tq-pro-public.js', __FILE__ ), array($this->plugin_slug.'-map-quote-calculator'), $this->version, true);
@@ -2212,7 +2210,8 @@ private function save_locations(){
 					$time_parts = explode(':', $delivery_time);
 					$hours = $time_parts[0];
 					$mins = $time_parts[1];
-					$date->setTime($hours, $mins);
+					$mins_parts = explode(' ', $mins);
+					$date->setTime($hours, $mins_parts[0]);
 					$record_data[$field] = $date->format('Y-m-d H:i:s');
 					break;				
 				default:
