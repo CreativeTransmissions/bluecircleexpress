@@ -117,6 +117,7 @@ class TQ_Calculation {
 			self::add_tax();
 		} else {
 			$this->tax_cost = 0;
+			$this->total = $this->basic_cost;
 		};
 		return self::build_quote();
 	

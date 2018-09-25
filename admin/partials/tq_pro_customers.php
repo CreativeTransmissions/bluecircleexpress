@@ -1,4 +1,6 @@
-<form class="admin-form box-form round hidden" id="edit_customer_form" method="post" autocomplete="false">
+<?php settings_fields( 'customers' ); ?>
+<?php do_settings_sections( 'customers' ); ?>
+<form class="tq-admin-form box-form round" box-form round hidden" id="edit_customer_form" method="post" autocomplete="false">
 	<fieldset>
 		<legend>Update Customer details:</legend>
 		<div class="inline-field">
