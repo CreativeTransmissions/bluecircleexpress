@@ -730,11 +730,11 @@
 								description: '',
 								addToCardRedirectUrl:''};
 
-					formData.firstName = $(".bt-flabels__wrapper input#first_name").val();
-					formData.lastName = $(".bt-flabels__wrapper input#last_name").val();
-					formData.phone = $(".bt-flabels__wrapper input.phone").val();
-					formData.email = $(".bt-flabels__wrapper input#email").val();
-					formData.description = $(".bt-flabels__wrapper textarea#description").val();
+					formData.firstName = $('.bt-flabels__wrapper input[name="first_name"]').val();
+					formData.lastName = $('.bt-flabels__wrapper input[name="last_name"]').val();
+					formData.phone = $('.bt-flabels__wrapper input[name="phone"]').val();
+					formData.email = $('.bt-flabels__wrapper input[name="email"]').val();
+					formData.description = $('.bt-flabels__wrapper textarea[name="description"]').val();
 
 					if(responseData.product_id){
 						formData.productId = responseData.product_id;						
