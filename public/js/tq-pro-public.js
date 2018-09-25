@@ -211,7 +211,7 @@
 						var idx = data.idx;
 						var html  = '<div class="address-wrap">';
 							html += '	<div class="field bt-flabels__wrapper full-width full">';
-                        	html += '		<span class="sub_title"><i class="icon icon-icn-collection-address"></i><label for="address_'+idx+'">Destination Address</label></span><a href="#" class="remove-address no-address-'+idx+'">'+TransitQuoteProSettings.remove_dest_link_text+'</a>';
+                        	html += '		<span class="sub_title"><i class="icon icon-icn-collection-address"></i>Destination Address</span><a href="#" class="remove-address no-address-'+idx+'">'+TransitQuoteProSettings.remove_dest_link_text+'</a>';
                         	html += '		<span class="transit_noadress"><a href="#" class="no-address no-address-'+idx+'">I can&apos;t find my address</a></span>';
                         	html += '		<input class="text addresspicker" required type="text" name="address_'+idx+'_address" id="address_'+idx+'" value="" autocomplete="false"/>';
                         	html += '		<span class="bt-flabels__error-desc">Required</span>';
