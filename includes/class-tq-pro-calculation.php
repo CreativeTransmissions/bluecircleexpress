@@ -33,7 +33,7 @@ class TQ_Calculation {
  									'rates'=>array(),
  									'include_return_journey'=>false,
  									'boundary_mode'=>'final',
- 									'rouunding_type'=>'Round to 2 decimal points');  // final or all
+ 									'rounding_type'=>'Round to 2 decimal points');  // final or all
 
     public function __construct($config = null) {
         //merge config with defaults so all properties are present
@@ -300,7 +300,8 @@ class TQ_Calculation {
 	}
 
 	private function apply_rounding($num){
-		switch ($this->config['rouunding_type']) {
+
+		switch ($this->config['rounding_type']) {
 			case 'Round to 2 decimal points':
 				$num = number_format((float)$num, 2, '.', '');
 				break;
