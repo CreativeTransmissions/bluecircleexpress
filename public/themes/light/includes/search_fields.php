@@ -13,7 +13,7 @@
             </div>
             <?php if($this->ask_for_unit_no){ ?>       
                 <div class="inline-block bt-flabels__wrapper half left">     
-                    <input class="left" type="text" id="address_0_appartment_no"  data-parsley-maxlength="20" name="address_0_appartment_no" placeholder="Unit" value=""/>
+                    <input class="left" type="text" id="address_0_appartment_no"  data-parsley-maxlength="20" name="address_0_appartment_no" placeholder="<?php echo self::get_setting('tq_pro_form_options','unit_no_label', 'Unit No'); ?>" value=""/>
                 </div>
             <?php } ?>
             <?php if($this->ask_for_postcode){ ?>    
@@ -48,7 +48,7 @@
                 </div>
                 <?php if($this->ask_for_unit_no){ ?>
                 <div class="inline-block bt-flabels__wrapper half left">   
-                    <input class="left" type="text" id="address_1_appartment_no" data-parsley-maxlength="20" name="address_1_appartment_no" placeholder="Unit" value=""/>
+                    <input class="left" type="text" id="address_1_appartment_no" data-parsley-maxlength="20" name="address_1_appartment_no" placeholder="<?php echo self::get_setting('tq_pro_form_options','unit_no_label', 'Unit No'); ?>" value=""/>
                 </div>
                 <?php } ?>
                 <?php if($this->ask_for_postcode){ ?>
@@ -91,7 +91,7 @@
                 </div>
                 <?php if($this->ask_for_unit_no){ ?>
                 <div class="inline-block bt-flabels__wrapper half left">   
-                    <input class="left" type="text" id="address_1_appartment_no" data-parsley-maxlength="20" name="address_1_appartment_no" placeholder="Unit" value=""/>
+                    <input class="left" type="text" id="address_1_appartment_no" data-parsley-maxlength="20" name="address_1_appartment_no" placeholder="<?php echo self::get_setting('tq_pro_form_options','unit_no_label', 'Unit No'); ?>" value=""/>
                 </div>
                 <?php } ?>
                 <?php if($this->ask_for_postcode){ ?>

@@ -573,7 +573,7 @@ class TransitQuote_Pro4 {
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
 			$cdb->update_row('payment_statuses', array('name' => 'Due', 'description'=> 'Due', 'created'=>$created, 'modified'=>$modified ));
-			$cdb->update_row('payment_statuses', array('name' => 'Recieved', 'description'=> 'Recieved', 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('payment_statuses', array('name' => 'received', 'description'=> 'received', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_statuses', array('name' => 'Failed', 'description'=> 'Failed', 'created'=>$created, 'modified'=>$modified ));
 			$cdb->update_row('payment_statuses', array('name' => 'Approved', 'description'=> 'Approved', 'created'=>$created, 'modified'=>$modified ));					
 		};

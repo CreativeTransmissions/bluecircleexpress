@@ -169,6 +169,7 @@ class TransitQuote_Pro_Public {
 
 		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','+ Insert Destination');
 		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');
+		$this->unit_no_label =  self::get_setting('tq_pro_form_options','unit_no_label', 'Unit No');
 
 	}
 
@@ -264,6 +265,7 @@ class TransitQuote_Pro_Public {
 							'sandbox'=>$this->sandbox,
 							'insert_dest_link_text'=>$this->insert_dest_link_text,
 							'remove_dest_link_text'=>$this->remove_dest_link_text,
+							'unit_no_label'=>$this->unit_no_label,
 							'blocked_dates'=> $blocked_dates,
 							'time_interval'=> $time_interval
 							);
@@ -1301,7 +1303,7 @@ class TransitQuote_Pro_Public {
 		$payment_status_type_id = self::check_payment_status_type_id($payment_status_type_id);
 		switch ($payment_status_type_id) {
 			case 2:
-				$result_title = 'Thank You. Your Payment Has Been Recieved Successfully.';
+				$result_title = 'Thank You. Your Payment Has Been received Successfully.';
 				break;
 			case 3:
 				$result_title = 'Sorry, there was a problem processing your payment.';
@@ -1813,7 +1815,7 @@ class TransitQuote_Pro_Public {
 		}
 
 		return array('success'=>'false',
-						'msg'=>'Invalid information recieved:<br/>'.$error_list,
+						'msg'=>'Invalid information received:<br/>'.$error_list,
 						'invalid_fields'=>$this->invalid_fields);
 	}
 
@@ -1830,7 +1832,7 @@ class TransitQuote_Pro_Public {
 	private function build_response_save_job($job_id = null){
 	
 		return array(	'success'=>'true',
-						'success_message'=>'Your job was recieved successfully<br/>The delivery reference number is: '.$job_id.'</p>',
+						'success_message'=>'Your job was received successfully<br/>The delivery reference number is: '.$job_id.'</p>',
 						'data'=>array('customer_id'=>$this->customer['id'],
 					 				'job_id'=>$job_id,
 					 				'quote_id'=>$this->quote['id'],
@@ -1841,7 +1843,7 @@ class TransitQuote_Pro_Public {
 	private function build_response_save_job_for_woocommerce($job_id = null){
 	
 		return array(	'success'=>'true',
-						'success_message'=>'Your job was recieved successfully<br/>The delivery reference number is: '.$job_id.'</p>',
+						'success_message'=>'Your job was received successfully<br/>The delivery reference number is: '.$job_id.'</p>',
 						'data'=>array('customer_id'=>$this->customer['id'],
 					 				'job_id'=>$job_id,
 					 				'quote_id'=>$this->quote['id'],
@@ -2150,7 +2152,7 @@ private function save_locations(){
 		};
 
 		return array(	'success'=>'true',
-						'success_message'=>'Your job was recieved successfully<br/>The delivery reference number is: '.$job_id.'</p>',
+						'success_message'=>'Your job was received successfully<br/>The delivery reference number is: '.$job_id.'</p>',
 						'data'=>array('customer_id'=>$this->customer['id'],
 					 				'job_id'=>$job_id,
 					 				'quote_id'=>$this->quote['id'],

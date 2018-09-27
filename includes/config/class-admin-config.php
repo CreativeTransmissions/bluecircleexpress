@@ -210,6 +210,14 @@ class Admin_Config {
                                                                     'help'=>'This is the link text for removing a new destination address picker.'
                                                                 ),
 
+                                                                'unit_no_label'=>array(
+                                                                  'id'=>'unit_no_label',
+                                                                  'label'=>'Unit / Flat / Appartment No Label',
+                                                                  'type'=>'input',
+                                                                  'default'=>'Unit No',
+                                                                  'help'=>'This text appears next to the Unit / Flat/ Appartment No field in the order form'
+                                                                ),                                                                
+
                                                                 'collection_date_label'=>array(
                                                                   'id'=>'collection_date_label',
                                                                   'label'=>'Collection Date Label',

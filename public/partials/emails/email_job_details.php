@@ -1,4 +1,4 @@
-New Job Request Recieved
+New Job Request received
 
 <?php 
 $this->job_details_list('Customer Details',$this->format_customer($this->job['customer'])); 

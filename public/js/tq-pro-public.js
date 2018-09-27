@@ -174,6 +174,9 @@
 					insertDestLinkText: this.settings.data.insert_dest_link_text,
 					removeDestLinkText: this.settings.data.remove_dest_link_text,
 
+					unitNoLabel: this.settings.data.unit_no_label,
+
+
 					/*	
 						The form elements tell the plugin which html inputs are used for 
 						entering the addresses and diplaying the reuslts 
@@ -218,7 +221,7 @@
 							html += '	</div>';
 							if(TransitQuoteProSettings.ask_for_unit_no === 'true'){
 	                    		html += '	<div class="inline-block bt-flabels__wrapper half left">';
-	                        	html += '		<input class="inline-block half-field" type="text" id="address_'+idx+'_appartment_no" name="address_'+idx+'_appartment_no" placeholder="Unit" value=""/>';
+	                        	html += '		<input class="inline-block half-field" type="text" id="address_'+idx+'_appartment_no" name="address_'+idx+'_appartment_no" placeholder="'+data.unitNoLabel+'" value=""/>';
 								html += '	</div>';
 							};
 							if(TransitQuoteProSettings.ask_for_postcode === 'true'){
