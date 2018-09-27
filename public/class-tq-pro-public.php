@@ -1096,12 +1096,13 @@ class TransitQuote_Pro_Public {
 	public function get_default_service(){
 		//return services which have rates set
 		$journey_lengths_table_name = $this->cdb->get_table_full_name('journey_lengths');
-		$services_table_name = $this->cdb->get_table_full_name('services_table_name');
-		$vehicles_table_name = $this->cdb->get_table_full_name('vehicles_table_name');
+		$services_table_name = $this->cdb->get_table_full_name('services');
+		$vehicles_table_name = $this->cdb->get_table_full_name('vehicles');
+		$rates_table_name = $this->cdb->get_table_full_name('rates');			
 		// get ordered list of rates with distance 0 as the final record
     	$sql = "select distinct s.* 
-				FROM wp_tq_pro4_services s 
-				inner join ".$services_table_name." r  
+				FROM ".$services_table_name." s 
+				inner join ".$rates_table_name." r  
 					on r.service_id = s.id
 				inner join ".$vehicles_table_name." v  
 					on r.vehicle_id = v.id
@@ -1120,12 +1121,13 @@ class TransitQuote_Pro_Public {
 	public function get_default_vehicle(){
 		//return services which have rates set
 		$journey_lengths_table_name = $this->cdb->get_table_full_name('journey_lengths');
-		$services_table_name = $this->cdb->get_table_full_name('services_table_name');
-		$vehicles_table_name = $this->cdb->get_table_full_name('vehicles_table_name');
+		$services_table_name = $this->cdb->get_table_full_name('services');
+		$vehicles_table_name = $this->cdb->get_table_full_name('vehicles');
+		$rates_table_name = $this->cdb->get_table_full_name('rates');		
 		// get ordered list of rates with distance 0 as the final record
     	$sql = "select distinct v.* 
 				FROM wp_tq_pro4_services s 
-				inner join ".$services_table_name." r  
+				inner join ".$rates_table_name." r  
 					on r.service_id = s.id
 				inner join ".$vehicles_table_name." v  
 					on r.vehicle_id = v.id
