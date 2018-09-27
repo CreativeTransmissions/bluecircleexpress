@@ -3214,7 +3214,7 @@ private function save_locations(){
 	private function format_waypoint($waypoint){
 		$html ='<ul>';
 		if(!empty($waypoint['appartment_no'])){
-			$html .='<li>Unit: '.$waypoint['appartment_no'].'</li>';
+			$html .='<li>'.self::get_setting('tq_pro_form_options','unit_no_label', 'Unit No').':'.$waypoint['appartment_no'].'</li>';
 		};
 		$html .='<li>Address: '.stripslashes($waypoint['address']).'</li>';
 		if(!empty($waypoint['postal_code'])){
@@ -3239,7 +3239,7 @@ private function save_locations(){
 		}
 		$text ="";
 		if(!empty($waypoint['location']['appartment_no'])){
-			$text .="Unit: ".$waypoint['location']['appartment_no'].$line_ending;
+			$text .= self::get_setting('tq_pro_form_options','unit_no_label', 'Unit No').": ".$waypoint['location']['appartment_no'].$line_ending;
 		};
 		$text .="Address: ".stripslashes($waypoint['location']['address']).$line_ending;
 		if(!empty($waypoint['location']['postal_code'])){
