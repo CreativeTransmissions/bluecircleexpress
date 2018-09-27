@@ -169,6 +169,7 @@
 .tq-form .add-waypoint {
     display: inline-block;
     clear: left;
+    float: left;
 }
 .transit_body {padding:1.75% 2%;background-color: #fbfbfb; float: left; width: 100%; box-sizing: border-box; -webkit-box-sizing: border-box;}
 .transit_body .sub_title {
