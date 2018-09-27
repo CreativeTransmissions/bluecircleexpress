@@ -3528,7 +3528,7 @@ private function save_locations(){
 						on r.service_id = s.id
 					left join ".$journey_lengths_table_name." jl
 						on r.journey_length_id = jl.id						
-					where v.id is null or s.id is null or js.id is null;";
+					where v.id is null or s.id is null or jl.id is null;";
 		//echo $sql;
 		$success = $this->cdb->query($sql);
 		return $success;
