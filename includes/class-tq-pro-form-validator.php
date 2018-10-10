@@ -24,7 +24,7 @@
 namespace TransitQuote_Pro4;
 class TQ_FormValidator {
 
- 	private $default_config = array('required_fields'=>array()); 
+ 	private $default_config = array('required_fields'=>array(),'fields'=>array()); 
  	private $empty_fields = array();
  	private $missing_fields = array();
  	private $invalid_fields = array();
@@ -104,7 +104,7 @@ class TQ_FormValidator {
 		return !empty($this->post_data[$field_name]);
 	}
 
-	public function post_field_length_is_valid(){
+	public function post_field_length_is_valid($field_name){
 
 		$val = $this->post_data[$field_name];
 		$def = $this->field_defs[$field_name];

@@ -144,43 +144,43 @@ final class FormValidatorTest extends TestCase
                                     'last_name'=>'van Duivenbode',
                                     'email'=>'andrew@creataivetransmissions.com',
                                     'phone'=>1234234234234,
-                                    'address_0'=>'123 Victoria Street, London, UK',
-                                    'flat_number_0'=>'1a',
-                                    'street_number_0'=>123,
-                                    'route_0'=>'Victoria Street',
-                                    'postal_town_0'=>'London',
-                                    'administrative_area_level_1_0'=>'England',
-                                    'administrative_area_level_2_0'=>'Greater London',
-                                    'country_0'=>'United Kingdom',
-                                    'postal_code_0'=>'SW1E 5NT',
-                                    'lat_0'=>'51.4969335',
-                                    'lng_0'=>'-0.13801509999996142',
-                                    'address_1'=>'123 Victoria Street, London, UK',
-                                    'flat_number_1'=>'1a',
-                                    'street_number_1'=>123,
-                                    'route_1'=>'Victoria Street',
-                                    'postal_town_1'=>'London',
-                                    'administrative_area_level_1_1'=>'England',
-                                    'administrative_area_level_2_1'=>'Greater London',
-                                    'country_1'=>'United Kingdom',
-                                    'postal_code_1'=>'SW1E 5NT',
-                                    'lat_1'=>51.4969335,
-                                    'lng_1'=>-0.13801509999996142   
+                                    'address_0_address'=>'123 Victoria Street, London, UK',
+                                    'address_0_flat_number'=>'1a',
+                                    'address_0_street_number'=>123,
+                                    'address_0_route'=>'Victoria Street',
+                                    'address_0_postal_town'=>'London',
+                                    'address_0_administrative_area_level_1'=>'England',
+                                    'address_0_administrative_area_level_2'=>'Greater London',
+                                    'address_0_country'=>'United Kingdom',
+                                    'address_0_postal_code'=>'SW1E 5NT',
+                                    'address_0_lat'=>'51.4969335',
+                                    'address_0_lng'=>'-0.13801509999996142',
+                                    'address_1_address'=>'123 Victoria Street, London, UK',
+                                    'address_1_flat_number'=>'1a',
+                                    'address_1_street_number'=>123,
+                                    'address_1_route'=>'Victoria Street',
+                                    'address_1_postal_town'=>'London',
+                                    'address_1_administrative_area_level_1'=>'England',
+                                    'address_1_administrative_area_level_2'=>'Greater London',
+                                    'address_1_country'=>'United Kingdom',
+                                    'address_1_postal_code'=>'SW1E 5NT',
+                                    'address_1_lat'=>51.4969335,
+                                    'address_1_lng'=>-0.13801509999996142   
                             );
 
     $this->test_bad_values = array('first_name'=>'Andrew LonglonglongLonglonglongLonglLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglong name',
                                     'last_name'=>'vanLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglong Duivenbode',
                                     'email'=>'',
                                     'phone'=>'12342LonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglongLonglonglong34234234',
-                                    'address_0'=>'123 Victoria Street, London, UK',
-                                    'flat_number_0'=>'1a',
-                                    'street_number_0'=>123,
-                                    'route_0'=>'Victoria Street',
-                                    'postal_town_0'=>'London',
-                                    'administrative_area_level_1_0'=>'England',
-                                    'administrative_area_level_2_0'=>'Greater London',
-                                    'country_0'=>'United Kingdom',
-                                    'postal_code_0'=>'SW1E 5NT'
+                                    'address_0_address'=>'123 Victoria Street, London, UK',
+                                    'address_0_flat_number'=>'1a',
+                                    'address_0_street_number'=>123,
+                                    'address_0_route'=>'Victoria Street',
+                                    'address_0_postal_town'=>'London',
+                                    'address_0_administrative_area_level_1'=>'England',
+                                    'address_0_administrative_area_level_2'=>'Greater London',
+                                    'address_0_country'=>'United Kingdom',
+                                    'address_0_postal_code'=>'SW1E 5NT'
                             );
 
                     
@@ -227,7 +227,7 @@ final class FormValidatorTest extends TestCase
 	public function testHasGetField() {
 		$_GET = $this->test_good_values;
         $validator = new TransitQuote_Pro4\TQ_FormValidator(array('fields'=>$this->test_field_defs));
-    	$this->assertTrue($validator->has_get_field('address_0'));
+    	$this->assertTrue($validator->has_get_field('address_0_address'));
     }
 
 	public function testHasGetFieldError() {
@@ -299,26 +299,22 @@ final class FormValidatorTest extends TestCase
     public function testErrorPostFieldLengthIsValid() {
         $_POST = $this->test_bad_values;
         $validator = new TransitQuote_Pro4\TQ_FormValidator(array('fields'=>$this->test_field_defs));
-        $this->assertFalse($validator->post_field_length_is_valid($first_name), 'has_required_post_fields returns true when all fields present');
+        $this->assertFalse($validator->post_field_length_is_valid('first_name'), 'has_required_post_fields returns true when all fields present');
     }
 
 
-    public function testGetMissingFieldErrorMessages() {
+    public function testMissingPostFieldErrorMessages() {
         $_POST = $this->test_bad_values;
         $required_fields = array('first_name', 'last_name', 'email', 'address_0_address','address_0_lat','address_0_lng','address_1_address','address_1_lat','address_1_lng');
         $validator = new TransitQuote_Pro4\TQ_FormValidator(array('fields'=>$this->test_field_defs,
                                                                 'required_fields'=> $required_fields));        
         $this->assertFalse($validator->has_required_post_fields(), 'testGetMissingFieldErrorMessages: has_required_get_fields returns false when at least one field missing');
-        $example_error_array =  array('name'=>'address_1_address',
-                            'max_length'=>1000,
-                            'required'=>true,
-                            'label'=>'Moving To Address',
-                            'error'=>'Missing'
-                            );
+        $example_error_array = array('name'=>'address_0_lat',
+                                'error'=>'Missing');
 
         $error_messages  = $validator->get_missing_field_error_messages();
         $this->assertContains($example_error_array,$error_messages, 'get_missing_field_error_messages contains error message for missing field');
-        print_r($error_messages);
+       
 
     }
 
@@ -328,13 +324,11 @@ final class FormValidatorTest extends TestCase
         $validator = new TransitQuote_Pro4\TQ_FormValidator(array('fields'=>$this->test_field_defs,
                                                                 'required_fields'=> $required_fields)); 
         $this->assertFalse($validator->has_required_get_fields(), 'testGetInvalidFieldErrorMessages: has_required_get_fields returns false when at least one field invalid');
-        $example_error_array = array('name'=>'email',
-                            'max_length'=>128,
-                            'required'=>true,
-                            'label'=>'Email',
-                            'error'=>'Empty'
-                            );
-        $this->assertContains($example_error_array, $validator->get_invalid_field_error_messages(), 'testGetInvalidFieldErrorMessages:  get_invalid_field_error_messages contains error message for invalid field');
+        $example_error_array = array('name'=>'address_0_lat',
+                                    'error'=>'Missing');
+        $error_messages = $validator->get_missing_field_error_messages();
+        print_r($error_messages);
+        $this->assertContains($example_error_array, $error_messages, 'testGetInvalidFieldErrorMessages:  get_invalid_field_error_messages contains error message for invalid field');
 
 
     }      
