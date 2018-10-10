@@ -94,3 +94,9 @@ div.rates-list {
     padding: 0em 1em;
     color: #F22;
 }
+@media screen and (max-width:767px) {
+    .tq-form .half {
+        display: block;
+        width: 100%;
+    }
+}
