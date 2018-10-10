@@ -40,6 +40,7 @@ class TQ_FormValidator {
 
 	private function init_properties(){
 		$this->required_fields = $this->config['required_fields'];
+		$this->field_defs = $this->config['fields'];
 	}
 
 	private function get_post_data(){
@@ -101,6 +102,24 @@ class TQ_FormValidator {
 
 	public function post_field_has_value($field_name){
 		return !empty($this->post_data[$field_name]);
+	}
+
+	public function post_field_length_is_valid(){
+
+		$val = $this->post_data[$field_name];
+		$def = $this->field_defs[$field_name];
+
+		if(!isset($def['max_length'])){
+			echo 'no max max_length';
+			return true;
+		};
+
+		$field_length = strlen($val);
+		if(strlen($val)>$def['max_length']){
+			return false;
+		};
+
+		return true;
 	}
 
 	public function get_error_messages(){

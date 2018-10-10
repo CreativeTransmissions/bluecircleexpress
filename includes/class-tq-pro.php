@@ -249,6 +249,14 @@ class TransitQuote_Pro4 {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-rates-list.php';
 		$this->loader = new TransitQuote_Pro_Loader();
 
+		/**
+		 * The class responsible for form validation methods
+		 * for the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-form-validator.php';
+		$this->loader = new TransitQuote_Pro_Loader();
+
+
 	}
 
 	/**
