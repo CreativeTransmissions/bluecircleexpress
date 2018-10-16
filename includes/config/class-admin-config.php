@@ -149,20 +149,34 @@ class Admin_Config {
                                                         'help'=>'If enabled, this option will display a link to another page on your website which should provide your customer with more information about the selected service.<br/>The link address will be based on the service name as entered on the Service tab with hyphens (-) instead of spaces.<br/>The link will change if the customer changes the service selection drop down.',
                                                         'default'=>0),
 														
-														'show_contact_name'=>array(
-															'id'=>'show_contact_name',
-															'label'=>'Show Contact Name',
-															'type'=>'checkbox',
-															'help'=>'If enabled, this option will display a Contact Name for destination',
-															'default'=>0),
-														
-													   'show_contact_number'=>array(
-															'id'=>'show_contact_number',
-															'label'=>'Show Contact Number',
-															'type'=>'checkbox',
-															'help'=>'If enabled, this option will display a Contact Number for destination',
-															'default'=>0)
-                                                    )
+                          														'show_contact_name'=>array(
+                          															'id'=>'show_contact_name',
+                          															'label'=>'Show Contact Name',
+                          															'type'=>'checkbox',
+                          															'help'=>'If enabled, this option will display a Contact Name for destination',
+                          															'default'=>0),
+                        														
+                          													   'show_contact_number'=>array(
+                          															'id'=>'show_contact_number',
+                          															'label'=>'Show Contact Number',
+                          															'type'=>'checkbox',
+                          															'help'=>'If enabled, this option will display a Contact Number for destination',
+                          															'default'=>0),
+
+                                                       'ask_for_date'=>array(
+                                                        'id'=>'ask_for_date',
+                                                        'label'=>'Ask For Date',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, the customer will be able to request a particular collection date in the main form.',
+                                                        'default'=>1),
+
+                                                        'ask_for_time'=>array(
+                                                        'id'=>'ask_for_time',
+                                                        'label'=>'Ask For Time',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, the customer will be able to request a particular collection time in the main form.',
+                                                        'default'=>1)
+                                                      )
                                                 ),
                                                 'pro_settings_form_labels'=>array(
                                                 'id'=>'pro_settings_form_labels',

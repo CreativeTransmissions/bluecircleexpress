@@ -18,7 +18,7 @@
  * Description:       Automatic Transportation Quote Calculator For WordPress
  * Version:           4.2.6
  * Author:            Creative Transmissions
- * Author URI:        http://creativetransmissions.com/
+ * Author URI:        https://transitquote.co.uk/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       tq-pro

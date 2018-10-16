@@ -170,6 +170,8 @@ class TransitQuote_Pro_Public {
 		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','+ Insert Destination');
 		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');
 		$this->unit_no_label =  self::get_setting('tq_pro_form_options','unit_no_label', 'Unit No');
+		$this->ask_for_date = (bool)$this->get_setting('','ask_for_date',true);
+		$this->ask_for_time = (bool)$this->get_setting('','ask_for_time',true);
 
 	}
 
@@ -234,6 +236,7 @@ class TransitQuote_Pro_Public {
 		$this->show_contact_name = (bool)$this->get_setting('','show_contact_name',false);
 		$this->destination_address_label = $this->get_setting('','destination_address_label','Destination Address');
 		$this->show_contact_number = (bool)$this->get_setting('','show_contact_number',false);
+
 		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');		
 
 		$tq_settings = array('ajaxurl' => $ajax_url,
@@ -968,16 +971,6 @@ class TransitQuote_Pro_Public {
 		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
 		$this->pick_start_address = (bool)$this->get_setting('','pick_start_address',true);
-		$this->ask_for_unit_no = (bool)$this->get_setting('','ask_for_unit_no',false);
-		$this->ask_for_postcode = (bool)$this->get_setting('','ask_for_postcode',false);
-		$this->show_contact_number = (bool)$this->get_setting('','show_contact_number',false);
-		$this->show_contact_name = (bool)$this->get_setting('','show_contact_name',false);
-		$this->show_driving_time = (bool)$this->get_setting('','show_driving_time',true);
-		if($this->show_driving_time){
-			$drive_time_hidden_class = '';
-		} else {
-			$drive_time_hidden_class = 'hidden';
-		};
 		
 		$this->show_deliver_and_return = $this->get_setting('','show_deliver_and_return');
 		if($this->show_deliver_and_return){
@@ -1038,7 +1031,9 @@ class TransitQuote_Pro_Public {
 		$this->show_driving_time = (bool)$this->get_setting('','show_driving_time',true);
 		$this->tax_name = $this->get_setting('','tax_name','VAT');
 		$this->tax_rate = $this->get_setting('','tax_rate', 0);
-		
+		$this->ask_for_date = (bool)$this->get_setting('','ask_for_date',true);
+		$this->ask_for_time = (bool)$this->get_setting('','ask_for_time',true);
+
 		if($this->show_driving_time){
 			$drive_time_hidden_class = '';
 		} else {
@@ -1657,7 +1652,7 @@ class TransitQuote_Pro_Public {
 		$this->plugin = new TransitQuote_Pro4();	
 		$this->cdb = $this->plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
-		
+		self::get_plugin_settings();		
 		// save job request from customer facing form
 		if($this->log_requests == true){
 			$this->ajax->log_requests();
@@ -1680,7 +1675,7 @@ class TransitQuote_Pro_Public {
 		$this->plugin = new TransitQuote_Pro4();	
 		$this->cdb = $this->plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
-		
+		self::get_plugin_settings();		
 		// save job request from customer facing form
 		if($this->log_requests == true){
 			$this->ajax->log_requests();
@@ -1729,7 +1724,7 @@ class TransitQuote_Pro_Public {
 		$this->plugin = new TransitQuote_Pro4();	
 		$this->cdb = $this->plugin->get_custom_db();
 		$this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
-		
+		self::get_plugin_settings();
 		// save job request from customer facing form
 		if($this->log_requests == true){
 			$this->ajax->log_requests();
@@ -2283,15 +2278,22 @@ private function save_locations(){
 				case 'purchase_date':
 					$record_data[$field] = date('Y-m-d G:i:s');
 					break;
-				case 'delivery_time':					
-					$delivery_date = $this->ajax->param(array('name'=>'delivery_date', 'optional'=>false));
-					$date = new DateTime($delivery_date);
-					$delivery_time = $this->ajax->param(array('name'=>'delivery_time', 'optional'=>false));
-					$time_parts = explode(':', $delivery_time);
-					$hours = $time_parts[0];
-					$mins = $time_parts[1];
-					$mins_parts = explode(' ', $mins);
-					$date->setTime($hours, $mins_parts[0]);
+				case 'delivery_time':
+					$delivery_date = $this->ajax->param(array('name'=>'delivery_date', 'optional'=>!$this->ask_for_date));
+					if(empty($delivery_date)){
+						$date = new DateTime($delivery_date);
+					} else {
+						$date = new DateTime();
+					};
+
+					$delivery_time = $this->ajax->param(array('name'=>'delivery_time_submit', 'optional'=>!$this->ask_for_time));
+					if(!empty($delivery_time)){
+						$time_parts = explode(':', $delivery_time);
+						$hours = $time_parts[0];
+						$mins = $time_parts[1];
+						$mins_parts = explode(' ', $mins);
+						$date->setTime($hours, $mins_parts[0]);
+					}
 					$record_data[$field] = $date->format('Y-m-d H:i:s');
 					break;				
 				default:

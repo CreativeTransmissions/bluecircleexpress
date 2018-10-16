@@ -84,6 +84,10 @@
     z-index: 0;    
 }
 
+.tq-form .date-wrap{
+    clear: left;
+}
+
 .tq-form .remove-address{
     display: inline-block;
     margin-left: 1em;

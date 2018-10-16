@@ -14,7 +14,7 @@
 		defaults = {
 			ajaxUrl: '',
 			customer: false,
-			debug: false,
+			debug: true,
 			quoteResult: 'quote',
 			timepickerSelector: '#delivery_time',
 			datepickerSelector: '#date'
@@ -245,7 +245,9 @@
 					},
 
 					afterQuote: function(){
+						console.log('afterQuote');
 						if(that.validateGetQuote()){
+							console.log('validateGetQuote ok');
 							that.updateFormAction('tq_pro4_get_quote');
 							that.submitForm('get_quote');
 						};						
@@ -345,6 +347,7 @@
 					max: '5:00 PM',
 					interval: 30,
 					editable:true,
+					formatSubmit: 'HH:i',
 					onSet: function(context) {
 						
 				  	},
@@ -606,12 +609,15 @@
 				// if journey fails checkjourneyRestrictions distance will be blank or 0
 				var distance = $('input[name="distance"]').val();
 				if(isNaN(distance)){
+					this.log('distance isNan');
 					return false;
 				};
 				if(distance == 0){
+					this.log('distance 0');
 					return false;
 				};
 				if(distance === ''){
+					this.log('distance empty');
 					return false;
 				};				
 				return true;
@@ -619,7 +625,7 @@
 
 			submitForm: function(submitType){
 				var that = this;
-
+				console.log('submitForm: '+submitType);
 				$('.failure').hide();
 				var progressMessage = this.getProgressMsgForSubmitType(submitType);
 				this.updateProgressMessage(progressMessage);
@@ -758,6 +764,9 @@
 			},
 
 			populateQuoteFields: function(quote){
+				console.log('populateQuoteFields');
+				console.log(quote);
+
 				$('.totalCost').html(quote.total);
 				$('.basicCost').html(quote.basic_cost);
 				$('.rateTax').html(quote.rate_tax);
@@ -774,6 +783,7 @@
 			showQuoteFields: function(){
 				$('.quote-fields').removeClass('hidden');
 				$('.quote-fields').show();
+				$('.quote-success').show();
 				$('.success.buttons').show();
 				$('.tq-form-fields-container').show();
 				$('.tq-form-fields-container').removeClass('hidden');
