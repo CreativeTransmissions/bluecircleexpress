@@ -228,6 +228,8 @@ class TransitQuote_Pro_Public {
 		$rates = self::get_rates_list();
 		$blocked_dates = self::get_blocked_dates();
 		$time_interval = self::get_setting('tq_pro_form_options', 'time_interval', 30);
+		$booking_start_time = strtotime(self::get_setting('tq_pro_form_options', 'booking_start_time', '07:00 AM'));
+		$booking_end_time = strtotime(self::get_setting('tq_pro_form_options', 'booking_end_time', '09:00 PM'));
 		// $surcharges = self::get_service_surcharges();
 		$ajax_url = admin_url( 'admin-ajax.php' );
 
@@ -270,7 +272,9 @@ class TransitQuote_Pro_Public {
 							'remove_dest_link_text'=>$this->remove_dest_link_text,
 							'unit_no_label'=>$this->unit_no_label,
 							'blocked_dates'=> $blocked_dates,
-							'time_interval'=> $time_interval
+							'time_interval'=> $time_interval,
+							'booking_start_time'=> $booking_start_time,
+							'booking_end_time'=> $booking_end_time
 							);
 
 		if(!empty($this->api_key)){

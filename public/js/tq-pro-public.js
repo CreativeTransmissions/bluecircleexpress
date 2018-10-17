@@ -301,23 +301,65 @@
 			  return date;
 			},
 
-
 			initDatePicker: function(){
 				var that = this;
 				
 				var interval = TransitQuoteProSettings.time_interval;
-				
 				var dateRangeToDisable = this.getInitialDateRangeToDisable();
+				
+				var todayDate = new Date();				
+				var endOfToday = new Date();			            		
+				var nextDate = new Date();
+				var booking_end_time_datetime = that.dateTimeConverter(TransitQuoteProSettings.booking_end_time+'000')['time'];
+				endOfToday.setHours(booking_end_time_datetime.getHours());
+        		endOfToday.setMinutes(booking_end_time_datetime.getMinutes());
+
+				if(todayDate > endOfToday){ //same day after booking end time
+        			var nextDate = new Date();
+        			nextDate.setDate(nextDate.getDate() + 1);
+        		}
 				var $inputDate = $( this.settings.datepickerSelector ).pickadate({						
 					disable : dateRangeToDisable,
 					formatSubmit: 'dd-mm-yyyy',
 		            hiddenPrefix: 'delivery_',
-					hiddenSuffix: '',
-		            min: new Date(),
-		            hiddenName:false,
+  					hiddenSuffix: '',
+		            min: nextDate,
 		            onSet: function(context) {
 		            	if(context.select){ // if its the selected date that has changed
-		            		
+		            		var selectedDate = that.dateConverter(context.select);
+		            		$("input[name='delivery_date']").val(selectedDate);
+			            	that.calculator.updateQuote();
+
+			            	/**Time check**/			            	
+			            	var today = that.dateConverter(new Date());							
+			            	
+			            	var inputTime = $(that.settings.timepickerSelector).pickatime();
+			            	var timePickerObj = inputTime.pickatime('picker');
+			            	// if same date then change min time to now else start of day as min time
+
+			            	var booking_start_time_datetime = that.dateTimeConverter(TransitQuoteProSettings.booking_start_time+'000')['time'];
+			            	
+			            	if(selectedDate == today){ 
+			            		var todayDate = new Date();
+			            		var startOfToday = new Date();			            		
+			            		startOfToday.setHours(booking_start_time_datetime.getHours());
+			            		startOfToday.setMinutes(booking_start_time_datetime.getMinutes());
+
+			            		if(todayDate < startOfToday){
+			            			console.log("======same day before booking hours===")
+			            			timePickerObj.set('min', startOfToday);//.clear(); //clear suppose if prev time selected
+			            			timePickerObj.set('select', startOfToday);
+			            		} else {
+			            			console.log("======same day in booking hours===")
+			            			todayDate.setTime(todayDate.getTime() + (.5*60*60*1000)); //add half hour	            			
+			            			timePickerObj.set('min', todayDate);//.clear(); //clear suppose if prev time selected
+			            			timePickerObj.set('select', todayDate);
+			            		}
+			            	} else {
+			            		timePickerObj.set('min', booking_start_time_datetime);
+			            	}
+
+			            	
 		            	}
 				  	},
 				  	onClose: function() {
@@ -331,25 +373,44 @@
 			},
 
 			getInitialDateRangeToDisable: function(){
-				var dateRangeToDisable = TransitQuoteProSettings.blocked_dates.map(function(t){
-					return new Date(t[0]); 
-				});
-
+				var dateRangeToDisable = [];
+				if(TransitQuoteProSettings.blocked_dates){
+					dateRangeToDisable = TransitQuoteProSettings.blocked_dates.map(function(t){
+						return new Date(t[0]); 
+					});
+				}
 				return dateRangeToDisable;
+			},
+
+			dateTimeConverter:function(UNIX_timestamp){
+				var a = new Date(parseInt(UNIX_timestamp));
+				var year = a.getFullYear();
+				var month = ('0' + (a.getMonth()+1)).slice(-2); // to add 0 padding
+				var day = a.getDate();
+				var hours = a.getUTCHours();
+				var minutes = a.getUTCMinutes();
+				var dateArray = [];
+				dateArray['date'] = day + '-' + month + '-' + year;
+				dateArray['fullDate'] = a;
+				dateArray['time'] = new Date('2016-06-16' + ' ' + hours + ':' + minutes); //just a dummy date
+				return dateArray;
 			},
 
 			initTimePicker: function(){
 				var that = this;
-
+				
+				var booking_start_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_start_time+'000')['time'];
+				var booking_end_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_end_time+'000')['time'];
+				
 				var interval = TransitQuoteProSettings.time_interval;								
 				var $input = $( this.settings.timepickerSelector ).pickatime({
-					min: '7:00 AM',
-					max: '5:00 PM',
-					interval: 30,
+					min: booking_start_time_datetime,
+					max: booking_end_time_datetime,
+					interval: parseInt(TransitQuoteProSettings.time_interval),
 					editable:true,
 					formatSubmit: 'HH:i',
 					onSet: function(context) {
-						
+
 				  	},
 				  	onClose: function() {
 					    $('.timepicker').blur();
@@ -359,7 +420,6 @@
 				})
 
 				var picker = $input.pickatime('picker');
-
 				$( this.settings.timepickerSelector ).on('click', function(){
 					picker.open();
 				});

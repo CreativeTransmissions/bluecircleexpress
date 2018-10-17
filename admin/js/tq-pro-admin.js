@@ -68,8 +68,9 @@
 							this.initBlockedDatesTabEvents();
 							this.initEditTableEvents('blocked_dates');
 						break;
-
 						case 'tq_pro_form_options':
+							this.validateAddTime();
+						break;
 						case 'tq_pro_email_options':
 						case 'tq_pro_paypal_options':
 						break;
@@ -81,6 +82,45 @@
 						break;
 					}
 				},
+
+				validateAddTime: function() {
+					var that = this;
+					var error = new Array();
+
+					$('input[name="tq_pro_form_options[booking_start_time]"], input[name="tq_pro_form_options[booking_end_time]"]').on('blur', function(){
+						var value = $(this).val();
+						var ele = $(this).attr('name');
+						that.validateTimeFields(ele, value);
+					});
+
+				},
+
+				validateTimeFields: function(ele, vlaue){
+					var re = /^(([0]?[1-9])|([1][0-2])):(([0-5][0-9])|([1-9])) [AP][M]$/;  
+				    var OK = re.exec(value);  
+				    if (!OK) {
+						$(this).siblings('p').css("color", "red");
+						
+						if(error.indexOf(ele) === -1){
+							error.push(ele);
+						} 
+						window.alert(value + ' isn\'t a valid time!');  
+				  	} else{
+				  		$(this).siblings('p').css("color", "#444");
+				  		
+				  		var index = error.indexOf(ele);
+				  		if(index > -1){
+							error.splice(index, 1);
+						} 
+				  	}
+				  	
+				  	if(error.length > 0){
+						$('input[type="submit"]').attr('disabled', 'disabled');
+					} else {
+						$('input[type="submit"]').removeAttr('disabled');
+					}
+				},
+
 
 				initDatePicker: function(){
 					var that = this;

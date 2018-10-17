@@ -83,6 +83,7 @@ class Admin_Config {
                                                 'id'=>'pro_settings_form_options',
                                                 'title'=>'Order Form Options',
                                                 'fields'=>array(
+
                                                      'form_theme'=>array(
                                                         'id'=>'form_theme',
                                                         'label'=>'Form Theme',
@@ -90,6 +91,7 @@ class Admin_Config {
                                                         'options'=>array( 'Classic', 'Light'),
                                                         'default'=>'Light',
                                                         'help'=>'Please select a theme to change the appearance of the order form.'),
+
                                                      'time_interval'=>array(
                                                         'id'=>'time_interval',
                                                         'label'=>'Time Picker Interval (min)',
@@ -98,6 +100,22 @@ class Admin_Config {
                                                         'default'=> 30,
                                                         'help'=>'Please select time interval for timepicker.'),
 
+                                                      'booking_start_time' => array(
+                                                          'id' => 'booking_start_time',
+                                                          'label' => 'Booking Start Time (HH:MM AM)',
+                                                          'type' => 'input',
+                                                          'help' => 'Please enter the start time for booking.',
+                                                          'default' => '07:00 AM'
+                                                      ),
+
+                                                      'booking_end_time' => array(
+                                                          'id' => 'booking_end_time',
+                                                          'label' => 'Booking End Time (HH:MM AM)',
+                                                          'type' => 'input',
+                                                          'help' => 'Please enter the end time for booking.',
+                                                          'default' => '09:00 PM'
+                                                      ), 
+
                                                       'form_section_order'=>array(
                                                         'id'=>'form_section_order',
                                                         'label'=>'Form Section Order',
@@ -105,7 +123,6 @@ class Admin_Config {
                                                         'options'=>array( 'Delivery Information', 'Customer Information'),
                                                         'default'=>'Delivery Information',
                                                         'help'=>'Please select the information that the customer will enter first.<br/>If you ask for Delivery Information first the customer will see their quote before having to enter their contact details.'),
-                                                     
 
                                                       'ask_for_postcode'=>array(
                                                         'id'=>'ask_for_postcode',
