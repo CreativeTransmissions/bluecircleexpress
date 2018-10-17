@@ -2,15 +2,15 @@
 <div class="tq-row">
 	<?php if($this->ask_for_date){ ?>    
 		<div class="bt-flabels__wrapper half left">
-			<label for="collection_date"><?php echo self::get_setting('tq_pro_form_options','collection_date_label', 'Collection Date'); ?></label>
-			<input tabindex="6" data-parsley-trigger="select change" type="text" class="datepicker"  placeholder="<?php echo self::get_setting('tq_pro_form_options','collection_date_label', 'Collection Date'); ?>*"  name="collection_date" id="collection_date" required readonly="">
+			<label for="date"><?php echo self::get_setting('tq_pro_form_options','collection_date_label', 'Collection Date'); ?></label>
+			<input tabindex="6" data-parsley-trigger="select change" type="text" class="datepicker"  placeholder="<?php echo self::get_setting('tq_pro_form_options','collection_date_label', 'Collection Date'); ?>*"  name="date" id="collection_date" required readonly="">
 			<span class="bt-flabels__error-desc">Required / Invalid <?php echo self::get_setting('tq_pro_form_options','collection_date_label', 'Collection Date'); ?></span>
 		</div>
     <?php } ?>
 	<?php if($this->ask_for_time){ ?>		
 		<div class="bt-flabels__wrapper half right last-address-field">
 			<label for="collection_time"><?php echo self::get_setting('tq_pro_form_options','collection_time_label', 'Collection Time'); ?></label>
-			<input tabindex="7" data-parsley-trigger="select change" type="text" class="timepicker" readonly="" placeholder="<?php echo self::get_setting('tq_pro_form_options','collection_time_label', 'Collection Time'); ?>*" name="delivery_time" id="collection_time" required>
+			<input tabindex="7" data-parsley-trigger="select change" type="text" class="timepicker" readonly="" placeholder="<?php echo self::get_setting('tq_pro_form_options','collection_time_label', 'Collection Time'); ?>*" name="delivery_time" id="delivery_time" required>
 			<span class="bt-flabels__error-desc">Required / Invalid <?php echo self::get_setting('tq_pro_form_options','collection_time_label', 'Collection Time'); ?></span>
 		</div>
 	<?php } ?>		

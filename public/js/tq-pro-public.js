@@ -14,10 +14,10 @@
 		defaults = {
 			ajaxUrl: '',
 			customer: false,
-			debug: true,
+			debug: false,
 			quoteResult: 'quote',
-			timepickerSelector: '#delivery_time',
-			datepickerSelector: '#date'
+			timepickerSelector: 'input[name="delivery_time"]',
+			datepickerSelector: 'input[name="date"]'
 		};
 
 		// The actual plugin constructor
@@ -245,9 +245,7 @@
 					},
 
 					afterQuote: function(){
-						console.log('afterQuote');
 						if(that.validateGetQuote()){
-							console.log('validateGetQuote ok');
 							that.updateFormAction('tq_pro4_get_quote');
 							that.submitForm('get_quote');
 						};						
@@ -346,11 +344,9 @@
 			            		startOfToday.setMinutes(booking_start_time_datetime.getMinutes());
 
 			            		if(todayDate < startOfToday){
-			            			console.log("======same day before booking hours===")
 			            			timePickerObj.set('min', startOfToday);//.clear(); //clear suppose if prev time selected
 			            			timePickerObj.set('select', startOfToday);
 			            		} else {
-			            			console.log("======same day in booking hours===")
 			            			todayDate.setTime(todayDate.getTime() + (.5*60*60*1000)); //add half hour	            			
 			            			timePickerObj.set('min', todayDate);//.clear(); //clear suppose if prev time selected
 			            			timePickerObj.set('select', todayDate);
@@ -685,7 +681,6 @@
 
 			submitForm: function(submitType){
 				var that = this;
-				console.log('submitForm: '+submitType);
 				$('.failure').hide();
 				var progressMessage = this.getProgressMsgForSubmitType(submitType);
 				this.updateProgressMessage(progressMessage);
@@ -824,9 +819,6 @@
 			},
 
 			populateQuoteFields: function(quote){
-				console.log('populateQuoteFields');
-				console.log(quote);
-
 				$('.totalCost').html(quote.total);
 				$('.basicCost').html(quote.basic_cost);
 				$('.rateTax').html(quote.rate_tax);
