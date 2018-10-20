@@ -119,8 +119,8 @@
 
 			initUI: function () {					
 				this.initCalculator();
-				this.initDatePicker();
 				this.initTimePicker();
+				this.initDatePicker();				
 				this.initParsleyValidation();
 				$('.notice-field').hide();
 				return true;				
@@ -304,59 +304,16 @@
 				
 				var interval = TransitQuoteProSettings.time_interval;
 				var dateRangeToDisable = this.getInitialDateRangeToDisable();
-				
-				var todayDate = new Date();				
-				var endOfToday = new Date();			            		
-				var nextDate = new Date();
-				var booking_end_time_datetime = that.dateTimeConverter(TransitQuoteProSettings.booking_end_time+'000')['time'];
-				endOfToday.setHours(booking_end_time_datetime.getHours());
-        		endOfToday.setMinutes(booking_end_time_datetime.getMinutes());
+        		var nextAvailableBookingDate = this.getNextAvailableBookingDate();
 
-				if(todayDate > endOfToday){ //same day after booking end time
-        			var nextDate = new Date();
-        			nextDate.setDate(nextDate.getDate() + 1);
-        		}
 				var $inputDate = $( this.settings.datepickerSelector ).pickadate({						
 					disable : dateRangeToDisable,
 					formatSubmit: 'dd-mm-yyyy',
 		            hiddenPrefix: 'delivery_',
   					hiddenSuffix: '',
-		            min: nextDate,
+		            min: nextAvailableBookingDate,
 		            onSet: function(context) {
-		            	if(context.select){ // if its the selected date that has changed
-		            		var selectedDate = that.dateConverter(context.select);
-		            		$("input[name='delivery_date']").val(selectedDate);
-			            	that.calculator.updateQuote();
-
-			            	/**Time check**/			            	
-			            	var today = that.dateConverter(new Date());							
-			            	
-			            	var inputTime = $(that.settings.timepickerSelector).pickatime();
-			            	var timePickerObj = inputTime.pickatime('picker');
-			            	// if same date then change min time to now else start of day as min time
-
-			            	var booking_start_time_datetime = that.dateTimeConverter(TransitQuoteProSettings.booking_start_time+'000')['time'];
-			            	
-			            	if(selectedDate == today){ 
-			            		var todayDate = new Date();
-			            		var startOfToday = new Date();			            		
-			            		startOfToday.setHours(booking_start_time_datetime.getHours());
-			            		startOfToday.setMinutes(booking_start_time_datetime.getMinutes());
-
-			            		if(todayDate < startOfToday){
-			            			timePickerObj.set('min', startOfToday);//.clear(); //clear suppose if prev time selected
-			            			timePickerObj.set('select', startOfToday);
-			            		} else {
-			            			todayDate.setTime(todayDate.getTime() + (.5*60*60*1000)); //add half hour	            			
-			            			timePickerObj.set('min', todayDate);//.clear(); //clear suppose if prev time selected
-			            			timePickerObj.set('select', todayDate);
-			            		}
-			            	} else {
-			            		timePickerObj.set('min', booking_start_time_datetime);
-			            	}
-
-			            	
-		            	}
+		            	that.onSetDatepickerDate(this,context);
 				  	},
 				  	onClose: function() {
 					    $('.timepicker').blur();
@@ -366,6 +323,40 @@
 		        });				
 				
 		        var datePickerObj = $inputDate.pickadate('picker');
+			},
+
+			getNextAvailableBookingDate: function(){
+				var todayDate = new Date();
+				var endOfToday = this.getBookingEndTime();
+				if(todayDate > endOfToday){ //same day after booking end time
+        			var nextAvailableBookingDate = this.getTommorowDate();
+        		} else {
+					var nextAvailableBookingDate = new Date();        			
+        		};
+        		return nextAvailableBookingDate;
+			},
+
+			getBookingStartTime: function(){
+				var startOfToday = new Date();			            		
+				var booking_start_time_datetime = this.dateTimeConverter(this.settings.data.booking_start_time+'000')['time'];
+					startOfToday.setHours(booking_start_time_datetime.getHours());
+        			startOfToday.setMinutes(booking_start_time_datetime.getMinutes());
+        		return startOfToday;
+			},			
+
+			getBookingEndTime: function(){
+				var endOfToday = new Date();			            		
+				var booking_end_time_datetime = this.dateTimeConverter(this.settings.data.booking_end_time+'000')['time'];
+            		var startOfToday = new Date();			            		
+            		endOfToday.setHours(booking_end_time_datetime.getHours());
+            		endOfToday.setMinutes(booking_end_time_datetime.getMinutes());
+        		return endOfToday;
+			},
+
+			getTommorowDate: function(){
+				var tommorowDate = new Date();
+        			tommorowDate.setDate(tommorowDate.getDate() + 1);
+        		return tommorowDate
 			},
 
 			getInitialDateRangeToDisable: function(){
@@ -390,6 +381,79 @@
 				dateArray['fullDate'] = a;
 				dateArray['time'] = new Date('2016-06-16' + ' ' + hours + ':' + minutes); //just a dummy date
 				return dateArray;
+			},
+
+			onSetDatepickerDate: function(datepicker, context){
+            	if(context.select){ // if its the selected date that has changed
+            		console.log('onSetDatepickerDate');
+            		var selectedDate = this.dateConverter(context.select);
+
+            		this.updateTimepickerForNewDate(selectedDate);
+
+            		$("input[name='delivery_date']").val(selectedDate);	            	
+	            	this.calculator.updateQuote();	            	
+            	}
+			},
+
+			updateTimepickerForNewDate: function(selectedDate){
+				// get reference to timepicker				
+            	var timePickerObj = this.getTimePickerObj();
+            	if(!timePickerObj){
+            		return false;
+            	};
+
+        		var todayDate = new Date();
+        		var startOfToday = this.getBookingStartTime();
+        		var endOfToday = this.getBookingEndTime();
+
+            	if(selectedDate == todayDate){ 
+
+            		// are we before the first booking time?
+            		if(todayDate < startOfToday){
+            			//set minimum booking time
+            			timePickerObj.set('min', startOfToday);//.clear(); //clear suppose if prev time selected
+            			timePickerObj.set('select', startOfToday);
+            			return true;
+            		};
+
+            		// we must be between start and end booking times, set min time to current time plus interval
+        			todayDate.setTime(todayDate.getTime() + (.5*60*60*1000)); //add half hour	            			
+        			timePickerObj.set('min', todayDate);//.clear(); //clear suppose if prev time selected
+        			timePickerObj.set('select', todayDate);
+            		
+            	} else {
+            		timePickerObj.set('min', startOfToday);
+            	}
+			},
+
+			getTimePickerObj: function(){
+				var timePickerEl = this.getTimePickerEl();
+				if(!timePickerEl){
+					return false;
+				};
+            	var inputTime = $(this.settings.timepickerSelector).pickatime();
+            	var timePickerObj = inputTime.pickatime('picker');
+            	return timePickerObj;
+			},
+
+			getTimePickerEl: function(){
+				var timePickerEl = $(this.settings.timepickerSelector);
+				if(timePickerEl.length === 0){
+					return false;
+				};
+				return timePickerEl;
+			},
+
+			enableTimePicker: function(){
+				var timePickerEl = this.getTimePickerEl();
+				$(timePickerEl).prop('disabled', false);
+				$(timePickerEl).removeAttr('disabled', false);	
+			},
+
+			disableTimePicker: function(){
+				var timePickerEl = this.getTimePickerEl();
+				$(timePickerEl).prop('disabled', true);
+				$(timePickerEl).attr('disabled', 'disabled');		
 			},
 
 			initTimePicker: function(){

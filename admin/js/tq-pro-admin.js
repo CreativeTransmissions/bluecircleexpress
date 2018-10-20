@@ -85,8 +85,6 @@
 
 				validateAddTime: function() {
 					var that = this;
-					var error = new Array();
-
 					$('input[name="tq_pro_form_options[booking_start_time]"], input[name="tq_pro_form_options[booking_end_time]"]').on('blur', function(){
 						var value = $(this).val();
 						var ele = $(this).attr('name');
@@ -95,7 +93,8 @@
 
 				},
 
-				validateTimeFields: function(ele, vlaue){
+				validateTimeFields: function(ele, value){
+					var error = new Array();
 					var re = /^(([0]?[1-9])|([1][0-2])):(([0-5][0-9])|([1-9])) [AP][M]$/;  
 				    var OK = re.exec(value);  
 				    if (!OK) {
