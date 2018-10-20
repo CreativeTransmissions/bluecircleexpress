@@ -140,6 +140,7 @@ class TransitQuote_Pro_Public {
 	}
 
 	public function get_plugin_settings(){
+
 		$this->start_lat = $this->get_setting('tq_pro_quote_options', 'start_lat','55.870853');
 		$this->start_lng = $this->get_setting('tq_pro_quote_options', 'start_lng', '-4.252036');
 		$this->start_place_name = $this->get_setting('tq_pro_quote_options', 'start_location', 'Glasgow');
@@ -165,6 +166,8 @@ class TransitQuote_Pro_Public {
 		$geolocate = self::get_geolocate();
 		$sandbox = self::get_sandbox();
 		$this->sandbox = self::bool_to_text_sandbox($sandbox);
+		$this->woocommerce_include_tax = (bool)$this->get_setting('','woocommerce_include_tax',true);
+
 		$this->geolocate = self::bool_to_text($geolocate);
 
 		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','+ Insert Destination');
@@ -751,18 +754,23 @@ class TransitQuote_Pro_Public {
 		
 		$product_id = $product->get_id();
 		$woo_product_id = self::get_setting('tq_pro_paypal_options','woo_product_id');
-		
+		$this->woocommerce_include_tax = (bool)$this->get_setting('','woocommerce_include_tax',true);
+
 		if($product_id == $woo_product_id) {
 			
 			if (!session_id()) {
 				session_start();
-			}
+			};
 			
 			if(isset($_GET['dynamic_price'])) {
 				
 				$job_id = $_POST["job_id"];
 				self::get_job_details_from_id($job_id);
-				$price = $this->quote['total'];
+				if($this->woocommerce_include_tax===true){
+					$price = $this->quote['total'];
+				} else {
+					$price = $this->quote['basic_cost'];
+				};
 				
 				$_SESSION['dynamic_price'] = $price;
 				$_SESSION['job_id'] = $job_id;
@@ -771,11 +779,11 @@ class TransitQuote_Pro_Public {
 				$_SESSION['billing_phone'] = $_POST["billing_phone"];
 				$_SESSION['billing_email'] = $_POST["billing_email"];
 				$_SESSION['order_comments'] = $_POST["order_comments"];
-			}
+			};
 			
 			if(isset($_SESSION['dynamic_price'])) {
 				$price = $_SESSION['dynamic_price'];
-			}
+			};
 		}
 		return $price;
 	}

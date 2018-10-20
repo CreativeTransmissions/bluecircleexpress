@@ -623,7 +623,14 @@ class Admin_Config {
                           															'id_field'=>'ID',
                           															'display_field'=>'post_title'
                           													 ),
-                           
+
+                                                    'woocommerce_include_tax'=>array(
+                                                      'id'=>'woocommerce_include_tax',
+                                                      'label'=>'Include Tax In WooCommerce Price',
+                                                      'type'=>'checkbox',
+                                                      'help'=>'When this box is ticked, the quote total inclusive of tax is provided to the WooCommerce checkout as the transportation price. If you would like WooCommerce to calculate tax instead of TransitQuote, untick this box.',
+                                                      'default'=>1),
+
                                                      'woo_product_id'=>array(
                                                         'id'=>'woo_product_id',
                                                         'label'=>'WooCommerce Product ID',
