@@ -1097,7 +1097,7 @@ class TransitQuote_Pro_Admin {
 	/**
 	 * Check if transitteam is active/installed
 	 *	 
-	 * @since    4.2.6
+	 * @since    4.2.7
 	 */	
 	public function is_transitteam_active() {
 		if( class_exists( 'TransitTeam' ) ) {
