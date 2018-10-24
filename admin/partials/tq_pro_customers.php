@@ -43,3 +43,6 @@
 		</tbody>
 	</table>
 </form>
+<div id="dialog-confirm" title="Delete Customer?" style="display: none;">
+  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This customer and their jobs  will be permanently deleted and cannot be recovered. Are you sure?</p>
+</di

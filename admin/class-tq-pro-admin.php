@@ -721,7 +721,8 @@ class TransitQuote_Pro_Admin {
 				$defaults = array(
 					'table'=>'customers',
 					'fields'=>array('id','last_name', 'first_name','email','phone'),
-					'inputs'=>false
+					'inputs'=>false,
+					'actions'=>array('Edit','Delete')
 				);
 			break;
 			case 'jobs':

@@ -173,7 +173,8 @@
 
 					insertDestLinkText: this.settings.data.insert_dest_link_text,
 					removeDestLinkText: this.settings.data.remove_dest_link_text,
-
+					cantFindAddressText: this.settings.data.cant_find_address_text,
+					
 					unitNoLabel: this.settings.data.unit_no_label,
 
 
@@ -214,10 +215,10 @@
 						var idx = data.idx;
 						var html  = '<div class="address-wrap">';
 							html += '	<div class="field bt-flabels__wrapper full-width full">';
-                        	html += '		<span class="sub_title"><i class="icon icon-icn-collection-address"></i>Destination Address</span><a href="#" class="remove-address no-address-'+idx+'">'+TransitQuoteProSettings.remove_dest_link_text+'</a>';
-                        	html += '		<span class="transit_noadress"><a href="#" class="no-address no-address-'+idx+'">I can&apos;t find my address</a></span>';
-                        	html += '		<input class="text addresspicker" required type="text" name="address_'+idx+'_address" id="address_'+idx+'" value="" autocomplete="false"/>';
-                        	html += '		<span class="bt-flabels__error-desc">Required</span>';
+                        	html += '		<span class="sub_title"><i class="icon icon-icn-collection-address"></i>'+TransitQuoteProSettings.destination_address_label+'</span><a href="#" class="remove-address no-address-'+idx+'">'+TransitQuoteProSettings.remove_dest_link_text+'</a>';
+                        	html += '		<span class="transit_noadress"><a href="#" class="no-address no-address-'+idx+'">'+TransitQuoteProSettings.cant_find_address_text+'</a></span>';
+                        	html += '		<input class="text addresspicker" required type="text" name="address_'+idx+'_address" id="address_'+idx+'" value="" autocomplete="false" placeholder="'+TransitQuoteProSettings.destination_address_label+'"/>';
+                        	html += '		<span class="bt-flabels__error-desc">Required '+TransitQuoteProSettings.destination_address_label+'</span>';
 							html += '	</div>';
 							if(TransitQuoteProSettings.ask_for_unit_no === 'true'){
 	                    		html += '	<div class="inline-block bt-flabels__wrapper half left">';
@@ -226,17 +227,17 @@
 							};
 							if(TransitQuoteProSettings.ask_for_postcode === 'true'){
 	                    		html += '	<div class="inline-block bt-flabels__wrapper half right last-address-field">';
-	                        	html += '		<input class="inline-block postcode half-field half-field-right" type="text" id="address_'+idx+'_postal_code" name="address_'+idx+'_postal_code" placeholder="Postcode" value=""/>';
+	                        	html += '		<input class="inline-block postcode half-field half-field-right" type="text" id="address_'+idx+'_postal_code" name="address_'+idx+'_postal_code" placeholder="'+TransitQuoteProSettings.postal_code_label+'" value=""/>';
 	                    		html += '	</div>';
 	                    	};
 							if(TransitQuoteProSettings.show_contact_name === 'true'){
 	                    		html += '	<div class="inline-block bt-flabels__wrapper half left last-address-field">';
-	                        	html += '		<input class="inline-block half-field" id="address_'+idx+'_contact_name" type="text" name="address_'+idx+'_contact_name" placeholder="Contact Name" value=""/>';
+	                        	html += '		<input class="inline-block half-field" id="address_'+idx+'_contact_name" type="text" name="address_'+idx+'_contact_name" placeholder="'+TransitQuoteProSettings.contact_name_label+'" value=""/>';
 	                    		html += '	</div>';
 	                    	};
 							if(TransitQuoteProSettings.show_contact_number === 'true'){
 	                    		html += '	<div class="inline-block bt-flabels__wrapper half right last-address-field">';
-	                        	html += '		<input class="inline-block postcode half-field half-field-right" type="text" id="address_'+idx+'_contact_phone" name="address_'+idx+'_contact_phone" placeholder="Contact Phone" value=""/>';
+	                        	html += '		<input class="inline-block postcode half-field half-field-right" type="text" id="address_'+idx+'_contact_phone" name="address_'+idx+'_contact_phone" placeholder="'+TransitQuoteProSettings.contact_phone_label+'" value=""/>';
 	                    		html += '	</div>';
 	                    	};
                     		html += '</div>';

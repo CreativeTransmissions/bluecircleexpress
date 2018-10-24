@@ -741,7 +741,7 @@
 					$('.admin-form table').on('click', 'button.delete-btn',function(e) {
 						e.preventDefault();
 						e.stopPropagation();
-
+console.log('here');
 						var btn = this;
 
 						$( "#dialog-confirm" ).dialog({
