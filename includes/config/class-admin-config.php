@@ -120,9 +120,9 @@ class Admin_Config {
                                                         'id'=>'form_section_order',
                                                         'label'=>'Form Section Order',
                                                         'type'=>'select',
-                                                        'options'=>array( 'Delivery Information', 'Customer Information'),
+                                                        'options'=>array( 'Delivery Information', 'Customer Information', 'Quote Only'),
                                                         'default'=>'Delivery Information',
-                                                        'help'=>'Please select the information that the customer will enter first.<br/>If you ask for Delivery Information first the customer will see their quote before having to enter their contact details.'),
+                                                        'help'=>'Please select the information that the customer will enter first.<br/>If you ask for Delivery Information first the customer will see their quote before having to enter their contact details. ,<br/>Quote Only will provide an on screen quote only with no booking section'),
 
                                                       'ask_for_postcode'=>array(
                                                         'id'=>'ask_for_postcode',

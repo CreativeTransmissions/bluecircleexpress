@@ -1124,7 +1124,9 @@ class TransitQuote_Pro_Public {
 		       		array(	'template'=>'quote_fields',
 		       				'hidden'=>'hidden'),
 		       		array(	'template'=>'customer_fields',
-		       				'hidden'=>'hidden')
+		       				'hidden'=>'hidden'),
+					array(	'template'=>'form-messages',
+		       				'hidden'=>'hidden')		       		
 		       	);
 		       break;
 		    case 'Customer Information':
@@ -1139,9 +1141,24 @@ class TransitQuote_Pro_Public {
 		       		array(	'template'=>'map',
 		       				'hidden'=>''),		       		
 		       		array(	'template'=>'quote_fields',
-		       				'hidden'=>'hidden')
+		       				'hidden'=>'hidden'),
+					array(	'template'=>'form-messages',
+		       				'hidden'=>'hidden')			       		
 				);
 		       break;
+			case 'Quote Only':
+		       $this->form_includes = array(
+
+					array(	'template'=>$search_fields_include,
+		       				'hidden'=>''),
+		       		array(	'template'=>'delivery_fields',
+		       				'hidden'=>''),
+		       		array(	'template'=>'map',
+		       				'hidden'=>''),		       		
+		       		array(	'template'=>'quote_fields',
+		       				'hidden'=>'hidden')
+				);
+		       break;		       
 		}
 	}
 
