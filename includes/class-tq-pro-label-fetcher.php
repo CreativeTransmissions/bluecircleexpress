@@ -55,6 +55,9 @@ class TQ_LabelFetcher {
 						'search_section_title' => $this->public->get_setting('tq_pro_form_options','search_section_title', 'Enter Addresses'),
 						'map_title' => $this->public->get_setting('tq_pro_form_options','map_title', 'Address Locations'),
 						'quote_section_title' => $this->public->get_setting('tq_pro_form_options','quote_section_title', 'Cost'),
+						
+						'quote_label' => $this->public->get_setting('tq_pro_form_options','quote_label', 'Cost'),
+
         				'job_info_label' => $this->public->get_setting('tq_pro_form_options','job_info_label', 'Delivery Details'),
         				'collection_date_label' => $this->public->get_setting('tq_pro_form_options','collection_date_label', 'Collection Date'),
         				'collection_time_label' => $this->public->get_setting('tq_pro_form_options','collection_time_label', 'Collection Time'),

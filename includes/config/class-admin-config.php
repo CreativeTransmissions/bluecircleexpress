@@ -215,6 +215,15 @@ class Admin_Config {
                                                                   'help'=>'This will appear as a title above the quote section.'
                                                                 ),
 
+                                                                'quote_label'=>array(
+                                                                  'id'=>'quote_label',
+                                                                  'label'=>'Quote Label',
+                                                                  'type'=>'input',
+                                                                  'default'=>'Your Quote',
+                                                                  'help'=>'This will appear above the qutoe in the quote section.'
+                                                                ),
+
+                                                                
                                                                 'collection_address_label'=>array(
                                                                   'id'=>'collection_address_label',
                                                                   'label'=>'Collection Address Label',
@@ -457,7 +466,7 @@ class Admin_Config {
                                                                     'id'=>'distance_label',
                                                                     'label'=>'Distance Label',
                                                                     'type'=>'input',
-                                                                    'default'=>'Date and Time',
+                                                                    'default'=>'Distance',
                                                                     'help'=>'This will be the label for the total journey distance.'
                                                                   
                                                                 ),

@@ -248,7 +248,7 @@ class TransitQuote_Pro_Public {
 		$this->show_contact_name = (bool)$this->get_setting('','show_contact_name',false);
 		$this->destination_address_label = $this->get_setting('','destination_address_label','Destination Address');
 		$this->show_contact_number = (bool)$this->get_setting('','show_contact_number',false);
-
+		$this->destination_address_label = $this->get_setting('', 'destination_address_label','Destination Address');
 		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','+ Insert Destination');
 		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');		
 		$this->cant_find_address_text = $this->get_setting('', 'cant_find_address_text','I can&apos;t find my address.');
@@ -256,7 +256,7 @@ class TransitQuote_Pro_Public {
 		$tq_settings = array('ajaxurl' => $ajax_url,
 							'ask_for_unit_no'=>self::bool_to_text($this->ask_for_unit_no),
 							'ask_for_postcode'=>self::bool_to_text($this->ask_for_postcode),
-							'destinationAddressLabel'=>$this->destination_address_label,
+							'destination_address_label'=>$this->destination_address_label,
 							'show_contact_name'=>self::bool_to_text($this->show_contact_name),
 							'show_contact_number'=>self::bool_to_text($this->show_contact_number),
 							'geolocate'=>$this->geolocate,
