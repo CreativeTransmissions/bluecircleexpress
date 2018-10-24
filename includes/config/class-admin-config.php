@@ -207,23 +207,6 @@ class Admin_Config {
                                                                   'help'=>'This will appear as a title above the address search boxes.'
                                                                 ),
 
-                                                                'quote_section_title'=>array(
-                                                                  'id'=>'quote_section_title',
-                                                                  'label'=>'Quote Section Title',
-                                                                  'type'=>'input',
-                                                                  'default'=>'Quote',
-                                                                  'help'=>'This will appear as a title above the quote section.'
-                                                                ),
-
-                                                                'quote_label'=>array(
-                                                                  'id'=>'quote_label',
-                                                                  'label'=>'Quote Label',
-                                                                  'type'=>'input',
-                                                                  'default'=>'Your Quote',
-                                                                  'help'=>'This will appear above the qutoe in the quote section.'
-                                                                ),
-
-                                                                
                                                                 'collection_address_label'=>array(
                                                                   'id'=>'collection_address_label',
                                                                   'label'=>'Collection Address Label',
@@ -267,6 +250,37 @@ class Admin_Config {
                                                                     'help'=>'This is the link for customers to click if Google does not have the address.'
                                                                 ),
 
+                                                              'appartment_no_label '=>array(
+                                                                    'id'=>'appartment_no_label',
+                                                                    'label'=>'Apartment/Unit No Label',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Unit No',
+                                                                    'help'=>'This will be the label for Apartment/Unit No in address.'
+                                                                ),
+
+                                                              'postal_code_label'=>array(
+                                                                    'id'=>'postal_code_label',
+                                                                    'label'=>'Postal Code Label',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Postal Code',
+                                                                    'help'=>'This will be the label for postal code in address.'
+                                                                ),
+
+                                                               'contact_name_label'=>array(
+                                                                    'id'=>'contact_name_label',
+                                                                    'label'=>'Contact Name Label',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Contact Name',
+                                                                    'help'=>'This will be the label for contact name in location details.'
+                                                                ),
+
+                                                                'contact_phone_label'=>array(
+                                                                    'id'=>'contact_phone_label',
+                                                                    'label'=>'Contact Phone Label',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Contact Phone',
+                                                                    'help'=>'This will be the label for contact phone in location details.'
+                                                                ),                                                                
                                                 
                                                                 'collection_date_label'=>array(
                                                                   'id'=>'collection_date_label',
@@ -284,6 +298,42 @@ class Admin_Config {
                                                                   'help'=>'This label will appears next to the time field.'
                                                                 ),
 
+
+                                                                'service_label'=>array(
+                                                                    'id'=>'service_label',
+                                                                    'label'=>'Service Label',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Service',
+                                                                    'help'=>'This will be the label for the service drop down.'
+                                                                ),
+
+                                                                'view_service_link_text'=>array(
+                                                                    'id'=>'view_service_link_text',
+                                                                    'label'=>'View Service Link Text',
+                                                                    'type'=>'input',
+                                                                    'default'=>'View Service Details..',
+                                                                    'help'=>'This will be the label for the view service link when service descriptions are enabled.'
+                                                                  
+                                                                ),
+
+                                                                'vehicle_label'=>array(
+                                                                    'id'=>'vehicle_label',
+                                                                    'label'=>'Vehicle Label',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Vehicle',
+                                                                    'help'=>'This will be the label for the vehicle drop down.'
+                                                                  
+                                                                ),
+
+                                                                'view_vehicle_link_text'=>array(
+                                                                    'id'=>'view_vehicle_link_text',
+                                                                    'label'=>'View Vehicle Link Text',
+                                                                    'type'=>'input',
+                                                                    'default'=>'View Vehicle Details..',
+                                                                    'help'=>'This will be the label for the view vehicle link when vehicle descriptions are enabled.'
+                                                                  
+                                                                ),
+
                                                                 'map_title'=>array(
                                                                     'id'=>'map_title',
                                                                     'label'=>'Map Title',
@@ -291,7 +341,7 @@ class Admin_Config {
                                                                     'default'=>'Address Locations',
                                                                     'help'=>'This will appear as a title above the map.'
                                                                   
-                                                                ),
+                                                                ),                                                               
 
                                                                 'contact_section_title'=>array(
                                                                     'id'=>'contact_section_title',
@@ -299,24 +349,6 @@ class Admin_Config {
                                                                     'type'=>'input',
                                                                     'default'=>'Your Contact Information',
                                                                     'help'=>'This will appear as a title above the customer contact information fields.'
-                                                                  
-                                                                ),
-
-                                                                'contact_section_title'=>array(
-                                                                    'id'=>'contact_section_title',
-                                                                    'label'=>'Contact Section Title',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Your Contact Information',
-                                                                    'help'=>'This will appear as a title above the customer contact information fields.'
-                                                                  
-                                                                ),
-
-                                                                'job_info_label'=>array(
-                                                                    'id'=>'job_info_label',
-                                                                    'label'=>'Job Information Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Delivery Details',
-                                                                    'help'=>'This will be the label for the large field for additional information.'
                                                                   
                                                                 ),
 
@@ -355,76 +387,30 @@ class Admin_Config {
                                                                   
                                                                 ),
 
-                                                                'delivery_information_label'=>array(
-                                                                    'id'=>'delivery_information_label',
-                                                                    'label'=>'Delivery Information Label',
+                                                                'job_info_label'=>array(
+                                                                    'id'=>'job_info_label',
+                                                                    'label'=>'Job Information Label',
                                                                     'type'=>'input',
-                                                                    'default'=>'Information',
-                                                                    'help'=>'This will be the label for additional information text area field.'
+                                                                    'default'=>'Delivery Details',
+                                                                    'help'=>'This will be the label for the large field for additional information.'
                                                                   
                                                                 ),
 
-                                                                'service_label'=>array(
-                                                                    'id'=>'service_label',
-                                                                    'label'=>'Service Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Service',
-                                                                    'help'=>'This will be the label for the service drop down.'
+                                                                'quote_section_title'=>array(
+                                                                  'id'=>'quote_section_title',
+                                                                  'label'=>'Quote Section Title',
+                                                                  'type'=>'input',
+                                                                  'default'=>'Quote',
+                                                                  'help'=>'This will appear as a title above the quote section.'
                                                                 ),
 
-                                                                'view_service_link_text'=>array(
-                                                                    'id'=>'view_service_link_text',
-                                                                    'label'=>'View Service Link Text',
-                                                                    'type'=>'input',
-                                                                    'default'=>'View Service Details..',
-                                                                    'help'=>'This will be the label for the view service link when service descriptions are enabled.'
-                                                                  
-                                                                ),
-
-                                                                'vehicle_label'=>array(
-                                                                    'id'=>'vehicle_label',
-                                                                    'label'=>'Vehicle Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Vehicle',
-                                                                    'help'=>'This will be the label for the vehicle drop down.'
-                                                                  
-                                                                ),
-
-                                                                'view_vehicle_link_text'=>array(
-                                                                    'id'=>'view_vehicle_link_text',
-                                                                    'label'=>'View Vehicle Link Text',
-                                                                    'type'=>'input',
-                                                                    'default'=>'View Vehicle Details..',
-                                                                    'help'=>'This will be the label for the view vehicle link when vehicle descriptions are enabled.'
-                                                                  
-                                                                ),
-
-                                                                'cost_heading_label'=>array(
-                                                                    'id'=>'cost_heading_label',
-                                                                    'label'=>'Cost Title',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Cost',
-                                                                    'help'=>'This will be the title for the quote breakdown.'
-                                                                  
-                                                                ),
-
-                                                                'route_heading_label'=>array(
-                                                                    'id'=>'route_heading_label',
-                                                                    'label'=>'Route Title',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Route',
-                                                                    'help'=>'This will be the title for the route list.'
-                                                                  
-                                                                ),                                                                
-
-                                                                'delivery_cost_label'=>array(
-                                                                    'id'=>'delivery_cost_label',
-                                                                    'label'=>'Delivery Cost Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Delivery Cost',
-                                                                    'help'=>'This will be the label for the cost for delivery before tax in the quote section.'
-                                                                  
-                                                                ),
+                                                                'quote_label'=>array(
+                                                                  'id'=>'quote_label',
+                                                                  'label'=>'Quote Label',
+                                                                  'type'=>'input',
+                                                                  'default'=>'Your Quote',
+                                                                  'help'=>'This will appear above the qutoe in the quote section.'
+                                                                ),                                                          
 
                                                                 'sub_total_label'=>array(
                                                                     'id'=>'sub_total_label',
@@ -442,25 +428,7 @@ class Admin_Config {
                                                                     'default'=>'Total Cost',
                                                                     'help'=>'This will be the label for the total cost in the quote sections.'
                                                                   
-                                                                ),
-
-                                                                'payment_info_header'=>array(
-                                                                    'id'=>'payment_info_header',
-                                                                    'label'=>'Payment Information Title',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Payment Information',
-                                                                    'help'=>'This will be the title for the Payment Information section.'
-                                                                  
-                                                                ),
-
-                                                               'journey_title'=>array(
-                                                                    'id'=>'journey_title',
-                                                                    'label'=>'journey Information Title',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Date and Time',
-                                                                    'help'=>'This will be the label for the journey information section.'
-                                                                  
-                                                                ),                                                                
+                                                                ),                                                        
 
                                                                'distance_label'=>array(
                                                                     'id'=>'distance_label',
@@ -479,6 +447,42 @@ class Admin_Config {
                                                                     'help'=>'This will be the label for the estimated travel time.'
                                                                   
                                                                 ),  
+
+                                                                'short_notice_cost_label'=>array(
+                                                                    'id'=>'short_notice_cost_label',
+                                                                    'label'=>'Short Notice Cost Label',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Short Notice Cost',
+                                                                    'help'=>'This will be the label for short notice cost.'
+                                                                )                                                               
+
+                                                          /*     
+                                                                'route_heading_label'=>array(
+                                                                    'id'=>'route_heading_label',
+                                                                    'label'=>'Route Title',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Route',
+                                                                    'help'=>'This will be the title for the route list.'
+                                                                  
+                                                                ),     
+
+                                                                'payment_info_header'=>array(
+                                                                    'id'=>'payment_info_header',
+                                                                    'label'=>'Payment Information Title',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Payment Information',
+                                                                    'help'=>'This will be the title for the Payment Information section.'
+                                                                  
+                                                                ),
+
+                                                               'journey_title'=>array(
+                                                                    'id'=>'journey_title',
+                                                                    'label'=>'journey Information Title',
+                                                                    'type'=>'input',
+                                                                    'default'=>'Date and Time',
+                                                                    'help'=>'This will be the label for the journey information section.'
+                                                                  
+                                                                ),      
 
                                                                'optimize_route_label '=>array(
                                                                     'id'=>'optimize_route_label',
@@ -502,14 +506,6 @@ class Admin_Config {
                                                                     'type'=>'input',
                                                                     'default'=>'Address',
                                                                     'help'=>'This will be the label for full formatted address'
-                                                                ),
-
-                                                              'appartment_no_label '=>array(
-                                                                    'id'=>'appartment_no_label',
-                                                                    'label'=>'Apartment/Unit No Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Unit No',
-                                                                    'help'=>'This will be the label for Apartment/Unit No in address.'
                                                                 ),
 
                                                               'street_number_label '=>array(
@@ -559,15 +555,6 @@ class Admin_Config {
                                                                     'default'=>'Country',
                                                                     'help'=>'This will be the label for country in address.'
                                                                 ),
-
-                                                              'postal_code_label'=>array(
-                                                                    'id'=>'postal_code_label',
-                                                                    'label'=>'Postal Code Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Postal Code',
-                                                                    'help'=>'This will be the label for postal code in address.'
-                                                                ),
-
                                                                'date_and_time_title'=>array(
                                                                     'id'=>'date_and_time_title',
                                                                     'label'=>'Date and Time Title',
@@ -575,31 +562,11 @@ class Admin_Config {
                                                                     'default'=>'Date and Time',
                                                                     'help'=>'This will be the label for the date and time section.'
                                                                   
-                                                                ),
-
-                                                                'contact_name_label'=>array(
-                                                                    'id'=>'contact_name_label',
-                                                                    'label'=>'Contact Name Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Contact Name',
-                                                                    'help'=>'This will be the label for contact name in location details.'
-                                                                ),
-
-                                                                'contact_phone_label'=>array(
-                                                                    'id'=>'contact_phone_label',
-                                                                    'label'=>'Contact Phone Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Contact Phone',
-                                                                    'help'=>'This will be the label for contact phone in location details.'
-                                                                ),
-
-                                                                'short_notice_cost_label'=>array(
-                                                                    'id'=>'short_notice_cost_label',
-                                                                    'label'=>'Short Notice Cost Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Short Notice Cost',
-                                                                    'help'=>'This will be the label for short notice cost.'
                                                                 )
+*/
+                                                               
+
+                                                                
 
                                                   )
                                               )
