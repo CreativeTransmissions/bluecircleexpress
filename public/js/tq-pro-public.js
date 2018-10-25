@@ -144,7 +144,7 @@
 					costPerUnit: this.excessDistance,
 					
 					showRoute: true,
-
+					transportationMode: this.settings.data.transportation_mode,
 					askForUnitNo: this.settings.data.ask_for_unit_no,
 					askForPostCode: this.settings.data.ask_for_postcode,
 					destinationAddressLabel: this.settings.data.destinationAddressLabel,
@@ -156,7 +156,6 @@
 					minNotice: this.settings.data.min_notice,
 					minNoticeCharge: this.settings.data.min_notice_charge,
 					minCost: this.settings.data.min_price,
-
 					minDistance: this.settings.data.min_distance,
 					minDistanceMsg: this.settings.data.min_distance_msg,
 

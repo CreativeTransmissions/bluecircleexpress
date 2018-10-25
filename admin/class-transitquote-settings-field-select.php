@@ -24,7 +24,6 @@
 class TransitQuote_Pro_Settings_Field_Select extends TransitQuote_Pro_Settings_Field {
 
     public function render(){
-
         echo '<select name="'.$this->field_name.'">';
 
         foreach ($this->config['options'] as $key => $option) {
@@ -37,7 +36,7 @@ class TransitQuote_Pro_Settings_Field_Select extends TransitQuote_Pro_Settings_F
                 $option_name = $option;
             };
 
-            if($option_id==$this->value){
+            if(($option_id==$this->value)||($option_name==$this->value)){
                 $selected_att = 'selected="selected"';
             };
 

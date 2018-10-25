@@ -158,6 +158,7 @@ class TransitQuote_Pro_Public {
 		$this->min_travel_time_msg = $this->get_setting('', 'min_travel_time_message');
 		$this->max_travel_time = $this->get_setting('', 'max_travel_time',0);
 		$this->max_travel_time_msg = $this->get_setting('', 'max_travel_time_message');
+		$this->transportation_mode =  $this->get_setting('', 'transportation_mode','Driving');
 
 		$this->quote_element = $this->get_setting('tq_pro_quote_options', 'quote_element', 'quote');
 		$this->api_key = self::get_api_key();
@@ -271,6 +272,7 @@ class TransitQuote_Pro_Public {
 							'min_price'=>$this->min_price,
 							'min_distance'=>$this->min_distance,
 							'pick_start_address'=>self::bool_to_text($this->pick_start_address),
+							'transportation_mode'=>$this->transportation_mode,
 							'max_distance'=>$this->max_distance,
 							'max_distance_msg'=>$this->max_distance_msg,
 							'min_travel_time'=>$this->min_travel_time,

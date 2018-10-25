@@ -88,7 +88,7 @@ class Admin_Config {
                                                         'id'=>'form_theme',
                                                         'label'=>'Form Theme',
                                                         'type'=>'select',
-                                                        'options'=>array( 'Classic', 'Light'),
+                                                        'options'=>array('Classic', 'Light'),
                                                         'default'=>'Light',
                                                         'help'=>'Please select a theme to change the appearance of the order form.'),
 
@@ -591,6 +591,12 @@ class Admin_Config {
                                                       'type'=>'select',
                                                       'options'=>array('Kilometer', 'Mile'),
                                                       'default'=>'Kilometer'),
+                                                    'transportation_mode'=>array(
+                                                      'id'=>'transportation_mode',
+                                                      'label'=>'Transportation Mode',
+                                                      'type'=>'select',
+                                                      'options'=>array('Driving', 'Walking', 'Cycling'),
+                                                      'default'=>'Driving'),                                                    
                                                     'start_location'=>array(
                                                       'id'=>'start_location',
                                                       'label'=>'Start Location',
