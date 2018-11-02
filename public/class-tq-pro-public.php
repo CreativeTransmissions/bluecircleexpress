@@ -173,7 +173,7 @@ class TransitQuote_Pro_Public {
 
 		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','+ Insert Destination');
 		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');
-		$this->cant_find_address_text = $this->get_setting('', 'cant_find_address_text','I can&apos;t find my address');
+		$this->cant_find_address_text = $this->get_setting('', 'cant_find_address_text','I can&#39;t find my address');
 		$this->destination_address_label = $this->get_setting('', 'destination_address_label','Destination Address');
 
 		$this->unit_no_label =  self::get_setting('tq_pro_form_options','appartment_no_label', 'Unit No');
@@ -252,7 +252,7 @@ class TransitQuote_Pro_Public {
 		$this->destination_address_label = $this->get_setting('', 'destination_address_label','Destination Address');
 		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','+ Insert Destination');
 		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');		
-		$this->cant_find_address_text = $this->get_setting('', 'cant_find_address_text','I can&apos;t find my address.');
+		$this->cant_find_address_text = $this->get_setting('', 'cant_find_address_text','I can&#39;t find my address.');
 
 		$tq_settings = array('ajaxurl' => $ajax_url,
 							'ask_for_unit_no'=>self::bool_to_text($this->ask_for_unit_no),

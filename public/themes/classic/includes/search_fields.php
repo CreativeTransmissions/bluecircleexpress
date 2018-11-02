@@ -4,7 +4,7 @@
         <div class="address-wrap">
             <div class="field bt-flabels__wrapper full-width">
                 <label for="pick_up"><?php echo self::get_setting('tq_pro_form_options','collection_address_label', 'Collection Address'); ?></label>
-                <a href="#" class="no-address no-address-0">I can&apos;t find my address</a>
+                <a href="#" class="no-address no-address-0">I can&#39;t find my address</a>
                 <input tabindex="10" class="text addresspicker" required type="text" name="address_0_address" id="address_0" value="" autocomplete="false"/>
                 <span class="bt-flabels__error-desc">Required: Collection Address</span>
             </div>
@@ -32,7 +32,7 @@
         <div class="address-wrap">
             <div class="field bt-flabels__wrapper full-width">
                 <label for="drop_off"><?php echo self::get_setting('tq_pro_form_options','destination_address_label', 'Destination Address'); ?></label>
-                <a href="#" class="no-address no-address-1">I can&apos;t find my address</a>
+                <a href="#" class="no-address no-address-1">I can&#39;t find my address</a>
                 <input  tabindex="11" class="text addresspicker" required type="text" name="address_1_address" id="address_1" value="" autocomplete="false"/>
                 <span class="bt-flabels__error-desc">Required: <?php echo self::get_setting('tq_pro_form_options','destination_address_label', 'Destination Address'); ?></span>
             </div>
@@ -62,7 +62,7 @@
         <div class="address-wrap">
             <div class="field bt-flabels__wrapper dest-only full-width">
                 <label for="drop_off"><?php echo self::get_setting('tq_pro_form_options','destination_address_label', 'Destination Address'); ?></label>
-                <a href="#" class="no-address no-address-1">I can&apos;t find my address</a>
+                <a href="#" class="no-address no-address-1">I can&#39;t find my address</a>
                 <input tabindex="10" class="text addresspicker" required type="text" name="address_1_address" id="address_1" value="" autocomplete="false"/>
                 <span class="bt-flabels__error-desc">Required: <?php echo self::get_setting('tq_pro_form_options','destination_address_label', 'Destination Address'); ?></span>
             </div>
