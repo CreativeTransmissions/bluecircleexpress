@@ -1432,6 +1432,7 @@ class TransitQuote_Pro_Public {
 																		'include_return_journey'=>(bool)$this->rate_options['deliver_and_return'],
 																		'distance'=>$this->rate_options['distance'],
 																		'return_percentage'=>$this->return_percentage,
+																		'hours'=>$this->rate_options['hours'],
 																		'return_distance'=>$this->rate_options['return_distance'],
 																		'return_time'=>$this->rate_options['return_time'],
 																		'tax_rate'=>$this->tax_rate,
@@ -1462,6 +1463,12 @@ class TransitQuote_Pro_Public {
 			$distance = 0;
 		};
 
+
+		$hours = $this->ajax->param(array('name'=>'hours', 'optional'=>true));
+		if(empty($hours)){
+			$hours = 0;
+		};
+
 		$return_time = $this->ajax->param(array('name'=>'return_time', 'optional'=>true));
 		if(empty($return_time)){
 			$return_time = 0;
@@ -1488,7 +1495,8 @@ class TransitQuote_Pro_Public {
 					'return_time'=>$return_time,
 					'deliver_and_return'=>$deliver_and_return,
 					'return_distance'=>$return_distance,
-					'no_destinations'=>$no_destinations);
+					'no_destinations'=>$no_destinations,
+					'hours'=>$hours);
 	}
 
 	private function get_rates_for_journey_options(){
