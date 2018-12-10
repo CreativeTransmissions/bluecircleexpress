@@ -173,7 +173,7 @@ class TransitQuote_Pro_Public {
 
 		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','+ Insert Destination');
 		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');
-		$this->cant_find_address_text = $this->get_setting('', 'cant_find_address_text','I can&apos;t find my address');
+		$this->cant_find_address_text = $this->get_setting('', 'cant_find_address_text','I can&#39;t find my address');
 		$this->destination_address_label = $this->get_setting('', 'destination_address_label','Destination Address');
 
 		$this->unit_no_label =  self::get_setting('tq_pro_form_options','appartment_no_label', 'Unit No');
@@ -252,7 +252,7 @@ class TransitQuote_Pro_Public {
 		$this->destination_address_label = $this->get_setting('', 'destination_address_label','Destination Address');
 		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','+ Insert Destination');
 		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');		
-		$this->cant_find_address_text = $this->get_setting('', 'cant_find_address_text','I can&apos;t find my address.');
+		$this->cant_find_address_text = $this->get_setting('', 'cant_find_address_text','I can&#39;t find my address.');
 
 		$tq_settings = array('ajaxurl' => $ajax_url,
 							'ask_for_unit_no'=>self::bool_to_text($this->ask_for_unit_no),
@@ -786,7 +786,7 @@ class TransitQuote_Pro_Public {
 				session_start();
 			};
 			
-			if(isset($_GET['dynamic_price'])) {
+			if(isset($_GET['dynamic_price'])  && !isset($_SESSION['dynamic_price'])) {
 				
 				$job_id = $_POST["job_id"];
 				self::get_job_details_from_id($job_id);
@@ -796,13 +796,25 @@ class TransitQuote_Pro_Public {
 					$price = $this->quote['basic_cost'];
 				};
 				
-				$_SESSION['dynamic_price'] = $price;
-				$_SESSION['job_id'] = $job_id;
-				$_SESSION['billing_first_name'] = $_POST["billing_first_name"];
-				$_SESSION['billing_last_name'] = $_POST["billing_last_name"];
-				$_SESSION['billing_phone'] = $_POST["billing_phone"];
-				$_SESSION['billing_email'] = $_POST["billing_email"];
-				$_SESSION['order_comments'] = $_POST["order_comments"];
+				if(!empty($price)) {
+					$_SESSION['dynamic_price'] = $price;
+					$_SESSION['job_id'] = $job_id;
+					$_SESSION['billing_first_name'] = $_POST["billing_first_name"];
+					$_SESSION['billing_last_name'] = $_POST["billing_last_name"];
+					$_SESSION['billing_phone'] = $_POST["billing_phone"];
+					$_SESSION['billing_email'] = $_POST["billing_email"];
+					$_SESSION['order_comments'] = $_POST["order_comments"];
+				} else {
+					global $woocommerce;
+					$woocommerce->cart->empty_cart();
+					$this->get_woocommerce_config();
+					
+					if($this->woocommerce->config['disable_cart']) {
+						wp_redirect(site_url());
+					} else {
+						wp_redirect($woocommerce->cart->get_cart_url());
+					}
+				}
 			};
 			
 			if(isset($_SESSION['dynamic_price'])) {
@@ -1432,6 +1444,7 @@ class TransitQuote_Pro_Public {
 																		'include_return_journey'=>(bool)$this->rate_options['deliver_and_return'],
 																		'distance'=>$this->rate_options['distance'],
 																		'return_percentage'=>$this->return_percentage,
+																		'hours'=>$this->rate_options['hours'],
 																		'return_distance'=>$this->rate_options['return_distance'],
 																		'return_time'=>$this->rate_options['return_time'],
 																		'tax_rate'=>$this->tax_rate,
@@ -1462,6 +1475,12 @@ class TransitQuote_Pro_Public {
 			$distance = 0;
 		};
 
+
+		$hours = $this->ajax->param(array('name'=>'hours', 'optional'=>true));
+		if(empty($hours)){
+			$hours = 0;
+		};
+
 		$return_time = $this->ajax->param(array('name'=>'return_time', 'optional'=>true));
 		if(empty($return_time)){
 			$return_time = 0;
@@ -1488,7 +1507,8 @@ class TransitQuote_Pro_Public {
 					'return_time'=>$return_time,
 					'deliver_and_return'=>$deliver_and_return,
 					'return_distance'=>$return_distance,
-					'no_destinations'=>$no_destinations);
+					'no_destinations'=>$no_destinations,
+					'hours'=>$hours);
 	}
 
 	private function get_rates_for_journey_options(){

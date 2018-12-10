@@ -113,6 +113,12 @@ class CT_WOOCOMMERCE {
 			$prod_unique_id = WC()->cart->generate_cart_id( $product_id );
 			unset( WC()->cart->cart_contents[$prod_unique_id] );
 		} 
+
+		if (!session_id()) {
+			session_start();
+		}
+	
+		unset ($_SESSION["dynamic_price"]);
 		return true;
 	}
 	

@@ -244,9 +244,9 @@ class Admin_Config {
 
                                                                 'cant_find_address_text'=>array(
                                                                     'id'=>'cant_find_address_text',
-                                                                    'label'=>'I can&apos;t find my address Link Text',
+                                                                    'label'=>'I can&#39;t find my address Link Text',
                                                                     'type'=>'input',
-                                                                    'default'=>'I can&apos;t find my address',
+                                                                    'default'=>'I can&#39;t find my address',
                                                                     'help'=>'This is the link for customers to click if Google does not have the address.'
                                                                 ),
 
