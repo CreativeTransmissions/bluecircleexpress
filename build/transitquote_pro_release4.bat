@@ -1,4 +1,4 @@
-set source="C:\xampp\htdocs\pro\wp-content\plugins\transitquote-pro"
+set source="C:\vagrant\www\htdocs\pro\wp-content\plugins\transitquote-pro"
 set destination="C:\Users\Transmissions HQ\Documents\Code\releases\transitquote-pro-v4-3"
 del "C:\Users\Transmissions HQ\Documents\Code\releases\transitquote-pro-v4-3\*.*" /s /q
 
