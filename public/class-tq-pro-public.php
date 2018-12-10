@@ -786,7 +786,7 @@ class TransitQuote_Pro_Public {
 				session_start();
 			};
 			
-			if(isset($_GET['dynamic_price'])) {
+			if(isset($_GET['dynamic_price'])  && !isset($_SESSION['dynamic_price'])) {
 				
 				$job_id = $_POST["job_id"];
 				self::get_job_details_from_id($job_id);
@@ -796,13 +796,25 @@ class TransitQuote_Pro_Public {
 					$price = $this->quote['basic_cost'];
 				};
 				
-				$_SESSION['dynamic_price'] = $price;
-				$_SESSION['job_id'] = $job_id;
-				$_SESSION['billing_first_name'] = $_POST["billing_first_name"];
-				$_SESSION['billing_last_name'] = $_POST["billing_last_name"];
-				$_SESSION['billing_phone'] = $_POST["billing_phone"];
-				$_SESSION['billing_email'] = $_POST["billing_email"];
-				$_SESSION['order_comments'] = $_POST["order_comments"];
+				if(!empty($price)) {
+					$_SESSION['dynamic_price'] = $price;
+					$_SESSION['job_id'] = $job_id;
+					$_SESSION['billing_first_name'] = $_POST["billing_first_name"];
+					$_SESSION['billing_last_name'] = $_POST["billing_last_name"];
+					$_SESSION['billing_phone'] = $_POST["billing_phone"];
+					$_SESSION['billing_email'] = $_POST["billing_email"];
+					$_SESSION['order_comments'] = $_POST["order_comments"];
+				} else {
+					global $woocommerce;
+					$woocommerce->cart->empty_cart();
+					$this->get_woocommerce_config();
+					
+					if($this->woocommerce->config['disable_cart']) {
+						wp_redirect(site_url());
+					} else {
+						wp_redirect($woocommerce->cart->get_cart_url());
+					}
+				}
 			};
 			
 			if(isset($_SESSION['dynamic_price'])) {
