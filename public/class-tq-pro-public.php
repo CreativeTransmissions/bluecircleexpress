@@ -249,14 +249,23 @@ class TransitQuote_Pro_Public {
 		$this->show_contact_name = (bool)$this->get_setting('','show_contact_name',false);
 		$this->destination_address_label = $this->get_setting('','destination_address_label','Destination Address');
 		$this->show_contact_number = (bool)$this->get_setting('','show_contact_number',false);
+		$this->restrict_to_country = (bool)$this->get_setting('','restrict_to_country',true);
+
 		$this->destination_address_label = $this->get_setting('', 'destination_address_label','Destination Address');
 		$this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link','+ Insert Destination');
 		$this->remove_dest_link_text = $this->get_setting('', 'remove_destination_link','- Remove This Destination');		
 		$this->cant_find_address_text = $this->get_setting('', 'cant_find_address_text','I can&#39;t find my address.');
+		$this->country_code = $this->get_setting('', 'country_code','');
+		$this->city_code = $this->get_setting('', 'city_code','');
+		$this->search_radius = $this->get_setting('', 'search_radius','');
+
 
 		$tq_settings = array('ajaxurl' => $ajax_url,
 							'ask_for_unit_no'=>self::bool_to_text($this->ask_for_unit_no),
 							'ask_for_postcode'=>self::bool_to_text($this->ask_for_postcode),
+							'country_code'=>$this->country_code,
+							'restrict_to_country'=>self::bool_to_text($this->restrict_to_country),
+							'search_radius'=>$this->search_radius,			
 							'destination_address_label'=>$this->destination_address_label,
 							'show_contact_name'=>self::bool_to_text($this->show_contact_name),
 							'show_contact_number'=>self::bool_to_text($this->show_contact_number),

@@ -63,7 +63,6 @@
 				var limits = [];
 				var rates = [];
 				var costPerUnit = []; //cost for additional miles
-
 				if(!this.settings.data.rates){
 					this.log('Warning: no Rates supplied');
 					return false;
@@ -205,6 +204,9 @@
 					dropOfLat: 'address_1_lat',
 					dropOfLng: 'address_1_lng',
 
+					restrictToCountry: this.settings.data.restrict_to_country,
+					countryCode: this.settings.data.country_code,
+					searchRadius: this.settings.data.search_radius,
 					//This will override the template in map-quote-calculator.js and can be used to change the html for dynamically added destinations
 					addressPickerTemplate: function(data){
 						if(!data.idx){
