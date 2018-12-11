@@ -288,6 +288,69 @@ class TQ_Calculation {
 		$this->time_cost = $this->time_hours * $rate['hour'];
 	}
 
+	public function charging_for_destinations(){
+
+		if(self::additional_stop_rate_empty()){
+			return false;
+		};
+
+		if(!is_numeric($this->config['charge_from_stop'])){
+			return false;
+		};
+
+		if(!is_array($this->config['stops'])){
+			return false;
+		}
+		$no_stops = count($this->config['stops']);
+		if($no_stops === 0){
+			return false;
+		};	
+
+		return true;
+
+	}
+
+	public function additional_stop_rate_empty(){
+		if(empty($this->max_distance_rate['additional_stop'])){
+			return true;
+		};
+		return false;
+	}
+	public function destinations_are_chargeable(){
+		$no_stops = count($this->config['stops']);
+		if($this->config['charge_from_stop']<=$no_stops){
+			return true;
+		};
+		return false;
+	}
+
+	public function add_extra_destination_surcharge(){
+		$this->extra_destination_surcharge = self::calc_extra_destination_surcharge();
+		$this->basic_cost = $this->basic_cost + $this->extra_destination_surcharge;
+		$this->breakdown[] = array(	'basic_cost'=>$this->basic_cost,
+									'total'=>$this->total,
+									'type'=>'destination_surcharge',
+									'rate'=>$this->max_distance_rate['additional_stop'],
+									'cost'=>$this->extra_destination_surcharge);
+		return $this->basic_cost;
+	}
+
+	public function calc_extra_destination_surcharge(){
+		$this->no_stops_to_charge_for = $no_stops_to_charge_for = $this->get_no_stops_to_charge_for();
+		$extra_destination_surcharge = $no_stops_to_charge_for * $this->max_distance_rate['additional_stop'];
+		return $extra_destination_surcharge;
+	}
+
+	public function get_no_stops_to_charge_for(){
+		$no_stops = count($this->config['stops']);
+		$no_stops_to_charge_for = $no_stops - $this->config['charge_from_stop']+1;
+		if($no_stops_to_charge_for<0){
+			$no_stops_to_charge_for = 0;
+		};
+
+		return $no_stops_to_charge_for;
+	}
+	
 	private function add_tax(){
 		$this->tax_cost = ($this->tax_rate/100)*$this->basic_cost;
 		$this->tax_cost = round($this->tax_cost,2);
