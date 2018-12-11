@@ -294,11 +294,17 @@ class TransitQuote_Pro_Admin {
 			$this->min_notice_charge = $this->plugin->get_setting('', 'min_notice_charge', '0');
 			$this->oldest_job_date = $this->plugin->get_oldest_job_date();
 			$this->api_string = $this->plugin->get_api_string();
+			$this->country_code = $this->plugin->get_setting('', 'country_code','');
+			$this->city_code = $this->plugin->get_setting('', 'city_code','');
+			$this->radius = $this->plugin->get_setting('', 'search_radius','');
 			
 			$tq_settings = array('startLat'=>$this->start_lat,
 								'startLng'=>$this->start_lng,
+								'radius'=>$this->radius,
 								'startPlaceName'=>$this->start_place_name,
-								'oldestJobDate'=>$this->oldest_job_date
+								'oldestJobDate'=>$this->oldest_job_date,
+								'countryCode'=>$this->country_code,
+								'cityCode'=>$this->city_code
 							);
 			
 			if(!empty($this->api_key)){

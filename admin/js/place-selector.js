@@ -31,6 +31,8 @@
 							html +='<input type="hidden" id="address_'+idx+'_postal_code" name="postal_code_'+idx+'" value=""/>';
 							html +='<input type="hidden" id="address_'+idx+'_lat" name="tq_pro_map_options[start_lat]" value=""/>';
 							html +='<input type="hidden" id="address_'+idx+'_lng" name="tq_pro_map_options[start_lng]" value=""/>';
+							html +='<input type="hidden" id="address_'+idx+'_lng" name="tq_pro_map_options[city_code]" value="'+data.cityCode+'"/>';
+							html +='<input type="hidden" id="address_'+idx+'_lng" name="tq_pro_map_options[country_code]" value="'+data.countryCode+'"/>';
 						return html;
 					},
 
@@ -143,13 +145,32 @@
 					} else {
 						this.log('There is no address input with id: '+ this.settings.pickUpInput);
 					}
+
+					this.renderCircle();
+				},
+
+				renderCircle: function(){
+
+					var cityCircle = new google.maps.Circle({
+			            strokeColor: '#003300',
+			            strokeOpacity: 0.8,
+			            strokeWeight: 2,
+			            fillColor: '#00cc00',
+			            fillOpacity: 0.35,
+			            map: this.map,
+			            center: new google.maps.LatLng(this.settings.map.startLat, this.settings.map.startLng),
+			            radius: this.settings.radius
+			          });
+
 				},
 
 				addElements: function(){
 					//Adds the hidden address elements to the page to capture the places results
 					var that =this;
 					$('.addresspicker').each(function(idx, el){
-						$(el).after(that.settings.addressTemplate({idx:String(idx)}));
+						$(el).after(that.settings.addressTemplate({idx:String(idx),
+																	cityCode: that.settings.cityCode,
+																	countryCode: that.settings.countryCode}));
 					});
 
 				},
@@ -233,7 +254,9 @@
 						
 						//update form with location data
 						that.updateForm(addressType, place.address_components);
-
+						if(that.settings.placeChangedCallback){
+							that.settings.placeChangedCallback(place);
+						}
 					  });				
 				},
 
