@@ -32,6 +32,7 @@ final class CalculationTest extends TestCase
 
         $calculator->init_calculation();
         $this->assertContains('rates', $calculator->config, 'testInitCalculation error: config has no rates element');
+        $this->assertContains('tax_name', $calculator->config, 'testInitCalculation error: config not merged');
     }
 
     public function testConfigNotEmpty() {
@@ -332,4 +333,100 @@ final class CalculationTest extends TestCase
 
         $this->assertNotEquals($calculator->max_distance_rate['amount'], $calculator->final_rate['amount'], ' max distance rate is not final rate we are within distance boundary');                
     }        
+
+    public function test_run(){
+      
+        $test_config = json_decode('{"debugging":false,"rates":[{"id":"1","service_id":"1","vehicle_id":"1","journey_length_id":"1","distance":"0.00","amount":"0.00","unit":"2.00","hour":"0.00","created":"2018-10-10 08:06:36","modified":"2018-10-10 08:06:36"}],"include_return_journey":false,"distance":"175.19","return_percentage":"100","hours":"2.04","return_distance":0,"return_time":0,"tax_rate":"0","tax_name":"VAT","rounding_type":"Round to 2 decimal points"}', true);
+        print_r($test_config);
+        $calculator = new TransitQuote_Pro4\TQ_Calculation($test_config);
+        $quote = $calculator->run();
+        $this->assertTrue(is_array($calculator->config), 'config is not an array');
+        $this->assertContains('rates', $calculator->config, 'test_run error: config has no rates element');
+        $this->assertNotEmpty($calculator->config['rates'], 'test_run error: rates config element is empty');
+        $this->assertNotEmpty($calculator->rates, 'test_run error: rates prop element is empty');
+
+
+        $this->assertEquals(true, is_array($quote), 'quote result not an array');
+        $this->assertEquals(175.19, $calculator->distance , 'distance prop is not 175.19');
+        $this->assertEquals(175.19, $calculator->full_distance, ' full distance prop is not 175.19');
+        $this->assertTrue(is_array($calculator->final_rate), 'final rate is not an array');
+
+        $this->assertNotFalse($calculator->final_rate, 'final rate is false');
+        $this->assertTrue(is_array($calculator->final_rate), 'final rate is not an array');        
+        $this->assertNotEquals( 0,$calculator->final_rate['unit'], 'unit rate is 0');
+        $this->assertEquals(350.38,$calculator->distance_cost,' calculator->distance_cost result is wrong');        
+        $this->assertEquals(350.38,$calculator->basic_cost,' calculator->basic_cost result is wrong');
+        $this->assertEquals(350.38,$calculator->total,' calculator->total  is wrong');
+
+        $this->assertGreaterThan(0, $quote['total'],' quote total result is 0');
+        $this->assertEquals(350.38,$quote['total'],' quote total result is wrong');
+
+    }
+
+    public function test_run_with_tax(){
+      
+        $test_config = json_decode('{"debugging":false,"rates":[{"id":"1","service_id":"1","vehicle_id":"1","journey_length_id":"1","distance":"0.00","amount":"0.00","unit":"2.00","hour":"0.00","created":"2018-10-10 08:06:36","modified":"2018-10-10 08:06:36"}],"include_return_journey":false,"distance":"175.19","return_percentage":"100","hours":"2.04","return_distance":0,"return_time":0,"tax_rate":"20","tax_name":"VAT","rounding_type":"Round to 2 decimal points"}', true);
+
+        // tax percentage 20
+        // tax amount 70.08
+        // total 420.456
+        // total rounded 420.46
+
+            $calculator = new TransitQuote_Pro4\TQ_Calculation($test_config);
+        $quote = $calculator->run();
+        $this->assertTrue(is_array($calculator->config), 'config is not an array');
+        $this->assertContains('rates', $calculator->config, 'test_run error: config has no rates element');
+        $this->assertNotEmpty($calculator->config['rates'], 'test_run error: rates config element is empty');
+        $this->assertNotEmpty($calculator->rates, 'test_run error: rates prop element is empty');
+
+
+        $this->assertEquals(true, is_array($quote), 'quote result not an array');
+        $this->assertEquals(175.19, $calculator->distance , 'distance prop is not 175.19');
+        $this->assertEquals(175.19, $calculator->full_distance, ' full distance prop is not 175.19');
+        $this->assertTrue(is_array($calculator->final_rate), 'final rate is not an array');
+
+        $this->assertNotFalse($calculator->final_rate, 'final rate is false');
+        $this->assertTrue(is_array($calculator->final_rate), 'final rate is not an array');        
+        $this->assertNotEquals( 0,$calculator->final_rate['unit'], 'unit rate is 0');
+        $this->assertEquals(350.38,$calculator->distance_cost,' calculator->distance_cost result is wrong');        
+        $this->assertEquals(350.38,$calculator->basic_cost,' calculator->basic_cost result is wrong');
+        $this->assertEquals(420.46,$calculator->total,' calculator->total  is wrong');
+        $this->assertEquals(70.08,$calculator->tax_cost,' calculator->total  is wrong');
+
+        $this->assertGreaterThan(0, $quote['total'],' quote total result is 0');
+        $this->assertEquals(420.46,$quote['total'],' quote total result is wrong');
+
+    }     
+
+    public function test_run_with_hourly_and_tax(){
+      
+        $test_config = json_decode('{"debugging":false,"rates":[{"id":"1","service_id":"1","vehicle_id":"1","journey_length_id":"1","distance":"0.00","amount":"0.00","unit":"2.00","hour":"50.00","created":"2018-10-10 08:06:36","modified":"2018-10-10 08:06:36"}],"include_return_journey":false,"distance":"175.19","return_percentage":"100","hours":"2.04","return_distance":0,"return_time":0,"tax_rate":"20","tax_name":"VAT","rounding_type":"Round to 2 decimal points"}', true);
+
+        $calculator = new TransitQuote_Pro4\TQ_Calculation($test_config);
+        $quote = $calculator->run();
+        $this->assertTrue(is_array($calculator->config), 'config is not an array');
+        $this->assertContains('rates', $calculator->config, 'test_run error: config has no rates element');
+        $this->assertNotEmpty($calculator->config['rates'], 'test_run error: rates config element is empty');
+        $this->assertNotEmpty($calculator->rates, 'test_run error: rates prop element is empty');
+
+
+        $this->assertEquals(true, is_array($quote), 'quote result not an array');
+        $this->assertEquals(175.19, $calculator->distance , 'distance prop is not 175.19');
+        $this->assertEquals(175.19, $calculator->full_distance, ' full distance prop is not 175.19');
+        $this->assertTrue(is_array($calculator->final_rate), 'final rate is not an array');
+
+        $this->assertNotFalse($calculator->final_rate, 'final rate is false');
+        $this->assertTrue(is_array($calculator->final_rate), 'final rate is not an array');        
+        $this->assertNotEquals( 0,$calculator->final_rate['unit'], 'unit rate is 0');
+        $this->assertEquals(350.38,$calculator->distance_cost,' calculator->distance_cost is wrong');       
+
+        $this->assertEquals(102,$calculator->time_cost,' calculator->time_cost is wrong');
+
+        $this->assertEquals(452.38,$calculator->basic_cost,' calculator->basic_cost result is wrong');
+        $this->assertEquals(90.48,$calculator->tax_cost,' calculator->total  is wrong');
+
+        $this->assertEquals(542.86,$calculator->total,' calculator->total  is wrong');
+        $this->assertEquals(542.86,$quote['total'],' quote total result is wrong');
+
+    }     
 }

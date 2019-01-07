@@ -42,7 +42,6 @@ class TQ_Calculation {
 	}
 
 	public function init_calculation(){
-		//print_r($this->config);
 		$this->total_before_tax = 0;
 		$this->distance_cost = 0;
 		$this->outward_cost = 0;
@@ -100,7 +99,7 @@ class TQ_Calculation {
 
 	public function run(){
 		self::init_calculation();
-		//echo 'boundary_mode: '.$this->config['boundary_mode'];
+
 		if(self::including_return_journey()&&!self::using_different_rate_for_return_journey()){
 			self::calc_for_full_distance();
 		} else {
@@ -110,11 +109,7 @@ class TQ_Calculation {
 
 		self::calc_time_cost($this->final_rate);
 
-		if($this->distance_cost>$this->time_cost){
-			$this->basic_cost = $this->distance_cost;
-		} else {
-			$this->basic_cost = $this->time_cost;
-		};
+		$this->basic_cost = $this->distance_cost + $this->time_cost;
 
 		if((self::charging_for_destinations())&&(self::destinations_are_chargeable())){
 			self::add_extra_destination_surcharge();
@@ -124,6 +119,8 @@ class TQ_Calculation {
 			self::add_tax();
 		} else {
 			$this->tax_cost = 0;
+			$this->total = $this->basic_cost;
+
 		};
 		return self::build_quote();
 	
@@ -183,9 +180,6 @@ class TQ_Calculation {
 				//echo ' Using max distance rate for long journey:';
 				//print_r($this->max_distance_rate);
 				$this->final_rate = $this->max_distance_rate;
-			} else {
-				////echo 'final rate not false:';
-				//print_r($this->final_rate);
 			};
 
 			self::add_max_distance_set_amount_to_distance_cost($this->final_rate);
@@ -240,7 +234,7 @@ class TQ_Calculation {
 									'rate'=>$rate['unit'],
 									'cost'=>$cost_of_miles_up_to_boundary);
 	}
-
+/*
 	private function add_remaining_distance_cost_to_total($rate){
 		$miles_remaining_within_boundary = $rate['distance'] - $this->distance;
 		$cost_of_miles_remaining_within_boundary = $miles_remaining_within_boundary*$rate['unit'];
@@ -251,7 +245,7 @@ class TQ_Calculation {
 							'rate'=>$rate['unit'],
 							'cost'=>$cost_of_miles_remaining_within_boundary);
 	}
-
+*/
 	private function add_max_distance_cost_to_distance_cost($rate){
 		//echo ', add_max_distance_cost_to_distance_cost: rate: '.$rate['unit'].PHP_EOL;
 		//echo ', add_max_distance_cost_to_distance_cost: total_distance: '.$this->distance.PHP_EOL;

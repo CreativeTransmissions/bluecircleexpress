@@ -327,7 +327,6 @@ final class FormValidatorTest extends TestCase
         $example_error_array = array('name'=>'address_0_lat',
                                     'error'=>'Missing');
         $error_messages = $validator->get_missing_field_error_messages();
-        print_r($error_messages);
         $this->assertContains($example_error_array, $error_messages, 'testGetInvalidFieldErrorMessages:  get_invalid_field_error_messages contains error message for invalid field');
 
 

@@ -181,4 +181,7 @@ final class CalculationTestRates extends TestCase
 
         $this->assertNotEquals($calculator->max_distance_rate['amount'], $calculator->final_rate['amount'], ' max distance rate is not final rate we are within distance boundary');                
     }    
+
+
+    
 }

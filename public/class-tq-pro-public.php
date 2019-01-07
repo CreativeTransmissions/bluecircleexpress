@@ -1,5 +1,5 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE );
+error_reporting(E_ERROR | E_PARSE );
  ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
@@ -1448,17 +1448,19 @@ class TransitQuote_Pro_Public {
 			return false;
 		};
 
-		$this->calculation = new TransitQuote_Pro4\TQ_Calculation(array('debugging'=>$this->debug,
-																		'rates'=>$this->rates,
-																		'include_return_journey'=>(bool)$this->rate_options['deliver_and_return'],
-																		'distance'=>$this->rate_options['distance'],
-																		'return_percentage'=>$this->return_percentage,
-																		'hours'=>$this->rate_options['hours'],
-																		'return_distance'=>$this->rate_options['return_distance'],
-																		'return_time'=>$this->rate_options['return_time'],
-																		'tax_rate'=>$this->tax_rate,
-																		'tax_name'=>'VAT',
-																		'rounding_type'=>$this->rounding_type)); 
+		$calc_config = array('debugging'=>$this->debug,
+										'rates'=>$this->rates,
+										'include_return_journey'=>(bool)$this->rate_options['deliver_and_return'],
+										'distance'=>$this->rate_options['distance'],
+										'return_percentage'=>$this->return_percentage,
+										'hours'=>$this->rate_options['hours'],
+										'return_distance'=>$this->rate_options['return_distance'],
+										'return_time'=>$this->rate_options['return_time'],
+										'tax_rate'=>$this->tax_rate,
+										'tax_name'=>'VAT',
+										'rounding_type'=>$this->rounding_type);
+		
+		$this->calculation = new TransitQuote_Pro4\TQ_Calculation($calc_config); 
  
 		$quote = $this->calculation->run();
 		return $quote;
