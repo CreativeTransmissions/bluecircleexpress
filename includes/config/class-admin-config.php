@@ -583,7 +583,7 @@ class Admin_Config {
                                                   'fields'=>array(
                                                     'api_key'=>array(
                                                       'id'=>'api_key',
-                                                      'label'=>'Googl Maps API Key',
+                                                      'label'=>'Google Maps API Key',
                                                       'type'=>'input'),
                                                     'distance_unit'=>array(
                                                       'id'=>'distance_unit',
