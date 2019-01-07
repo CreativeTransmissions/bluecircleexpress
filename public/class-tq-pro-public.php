@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ERROR | E_PARSE );
+/*error_reporting(E_ERROR | E_PARSE );
  ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
@@ -1459,7 +1459,7 @@ class TransitQuote_Pro_Public {
 										'tax_rate'=>$this->tax_rate,
 										'tax_name'=>'VAT',
 										'rounding_type'=>$this->rounding_type);
-		
+
 		$this->calculation = new TransitQuote_Pro4\TQ_Calculation($calc_config); 
  
 		$quote = $this->calculation->run();
