@@ -1140,7 +1140,7 @@ class TransitQuote_Pro_Public {
 		       $this->form_includes = array(
 		       		array(	'template'=>$search_fields_include,
 		       				'hidden'=>''),
-		       		array(	'template'=>'delivery_fields',
+		       		array(	'template'=>'service_vehicle',
 		       				'hidden'=>''),
 		       		array(	'template'=>'map',
 		       				'hidden'=>''),		       		
@@ -1157,7 +1157,7 @@ class TransitQuote_Pro_Public {
 
 		       		array(	'template'=>'customer_fields',
 		       				'hidden'=>''),
-		       		array(	'template'=>'delivery_fields',
+		       		array(	'template'=>'service_vehicle',
 		       				'hidden'=>''),
 		       		array(	'template'=>$search_fields_include,
 		       				'hidden'=>''),
@@ -1174,7 +1174,7 @@ class TransitQuote_Pro_Public {
 
 					array(	'template'=>$search_fields_include,
 		       				'hidden'=>''),
-		       		array(	'template'=>'delivery_fields',
+		       		array(	'template'=>'service_vehicle',
 		       				'hidden'=>''),
 		       		array(	'template'=>'map',
 		       				'hidden'=>''),		       		
@@ -1192,7 +1192,7 @@ class TransitQuote_Pro_Public {
 		       $this->form_includes = array(
 		       		array(	'template'=>'search_fields_popup',
 		       				'hidden'=>''),
-		       		array(	'template'=>'delivery_fields',
+		       		array(	'template'=>'service_vehicle',
 		       				'hidden'=>''),
 		       		array(	'template'=>'quote_fields',
 		       				'hidden'=>'hidden'),
@@ -1205,7 +1205,7 @@ class TransitQuote_Pro_Public {
 
 		       		array(	'template'=>'customer_fields',
 		       				'hidden'=>''),
-		       		array(	'template'=>'delivery_fields',
+		       		array(	'template'=>'service_vehicle',
 		       				'hidden'=>''),
 		       		array(	'template'=>'search_fields_popup',
 		       				'hidden'=>''),

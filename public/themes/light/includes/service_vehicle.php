@@ -15,6 +15,9 @@ $get_services_with_rates_by_id = $this->get_services_with_rates_by_id($attribute
 	}
 $hide_all = 'left';
 ?>
+<?php
+if(($has_services) || ($has_vehicles)){ ?>
+	<div class="tq-row transit_inner transit_body">
 <div class="service-vehicle-wrap">
 <?php
 if(($has_services) && ($has_vehicles)){ 
@@ -90,5 +93,5 @@ if (!((empty($get_services_by_id)) && (empty($get_services_with_rates_by_id)))) 
 				<?php } ?>			
 			<?php } ?>
 	</div>
-
-
+</div>	
+<?php }; ?>
