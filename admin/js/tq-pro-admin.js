@@ -495,7 +495,7 @@
 
 					//set form to read/populate
 					this.editForm = $('#edit_service_form')[0];
-					this.editTable = $('#service_table')[0];
+					this.editTable = $('#services_table')[0];
 
 					// set form status message
 					this.editRecordMessage = 'Editing Service';
@@ -759,7 +759,6 @@
 					$('.admin-form table').on('click', 'button.delete-btn',function(e) {
 						e.preventDefault();
 						e.stopPropagation();
-console.log('here');
 						var btn = this;
 
 						$( "#dialog-confirm" ).dialog({
@@ -960,7 +959,7 @@ console.log('here');
 
 				clearTable: function(table){
 					if(!table){
-						console.log('no table name supplied');
+						this.log('no table name supplied');
 						return false;
 					};
 					var tableName = table+'_table';
@@ -1019,7 +1018,7 @@ console.log('here');
 					//Set id field for save
 					var formEl = $('input[name="id"]', this.editForm);
 					if(formEl.length==0){
-						console.log('no id field for form.');
+						this.log('no id field for form.');
 						return false;
 					};
 					$(formEl).val(recId);
@@ -1308,7 +1307,6 @@ console.log('here');
 									var row = $(that.editTable).find('tr[data-id="'+response.id+'"]');
 									$(row).replaceWith(response.html);								
 								}
-
 							} else {
 								if(response.html){
 									//refresh table
