@@ -63,6 +63,8 @@ class TQ_Calculation {
 		
 		if(self::including_return_journey()){
 			$this->distance = self::get_outward_distance();
+		} else {
+			$this->outward_distance = $this->distance;
 		}
 	}
 
