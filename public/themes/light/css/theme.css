@@ -75,7 +75,6 @@
     height: auto;
     line-height: auto;
     margin-left: auto;
-    margin-bottom: 0.25em !important;
 }
 .tq-form .datepicker {
     left: auto;
@@ -91,7 +90,8 @@
 .tq-form .remove-address{
     display: inline-block;
     margin-left: 1em;
-    margin-top: 1.1em;
+    margin-top: 1em;
+    font-size: 0.75em;
 }
 
 /*Font Integration*/
@@ -108,6 +108,10 @@
     padding: 1.75% 2%;
     margin: 0;
 }
+.tq-form .transit_header h2:before{
+    content:none
+}
+
 .transit_main h3 {
     font-weight: 700;
     color:#3e80fa;
@@ -171,32 +175,31 @@
     margin-bottom: 30px;
 }
 .tq-form .add-waypoint {
+    clear: left;    
     display: inline-block;
-    clear: left;
     float: left;
+    font-size: 0.75em;
 }
 .transit_body {padding:1.75% 2%;background-color: #fbfbfb; float: left; width: 100%; box-sizing: border-box; -webkit-box-sizing: border-box;}
 .transit_body .sub_title {
     color: #3e80fa;
-    font-size: 1.125em;
+    font-size: 1em;
     display: block;
-    margin: 1% 0;
+    margin: 1% 0 0 0;
     float: left;
 }
 .transit_body .sub_title i {
     margin-right: 12px;
     display: inline-block;
-    margin-bottom: 0.25em;    
     vertical-align: middle;
     font-size: 28px;
 }
 .transit_noadress {
     display: inline-block;
     text-align: right;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1em;
+    font-size: 0.5em;
     font-weight: 500;
-    margin-top: 2em;
+    margin-top: 3em;
     color: #c5d0df;
     float: right;
 }

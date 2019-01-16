@@ -880,7 +880,8 @@ class Admin_Config {
                                                         'id'=>'sales_item_description',
                                                         'label'=>'Invoice Item Name',
                                                         'type'=>'input',
-                                                        'help'=>'This is the item name that will be be listed against the payment in your customers PayPal account or in WooCommerce.'
+                                                        'help'=>'This is the item name that will be be listed against the payment in your customers PayPal account or in WooCommerce.',
+                                                        'default'=>'Delivery'
                                                      ),
 													 
 												                          	'disable_cart'=>array(
