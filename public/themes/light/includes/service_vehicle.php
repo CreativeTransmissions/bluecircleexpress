@@ -56,7 +56,7 @@ if (!((empty($get_services_by_id)) && (empty($get_services_with_rates_by_id)))) 
 		</div>
 	</div>
 	<?php } elseif($has_vehicles){ ?>
-				<div class="left half">
+				<div class="left full">
 					<span class="sub_title"><i class="icon icon-icn-service"></i><?php echo $this->view_labels['vehicle_label']; ?></span>
 					<div class="bt-flabels__wrapper select-wrap">
 						<select tabindex="8" name="vehicle_id" id="vehicle_id">
@@ -75,7 +75,7 @@ if (!((empty($get_services_by_id)) && (empty($get_services_with_rates_by_id)))) 
 				if (!((empty($get_services_by_id)) && (empty($get_services_with_rates_by_id)))) { ?>
 					<input tabindex="7" name="service_id" id="service_id" value="<?php echo($attributes['service']);?>" type="hidden">
 				<?php }else{ ?>
-					<div class="left half">
+					<div class="left full">
 						<span class="sub_title"><i class="icon icon-icn-service"></i><?php echo $this->view_labels['service_label']; ?></span>
 						<div class="bt-flabels__wrapper select-wrap">
 							<select tabindex="7" name="service_id" id="service_id">
