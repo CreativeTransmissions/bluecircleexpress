@@ -1,12 +1,9 @@
 [submodule "includes/ct-utils"]
 	path = includes/ct-utils
-	url = git@github.com:CreativeTransmissions/ct-utils.git
+	url = https://github.com/CreativeTransmissions/ct-utils.git
 [submodule "includes/ct-db"]
 	path = includes/ct-db
-	url = git@github.com:CreativeTransmissions/ct-db.git
+	url = https://github.com/CreativeTransmissions/ct-db.git
 [submodule "public/js/js-transitquote"]
 	path = public/js/js-transitquote
-	url = git@github.com:CreativeTransmissions/jq-transitquote.git
-[submodule "includes/ct-payment-pp"]
-	path = includes/ct-payment-pp
-	url = https://github.com/CreativeTransmissions/ct-payment-pp
+	url = https://github.com/CreativeTransmissions/jq-transitquote.git
