@@ -228,13 +228,7 @@ class TransitQuote_Pro4 {
 		 * The class responsible for woocommerce payments
 		 * for the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/ct-woocommerce/class-ct-woocommerce.php';
-		
-		/**
-		 * The class responsible for PayPal methods
-		 * for the plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/ct-payment-pp/ct-paypal.php';		
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/ct-woocommerce/class-ct-woocommerce.php';	
 
 		/**
 		 * The class responsible for Calculation methods
