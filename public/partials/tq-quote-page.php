@@ -38,8 +38,11 @@
 </table>
 <?php
 
-    if(isset($this->job['quote'])){
+    if(isset($this->job['surcharges'])){
         $this->job_details_quote_table('Surcharges',$this->format_surcharges_web($this->job['surcharges']));
+    };
+
+    if(isset($this->job['quote'])){
         $this->job_details_quote_table('Cost',$this->format_quote_web($this->job['quote']));
     };
 

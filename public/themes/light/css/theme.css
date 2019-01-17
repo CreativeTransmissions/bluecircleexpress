@@ -229,6 +229,12 @@
 .transit_main select {
     color:#c5d0df; 
 }
+.tq-form .select-desc {
+    clear: left;
+}
+.tq-form .select-desc p{
+    font-size: 0.75em;
+}
 .transit_main textarea {min-height: 160px; padding-top: 25px;}
 .transit_main input::-webkit-input-placeholder { 
     color: #c5d0df;
