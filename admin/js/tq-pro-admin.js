@@ -127,7 +127,7 @@
 					d.setMonth( d.getMonth( ) - 1 );
 					$('.datepicker').datepicker();
 					$('.datepicker').datepicker('option', 'altFormat','yy-mm-dd' );
-					$('.datepicker').datepicker('option', 'dateFormat','dd/mm/yy' );
+					$('.datepicker').datepicker('option', 'dateFormat', this.settings.data.datepickerFormat );
 					$('#from_date').datepicker('option', 'altField','#from_date_alt');
 					$('#from_date').datepicker('setDate', d);
 					$('#to_date').datepicker('option', 'altField','#to_date_alt');
@@ -145,7 +145,7 @@
 
 				initRangeDatepicker:function(){
 					var that = this;
-					var dateFormat = 'mm/dd/yy';
+					var dateFormat = this.settings.data.datepickerFormat;//'mm/dd/yy';
 					start_date = $( "#start_date" ).datepicker({
 						defaultDate: "+1d",
 						changeMonth: true,
@@ -170,7 +170,7 @@
 
 				getDate:function( element ) {
 					var date;
-					var dateFormat = 'mm/dd/yy'
+					var dateFormat = this.settings.data.datepickerFormat; //'mm/dd/yy'
 					try {
 						date = $.datepicker.parseDate( dateFormat, element.value );
 						
@@ -382,7 +382,11 @@
 
 					if(this.settings.data.countryCode){
 						settings.countryCode = this.settings.data.countryCode;			
-					};	
+					};
+					
+					if(this.settings.data.datepickerFormat){
+						settings.datepickerFormat = this.settings.data.datepickerFormat;			
+					};
 
 					if(this.settings.data.radius){
 						settings.radius = parseInt(this.settings.data.radius)*1000;

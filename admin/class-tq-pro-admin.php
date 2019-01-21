@@ -297,6 +297,8 @@ class TransitQuote_Pro_Admin {
 			$this->country_code = $this->plugin->get_setting('', 'country_code','');
 			$this->city_code = $this->plugin->get_setting('', 'city_code','');
 			$this->radius = $this->plugin->get_setting('', 'search_radius','');
+
+			$this->datepicker_format = $this->plugin->datepicker_format();
 			
 			$tq_settings = array('startLat'=>$this->start_lat,
 								'startLng'=>$this->start_lng,
@@ -304,7 +306,8 @@ class TransitQuote_Pro_Admin {
 								'startPlaceName'=>$this->start_place_name,
 								'oldestJobDate'=>$this->oldest_job_date,
 								'countryCode'=>$this->country_code,
-								'cityCode'=>$this->city_code
+								'cityCode'=>$this->city_code,
+								'datepickerFormat'=>$this->datepicker_format
 							);
 			
 			if(!empty($this->api_key)){

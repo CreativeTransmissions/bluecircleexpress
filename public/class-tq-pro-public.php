@@ -332,6 +332,55 @@ class TransitQuote_Pro_Public {
 		return get_option('time_format');
 	}
 
+	function  datepicker_format(){
+		$date_format = self::get_date_format();
+		$month_symboles= ['F', 'm', 'M', 'n', 't'];
+		$date_symboles= ['D', 'd', 'j'];
+		$month_pos = $date_pos = 'no'; //dummy value		
+		foreach($month_symboles as $month_symbole){
+			$pos = stripos($date_format, $month_symbole);
+			if (($pos !== false)) {
+				$month_pos = $pos;
+				break;
+			}
+		}
+		foreach($date_symboles as $date_symbole){
+			$pos = stripos($date_format, $date_symbole);
+			if (($pos !== false)) {
+				$date_pos = $pos;
+				break;
+			}
+		}
+		$date_first = 'dd/mm/yy';
+		$return_format = $date_first;
+		$month_first = 'mm/dd/yy';
+		if($month_pos !== 'no' &&  $month_pos >= 0){ // if month found
+			if($date_pos !=='no' && $date_pos >= 0){ 
+				if( $month_pos > $date_pos ){
+					$return_format = $date_first;
+				} else {
+					$return_format = $month_first;
+				}
+			} else { // no date
+				$return_format = $month_first;
+			}
+		} else if($date_pos !== 'no'  &&  $date_pos >= 0){// if date found
+			if($month_pos !== 'no' && $month_pos >= 0 ){
+				if( $date_pos > $month_pos ){
+					$return_format = $month_first;
+				} else {
+					$return_format = $date_first;
+				}
+			} else { // no month
+				$return_format = $date_first;
+			}
+		} else {
+			$return_format = $date_first;
+		}
+		
+		return $return_format;
+	}
+
 	private function get_blocked_dates(){
 	   	$plugin = new TransitQuote_Pro4();
 		$this->cdb = $plugin->get_custom_db();
