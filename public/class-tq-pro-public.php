@@ -65,8 +65,7 @@ class TransitQuote_Pro_Public {
 		if(self::woocommerce_is_activated()){
 			self::get_woocommerce_config();
 		}
-
-
+		$this->dbui = new TransitQuote_Pro4\CT_DBUI(array('cdb'=>$this->cdb));
 	}
 
 	public function enqueue_styles() {
@@ -236,8 +235,13 @@ class TransitQuote_Pro_Public {
 	public function get_settings_for_js(){
 		//get varibles to pass to JS
 		// $holidays = self::get_holidays();
+
 		$rates = self::get_rates_list();
 		$blocked_dates = self::get_blocked_dates();
+
+		$get_date_format = self::get_date_format();
+		$get_time_format = self::get_time_format();
+
 		$time_interval = self::get_setting('tq_pro_form_options', 'time_interval', 30);
 		$booking_start_time = strtotime(self::get_setting('tq_pro_form_options', 'booking_start_time', '07:00 AM'));
 		$booking_end_time = strtotime(self::get_setting('tq_pro_form_options', 'booking_end_time', '09:00 PM'));
@@ -302,7 +306,9 @@ class TransitQuote_Pro_Public {
 							'blocked_dates'=> $blocked_dates,
 							'time_interval'=> $time_interval,
 							'booking_start_time'=> $booking_start_time,
-							'booking_end_time'=> $booking_end_time
+							'booking_end_time'=> $booking_end_time,
+							'date_format'=> $get_date_format,
+							'time_format'=> $get_time_format
 							);
 
 		if(!empty($this->api_key)){
@@ -317,6 +323,13 @@ class TransitQuote_Pro_Public {
 			$tq_settings['paypal'] = $paypal_settings;
 		};
 		return $tq_settings;
+	}
+
+	function  get_date_format(){
+		return get_option('date_format');
+	}
+	function  get_time_format(){
+		return get_option('time_format');
 	}
 
 	private function get_blocked_dates(){
@@ -2256,7 +2269,7 @@ private function save_locations(){
 					break;
 				case 'delivery_time':
 					$delivery_date = $this->ajax->param(array('name'=>'delivery_date', 'optional'=>!$this->ask_for_date));
-					if(empty($delivery_date)){
+					if(!empty($delivery_date)){
 						$date = new DateTime($delivery_date);
 					} else {
 						$date = new DateTime();
@@ -2426,6 +2439,7 @@ private function save_locations(){
     }
 	
 	public function get_job_date($job = null){
+		
 		//get date and time for job in separate  array elements
 		if(empty($job)){
     		$job = $this->job;
@@ -2453,15 +2467,18 @@ private function save_locations(){
 		$hours = $time_parts[0];
 		$mins = $time_parts[1];
 		
-    	$dt = new DateTime($job_datetime);
-
-		$date = $dt->format('d/m/Y');
+		$dt = new DateTime($job_datetime);
+			
+		$date = $this->dbui->format_date($job['delivery_time']);
+		$time = $this->dbui->format_time($job['delivery_time']);
+		
+		// $date = $dt->format('m/d/y');
 
 		$job_date[0]=array('label'=>'Pick Up Date',
 								'value'=> $date);
 
-		$job_date[1] = array('label'=>'Pick Up Time',
-							'value'=>$hours.':'.$mins);
+		// $job_date[1] = array('label'=>'Pick Up Time', 'value'=>$hours.':'.$mins);
+		$job_date[1] = array('label'=>'Pick Up Time', 'value'=> $time);
 	
 		return $job_date;
 	}

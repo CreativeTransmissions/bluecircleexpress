@@ -765,8 +765,8 @@ class TransitQuote_Pro_Admin {
 													'payment_status_type_id'
 													),
 									'formats'=>array(
-										'created'=>'ukdatetime', 
-										'delivery_time'=>'ukdatetime',
+										'created'=>'datetime', 
+										'delivery_time'=>'datetime',
 										'status_type_id'=>array(
 											'select'=>'status_types'
 										),
