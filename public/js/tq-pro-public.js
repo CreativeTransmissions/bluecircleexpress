@@ -216,7 +216,7 @@
 						var idx = data.idx;
 						var html  = '<div class="address-wrap">';
 							html += '	<div class="field bt-flabels__wrapper full-width full">';
-                        	html += '		<span class="sub_title"><i class="icon icon-icn-collection-address"></i>'+TransitQuoteProSettings.destination_address_label+'</span><a href="#" class="remove-address no-address-'+idx+'">'+TransitQuoteProSettings.remove_dest_link_text+'</a>';
+                        	html += '		<span class="sub_title tq-primary-color"><i class="icon icon-icn-collection-address"></i>'+TransitQuoteProSettings.destination_address_label+'</span><a href="#" class="remove-address no-address-'+idx+'">'+TransitQuoteProSettings.remove_dest_link_text+'</a>';
                         	html += '		<span class="transit_noadress"><a href="#" class="no-address no-address-'+idx+'">'+TransitQuoteProSettings.cant_find_address_text+'</a></span>';
                         	html += '		<input class="text addresspicker" required type="text" name="address_'+idx+'_address" id="address_'+idx+'" value="" autocomplete="false" placeholder="'+TransitQuoteProSettings.destination_address_label+'"/>';
                         	html += '		<span class="bt-flabels__error-desc">Required '+TransitQuoteProSettings.destination_address_label+'</span>';
