@@ -1,11 +1,11 @@
-<div class="transit_inner address pick-start"> <!-- Delivery Address section start here -->
-    <div class="transit_header">
+<div class="transit_inner address pick-start"> <!-- Delivery Address section start heres -->
+    <div class="transit_header tq-form-title-color">
         <h2><?php echo self::get_setting('tq_pro_form_options','search_section_title', 'Enter Addresses'); ?></h2>
     </div>
     <div class="transit_body">
          <div class="search-fields">
             <div class="collection_wrap">
-                <span class="sub_title">
+                <span class="sub_title tq-primary-color">
                     <i class="icon icon-icn-collection-address"></i><?php echo $this->view_labels['collection_address_label']; ?>
                 </span>
                 <div class="address-wrap">
@@ -38,7 +38,7 @@
             </div>
             <div class="destination_wrap_sub">
                 <div class="destination_wrap">
-                    <span class="sub_title">
+                    <span class="sub_title tq-primary-color">
                         <i class="icon icon-icn-collection-address"></i><?php echo $this->view_labels['destination_address_label']; ?>
                     </span>
                     <div class="address-wrap">

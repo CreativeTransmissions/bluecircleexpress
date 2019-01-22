@@ -268,6 +268,7 @@ class TransitQuote_Pro_Admin {
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
 			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/tq-pro-admin.css', array(), $this->version, 'all' );
 			wp_enqueue_style( 'wp-jquery-ui-dialog' );
+			wp_enqueue_style( 'wp-color-picker' );
 		}
 	}
 
@@ -323,7 +324,7 @@ class TransitQuote_Pro_Admin {
 
 
 			wp_localize_script( $this->plugin_slug . '-admin-mainscript', 'TransitQuoteProSettings', $tq_settings);
-
+			wp_enqueue_script( $this->plugin_slug . '-admin-form-color-picker', plugin_dir_url( __FILE__ ) . 'js/tq-pro-admin.js', array( 'wp-color-picker' ), false, true ); 
 
 		}
 

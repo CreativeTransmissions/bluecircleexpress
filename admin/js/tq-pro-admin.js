@@ -70,6 +70,7 @@
 						break;
 						case 'tq_pro_form_options':
 							this.validateAddTime();
+							this.includeColorPicker();
 						break;
 						case 'tq_pro_email_options':
 						case 'tq_pro_paypal_options':
@@ -91,6 +92,9 @@
 						that.validateTimeFields(ele, value);
 					});
 
+				},
+				includeColorPicker: function() {
+					$('input[name="tq_pro_form_options[form_color]"], input[name="tq_pro_form_options[title_background_color]"], input[name="tq_pro_form_options[form_background_color]"]').wpColorPicker();
 				},
 
 				validateTimeFields: function(ele, value){

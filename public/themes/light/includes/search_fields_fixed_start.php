@@ -1,5 +1,5 @@
 <div class="transit_inner address fixed-start"> <!-- Delivery Address section start here -->
-    <div class="transit_header">
+    <div class="transit_header tq-form-title-color">
         <h2><?php echo self::get_setting('tq_pro_form_options','search_section_title', 'Enter Addresses'); ?></h2>
     </div>
         <div class="transit_body">

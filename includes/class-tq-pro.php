@@ -306,7 +306,6 @@ class TransitQuote_Pro4 {
 		$this->loader->add_action( 'wp_ajax_test_dispatch_email', $plugin_admin, 'test_dispatch_email_callback');
 		$this->loader->add_action( 'woocommerce_order_status_completed', $plugin_admin, 'woocommerce_order_marked_completed');
 		$this->loader->add_action( 'plugins_loaded', $plugin_admin, 'is_transitteam_active' );
-		
 	}
 
 	/**
@@ -349,6 +348,8 @@ class TransitQuote_Pro4 {
 		$this->loader->add_filter( 'return_main_cdb_config', $this->plugin_public, 'return_main_cdb_config' );
 		$this->loader->add_filter( 'woocommerce_my_account_my_orders_columns', $this->plugin_public, 'booking_details_add_my_account_orders_column', 10, 1);
 		$this->loader->add_action( 'woocommerce_my_account_my_orders_column_booking_details', $this->plugin_public, 'booking_details_to_column', 10, 1);
+		$this->loader->add_action( 'wp_head', $this->plugin_public, 'tq_form_css');
+
 	}
 
 	/**

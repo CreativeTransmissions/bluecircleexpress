@@ -91,7 +91,24 @@ class Admin_Config {
                                                         'options'=>array('Classic', 'Light'),
                                                         'default'=>'Light',
                                                         'help'=>'Please select a theme to change the appearance of the order form.'),
-
+                                                      'form_color' => array(
+                                                          'id' => 'form_color',
+                                                          'label' => 'Form color',
+                                                          'type' => 'input',
+                                                          'help' => 'Enter the form color.',
+                                                          'default' => '#3e80fa'), 
+                                                      'title_background_color' => array(
+                                                            'id' => 'title_background_color',
+                                                            'label' => 'Titles background color',
+                                                            'type' => 'input',
+                                                            'help' => 'Select the color for titles background.',
+                                                            'default' => '#e8e8e8'), 
+                                                      'form_background_color' => array(
+                                                              'id' => 'form_background_color',
+                                                              'label' => 'Form background color',
+                                                              'type' => 'input',
+                                                              'help' => 'Select the form background color.',
+                                                              'default' => '#cccccc'), 
                                                      'time_interval'=>array(
                                                         'id'=>'time_interval',
                                                         'label'=>'Time Picker Interval (min)',
@@ -562,12 +579,7 @@ class Admin_Config {
                                                                     'default'=>'Date and Time',
                                                                     'help'=>'This will be the label for the date and time section.'
                                                                   
-                                                                )
-*/
-                                                               
-
-                                                                
-
+                                                                )*/
                                                   )
                                               )
                                         )

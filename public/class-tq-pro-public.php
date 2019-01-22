@@ -3668,6 +3668,23 @@ private function save_locations(){
 		echo sprintf($html, $site_url, $site_url);
 
 	}
+	public function tq_form_css() {
+		$form_color = self::get_setting('tq_pro_form_options', 'form_color', '#3e80fa');
+		$form_title_color = self::get_setting('tq_pro_form_options', 'title_background_color', '#e8e8e8');
+		$form_bg_color = self::get_setting('tq_pro_form_options', 'form_background_color', '#cccccc');
+		echo "
+			<style>
+				.tq-primary-color{ 
+					color: $form_color !important;
+				}
+				.tq-form-title-color{ 
+					background-color: $form_title_color !important;
+				}
+				.tq-form-bg-color{ 
+					background-color: $form_bg_color !important;
+				}
+			</style>"; 
+	}
 
 	/*
 		Return cdb config to be used in any extentions if added

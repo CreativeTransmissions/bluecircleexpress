@@ -1,5 +1,5 @@
 <div class="transit_inner contact tq-form-fields-container <?php echo $hide_section; ?>" > <!-- your contact section start here -->
-    <div class="transit_header">   <!-- Delivery Address section start here -->
+    <div class="transit_header tq-form-title-color">   <!-- Delivery Address section start here -->
         <h2><?php echo $this->view_labels['contact_section_title']; ?></h2>
     </div>
     <div class="transit_body">

@@ -1,5 +1,5 @@
 <div class="transit_inner"> <!-- Delivery Address section start here -->
-    <div class="transit_header">
+    <div class="transit_header tq-form-title-color">
         <h2><?php echo $this->view_labels['map_title']; ?></h2>
     </div>
 	<div class="map-ctr transit_body">
