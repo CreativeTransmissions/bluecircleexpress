@@ -2,7 +2,7 @@
     <div class="transit_header tq-form-title-color">
         <h2><?php echo self::get_setting('tq_pro_form_options','search_section_title', 'Enter Addresses'); ?></h2>
     </div>
-    <div class="transit_body">
+    <div class="transit_body tq-form-bg-color">
          <div class="search-fields">
             <div class="collection_wrap">
                 <span class="sub_title tq-primary-color">

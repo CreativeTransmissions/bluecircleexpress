@@ -12,7 +12,7 @@
 <div id="feedback"></div>
 <div class="requestform round">
     <div class="spinner-div"> </div>
-    <div class="transit_main tq-form-bg-color">
+    <div class="transit_main">
         <form id="quote-form" class="tq-form" autocomplete="off" data-parsley-errors-messages-disabled>
             <?php 
                 include( TQ_PLUGIN_PATH."public/themes/".strtolower($this->theme)."/form.php" );       
