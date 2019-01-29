@@ -2,7 +2,7 @@
     <div class="transit_header">   <!-- Delivery Address section start here -->
         <h2><?php echo $this->view_labels['quote_section_title']; ?></h2>
     </div>
-    <div class="transit_body quote-success">
+    <div class="transit_body quote-success tq-form-bg-color">
         <span><?php echo $this->view_labels['quote_label']; ?>
     </span>
         <h3><?php echo $this->currency_symbol; ?><span class="totalCost" ></span></h3>
@@ -15,7 +15,7 @@
         </ul>
 
     </div>
-    <div class="transit_body quote-fail tq-warning">
+    <div class="transit_body quote-fail tq-warning tq-form-bg-color">
         <h3><span class="warning-phone">Sorry</span></h3>
         <ul>
             <li class="min-cost-msg" style="display: none;"><?php echo self::get_min_price_msg(); ?></li>

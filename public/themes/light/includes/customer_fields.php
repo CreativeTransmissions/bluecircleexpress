@@ -2,7 +2,7 @@
     <div class="transit_header tq-form-title-color">   <!-- Delivery Address section start here -->
         <h2><?php echo $this->view_labels['contact_section_title']; ?></h2>
     </div>
-    <div class="transit_body">
+    <div class="transit_body tq-form-bg-color">
         <div class="full">
             <div class="left half bt-flabels__wrapper">
                 <span class="sub_title"><i class="icon icon-icn-name"></i><?php echo $this->view_labels['first_name_label']; ?></span>
