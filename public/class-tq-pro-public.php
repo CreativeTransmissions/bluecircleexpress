@@ -3674,13 +3674,13 @@ private function save_locations(){
 		$form_bg_color = self::get_setting('tq_pro_form_options', 'form_background_color', '#cccccc');
 		echo "
 			<style>
-				.tq-primary-color{ 
+				.requestform form#quote-form.tq-form.tq-primary-color{ 
 					color: $form_color !important;
 				}
-				.tq-form-title-color{ 
+				.requestform form#quote-form.tq-form .tq-form-title-color{ 
 					background-color: $form_title_color !important;
 				}
-				.tq-form-bg-color{ 
+				.requestform form#quote-form.tq-form .tq-form-bg-color{ 
 					background-color: $form_bg_color !important;
 				}
 			</style>"; 
