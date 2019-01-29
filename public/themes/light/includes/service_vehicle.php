@@ -31,7 +31,7 @@ if (!((empty($get_services_by_id)) && (empty($get_services_with_rates_by_id)))) 
 				<?php $this->render_service_options_with_rates(); ?>
 				</select>
 			</div>
-			<div class="bt-flabels__wrapper">
+			<div>
 				<?php 
 					if($using_service_descript || $using_service_links){
 						include( "service_descriptions.php" );
@@ -47,7 +47,7 @@ if (!((empty($get_services_by_id)) && (empty($get_services_with_rates_by_id)))) 
 			<?php $this->render_vehicle_options_with_rates(); ?>
 			</select>
 		</div>
-		<div class="bt-flabels__wrapper">
+		<div>
 			<?php 
 				if($using_vehicle_descript || $using_vehicle_links){
 						include( "vehicle_descriptions.php" );
