@@ -3526,13 +3526,8 @@ private function save_locations(){
 
    		//create email subject
    		$customer = trim($this->customer['first_name']." ".$this->customer['last_name']);
-   		$assigned = self::get_assigned($job);
-   		if($assigned===false){
-   			$assigned = ' - Not Assigned';
-   		} else {
-   			$assigned = ' - '.$assigned['name'];
-   		};
-   		$subject = 'Delivery for '.$customer.' '.$status_type_rec['name'].$assigned;
+   		
+   		$subject = 'Delivery for '.$customer.' '.$status_type_rec['name'];
 
    		return $subject;
    	}
@@ -3682,6 +3677,13 @@ private function save_locations(){
 				}
 				.requestform form#quote-form.tq-form .tq-form-bg-color{ 
 					background-color: $form_bg_color !important;
+				}
+
+				.requestform form#quote-form button.tq-button,
+				.woocommerce a.button,
+				.woocommerce button.button  {
+					background-color:  $form_color !important;
+					color: $form_bg_color !important;
 				}
 			</style>"; 
 	}

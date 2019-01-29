@@ -17,7 +17,7 @@ $hide_all = 'left';
 ?>
 <?php
 if(($has_services) || ($has_vehicles)){ ?>
-	<div class="tq-row transit_inner transit_body">
+	<div class="tq-row transit_inner transit_body tq-form-bg-color">
 <div class="service-vehicle-wrap">
 <?php
 if(($has_services) && ($has_vehicles)){ 

@@ -178,7 +178,7 @@
 .transit_body .sub_title {
     font-size: 1em;
     display: block;
-    margin: 1% 0 0 0;
+    margin: 1% 0 1% 0;
     float: left;
 }
 .transit_body .sub_title i {
@@ -203,6 +203,7 @@
 .transit_main select,
 .transit_main textarea
 {
+    color: #000;
     line-height: 1.4;
     display: block;
     width: 100%;
