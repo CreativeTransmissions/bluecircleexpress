@@ -91,6 +91,8 @@ div.rates-list {
     background: transparent;
     background-image: none;
     box-shadow: none;
+    text-align: center;
+    margin: 0 auto;
 }
 .tq-form .tq-feedback {
     padding: 0em 1em;
