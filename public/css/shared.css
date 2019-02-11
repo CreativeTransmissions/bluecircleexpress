@@ -42,6 +42,9 @@ Feel free to use them for the intended purpose
     clear: left;
     display: block;
 }
+.tq-form .gm-style .gm-style-iw .pop-up{
+    color: #333;
+} 
 
 /************************* Reserved CSS Classes ***********************
 Never use these classes for styling!! They are for use by jQuery code
