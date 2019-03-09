@@ -14,7 +14,7 @@
                                 <a href="#" class="transit_noadress no-address no-address-1"><?php echo $this->view_labels['cant_find_address_text']; ?></a>
                             </div>
                             <div class="full bt-flabels__wrapper">
-                                <input tabindex="10" class="left text addresspicker" required type="text" name="address_1_address" id="address_1" value="" autocomplete="false" placeholder="<?php echo $this->view_labels['destination_address_label']; ?>/>
+                                <input tabindex="10" class="left text addresspicker" required type="text" name="address_1_address" id="address_1" value="" autocomplete="false" placeholder="<?php echo $this->view_labels['destination_address_label']; ?>"/>
                                 <span class="bt-flabels__error-desc">Required: <?php echo $this->view_labels['destination_address_label']; ?></span>
                             </div>
                             <?php if($this->ask_for_unit_no){ ?>
