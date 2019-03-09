@@ -3664,26 +3664,27 @@ private function save_locations(){
 
 	}
 	public function tq_form_css() {
-		$form_color = self::get_setting('tq_pro_form_options', 'form_color', '#3e80fa');
-		$form_title_color = self::get_setting('tq_pro_form_options', 'title_background_color', '#e8e8e8');
-		$form_bg_color = self::get_setting('tq_pro_form_options', 'form_background_color', '#cccccc');
+		$form_header_color = self::get_setting('tq_pro_form_options', 'form_header_color', '#5e5e5e');
+		$title_background_color = self::get_setting('tq_pro_form_options', 'title_background_color', '#e8e8e8');		
+		$form_text_color = self::get_setting('tq_pro_form_options', 'form_color', '#3e80fa');
+		$form_background_color = self::get_setting('tq_pro_form_options', 'form_background_color', '#fbfbfb');
 		echo "
 			<style>
 				.requestform form#quote-form.tq-form.tq-primary-color{ 
-					color: $form_color !important;
+					color: $form_text_color !important;
 				}
 				.requestform form#quote-form.tq-form .tq-form-title-color{ 
-					background-color: $form_title_color !important;
+					background-color: $title_background_color !important;
 				}
 				.requestform form#quote-form.tq-form .tq-form-bg-color{ 
-					background-color: $form_bg_color !important;
+					background-color: $form_background_color !important;
 				}
 
 				.requestform form#quote-form button.tq-button,
 				.woocommerce a.button,
 				.woocommerce button.button  {
-					background-color:  $form_color !important;
-					color: $form_bg_color !important;
+					background-color:  $form_text_color !important;
+					color: $form_background_color !important;
 				}
 			</style>"; 
 	}

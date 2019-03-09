@@ -194,6 +194,7 @@ form.tq-form .progress {
 	text-align: center;
 	font-weight: bold;
 	padding-top: 1em;
+    margin: 0 auto;	
 }
 form.tq-form .failure h3,
 form.tq-form .success h3{

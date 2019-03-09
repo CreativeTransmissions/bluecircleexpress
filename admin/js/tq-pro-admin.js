@@ -94,7 +94,7 @@
 
 				},
 				includeColorPicker: function() {
-					$('input[name="tq_pro_form_options[form_color]"], input[name="tq_pro_form_options[title_background_color]"], input[name="tq_pro_form_options[form_background_color]"]').wpColorPicker();
+					$('input[name="tq_pro_form_options[form_header_color]"], input[name="tq_pro_form_options[form_color]"], input[name="tq_pro_form_options[title_background_color]"], input[name="tq_pro_form_options[form_background_color]"]').wpColorPicker();
 				},
 
 				validateTimeFields: function(ele, value){

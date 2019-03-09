@@ -1246,20 +1246,20 @@ private function config_locations(){
     'lat' => 
     array (
       'name' => 'lat',
-      'type' => 'decimal(10,6)',
+      'type' => 'decimal(16,10)',
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%d',
+      'format' => '%f',
     ),
     'lng' => 
     array (
       'name' => 'lng',
-      'type' => 'decimal(10,6)',
+      'type' => 'decimal(16,10)',
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%d',
+      'format' => '%f',
     ),
     'created' => 
     array (
