@@ -183,9 +183,7 @@ class TransitQuote_Pro_Public {
         $this->postal_code_label = self::get_setting('tq_pro_form_options', 'postal_code_label', 'Postal Code');
 
         $this->ask_for_date = (bool) $this->get_setting('', 'ask_for_date', true);
-		$this->ask_for_time = (bool) $this->get_setting('', 'ask_for_time', true);
-		$this->autofill_customer_details = (bool) $this->get_setting('', 'autofill_customer_details', false);
-        $this->autofill_collection_address = (bool) $this->get_setting('', 'autofill_collection_address', false);
+        $this->ask_for_time = (bool) $this->get_setting('', 'ask_for_time', true);
     }
 
     public function check_shortcode() {
@@ -309,10 +307,7 @@ class TransitQuote_Pro_Public {
             'booking_start_time' => $booking_start_time,
             'booking_end_time' => $booking_end_time,
             'date_format' => $get_date_format,
-			'time_format' => $get_time_format,
-			
-            'autofill_customer_details' => $this->autofill_customer_details,
-            'autofill_collection_address' => $this->autofill_collection_address,
+            'time_format' => $get_time_format,
         );
 
         if (!empty($this->api_key)) {
