@@ -31,7 +31,7 @@ class TQ_WooCommerceCustomer {
     }
 
     public function is_logged_in() {
-		// if(is_admin()){
+		// if(is_admin()){ // for testing because the logged in user is admin
 		// 	return false;
 		// }
 		$wp_user_id = get_current_user_id();

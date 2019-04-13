@@ -183,7 +183,9 @@ class TransitQuote_Pro_Public {
         $this->postal_code_label = self::get_setting('tq_pro_form_options', 'postal_code_label', 'Postal Code');
 
         $this->ask_for_date = (bool) $this->get_setting('', 'ask_for_date', true);
-        $this->ask_for_time = (bool) $this->get_setting('', 'ask_for_time', true);
+		$this->ask_for_time = (bool) $this->get_setting('', 'ask_for_time', true);
+		$this->autofill_customer_details = (bool) $this->get_setting('', 'autofill_customer_details', false);
+        $this->autofill_collection_address = (bool) $this->get_setting('', 'autofill_collection_address', false);
     }
 
     public function check_shortcode() {
@@ -307,7 +309,10 @@ class TransitQuote_Pro_Public {
             'booking_start_time' => $booking_start_time,
             'booking_end_time' => $booking_end_time,
             'date_format' => $get_date_format,
-            'time_format' => $get_time_format,
+			'time_format' => $get_time_format,
+			
+            'autofill_customer_details' => $this->autofill_customer_details,
+            'autofill_collection_address' => $this->autofill_collection_address,
         );
 
         if (!empty($this->api_key)) {
@@ -1034,8 +1039,8 @@ class TransitQuote_Pro_Public {
         $this->ask_for_date = (bool) $this->get_setting('', 'ask_for_date', true);
         $this->ask_for_time = (bool) $this->get_setting('', 'ask_for_time', true);
 
-        $this->autofill_customer_details = (bool) $this->get_setting('', 'autofill_customer_details', true);
-        $this->autofill_collection_address = (bool) $this->get_setting('', 'autofill_collection_address', true);
+        $this->autofill_customer_details = (bool) $this->get_setting('', 'autofill_customer_details', false);
+        $this->autofill_collection_address = (bool) $this->get_setting('', 'autofill_collection_address', false);
 
         if ($this->show_driving_time) {
             $drive_time_hidden_class = '';
@@ -1190,26 +1195,50 @@ class TransitQuote_Pro_Public {
 
     public function build_form_include_list() {
         $this->form_includes = array();
-        //repeat_customer_search_fields        
+        //repeat_customer_search_fields
 
         if ($this->pick_start_address == true) {
-            $search_fields_include = 'search_fields';
-        } else {
-            $search_fields_include = 'search_fields_fixed_start';
-		};
-		
-		// check for repeated customer and load view on that basis
-		$is_repeat_customer = $this->tq_woocommerce_customer->is_repeat_customer();
-        if ($is_repeat_customer) {
-            $this->customer = $this->tq_woocommerce_customer->get_tq_customer();
-            if (!empty($this->customer)) {
-				$job = $this->tq_woocommerce_customer->get_latest_job($this->customer['id']);
-                if (!empty($job)) {
-					$this->job_details = $this->tq_woocommerce_customer->get_latest_job_details($job);
-                    $search_fields_include = 'repeat_customer_search_fields';
+            if ($this->autofill_collection_address) {
+                $is_repeat_customer = $this->tq_woocommerce_customer->is_repeat_customer();
+                if ($is_repeat_customer) {
+                    $this->customer = $this->tq_woocommerce_customer->get_tq_customer();
+                    if (!empty($this->customer)) {
+                        $job = $this->tq_woocommerce_customer->get_latest_job($this->customer['id']);
+                        if (!empty($job)) {
+                            $this->job_details = $this->tq_woocommerce_customer->get_latest_job_details($job);
+                            $search_fields_include = 'repeat_customer_search_fields';
+                        } else {
+							$search_fields_include = 'search_fields';
+						}
+                    } else {
+                        $search_fields_include = 'search_fields';
+                    }
+                } else {
+                    $search_fields_include = 'search_fields';
                 }
+            } else {
+                $search_fields_include = 'search_fields';
             }
 
+        } else {
+            $search_fields_include = 'search_fields_fixed_start';
+        };
+
+        // check for repeated customer and load view on that basis
+
+        $customer_fields = 'customer_fields';
+        if ($this->autofill_customer_details) {
+            $is_repeat_customer = $this->tq_woocommerce_customer->is_repeat_customer();
+            if ($is_repeat_customer) {
+                $this->customer = $this->tq_woocommerce_customer->get_tq_customer();
+                if (!empty($this->customer)) {
+                    $job = $this->tq_woocommerce_customer->get_latest_job($this->customer['id']); // no need for this as $this->customer has values till
+                    if (!empty($job)) {
+                        $this->job_details = $this->tq_woocommerce_customer->get_latest_job_details($job);
+                        $customer_fields = 'repeat_customer_fields';
+                    }
+                }
+            }
         }
 
         switch ($this->form_section_order) {
@@ -1223,7 +1252,7 @@ class TransitQuote_Pro_Public {
                     'hidden' => ''),
                 array('template' => 'quote_fields',
                     'hidden' => 'hidden'),
-                array('template' => 'customer_fields',
+                array('template' => $customer_fields,
                     'hidden' => 'hidden'),
                 array('template' => 'form-messages',
                     'hidden' => 'hidden'),
@@ -1232,7 +1261,7 @@ class TransitQuote_Pro_Public {
         case 'Customer Information':
             $this->form_includes = array(
 
-                array('template' => 'customer_fields',
+                array('template' => $customer_fields,
                     'hidden' => ''),
                 array('template' => 'service_vehicle',
                     'hidden' => ''),

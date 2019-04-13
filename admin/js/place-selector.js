@@ -21,7 +21,6 @@
 						};
 
 						var idx = data.idx;
-
 						var html = '<input type="hidden" id="address_'+idx+'_street_number" name="street_number_'+idx+'" value=""/>';
 							html +='<input type="hidden" id="address_'+idx+'_route" name="route_'+idx+'" value=""/>';
 							html +='<input type="hidden" id="address_'+idx+'_postal_town" name="postal_town_'+idx+'" value=""/>';
