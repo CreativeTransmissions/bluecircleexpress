@@ -1,8 +1,7 @@
 <div class="transit_inner contact tq-form-fields-container <?php echo $hide_section; ?>" > <!-- your contact section start here -->
     <div class="transit_header tq-form-title-color">   <!-- Delivery Address section start here -->
         <h2><?php echo $this->view_labels['contact_section_title']; ?></h2>
-    </div>
-    <?php echo "<pre>";print_r($this->customer);echo "</pre>";?>
+    </div>    
     <div class="transit_body tq-form-bg-color">
         <div class="full">
             <div class="left half bt-flabels__wrapper">
