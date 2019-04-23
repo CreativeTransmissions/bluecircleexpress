@@ -262,6 +262,7 @@ class TransitQuote_Pro_Public {
 		$this->country_code = $this->get_setting('', 'country_code','');
 		$this->city_code = $this->get_setting('', 'city_code','');
 		$this->search_radius = $this->get_setting('', 'search_radius','');
+		$this->route_type = $this->get_setting('', 'route_type','');
 
 
 		$tq_settings = array('ajaxurl' => $ajax_url,
@@ -294,6 +295,7 @@ class TransitQuote_Pro_Public {
 							'max_travel_time_msg'=>$this->max_travel_time_msg,
 							'quote_element'=>$this->quote_element,
 							'max_address_pickers'=>$this->max_address_pickers,
+							'route_type'=>$this->route_type,
 							'sandbox'=>$this->sandbox,
 							'insert_dest_link_text'=>$this->insert_dest_link_text,
 							'remove_dest_link_text'=>$this->remove_dest_link_text,

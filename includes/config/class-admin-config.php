@@ -614,7 +614,14 @@ class Admin_Config {
                                                       'label'=>'Transportation Mode',
                                                       'type'=>'select',
                                                       'options'=>array('Driving', 'Walking', 'Cycling'),
-                                                      'default'=>'Driving'),                                                    
+                                                      'default'=>'Driving'),
+                                                     'route_type'=>array(
+                                                      'id'=>'route_type',
+                                                      'label'=>'Route Choice',
+                                                      'type'=>'select',
+                                                      'options'=>array('Fastest', 'Shortest'),
+                                                      'default'=>'Fastest',
+                                                      'help'=>'Google Directions provides the fastest route by default. Usually the fastest route is also the shortest route, however due to motorways and one way systems this is not always the case. If you require the Shortest route, even if it takes longer to travel, set this option to Shortest.'),
                                                     'start_location'=>array(
                                                       'id'=>'start_location',
                                                       'label'=>'Business Address',
