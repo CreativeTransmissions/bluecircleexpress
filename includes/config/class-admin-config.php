@@ -215,7 +215,21 @@ class Admin_Config {
                                                         'label'=>'Ask For Time',
                                                         'type'=>'checkbox',
                                                         'help'=>'If enabled, the customer will be able to request a particular collection time in the main form.',
-                                                        'default'=>1)
+                                                        'default'=>1),
+
+                                                        'autofill_collection_address'=>array(
+                                                          'id'=>'autofill_collection_address',
+                                                          'label'=>'Auto-fill Collection Address From Customer`s Last Job',
+                                                          'type'=>'checkbox',
+                                                          'help'=>'If enabled, the customer collection address will be pre-filled in the main form.',
+                                                          'default'=>1),
+
+                                                        'autofill_customer_details'=>array(
+                                                          'id'=>'autofill_customer_details',
+                                                          'label'=>'Auto-fill Customer Details (name, email, telephone number)',
+                                                          'type'=>'checkbox',
+                                                          'help'=>'If enabled, the customer details will be pre-filled in the main form.',
+                                                          'default'=>1)
                                                       )
                                                 ),
                                                 'pro_settings_form_labels'=>array(
