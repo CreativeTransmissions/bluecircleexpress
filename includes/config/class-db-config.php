@@ -295,7 +295,7 @@ private function config_customers(){
       'name' => 'wp_user_id',
       'type' => 'int',
       'null' => 'null',
-      'auto' => 'auto_increment',
+      'auto' => '',
       'default' => '',
       'format' => '%d'
     ),
