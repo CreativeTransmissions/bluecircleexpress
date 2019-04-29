@@ -47,7 +47,18 @@ class TransitQuote_Pro_Activator {
 		$plugin->insert_default_data($cdb);
 		$plugin->update_default_data($cdb);
 		$plugin->delete_orphaned_rates();
+		self::add_cap();
 	}
+
+	private function add_cap(){
+		// Add manage_transitquote capabilities for admins and all with manage options
+		$roles = get_editable_roles();
+        foreach ($GLOBALS['wp_roles']->role_objects as $key => $role) {
+            if (isset($roles[$key]) && $role->has_cap('manage_options')) {
+                $role->add_cap('manage_transitquote');
+            }
+        }        
+	}	
 
 
 
