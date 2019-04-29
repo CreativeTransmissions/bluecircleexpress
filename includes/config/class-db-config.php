@@ -290,6 +290,15 @@ private function config_customers(){
       'default' => '',
       'format' => '%d'
     ),
+    'wp_user_id' => 
+    array (
+      'name' => 'wp_user_id',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
+    ),
     'first_name' => 
     array (
       'name' => 'first_name',

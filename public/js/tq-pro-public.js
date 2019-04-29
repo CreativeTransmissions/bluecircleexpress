@@ -129,7 +129,7 @@
 				var that = this;
 				//Initialize Google Maps Quote Calculator jquery plugin
 				this.calculator = $('#map').mapQuoteCalculator({
-
+					routeType: this.settings.data.route_type,
 					ajaxUrl: TransitQuoteProSettings.ajaxurl,
 					debug: this.settings.debug,
 
@@ -387,7 +387,6 @@
 
 			onSetDatepickerDate: function(datepicker, context){
             	if(context.select){ // if its the selected date that has changed
-            		console.log('onSetDatepickerDate');
             		var selectedDate = this.dateConverter(context.select);
 
             		this.updateTimepickerForNewDate(selectedDate);

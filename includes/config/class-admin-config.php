@@ -215,7 +215,21 @@ class Admin_Config {
                                                         'label'=>'Ask For Time',
                                                         'type'=>'checkbox',
                                                         'help'=>'If enabled, the customer will be able to request a particular collection time in the main form.',
-                                                        'default'=>1)
+                                                        'default'=>1),
+
+                                                        'autofill_collection_address'=>array(
+                                                          'id'=>'autofill_collection_address',
+                                                          'label'=>'Auto-fill Collection Address From Customer`s Last Job',
+                                                          'type'=>'checkbox',
+                                                          'help'=>'If enabled, the customer collection address will be pre-filled in the main form.',
+                                                          'default'=>1),
+
+                                                        'autofill_customer_details'=>array(
+                                                          'id'=>'autofill_customer_details',
+                                                          'label'=>'Auto-fill Customer Details (name, email, telephone number)',
+                                                          'type'=>'checkbox',
+                                                          'help'=>'If enabled, the customer details will be pre-filled in the main form.',
+                                                          'default'=>1)
                                                       )
                                                 ),
                                                 'pro_settings_form_labels'=>array(
@@ -614,7 +628,14 @@ class Admin_Config {
                                                       'label'=>'Transportation Mode',
                                                       'type'=>'select',
                                                       'options'=>array('Driving', 'Walking', 'Cycling'),
-                                                      'default'=>'Driving'),                                                    
+                                                      'default'=>'Driving'),
+                                                     'route_type'=>array(
+                                                      'id'=>'route_type',
+                                                      'label'=>'Route Choice',
+                                                      'type'=>'select',
+                                                      'options'=>array('Fastest', 'Shortest'),
+                                                      'default'=>'Fastest',
+                                                      'help'=>'Google Directions provides the fastest route by default. Usually the fastest route is also the shortest route, however due to motorways and one way systems this is not always the case. If you require the Shortest route, even if it takes longer to travel, set this option to Shortest.'),
                                                     'start_location'=>array(
                                                       'id'=>'start_location',
                                                       'label'=>'Business Address',

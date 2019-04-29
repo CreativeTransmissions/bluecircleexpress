@@ -38,7 +38,7 @@ class TransitQuote_Pro4 {
 	 * @var      TransitQuote_Pro_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
-	const VERSION = ' 4.2.9';
+	const VERSION = '4.3.0';
 	/**
 	 * The unique identifier of this plugin.
 	 *
@@ -74,7 +74,7 @@ class TransitQuote_Pro4 {
 
 		$this->plugin_name = 'TransitQuote Pro';
 		$this->plugin_slug = 'tq-pro';
-		$this->version = ' 4.2.9';
+		$this->version = '4.3.0';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -256,7 +256,12 @@ class TransitQuote_Pro4 {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-label-fetcher.php';
 		$this->loader = new TransitQuote_Pro_Loader();
-
+		/**
+		 * The class responsible for customer 
+		 * for the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-woocommerce-customer.php';
+		$this->loader = new TransitQuote_Pro_Loader();
 	}
 
 	/**
