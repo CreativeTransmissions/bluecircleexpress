@@ -96,11 +96,31 @@ div.rates-list {
     box-shadow: none;
     text-align: center;
     margin: 0 auto;
+    display: block;
+    width: 100%;
+    clear:  both;
+}
+.tq-form .progress h2,
+.tq-form .progress p {
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+    clear:  both;
 }
 .tq-form .tq-feedback {
     padding: 0em 1em;
     color: #F22;
 }
+.entry-content li.picker__list-item {
+    margin: 0;
+}
+.entry-content li.picker__list-item {
+    margin: 0;
+}
+.site-header.header-fixed {
+    position: relative !important;
+}
+
 @media screen and (max-width:767px) {
     .tq-form .half {
         display: block;
