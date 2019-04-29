@@ -51,14 +51,24 @@ class TransitQuote_Pro_Activator {
 	}
 
 	private function add_cap(){
-		// Add manage_transitquote capabilities for admins and all with manage options
+		// Add manage_transitquote permission to all who have manage_options
 		$roles = get_editable_roles();
         foreach ($GLOBALS['wp_roles']->role_objects as $key => $role) {
-            if (isset($roles[$key]) && $role->has_cap('manage_options')) {
-                $role->add_cap('manage_transitquote');
+            if (isset($roles[$key])){
+            	switch ($key) {
+            		case 'Dispatch':
+            		$role->add_cap('manage_transitquote');
+            			break;
+            		
+            		default:
+            			if($role->has_cap('manage_options')) {
+                			$role->add_cap('manage_transitquote');
+                		};
+            			break;
+            	}
             }
         }        
-	}	
+	}
 
 
 
