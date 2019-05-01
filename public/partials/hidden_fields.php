@@ -1,6 +1,6 @@
 <input id="rate_hour" class="hourlyRate" type="hidden" name="rate_hour" value=""/>
 <input type="hidden" name="distance" value=""/>
-<input class="hours" type="hidden" name="hours" value=""/>
+<input class="hours" type="hidden" name="time" value=""/>
 <input type="hidden" name="return_distance" value=""/>
 <input class="return_hours" type="hidden" name="return_time" value=""/>
 <input class="hourCost" type="hidden" name="time_cost" value=""/>

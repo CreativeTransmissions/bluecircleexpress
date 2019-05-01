@@ -2011,7 +2011,7 @@ class TransitQuote_Pro_Public {
         }
     }
 
-    private function save_journey() {
+    public function save_journey() {
         //a job could potentially have multiple journeys so save job id against table
         $this->journey = self::save('journeys', null, array('job_id' => $this->job['id']));
     }

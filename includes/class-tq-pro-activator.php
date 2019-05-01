@@ -47,7 +47,7 @@ class TransitQuote_Pro_Activator {
 		$plugin->insert_default_data($cdb);
 		$plugin->update_default_data($cdb);
 		$plugin->delete_orphaned_rates();
-		self::add_cap();
+		$this->add_cap();
 	}
 
 	private function add_cap(){
