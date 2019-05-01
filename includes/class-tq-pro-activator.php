@@ -47,10 +47,10 @@ class TransitQuote_Pro_Activator {
 		$plugin->insert_default_data($cdb);
 		$plugin->update_default_data($cdb);
 		$plugin->delete_orphaned_rates();
-		$this->add_cap();
+		self::add_cap();
 	}
 
-	private function add_cap(){
+	private static function add_cap(){
 		// Add manage_transitquote permission to all who have manage_options
 		$roles = get_editable_roles();
         foreach ($GLOBALS['wp_roles']->role_objects as $key => $role) {
