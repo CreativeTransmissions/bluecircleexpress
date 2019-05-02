@@ -1954,6 +1954,7 @@ class TransitQuote_Pro_Public {
 
     public function save_job() {
         $success = 'true';
+
         //default message
         $message = 'Request booked successfully';
 
@@ -2382,7 +2383,7 @@ class TransitQuote_Pro_Public {
                 $field_name = $field . $idx_str;
                 //$this->ajax->pa($field_name);
                 $val = $this->ajax->param(array('name' => $field_name, 'optional' => true));
-                if (!empty($val)) {
+                if (!empty($val)&&(is_string($val))) {
                     $record_data[$field] = sanitize_text_field($val);
                 };
                 if (strrpos($field, '_date') > -1) {
