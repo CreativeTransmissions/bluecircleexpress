@@ -2516,6 +2516,7 @@ class TransitQuote_Pro_Public {
                 'administrative_area_level_1',
                 'country',
                 'postal_code',
+                'place_id',
                 'lat',
                 'lng',
                 'jl.contact_name as contact_name',

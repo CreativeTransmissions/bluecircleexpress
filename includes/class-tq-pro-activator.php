@@ -30,6 +30,7 @@ class TransitQuote_Pro_Activator {
 	 */
 	public static function activate() {
 		self::init_database();
+		return true;
 	}
 	/**
 	 * Initialize the database

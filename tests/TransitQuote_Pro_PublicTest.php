@@ -42,6 +42,24 @@ final class TransitQuote_Pro_PublicTest extends TestCase
         $this->assertEquals(8.64,$public->job['journey']['time']);
         $this->assertEquals(811.53,$public->job['journey']['distance']);
 
+        $this->assertEquals(4, count($public->job['stops']));
+  /*      $this->assertEquals(0, $public->job['stops'][0]['journey_order']);
+        $this->assertEquals(1, $public->job['stops'][1]['journey_order']);
+        $this->assertEquals(2, $public->job['stops'][2]['journey_order']);
+        $this->assertEquals(3, $public->job['stops'][3]['journey_order']);
+*/
+        $this->assertEquals('385 Dumbarton Road, Glasgow, UK', $public->job['stops'][0]['address']);
+        $this->assertEquals('G11 6BE', $public->job['stops'][0]['postal_code']);
+        $this->assertEquals('385', $public->job['stops'][0]['street_number']);
+        $this->assertEquals('Dumbarton Road', $public->job['stops'][0]['route']);
+        $this->assertEquals('Glasgow', $public->job['stops'][0]['postal_town']);
+        $this->assertEquals('Glasgow City', $public->job['stops'][0]['administrative_area_level_2']);
+        $this->assertEquals('Scotland', $public->job['stops'][0]['administrative_area_level_1']);
+        $this->assertEquals('United Kingdom', $public->job['stops'][0]['country']);
+    //    $this->assertEquals('55.87069899999999', $public->job['stops'][0]['lat']);
+        //$this->assertEquals('-4.308279900000002', $public->job['stops'][0]['lng']);
+        $this->assertEquals('ChIJORdf39xFiEgRJAAllCRtufc', $public->job['stops'][0]['place_id']);
+     //   $this->assertEquals(0, $public->job['stops'][0]['journey_order']);
 
         $this->assertInternalType("int",$success);
         $public = null;

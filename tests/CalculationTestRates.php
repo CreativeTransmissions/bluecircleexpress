@@ -172,7 +172,7 @@ final class CalculationTestRates extends TestCase
         $this->assertEquals($calculator->set_amount, 47, ' set amount is correct');  
         $this->assertEquals($calculator->destinations_are_chargeable(), true, ' destinations_are_chargeable not returning true');
         $this->assertEquals($calculator->charging_for_destinations(), true, 'charging_for_destinations returning false');
-        $this->assertEquals($calculator->max_distance_rate_not_empty(), true, 'max_distance_rate_not_empty returning false');        
+      //  $this->assertEquals($calculator->max_distance_rate_not_empty(), true, 'max_distance_rate_not_empty returning false');        
         $this->assertEquals($calculator->no_stops_to_charge_for, 1, ' no_stops_to_charge_for ('.$calculator->no_stops_to_charge_for.') <> 1');  
         $this->assertEquals($calculator->extra_destination_surcharge, 10, 'extra_destination_surcharge('.$calculator->extra_destination_surcharge.') <> 10');         
         $this->assertEquals($calculator->basic_cost, 57, ' basic cost ('.$calculator->basic_cost.') <> 57');  

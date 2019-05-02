@@ -337,7 +337,7 @@ final class CalculationTest extends TestCase
     public function test_run(){
       
         $test_config = json_decode('{"debugging":false,"rates":[{"id":"1","service_id":"1","vehicle_id":"1","journey_length_id":"1","distance":"0.00","amount":"0.00","unit":"2.00","hour":"0.00","created":"2018-10-10 08:06:36","modified":"2018-10-10 08:06:36"}],"include_return_journey":false,"distance":"175.19","return_percentage":"100","hours":"2.04","return_distance":0,"return_time":0,"tax_rate":"0","tax_name":"VAT","rounding_type":"Round to 2 decimal points"}', true);
-        print_r($test_config);
+
         $calculator = new TransitQuote_Pro4\TQ_Calculation($test_config);
         $quote = $calculator->run();
         $this->assertTrue(is_array($calculator->config), 'config is not an array');
