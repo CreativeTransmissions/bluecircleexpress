@@ -254,7 +254,7 @@ class TransitQuote_Pro_Public {
         $this->show_contact_name = (bool) $this->get_setting('', 'show_contact_name', false);
         $this->destination_address_label = $this->get_setting('', 'destination_address_label', 'Destination Address');
         $this->show_contact_number = (bool) $this->get_setting('', 'show_contact_number', false);
-        $this->restrict_to_country = (bool) $this->get_setting('', 'restrict_to_country', true);
+        $this->restrict_to_country = (bool) $this->get_setting('', 'restrict_to_country', false);
 
         $this->destination_address_label = $this->get_setting('', 'destination_address_label', 'Destination Address');
         $this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link', '+ Insert Destination');
