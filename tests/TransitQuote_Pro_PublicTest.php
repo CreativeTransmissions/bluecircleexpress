@@ -21,7 +21,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
         $_POST = $this->test_job;
         $success = $public->save_job();
         $this->assertGreaterThan(0,$public->job->journey['time']);
-        $this->assertEquals(8.56,$public->job->journey['time'])
+        $this->assertEquals(8.56,$public->job->journey['time']);
         $this->assertTrue($success);
 
     }

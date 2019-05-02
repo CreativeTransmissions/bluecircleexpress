@@ -1846,6 +1846,7 @@ class TransitQuote_Pro_Public {
         $required_customer_fields = array('first_name', 'last_name', 'email');
         foreach ($required_customer_fields as $key => $field_name) {
             if (!$this->ajax->param_check(array('name' => $field_name, 'optional' => false))) {
+                echo ' * job_data_is_valid error *';
                 array_push($this->invalid_fields, array('name' => str_replace('_', ' ', $field_name),
                     'error' => 'empty'));
             };
