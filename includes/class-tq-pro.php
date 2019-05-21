@@ -447,6 +447,7 @@ class TransitQuote_Pro4 {
 		$cdb->define_table($db_config->get_config('event_logs')); 
 		$cdb->define_table($db_config->get_config('event_data'));
 		$cdb->define_table($db_config->get_config('blocked_dates'));
+		$cdb->define_table($db_config->get_config('holiday_dates'));
 
 		// apply filter to use added extenstion tables	
 

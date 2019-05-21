@@ -853,6 +853,15 @@ class TransitQuote_Pro_Admin {
 					'actions'=>array('Edit','Delete')
 				);
 			break;
+			case 'holiday_dates':
+				$defaults = array(
+					'table'=>'holiday_dates',
+					'formats'=>array('start_date'=>'usdate', 'end_date'=>'usdate'),
+					'fields'=>array('id','start_date', 'end_date'),
+					'inputs'=>false,
+					'actions'=>array('Edit','Delete')
+				);
+			break;
 		};
 
 		if(is_array($defaults)){

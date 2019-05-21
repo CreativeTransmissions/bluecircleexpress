@@ -68,6 +68,12 @@
 							this.initBlockedDatesTabEvents();
 							this.initEditTableEvents('blocked_dates');
 						break;
+						case 'tq_pro_holiday_dates':
+							this.initHolidayDatesTabUI();
+							this.initHolidayDatesTabEvents();
+							this.initEditTableEvents('holiday_dates');
+						break;
+
 						case 'tq_pro_form_options':
 							this.validateAddTime();
 							this.includeColorPicker();
@@ -146,6 +152,14 @@
 					});
 							
 				},
+				initHolidayDatesTabUI: function(){
+					var that = this;
+					this.initRangeDatepicker();
+					this.loadTable({
+						table: 'holiday_dates'
+					});
+							
+				},
 
 				initRangeDatepicker:function(){
 					var that = this;
@@ -211,6 +225,35 @@
 					    that.saveRecord(this);
 					});					
 				},
+
+				initHolidayDatesTabEvents: function(){
+									
+					var that = this;
+
+					//set form to read/populate
+					this.editForm = $('#edit_holiday_dates_form')[0];
+					this.editTable = $('#holiday_dates_table')[0];
+
+					// set form status message
+					this.editRecordMessage = 'Editing holiday dates';
+					this.newRecordMessage = 'Enter New holiday dates'
+
+					
+					$('#clear_holiday_date').on('click', function(e){
+						e.preventDefault();
+						that.clearForm(this);
+						that.updateLegend(that.editForm, that.newRecordMessage);
+					});
+
+					
+					$(this.editForm).on('submit',function(e) {
+					    e.preventDefault();
+					    that.spinner(true);
+					    that.saveRecord(this);
+					});					
+				},
+
+
 				initJobsTabEvents: function(){
 					var that = this;
 

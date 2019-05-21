@@ -2199,4 +2199,71 @@ private function config_blocked_dates(){
 );
 }
 
+private function config_holiday_dates(){
+  return array (
+    'name' => 'holiday_dates',
+    'defaults' => 
+    array (
+      'fields' => 
+      array (
+      ),
+      'orderby' => 'id',
+      'order' => 'asc',
+      'user_id' => false,
+      'since' => false,
+      'until' => false,
+      'number' => -1,
+      'offset' => 0,
+    ),
+    'cols' => 
+    array (
+      'id' => 
+      array (
+        'name' => 'id',
+        'type' => 'int',
+        'null' => 'not null',
+        'auto' => 'auto_increment',
+        'default' => '',
+        'format' => '%d',
+      ),
+      'start_date' => 
+      array (
+        'name' => 'start_date',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s',
+      ),   
+      'end_date' => 
+      array (
+        'name' => 'end_date',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s',
+      ), 
+      'created' => 
+      array (
+        'name' => 'created',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s',
+      ),
+      'modified' => 
+      array (
+        'name' => 'modified',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s',
+      )
+    ),
+    'pk' => 'id',
+  );
+}
 }?>

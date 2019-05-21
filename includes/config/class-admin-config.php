@@ -47,6 +47,12 @@ class Admin_Config {
                               'table'=>'blocked_dates',
                               'sections'=>array()
                               ),
+              'tq_pro_holiday_dates'=>array( 
+                                'key'=>'tq_pro_holiday_dates',
+                                'title'=>'Holiday Dates',
+                                'table'=>'holiday_dates',
+                                'sections'=>array()
+                                ),                    
               'tq_pro_rates'=>array(
                               'key'=>'tq_pro_rates',
                               'title'=>'Rates',
