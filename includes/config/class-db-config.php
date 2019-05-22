@@ -1784,6 +1784,87 @@ private function config_rates(){
       'default' => '',
       'format' => '%f',
     ),
+    'amount_holiday' => 
+    array (
+      'name' => 'amount_holiday',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'amount_weekend' => 
+    array (
+      'name' => 'amount_weekend',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'amount_out_of_hours' => 
+    array (
+      'name' => 'amount_out_of_hours',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'unit_holiday' => 
+    array (
+      'name' => 'unit_holiday',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'unit_weekend' => 
+    array (
+      'name' => 'unit_weekend',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'unit_out_of_hours' => 
+    array (
+      'name' => 'unit_out_of_hours',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'hour_holiday' => 
+    array (
+      'name' => 'hour_holiday',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'hour_weekend' => 
+    array (
+      'name' => 'hour_weekend',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'hour_out_of_hours' => 
+    array (
+      'name' => 'hour_out_of_hours',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
     'created' => 
     array (
       'name' => 'created',

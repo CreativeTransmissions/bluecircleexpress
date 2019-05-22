@@ -781,7 +781,105 @@ class TransitQuote_Pro4 {
 						     'default' => '',
 							'after'=>'after lng');
 			$cdb->add_column('locations',$col_def);
-		}		
+		}	
+		
+		if(!$cdb->col_exists('rates','amount_holiday')){
+			$col_def = array('name' => 'amount_holiday',
+						     'type' => 'decimal(10,2)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							 'after'=>'after hour');
+			$cdb->add_column('rates',$col_def);
+		}	
+		if(!$cdb->col_exists('rates','amount_weekend')){
+			$col_def = array('name' => 'amount_weekend',
+						     'type' => 'decimal(10,2)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							 'after'=>'after amount_holiday');
+			$cdb->add_column('rates',$col_def);
+		}	
+
+		if(!$cdb->col_exists('rates','amount_out_of_hours')){
+			$col_def = array('name' => 'amount_out_of_hours',
+						     'type' => 'decimal(10,2)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							 'after'=>'after amount_weekend');
+			$cdb->add_column('rates',$col_def);
+		}	
+
+		if(!$cdb->col_exists('rates','unit_holiday')){
+			$col_def = array('name' => 'unit_holiday',
+						     'type' => 'decimal(10,2)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							 'after'=>'after amount_out_of_hours');
+			$cdb->add_column('rates',$col_def);
+		}	
+
+		if(!$cdb->col_exists('rates','unit_weekend')){
+			$col_def = array('name' => 'unit_weekend',
+						     'type' => 'decimal(10,2)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							 'after'=>'after unit_holiday');
+			$cdb->add_column('rates',$col_def);
+		}	
+
+		if(!$cdb->col_exists('rates','unit_out_of_hours')){
+			$col_def = array('name' => 'unit_out_of_hours',
+						     'type' => 'decimal(10,2)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							 'after'=>'after unit_weekend');
+			$cdb->add_column('rates',$col_def);
+		}	
+
+		if(!$cdb->col_exists('rates','hour_holiday')){
+			$col_def = array('name' => 'hour_holiday',
+						     'type' => 'decimal(10,2)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							 'after'=>'after unit_out_of_hours');
+			$cdb->add_column('rates',$col_def);
+		}	
+
+		if(!$cdb->col_exists('rates','hour_weekend')){
+			$col_def = array('name' => 'hour_weekend',
+						     'type' => 'decimal(10,2)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							 'after'=>'after hour_holiday');
+			$cdb->add_column('rates',$col_def);
+		}	
+
+		if(!$cdb->col_exists('rates','hour_out_of_hours')){
+			$col_def = array('name' => 'hour_out_of_hours',
+						     'type' => 'decimal(10,2)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							 'after'=>'after hour_weekend');
+			$cdb->add_column('rates',$col_def);
+		}	
+		if(!$cdb->col_exists('quotes','rates')){
+			$col_def = array('name' => 'rates',
+						     'type' => 'varchar(30)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							 'after'=>'after breakdown');
+			$cdb->add_column('rates',$col_def);
+		}
 	}
 
 
