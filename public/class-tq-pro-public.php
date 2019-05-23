@@ -1629,24 +1629,38 @@ class TransitQuote_Pro_Public {
         $delivery_date = $this->ajax->param(array('name' => 'delivery_date', 'optional' => false));
         $delivery_time = $this->ajax->param(array('name' => 'delivery_time', 'optional' => false));
 
-        self::check_rates_by_job_date($delivery_date, $delivery_time);
-
         $rates = false;
         $query = self::get_rates_query_for_journey_options();
         if ($query === false) {
             //echo 'could not get query';
             return false;
         }
-        //echo 'rates query';
-        //print_r($query);
-        return $this->cdb->get_rows('rates', $query);
+
+        $job_rate = self::check_rates_by_job_date($delivery_date, $delivery_time);
+        if($job_rate == 'holiday'){
+            $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_holiday as amount', 'unit_holiday as unit', 'hour_holiday as hour');
+        }
+
+        if($job_rate == 'weekend'){
+            $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit_weekend as unit', 'hour_weekend as hour');
+        }
+
+        if($job_rate == 'out of hours'){
+            $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_out_of_hours as amount', 'unit_out_of_hours as unit', 'hour_out_of_hours as hour');
+        }
+        if($job_rate == 'standard'){
+            $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
+        }
+        
+        // return $this->cdb->get_rows('rates', $query);
+        return $this->cdb->get_rows('rates', $query, $fields);
 
     }
     function check_rates_by_job_date($delivery_date, $delivery_time) {        
         if(slef::is_holiday($delivery_date)){
             return 'holiday';
         } else if(slef::is_weekend($delivery_date)) {
-            return 'holiday';
+            return 'weekend';
         } else if(slef::is_between_booking($delivery_time)) {
             return 'out of hours';
         } else {
