@@ -1626,6 +1626,11 @@ class TransitQuote_Pro_Public {
     }
 
     private function get_rates_for_journey_options() {
+        $delivery_date = $this->ajax->param(array('name' => 'delivery_date', 'optional' => false));
+        $delivery_time = $this->ajax->param(array('name' => 'delivery_time', 'optional' => false));
+
+        self::check_rates_by_job_date($delivery_date, $delivery_time);
+
         $rates = false;
         $query = self::get_rates_query_for_journey_options();
         if ($query === false) {
@@ -1636,6 +1641,60 @@ class TransitQuote_Pro_Public {
         //print_r($query);
         return $this->cdb->get_rows('rates', $query);
 
+    }
+    function check_rates_by_job_date($delivery_date, $delivery_time) {        
+        if(slef::is_holiday($delivery_date)){
+            return 'holiday';
+        } else if(slef::is_weekend($delivery_date)) {
+            return 'holiday';
+        } else if(slef::is_between_booking($delivery_time)) {
+            return 'out of hours';
+        } else {
+            return 'standard';
+        }
+    }
+    // weekends
+    function is_weekend($job_date) {        
+        $weekDay = date('w', strtotime($job_date));
+        return ($weekDay == 0 || $weekDay == 6);
+    }
+    // out of hours
+    function is_between_booking($delivery_time) {
+        $booking_start_time = strtotime(self::get_setting('tq_pro_form_options', 'booking_start_time', '07:00 AM'));
+        $booking_end_time = strtotime(self::get_setting('tq_pro_form_options', 'booking_end_time', '09:00 PM'));
+        $time = strtotime($delivery_time);
+        return (($time > $booking_start_time) && ($time < $booking_end_time));
+    }
+
+    function is_holiday($delivery_date) {
+        $holiday_dates_array = self::get_holiday_dates();
+        $job_date = date("Y-m-d", strtotime($delivery_date)) ;        
+        return in_array($job_date, $holiday_dates_array);
+    }
+    
+    // holiday dates range
+    function get_holiday_dates() {
+        $plugin = new TransitQuote_Pro4();
+        $this->cdb = $plugin->get_custom_db();
+        $today = date('Y-m-d');
+        // get future dates only
+        $all_holiday_dates = $this->cdb->get_rows('holiday_dates', array("CAST(end_date as DATE) >" => $today), array(), null, false);
+        $holiday_dates_array = array();
+
+        foreach ($all_holiday_dates as $key => $holiday_dates) {
+            $start_date = $holiday_dates['start_date'];
+            $sdate = $holiday_dates['start_date'];
+            $end_date = $holiday_dates['end_date'];
+            if ($end_date == $start_date) {
+                $holiday_dates_array[] = date("Y-m-d", strtotime($start_date));
+            } else {
+                while (strtotime($sdate) <= strtotime($end_date)) {
+                    $holiday_dates_array[] = date("Y-m-d", strtotime($sdate));
+                    $sdate = date("Y-m-d", strtotime("+1 day", strtotime($sdate)));
+                }
+            }
+        };
+        return $holiday_dates_array;
     }
 
     private function get_rates_query_for_journey_options() {
