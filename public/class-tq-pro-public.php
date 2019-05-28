@@ -1928,8 +1928,6 @@ class TransitQuote_Pro_Public {
     public function get_job_details_from_id($job_id) {
 
         $this->job = self::get_job($job_id);
-        $this->job = self::get_job_details($this->job);
-
         if ($this->job === false) {
             $this->ajax->log_error(array('name' => 'Could not get job to update',
                 'value' => 'job_id: ' . $this->job['id']));
@@ -1938,7 +1936,9 @@ class TransitQuote_Pro_Public {
 
         if (self::job_is_available($this->job)) {
             $this->job = self::get_job_details($this->job);
-        };
+        } else {
+            return false;
+        }
     }
 
     public function get_job_id() {
@@ -2007,6 +2007,9 @@ class TransitQuote_Pro_Public {
 
         if (self::job_is_available($this->job)) {
             $this->job = self::get_job_details($this->job);
+            if(!$this->job){
+                return false;
+            };
             //echo 'success: '.$success.' '.$message;
             $email = self::email_dispatch('New Job Booking - ref: ' . $this->job['id'] . " " . $this->customer['first_name'] . " " . $this->customer['last_name']);
             $customer_email = self::email_customer();
@@ -2469,6 +2472,11 @@ class TransitQuote_Pro_Public {
         //add the details to a job record
 
         $job['customer'] = $this->customer = self::get_customer($job['customer_id']);
+        if(empty($this->customer)){
+            echo ' no customer for job: ';
+            print_r($job);
+            return false;
+        };
         $job['journey'] = $this->journey = self::get_journey_by_job_id($job['id']);
         $job['stops'] = self::get_journey_stops($job['journey']['id']);
         self::load_journey_order($job['journey']['id']);
@@ -2764,22 +2772,27 @@ class TransitQuote_Pro_Public {
             $headers .= "Bcc: " . $address . "\r\n";
         };
         $this->view_labels = self::get_view_labels('email_job_details');
-        self::get_job_details_from_id($this->job_id);  
-        ob_start();
-        include 'partials/emails/email_job_details.php';
-        $html_email = ob_get_clean();
+        if(self::get_job_details_from_id($this->job_id)){
+             ob_start();
+            include 'partials/emails/email_job_details.php';
+            $html_email = ob_get_clean();
 
-        //    add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
-        //$this->ajax->set_email_debug(true);
-        $email = $this->ajax->send_notification($to,
+            //    add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
+            //$this->ajax->set_email_debug(true);
+                $email = $this->ajax->send_notification($to,
             $from,
             $from_name,
             $subject,
             $html_email, $headers);
 
-        //    remove_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
+            //    remove_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
+            return $email;
 
-        return $email;
+        } else {
+            return false;
+        }
+       
+        
     }
 
     public function display_internal_email_preview($atts) {
