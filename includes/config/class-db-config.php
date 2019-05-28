@@ -1255,21 +1255,30 @@ private function config_locations(){
     'lat' => 
     array (
       'name' => 'lat',
-      'type' => 'decimal(16,10)',
+      'type' => 'decimal(26,20)',
       'null' => 'null',
       'auto' => '',
       'default' => '',
       'format' => '%f',
-    ),
+    ),  
     'lng' => 
     array (
       'name' => 'lng',
-      'type' => 'decimal(16,10)',
+      'type' => 'decimal(26,20)',
       'null' => 'null',
       'auto' => '',
       'default' => '',
       'format' => '%f',
     ),
+    'place_id' => 
+    array (
+      'name' => 'place_id',
+      'type' => 'varchar(128)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),    
     'created' => 
     array (
       'name' => 'created',

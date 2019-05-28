@@ -254,7 +254,7 @@ class TransitQuote_Pro_Public {
         $this->show_contact_name = (bool) $this->get_setting('', 'show_contact_name', false);
         $this->destination_address_label = $this->get_setting('', 'destination_address_label', 'Destination Address');
         $this->show_contact_number = (bool) $this->get_setting('', 'show_contact_number', false);
-        $this->restrict_to_country = (bool) $this->get_setting('', 'restrict_to_country', true);
+        $this->restrict_to_country = (bool) $this->get_setting('', 'restrict_to_country', false);
 
         $this->destination_address_label = $this->get_setting('', 'destination_address_label', 'Destination Address');
         $this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link', '+ Insert Destination');
@@ -1846,7 +1846,6 @@ class TransitQuote_Pro_Public {
         $required_customer_fields = array('first_name', 'last_name', 'email');
         foreach ($required_customer_fields as $key => $field_name) {
             if (!$this->ajax->param_check(array('name' => $field_name, 'optional' => false))) {
-                echo ' * job_data_is_valid error *';
                 array_push($this->invalid_fields, array('name' => str_replace('_', ' ', $field_name),
                     'error' => 'empty'));
             };
@@ -1954,6 +1953,7 @@ class TransitQuote_Pro_Public {
 
     public function save_job() {
         $success = 'true';
+
         //default message
         $message = 'Request booked successfully';
 
@@ -2382,7 +2382,7 @@ class TransitQuote_Pro_Public {
                 $field_name = $field . $idx_str;
                 //$this->ajax->pa($field_name);
                 $val = $this->ajax->param(array('name' => $field_name, 'optional' => true));
-                if (!empty($val)) {
+                if (!empty($val)&&(is_string($val))) {
                     $record_data[$field] = sanitize_text_field($val);
                 };
                 if (strrpos($field, '_date') > -1) {
@@ -2516,6 +2516,7 @@ class TransitQuote_Pro_Public {
                 'administrative_area_level_1',
                 'country',
                 'postal_code',
+                'place_id',
                 'lat',
                 'lng',
                 'jl.contact_name as contact_name',

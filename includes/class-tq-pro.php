@@ -772,6 +772,15 @@ class TransitQuote_Pro4 {
 			$cdb->add_column('journeys_locations',$col_def);
 		}
 		
+		if(!$cdb->col_exists('locations','place_id')){
+			$col_def = array('name' => 'place_id',
+						     'type' => 'varchar(256)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							'after'=>'after lng');
+			$cdb->add_column('locations',$col_def);
+		}		
 	}
 
 
