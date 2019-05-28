@@ -1808,7 +1808,7 @@ class TransitQuote_Pro_Public {
         };
 
         if (self::job_data_is_valid()) {
-            $job_id = self::save_new_job();
+            $this->job_id = $job_id = self::save_new_job();
             if (empty($job_id)) {
                 $response = array('success' => 'false',
                     'msg' => 'Unable to save new job');
@@ -1928,6 +1928,8 @@ class TransitQuote_Pro_Public {
     public function get_job_details_from_id($job_id) {
 
         $this->job = self::get_job($job_id);
+        $this->job = self::get_job_details($this->job);
+
         if ($this->job === false) {
             $this->ajax->log_error(array('name' => 'Could not get job to update',
                 'value' => 'job_id: ' . $this->job['id']));
@@ -1987,7 +1989,7 @@ class TransitQuote_Pro_Public {
 
         $this->job = self::save('jobs', null, array('customer_id' => $this->customer['id'],
             'accepted_quote_id' => $this->quote['id']));
-
+        $this->job_id = $this->job['id'];
         $this->save_journey();
         $this->journey_order = $this->get_journey_order_from_post_data();
         if (!$this->save_locations()) {
@@ -1998,18 +2000,21 @@ class TransitQuote_Pro_Public {
             $success = 'false';
             $message = 'Unable to save route information';
         };
-        if (self::job_is_available()) {
-            $this->job = self::get_job_details($this->job);
+
+        if($success !== 'true'){
+            return false;
         };
 
-        //echo 'success: '.$success.' '.$message;
-        if ($success === 'true') {
+        if (self::job_is_available($this->job)) {
+            $this->job = self::get_job_details($this->job);
+            //echo 'success: '.$success.' '.$message;
             $email = self::email_dispatch('New Job Booking - ref: ' . $this->job['id'] . " " . $this->customer['first_name'] . " " . $this->customer['last_name']);
             $customer_email = self::email_customer();
-            return $this->job['id'];
-        } else {
-            return false;
-        }
+            return $this->job['id'];            
+        };
+
+        return false;
+      
     }
 
     public function save_journey() {
@@ -2678,15 +2683,16 @@ class TransitQuote_Pro_Public {
         //get details for the job
         if (self::job_is_available()) {
             $this->job = self::get_job_details($this->job);
+            $message = self::get_customer_message();
+            ob_start();
+            include 'partials/emails/email_customer.php';
+            $html_email = ob_get_clean();
+            echo $html_email;      
         };
 
-        $message = self::get_customer_message();
 
-        ob_start();
-        include 'partials/emails/email_customer.php';
-        $html_email = ob_get_clean();
 
-        echo $html_email;
+        
     }
 
     public function test_dispatch_email($job_id) {
@@ -2695,13 +2701,13 @@ class TransitQuote_Pro_Public {
         //get details for the job
         if (self::job_is_available()) {
             $this->job = self::get_job_details($this->job);
+            ob_start();
+            include 'partials/emails/email_job_details.php';
+            $html_email = ob_get_clean();
+            echo $html_email;            
         };
 
-        ob_start();
-        include 'partials/emails/email_job_details.php';
-        $html_email = ob_get_clean();
 
-        echo $html_email;
     }
 
     private function email_customer() {
@@ -2757,7 +2763,8 @@ class TransitQuote_Pro_Public {
         foreach ($this->notification_emails as $key => $address) {
             $headers .= "Bcc: " . $address . "\r\n";
         };
-
+        $this->view_labels = self::get_view_labels('email_job_details');
+        self::get_job_details_from_id($this->job_id);  
         ob_start();
         include 'partials/emails/email_job_details.php';
         $html_email = ob_get_clean();
