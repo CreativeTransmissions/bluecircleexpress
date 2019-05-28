@@ -14,7 +14,7 @@
 		defaults = {
 			ajaxUrl: '',
 			customer: false,
-			debug: true,
+			debug: false,
 			quoteResult: 'quote',
 			timepickerSelector: 'input[name="delivery_time"]',
 			datepickerSelector: 'input[name="date"]'
@@ -617,7 +617,7 @@
 
 				$('input,select').keypress(function(event) { return event.keyCode != 13; });
 
-				$('a.no-address').on('click', function(e){
+				$('.tq-form').on('click', 'a.no-address', function (e) {
 					e.preventDefault();
 					e.stopPropagation();
 					that.scrollToMap();					

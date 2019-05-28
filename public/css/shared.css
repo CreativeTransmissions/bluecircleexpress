@@ -63,7 +63,9 @@ Add a new class if the same element needs styling
 .feedback {
     /* used to contain map feedback messages and also to hide and show the messages */
 }
-
+.tq-form button.confirm-pos-btn{
+    margin-top: 0.5em;
+}
 
 /** the styles below can be overridden in required **/
 
