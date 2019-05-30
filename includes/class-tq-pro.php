@@ -873,7 +873,7 @@ class TransitQuote_Pro4 {
 		}	
 		if(!$cdb->col_exists('quotes','rates')){
 			$col_def = array('name' => 'rates',
-						     'type' => 'varchar(30)',
+							 'type' => 'varchar(256)',
 						     'null' => 'null',
 						     'auto' => '',
 						     'default' => '',

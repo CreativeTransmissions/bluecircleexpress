@@ -476,6 +476,15 @@ private function config_quotes(){
       'default' => '',
       'format' => '%s'
     ),
+    'rates' => 
+    array (
+      'name' => 'rates',
+      'type' => 'varchar(256)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
 
     'created' => 
     array (
