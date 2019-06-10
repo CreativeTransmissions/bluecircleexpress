@@ -641,7 +641,7 @@ class TransitQuote_Pro_Public {
         //get paths for includes
         self::get_paths_for_includes();
 
-        $this->job_id = $this->ajax->param(array('name' => 'job_id', 'optional' => true));
+        $this->job_id = 8;//$this->ajax->param(array('name' => 'job_id', 'optional' => true));
         if (empty($this->job_id)) {
             return '';
         } else {
@@ -661,6 +661,7 @@ class TransitQuote_Pro_Public {
             $this->rate_hour = $this->job['quote']['rate_hour'];
 
             $this->total_cost = $this->job['quote']['total'];
+            $this->rates = $this->job['quote']['rates'];
 
             $view_name = 'tq-quote-page';
             $this->view_labels = self::get_view_labels($view_name);
@@ -806,7 +807,7 @@ class TransitQuote_Pro_Public {
         };
         $currency = self::get_currency_code();
         $out = array();
-        $output_order = array('distance_cost', 'tax_cost', 'total');
+        $output_order = array('distance_cost', 'tax_cost', 'total', 'rates');
 
         foreach ($output_order as $key => $field_name) {
             //init new field
@@ -818,6 +819,13 @@ class TransitQuote_Pro_Public {
             case 'distance_cost':
                 $field['label'] = 'Delivery Cost <span style="display: inline-block; float: right;">£</span>';
                 $field['value'] = $value;
+                $field['update'] = 'quote';
+                $field['name'] = $field_name;
+                $out[] = $field;
+                break;
+            case 'rates':
+                $field['label'] = 'Rates';
+                $field['value'] = ucfirst($value);
                 $field['update'] = 'quote';
                 $field['name'] = $field_name;
                 $out[] = $field;
@@ -1626,16 +1634,92 @@ class TransitQuote_Pro_Public {
     }
 
     private function get_rates_for_journey_options() {
+        $delivery_date = $this->ajax->param(array('name' => 'delivery_date', 'optional' => true));
+        $delivery_time = $this->ajax->param(array('name' => 'delivery_time', 'optional' => true));
+
         $rates = false;
         $query = self::get_rates_query_for_journey_options();
         if ($query === false) {
             //echo 'could not get query';
             return false;
         }
-        //echo 'rates query';
-        //print_r($query);
-        return $this->cdb->get_rows('rates', $query);
+        if(!empty($delievry_date) && !empty($delivery_time)){
+            $job_rate = self::check_rates_by_job_date($delivery_date, $delivery_time);            
+            switch ($job_rate) {
+                case 'holiday':
+                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_holiday as amount', 'unit_holiday as unit', 'hour_holiday as hour');
+                    break;
+                case 'weekend':
+                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit_weekend as unit', 'hour_weekend as hour');
+                    break;
+                case 'out of hours':
+                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_out_of_hours as amount', 'unit_out_of_hours as unit', 'hour_out_of_hours as hour');
+                    break;
+                case 'standard':
+                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
+                    break;
+                default:
+                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
+                    break;
+            }
+            return $this->cdb->get_rows( 'rates', $query, $fields );
+        } else {
+            return $this->cdb->get_rows( 'rates', $query );
+        }
+    }
+    function check_rates_by_job_date($delivery_date, $delivery_time) {        
+        if(self::is_holiday($delivery_date)){
+            return 'holiday';
+        } else if (self::is_weekend($delivery_date)) {
+            return 'weekend';
+        } else if(self::is_out_of_booking_time($delivery_time)) {
+            return 'out of hours';
+        } else {
+            return 'standard';
+        }
+    }
+    // weekends
+    function is_weekend($job_date) {        
+        $weekDay = date('w', strtotime($job_date));
+        return ($weekDay == 0 || $weekDay == 6);
+    }
+    // out of hours
+    function is_out_of_booking_time($delivery_time) {
+        $booking_start_time = strtotime(self::get_setting('tq_pro_form_options', 'booking_start_time', '07:00 AM'));
+        $booking_end_time = strtotime(self::get_setting('tq_pro_form_options', 'booking_end_time', '09:00 PM'));
+        $time = strtotime($delivery_time);
+        return (($time > $booking_end_time) && ($time < $booking_start_time));
+    }
 
+    function is_holiday($delivery_date) {
+        $holiday_dates_array = self::get_holiday_dates();
+        $job_date = date("Y-m-d", strtotime($delivery_date));        
+        return in_array($job_date, $holiday_dates_array);
+    }
+    
+    // holiday dates range
+    function get_holiday_dates() {
+        $plugin = new TransitQuote_Pro4();
+        $this->cdb = $plugin->get_custom_db();
+        $today = date('Y-m-d');
+        // get future dates only
+        $all_holiday_dates = $this->cdb->get_rows('holiday_dates', array("CAST(end_date as DATE) >" => $today), array(), null, false);
+        $holiday_dates_array = array();
+
+        foreach ($all_holiday_dates as $key => $holiday_dates) {
+            $start_date = $holiday_dates['start_date'];
+            $sdate = $holiday_dates['start_date'];
+            $end_date = $holiday_dates['end_date'];
+            if ($end_date == $start_date) {
+                $holiday_dates_array[] = date("Y-m-d", strtotime($start_date));
+            } else {
+                while (strtotime($sdate) <= strtotime($end_date)) {
+                    $holiday_dates_array[] = date("Y-m-d", strtotime($sdate));
+                    $sdate = date("Y-m-d", strtotime("+1 day", strtotime($sdate)));
+                }
+            }
+        };
+        return $holiday_dates_array;
     }
 
     private function get_rates_query_for_journey_options() {
@@ -1981,7 +2065,16 @@ class TransitQuote_Pro_Public {
             }
         };
 
-        $this->quote = self::save('quotes');
+        $delivery_date = $this->ajax->param(array('name' => 'delivery_date', 'optional' => true));
+        $delivery_time = $this->ajax->param(array('name' => 'delivery_time', 'optional' => true));
+
+     
+        if(!empty($delivery_date) && !empty($delivery_time) && $this->cdb->col_exists('quotes','rates')) {
+            $job_rate = self::check_rates_by_job_date($delivery_date, $delivery_time);   
+            $this->quote = self::save('quotes', null, array('rates' => $job_rate));         
+        } else {
+            $this->quote = self::save('quotes');
+        }
         //$this->quote_surcharge_ids = self::save_surcharges($this->quote['id']);
 
         //To do: create a many to many address relationship with job with an order index
@@ -3240,7 +3333,7 @@ class TransitQuote_Pro_Public {
             return false;
         };
         $currency = self::get_currency_code();
-        $output_order = array('distance_cost', 'rate_hour', 'time_cost', 'rate_tax', 'tax_cost', 'total');
+        $output_order = array('distance_cost', 'rate_hour', 'time_cost', 'rate_tax', 'tax_cost', 'total', 'rates');
         $out = array();
         foreach ($output_order as $key => $field_name) {
             //init new field
@@ -3254,6 +3347,14 @@ class TransitQuote_Pro_Public {
             case 'total':
                 $field['label'] = 'Total (' . $currency . ')';
                 $field['value'] = $value;
+                $field['type'] = 'text';
+                $field['update'] = 'quote';
+                $field['name'] = $field_name;
+                $out[] = $field;
+                break;
+            case 'rates':
+                $field['label'] = 'Rates';
+                $field['value'] = ucfirst($value);
                 $field['type'] = 'text';
                 $field['update'] = 'quote';
                 $field['name'] = $field_name;

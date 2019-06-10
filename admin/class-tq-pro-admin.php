@@ -711,7 +711,7 @@ class TransitQuote_Pro_Admin {
 				// by default use standard options for table_rows to allow for only returning a single row to ui after an update
 				$defaults = array(
 							'table'=>'rates',
-							'fields'=>array('id', 'vehicle_id', 'service_id', 'distance','amount','unit','hour'),
+							'fields'=>array('id', 'vehicle_id', 'service_id', 'distance','amount','unit','hour','amount_holiday', 'amount_weekend', 'amount_out_of_hours', 'unit_holiday', 'unit_weekend', 'unit_out_of_hours', 'hour_holiday', 'hour_weekend', 'hour_out_of_hours'),
 							'classes'=>array( 'vehicle_id'=>'hidden', 'service_id'=>'hidden'),
 							'inputs'=>false,
 							'actions'=>array('Edit', 'Delete')
@@ -847,6 +847,15 @@ class TransitQuote_Pro_Admin {
 			case 'blocked_dates':
 				$defaults = array(
 					'table'=>'blocked_dates',
+					'formats'=>array('start_date'=>'usdate', 'end_date'=>'usdate'),
+					'fields'=>array('id','start_date', 'end_date'),
+					'inputs'=>false,
+					'actions'=>array('Edit','Delete')
+				);
+			break;
+			case 'holiday_dates':
+				$defaults = array(
+					'table'=>'holiday_dates',
 					'formats'=>array('start_date'=>'usdate', 'end_date'=>'usdate'),
 					'fields'=>array('id','start_date', 'end_date'),
 					'inputs'=>false,

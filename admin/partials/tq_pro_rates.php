@@ -43,6 +43,45 @@
 				<label for="hour">Price Per Hour</label>
 				<input class="input-long" type="text" name="hour" />
 			</div>
+			<!-- NEW FIELDS STARTS-->
+			<div class="inline-field">
+				<label for="hour">Amount holiday</label>
+				<input class="input-long" type="text" name="amount_holiday" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Amount weekend</label>
+				<input class="input-long" type="text" name="amount_weekend" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Amount out of hours</label>
+				<input class="input-long" type="text" name="amount_out_of_hours" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Unit holiday</label>
+				<input class="input-long" type="text" name="unit_holiday" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Unit weekend</label>
+				<input class="input-long" type="text" name="unit_weekend" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Unit out of hours</label>
+				<input class="input-long" type="text" name="unit_out_of_hours" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Hour holiday</label>
+				<input class="input-long" type="text" name="hour_holiday" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Hour weekend</label>
+				<input class="input-long" type="text" name="hour_weekend" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Hour out of hours</label>
+				<input class="input-long" type="text" name="hour_out_of_hours" />
+			</div>
+			<!-- NEW FIELDS END-->
+
 		</div>
 	</fieldset>
 	<input type="hidden" name="id" value=""/>
@@ -83,7 +122,22 @@
  	</fieldset>
 	<table id="rates_table" class="settings-table">
 		<thead>
-			<tr><th>Boundary Distance</th><th>Set Price</th><th>Price Per <?php echo $this->admin->distance_unit; ?></th><th>Price Per Hour</th><th class="actions"><div class="spinner"></div></tr>
+			<tr><th>Boundary Distance</th><th>Set Price</th><th>Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th>Price Per Hour</th>
+			
+			
+			<th>Amount holiday</th>
+			<th>Amount weekend</th>
+			<th>Amount out of hours</th>
+			<th>Unit holiday</th>
+			<th>Unit weekend</th>
+			<th>Unit out of hours</th>
+			<th>Hour holiday</th>
+			<th>Hour weekend</th>
+			<th>Hour out of hours</th>
+
+
+			<th class="actions"><div class="spinner"></div></tr>
 		</thead>
 		<tbody>
 		</tbody>

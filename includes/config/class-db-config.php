@@ -476,6 +476,15 @@ private function config_quotes(){
       'default' => '',
       'format' => '%s'
     ),
+    'rates' => 
+    array (
+      'name' => 'rates',
+      'type' => 'varchar(256)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
 
     'created' => 
     array (
@@ -1784,6 +1793,87 @@ private function config_rates(){
       'default' => '',
       'format' => '%f',
     ),
+    'amount_holiday' => 
+    array (
+      'name' => 'amount_holiday',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'amount_weekend' => 
+    array (
+      'name' => 'amount_weekend',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'amount_out_of_hours' => 
+    array (
+      'name' => 'amount_out_of_hours',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'unit_holiday' => 
+    array (
+      'name' => 'unit_holiday',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'unit_weekend' => 
+    array (
+      'name' => 'unit_weekend',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'unit_out_of_hours' => 
+    array (
+      'name' => 'unit_out_of_hours',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'hour_holiday' => 
+    array (
+      'name' => 'hour_holiday',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'hour_weekend' => 
+    array (
+      'name' => 'hour_weekend',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'hour_out_of_hours' => 
+    array (
+      'name' => 'hour_out_of_hours',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
     'created' => 
     array (
       'name' => 'created',
@@ -2199,4 +2289,71 @@ private function config_blocked_dates(){
 );
 }
 
+private function config_holiday_dates(){
+  return array (
+    'name' => 'holiday_dates',
+    'defaults' => 
+    array (
+      'fields' => 
+      array (
+      ),
+      'orderby' => 'id',
+      'order' => 'asc',
+      'user_id' => false,
+      'since' => false,
+      'until' => false,
+      'number' => -1,
+      'offset' => 0,
+    ),
+    'cols' => 
+    array (
+      'id' => 
+      array (
+        'name' => 'id',
+        'type' => 'int',
+        'null' => 'not null',
+        'auto' => 'auto_increment',
+        'default' => '',
+        'format' => '%d',
+      ),
+      'start_date' => 
+      array (
+        'name' => 'start_date',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s',
+      ),   
+      'end_date' => 
+      array (
+        'name' => 'end_date',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s',
+      ), 
+      'created' => 
+      array (
+        'name' => 'created',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s',
+      ),
+      'modified' => 
+      array (
+        'name' => 'modified',
+        'type' => 'timestamp',
+        'null' => 'null',
+        'auto' => '',
+        'default' => '',
+        'format' => '%s',
+      )
+    ),
+    'pk' => 'id',
+  );
+}
 }?>
