@@ -378,10 +378,12 @@
 				var day = a.getDate();
 				var hours = a.getUTCHours();
 				var minutes = a.getUTCMinutes();
-				var dateArray = [];
+				var dateArray = {};
+				var formattedString = a.toTimeString().substr(0,5)
+				var newDateString = day + '-' + month + '-' + year;
 				dateArray['date'] = day + '-' + month + '-' + year;
 				dateArray['fullDate'] = a;
-				dateArray['time'] = new Date('2016-06-16' + ' ' + hours + ':' + minutes); //just a dummy date
+				dateArray['time'] = new Date(2016,01,01,hours,minutes,0,0); //just a dummy date
 				return dateArray;
 			},
 
@@ -459,11 +461,12 @@
 
 			initTimePicker: function(){
 				var that = this;
-				
 				var booking_start_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_start_time+'000')['time'];
 				var booking_end_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_end_time+'000')['time'];
 				
-				var interval = TransitQuoteProSettings.time_interval;								
+				var interval = TransitQuoteProSettings.time_interval;
+
+
 				var $input = $( this.settings.timepickerSelector ).pickatime({
 					min: booking_start_time_datetime,
 					max: booking_end_time_datetime,
