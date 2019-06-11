@@ -925,11 +925,20 @@ class TransitQuote_Pro_Admin {
 
 	public function get_date_filters(){
 		$from_date = $this->ajax->param(array('name'=>'from_date'));
+		$from_date_mysql_format = self::convert_date_to_mysql_format($from_date);
 		$to_date = $this->ajax->param(array('name'=>'to_date'));
-
-		$filters = array('from_date'=>$from_date, 'to_date'=>$to_date);
+		$to_date_mysql_format = self::convert_date_to_mysql_format($to_date);
+		$filters = array('from_date'=>$from_date_mysql_format, 'to_date'=>$to_date_mysql_format);
 		return $filters;
 	}
+
+	public function convert_date_to_mysql_format($date_string){
+		$date_stamp = strtotime($date_string);
+		$mysql_date = date("Y-m-d H:i:s", $date_stamp);
+		return $mysql_date;
+	}
+
+
 
 	private function get_rates_filters(){
 		$filters = null;
