@@ -1958,27 +1958,10 @@ class TransitQuote_Pro_Public {
 
         //default message
         $message = 'Request booked successfully';
-
-        //get email for notification
-        $email = $this->ajax->param(array('name' => 'email'));
-
-        $existing_customer = self::get_customer_by_email($email);
-        $wp_user_id = $this->tq_woocommerce_customer->is_logged_in();
-        if ($existing_customer === false) {
-            //save new customer as we have a new email address
-            if ($wp_user_id) {
-                $this->customer = self::save('customers', null, array('wp_user_id' => $wp_user_id));
-            } else {
-                $this->customer = self::save('customers');
-            }
-        } else {
-            //save against an existing customer email
-            //we can pass id and it will not be overwritten as it is not in the post data
-            if ($wp_user_id) {
-                $this->customer = self::save('customers', null, array('id' => $existing_customer['id'], 'wp_user_id' => $wp_user_id));
-            } else {
-                $this->customer = self::save('customers', null, array('id' => $existing_customer['id']));
-            }
+        
+        $this->customer = self::save_customer();
+        if(!$this->customer){
+            return false;
         };
 
         $this->quote = self::save('quotes');
@@ -1989,6 +1972,10 @@ class TransitQuote_Pro_Public {
 
         $this->job = self::save('jobs', null, array('customer_id' => $this->customer['id'],
             'accepted_quote_id' => $this->quote['id']));
+        if(empty($this->job)){
+            return false;
+        };    
+
         $this->job_id = $this->job['id'];
         $this->save_journey();
         $this->journey_order = $this->get_journey_order_from_post_data();
@@ -2002,23 +1989,67 @@ class TransitQuote_Pro_Public {
         };
 
         if($success !== 'true'){
+            echo ' SUCCESS NOT true: '.$message;
+            var_dump($success);
             return false;
         };
 
         if (self::job_is_available($this->job)) {
+             echo 'job IS availabl after save';
+             print_r($this->job);
             $this->job = self::get_job_details($this->job);
-            if(!$this->job){
-                return false;
-            };
+        };
+
+        if (self::job_is_available($this->job)) {        
             //echo 'success: '.$success.' '.$message;
             $email = self::email_dispatch('New Job Booking - ref: ' . $this->job['id'] . " " . $this->customer['first_name'] . " " . $this->customer['last_name']);
             $customer_email = self::email_customer();
+            echo ' returning job id: '.$this->job['id'];
             return $this->job['id'];            
-        };
+        } else {
+            echo 'job not availabl after get_job_details';
+        }
 
         return false;
       
     }
+
+    public function save_customer(){
+        //get email for notification
+        $email = $this->ajax->param(array('name' => 'email','optional'=>false));
+        echo 'email param: '.$email;
+        if(empty($email)){
+            echo 'cannot save job with no email: '.$_POST['email'];
+            print_r($_POST);            
+            return false;
+        };
+
+        $wp_user_id = $this->tq_woocommerce_customer->is_logged_in();
+
+
+        $existing_customer = self::get_customer_by_email($email);
+        if ($existing_customer === false) {
+            echo ' NOT AN existing customer: '.$email.' end of email';
+            //save new customer as we have a new email address
+            if ($wp_user_id) {
+                $customer = self::save('customers', null, array('wp_user_id' => $wp_user_id));
+            } else {
+                $customer = self::save('customers');
+            }
+        } else {
+            echo ' IS existing customer: '.$email;
+            print_r($existing_customer);
+
+            //save against an existing customer email
+            //we can pass id and it will not be overwritten as it is not in the post data
+            if ($wp_user_id) {
+                $customer = self::save('customers', $existing_customer['id'], array('id' => $existing_customer['id'], 'wp_user_id' => $wp_user_id));
+            } else {
+                $customer = self::save('customers', $existing_customer['id'], array('id' => $existing_customer['id']));
+            }
+        };
+        return $customer;
+    }   
 
     public function save_journey() {
         //a job could potentially have multiple journeys so save job id against table
@@ -2473,11 +2504,10 @@ class TransitQuote_Pro_Public {
 
         $job['customer'] = $this->customer = self::get_customer($job['customer_id']);
         if(empty($this->customer)){
-            echo ' no customer for job: ';
-            print_r($job);
             return false;
         };
         $job['journey'] = $this->journey = self::get_journey_by_job_id($job['id']);
+        echo ' -- get stops for journey_id: '.$job['journey']['id'];
         $job['stops'] = self::get_journey_stops($job['journey']['id']);
         self::load_journey_order($job['journey']['id']);
         self::load_journey_locations();
@@ -2647,7 +2677,7 @@ class TransitQuote_Pro_Public {
         if (!empty($defaults)) {
             //merge with passed data
             $record_data = array_merge($defaults, $record_data);
-        }
+        };
 
         $row_id = self::save_record($table, $record_data);
         $record_data['id'] = $row_id;

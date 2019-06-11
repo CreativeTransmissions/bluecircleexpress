@@ -21,11 +21,15 @@ final class TransitQuote_Pro_PublicTest extends TestCase
     public function test_save_job() {
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.0');
 
-        $_POST = $this->test_job;
+        $_REQUEST = $this->test_job;
         $public->get_plugin_settings();
-        $success = $public->save_job();
+        $job_id = $public->save_job();
+        $this->assertTrue(($job_id>0));
+        $this->assertTrue(is_numeric($job_id));
+
+        $this->assertEquals(8.56,$public->journey['time']);
+        $this->assertEquals(true,is_array($public->job));
         $this->assertEquals(8.56,$public->job['journey']['time']);
-        $this->assertInternalType("int",$success);
 
         $public = null;
 
@@ -34,13 +38,13 @@ final class TransitQuote_Pro_PublicTest extends TestCase
     public function test_save_job_multiple_addresses() {
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.0');
 
-        $_POST = $this->test_job_multi_addresses;
+        $_REQUEST = $this->test_job_multi_addresses;
 
-    //    var_dump($_POST);
         $public->get_plugin_settings();
-        $success = $public->save_job();
+        $job_id = $public->save_job();
         $this->assertEquals(8.64,$public->job['journey']['time']);
         $this->assertEquals(811.53,$public->job['journey']['distance']);
+        $this->assertEquals(true, is_array($public->job['stops']));
 
         $this->assertEquals(4, count($public->job['stops']));
   /*      $this->assertEquals(0, $public->job['stops'][0]['journey_order']);
@@ -61,7 +65,8 @@ final class TransitQuote_Pro_PublicTest extends TestCase
         $this->assertEquals('ChIJORdf39xFiEgRJAAllCRtufc', $public->job['stops'][0]['place_id']);
      //   $this->assertEquals(0, $public->job['stops'][0]['journey_order']);
 
-        $this->assertInternalType("int",$success);
+        $this->assertTrue(($job_id>0));
+        $this->assertTrue(is_numeric($job_id));
         $public = null;
 
 
