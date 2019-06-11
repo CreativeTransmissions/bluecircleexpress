@@ -4,9 +4,10 @@
 <p>Prices entered against a distance boundary of 0 will apply to all remaining miles after the highest distance boundary. For example if you have a boundary of 20 miles and a boundary of 0 miles, the first 20 miles will be charged with the 20 mile boundary rate and the remaining miles will be charged with the 0 boundary rate.</p> 
 <p>You can charge with a different set of rates depending on journey length or the vehicle or service selected by the customer. When entering a rate, use the drop down boxes to select the options that will cause the rate to be used. For example if you select Maximum Distance = 50, Vehicle = Large Van, Service = Express, the rates will only apply to journeys of up to 50 miles when the customer has selected Large Van as the vehicle and Express as the service.</p>
 <form class="box-form round tq-admin-form" id="edit_rate_form" method="post" autocomplete="false">
-	<fieldset>
-		<legend>Add a new rate by entering the details below:</legend>
-		<div class="row">
+	
+	<div class="row">
+		<fieldset>
+			<legend>Add a new rate by entering the details below:</legend>
 			<div class="inline-field">
 				<label for="group">Select Max Distance</label>
 				<select name="journey_length_id" class="inline">
@@ -25,12 +26,20 @@
 					<?php $this->admin->plugin->render_vehicle_options(); ?>
 				</select>
 			</div>
-		</div>
-		<div class="row row-rates">
+		</fieldset>			
+	</div>
+	<div class="row row-rates">	
+		<fieldset>
+			<legend>Upper boundary distance for these rates:</legend>				
 			<div class="inline-field">
 				<label for="distance">Boundary Distance (<?php echo $this->admin->distance_unit; ?>s)</label>
 				<input class="input-long" type="text" name="distance" />
 			</div>
+		</fieldset>
+	</div>
+	<div class="row row-rates">
+		<fieldset>
+			<legend>Standard Rates</legend>			
 			<div class="inline-field">
 				<label for="amount">Set Price</label>
 				<input class="input-long" type="text" name="amount" />
@@ -43,47 +52,61 @@
 				<label for="hour">Price Per Hour</label>
 				<input class="input-long" type="text" name="hour" />
 			</div>
-			<!-- NEW FIELDS STARTS-->
+		</fieldset>				
+	</div>
+	<div class="row row-rates">				
+		<fieldset>
+			<legend>Holiday Rates</legend>
 			<div class="inline-field">
-				<label for="hour">Amount holiday</label>
+				<label for="hour">Set Price</label>
 				<input class="input-long" type="text" name="amount_holiday" />
 			</div>
 			<div class="inline-field">
-				<label for="hour">Amount weekend</label>
-				<input class="input-long" type="text" name="amount_weekend" />
-			</div>
-			<div class="inline-field">
-				<label for="hour">Amount out of hours</label>
-				<input class="input-long" type="text" name="amount_out_of_hours" />
-			</div>
-			<div class="inline-field">
-				<label for="hour">Unit holiday</label>
+				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?> holiday</label>
 				<input class="input-long" type="text" name="unit_holiday" />
 			</div>
 			<div class="inline-field">
-				<label for="hour">Unit weekend</label>
+				<label for="hour">Price Per Hour holiday</label>
+				<input class="input-long" type="text" name="hour_holiday" />
+			</div>
+		</fieldset>
+	</div>
+	<div class="row row-rates">				
+		<fieldset>
+			<legend>Weekend Rates</legend>
+			<div class="inline-field">
+				<label for="hour">Set Price Weekend</label>
+				<input class="input-long" type="text" name="amount_weekend" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?> weekend</label>
 				<input class="input-long" type="text" name="unit_weekend" />
 			</div>
 			<div class="inline-field">
-				<label for="hour">Unit out of hours</label>
+				<label for="hour">Price Per Hour weekend</label>
+				<input class="input-long" type="text" name="hour_weekend" />
+			</div>
+		</fieldset>
+	</div>
+	<div class="row row-rates">		
+		<fieldset>
+			<legend>Out Of Hours Rates</legend>
+			<div class="inline-field">
+				<label for="hour">Set Price out of hours</label>
+				<input class="input-long" type="text" name="amount_out_of_hours" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?> out of hours</label>
 				<input class="input-long" type="text" name="unit_out_of_hours" />
 			</div>
 			<div class="inline-field">
-				<label for="hour">Hour holiday</label>
-				<input class="input-long" type="text" name="hour_holiday" />
-			</div>
-			<div class="inline-field">
-				<label for="hour">Hour weekend</label>
-				<input class="input-long" type="text" name="hour_weekend" />
-			</div>
-			<div class="inline-field">
-				<label for="hour">Hour out of hours</label>
+				<label for="hour">Price Per Hour out of hours</label>
 				<input class="input-long" type="text" name="hour_out_of_hours" />
-			</div>
-			<!-- NEW FIELDS END-->
+			</div>	
+		</fieldset>
+	</div>
+		
 
-		</div>
-	</fieldset>
 	<input type="hidden" name="id" value=""/>
 	<input type="hidden" name="action" value="tq_pro4_save_record"/>
 	<input type="hidden" name="update" value="rates"/>

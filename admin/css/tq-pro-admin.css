@@ -295,6 +295,9 @@ td.email input{
   	color: #000;
 	display: none;
 }
+.row-rates legend {
+	margin-top: 2em;
+}
 .job-details .row {
 	width: 100%;
 	clear: left;
