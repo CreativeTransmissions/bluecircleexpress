@@ -45,6 +45,7 @@ class TransitQuote_Pro_Activator {
 		$plugin->load_dependencies();
 		$cdb = $plugin->get_custom_db();
 		$cdb->create_tables();
+		$plugin->update_table_structure($cdb);		
 		$plugin->insert_default_data($cdb);
 		$plugin->update_default_data($cdb);
 		$plugin->delete_orphaned_rates();

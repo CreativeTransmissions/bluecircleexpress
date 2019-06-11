@@ -636,7 +636,6 @@ class TransitQuote_Pro4 {
 	public function update_default_data($cdb){
 		self::update_default_payment_types($cdb);
 		self::add_custom_currency_option($cdb);
-		self::migrate_rates($cdb);
 		self::update_appartment_no_column_size($cdb);
 	}
 
@@ -658,7 +657,7 @@ class TransitQuote_Pro4 {
 		}
 	}
 
-	public function migrate_rates($cdb){
+	public function update_table_structure($cdb){
 
 		if(!$cdb->col_exists('table_filters','wp_user_id')){
 			$col_def = array('name'=>'wp_user_id',
@@ -878,7 +877,7 @@ class TransitQuote_Pro4 {
 						     'auto' => '',
 						     'default' => '',
 							 'after'=>'after breakdown');
-			$cdb->add_column('rates',$col_def);
+			$cdb->add_column('quotes',$col_def);
 		}
 	}
 
