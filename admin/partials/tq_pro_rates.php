@@ -145,19 +145,20 @@
  	</fieldset>
 	<table id="rates_table" class="settings-table">
 		<thead>
-			<tr><th>Boundary Distance</th><th>Set Price</th><th>Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<tr><th>Boundary Distance</th><th>Set Price</th>
+			<th>Price Per <?php echo $this->admin->distance_unit; ?></th>
 			<th>Price Per Hour</th>
 			
 			
-			<th>Amount holiday</th>
-			<th>Amount weekend</th>
-			<th>Amount out of hours</th>
-			<th>Unit holiday</th>
-			<th>Unit weekend</th>
-			<th>Unit out of hours</th>
-			<th>Hour holiday</th>
-			<th>Hour weekend</th>
-			<th>Hour out of hours</th>
+			<th>Holiday Set Price</th>
+			<th>Weekend Set Price</th>
+			<th>Out of Hours Set Price</th>
+			<th>Holiday Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th>Weekend Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th>Out of Hours Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th>Holiday Price Per Hour</th>
+			<th>Weekend Price Per Hour</th>
+			<th>Out of Hours Price Per Hour</th>
 
 
 			<th class="actions"><div class="spinner"></div></tr>
