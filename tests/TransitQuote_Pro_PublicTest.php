@@ -19,7 +19,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
    
 
     public function test_save_job() {
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.0');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.1');
 
         $_REQUEST = $this->test_job;
         $public->get_plugin_settings();
@@ -36,7 +36,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
     }
 
     public function test_save_job_multiple_addresses() {
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.0');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.1');
 
         $_REQUEST = $this->test_job_multi_addresses;
 
