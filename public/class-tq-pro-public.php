@@ -1701,6 +1701,7 @@ class TransitQuote_Pro_Public {
             return $this->cdb->get_rows( 'rates', $query );
         }
     }
+
     function check_rates_by_job_date() {        
         if(self::is_holiday($this->rate_options['delivery_date']) && ($this->use_holiday_rates) ){
             return 'holiday';
@@ -2081,13 +2082,16 @@ class TransitQuote_Pro_Public {
         if(!$this->customer){
             return false;
         };
+        
+        $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
+        $this->use_weekend_rates = self::get_use_weekend_rates();
+        $this->use_holiday_rates = self::get_use_holiday_rates(); 
+        
+        $this->rate_options = self::get_rate_affecting_options();
+   
 
-        $delivery_date = $this->ajax->param(array('name' => 'delivery_date', 'optional' => true));
-        $delivery_time = $this->ajax->param(array('name' => 'delivery_time', 'optional' => true));
-
-     
-        if(!empty($delivery_date) && !empty($delivery_time) && $this->cdb->col_exists('quotes','rates')) {
-            $job_rate = self::check_rates_by_job_date($delivery_date, $delivery_time);   
+        if(!empty($this->rate_options['delivery_date']) && !empty($this->rate_options['delivery_time']) && $this->cdb->col_exists('quotes','rates')) {
+            $job_rate = self::check_rates_by_job_date($this->rate_options['delivery_date'], $this->rate_options['delivery_time']);   
             $this->quote = self::save('quotes', null, array('rates' => $job_rate));         
         } else {
             $this->quote = self::save('quotes');

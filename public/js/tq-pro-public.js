@@ -325,6 +325,9 @@
 		        });				
 				
 		        var datePickerObj = $inputDate.pickadate('picker');
+
+    			var date = new Date();
+    				datePickerObj.set('select', date);
 			},
 
 			getNextAvailableBookingDate: function(){
@@ -491,6 +494,10 @@
 				$( this.settings.timepickerSelector ).on('click', function(){
 					picker.open();
 				});
+
+
+    			var date = new Date();
+    				picker.set('select', date);				
 			},
 
 			onSetTimePicker: function(context){
