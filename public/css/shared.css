@@ -45,7 +45,9 @@ Feel free to use them for the intended purpose
 .tq-form .gm-style .gm-style-iw .pop-up{
     color: #333;
 } 
-
+.tq-form .capitalize {
+    text-transform: capitalize;
+}
 /************************* Reserved CSS Classes ***********************
 Never use these classes for styling!! They are for use by jQuery code
 They should only appear as demonstrated in the html snippets

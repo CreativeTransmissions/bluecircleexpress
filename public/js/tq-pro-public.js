@@ -390,11 +390,14 @@
 			onSetDatepickerDate: function(datepicker, context){
             	if(context.select){ // if its the selected date that has changed
             		var selectedDate = this.dateConverter(context.select);
+            		$("input[name='delivery_date']").val(selectedDate);	            	
 
             		this.updateTimepickerForNewDate(selectedDate);
 
-            		$("input[name='delivery_date']").val(selectedDate);	            	
-	            	this.calculator.updateQuote();	            	
+					if(this.validateGetQuote()){
+						this.updateFormAction('tq_pro4_get_quote');
+						this.submitForm('get_quote');
+					}; 
             	}
 			},
 
@@ -468,25 +471,35 @@
 
 
 				var $input = $( this.settings.timepickerSelector ).pickatime({
-					min: booking_start_time_datetime,
-					max: booking_end_time_datetime,
-					interval: parseInt(TransitQuoteProSettings.time_interval),
-					editable:true,
-					formatSubmit: 'HH:i',
-					onSet: function(context) {
+						min: booking_start_time_datetime,
+						max: booking_end_time_datetime,
+						interval: parseInt(TransitQuoteProSettings.time_interval),
+						editable:true,
+						formatSubmit: 'HH:i',
+						onSet: function(context) {
+							that.onSetTimePicker(context);
 
-				  	},
-				  	onClose: function() {
-					    $('.timepicker').blur();
-					    $('.datepicker').blur();
-					    $('.picker').blur();
-					}
+					  	},
+					  	onClose: function() {
+						    $('.timepicker').blur();
+						    $('.datepicker').blur();
+						    $('.picker').blur();
+						}
 				})
 
 				var picker = $input.pickatime('picker');
 				$( this.settings.timepickerSelector ).on('click', function(){
 					picker.open();
 				});
+			},
+
+			onSetTimePicker: function(context){
+				if(context.select){
+					if(this.validateGetQuote()){
+						this.updateFormAction('tq_pro4_get_quote');
+						this.submitForm('get_quote');
+					};
+				}
 			},
 
 			initParsleyValidation: function(){
@@ -743,7 +756,19 @@
 				if(distance === ''){
 					this.log('distance empty');
 					return false;
-				};				
+				};
+
+				var deliveryTime = $('input[name="delivery_time"]').val();
+				if(deliveryTime === ''){
+					this.log('deliveryTime empty');
+					return false;
+				};
+
+				var deliveryDate = $('input[name="delivery_date"]').val();
+				if(deliveryDate === ''){
+					this.log('deliveryDate empty');
+					return false;
+				};					
 				return true;
 			},
 
@@ -891,7 +916,14 @@
 				$('.basicCost').html(quote.basic_cost);
 				$('.rateTax').html(quote.rate_tax);
 				$('.taxCost').html(quote.tax_cost);
-				$('.hourCost').val(quote.time_cost);				
+				$('.hourCost').val(quote.time_cost);
+
+				if(quote.job_rate ==='standard'){
+					$('.job-rate').html('');
+				} else {
+					$('.job-rate').html(quote.job_rate + ' rate');
+				};
+				
 				$('input[name="distance_cost"]').val(quote.distance_cost);
 				$('input[name="total"]').val(quote.total);
 				$('input[name="rate_tax"]').val(quote.rate_tax);

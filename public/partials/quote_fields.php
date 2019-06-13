@@ -28,6 +28,9 @@
             <label class="" for="totalCost">Total Cost:</label>
             <span class="sub-total"><?php echo $this->currency_symbol; ?></span>
             <span class="totalCost quote" id="totalCost"></span>
-        </div> 
+        </div>
+        <div class="field">
+            <span class="job-rate quote" id="jobRate"></span>
+        </div>         
     </fieldset>
 </div>

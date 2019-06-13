@@ -12,6 +12,7 @@
             <li class="hidden"><?php echo $this->view_labels['short_notice_cost_label']; ?>: <?php echo $this->currency_symbol; ?><span class="noticeCost"></span></li>
             <li class="field"><?php echo $this->view_labels['sub_total_label']; ?>: <?php echo $this->currency_symbol; ?><span class="basicCost"></span></li>
             <li class="<?php echo $tax_hidden_class; ?>"><?php echo $this->tax_name; ?>: <?php echo $this->currency_symbol; ?><span class="taxCost"></span></li>
+            <li><span class="job-rate capitalize quote" id="jobRate"></span></li>
         </ul>
 
     </div>
