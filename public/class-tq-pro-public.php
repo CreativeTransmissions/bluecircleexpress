@@ -1669,8 +1669,6 @@ class TransitQuote_Pro_Public {
             }
             return $this->cdb->get_rows( 'rates', $query, $fields );
         } else {
-            echo ' no date and time';
-            print_r($this->rate_options);
             return $this->cdb->get_rows( 'rates', $query );
         }
     }
