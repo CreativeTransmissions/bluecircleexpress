@@ -1075,7 +1075,7 @@
 					$(formEl).val(recId);
 					
 					//update editing status
-				    var legend = $(this.editForm).find('legend');
+				    var legend = $(this.editForm).find('legend').first();
 		 			$(legend).html(this.editRecordMessage);
 
 					this.populateForm(recId, this.editForm, btn);
