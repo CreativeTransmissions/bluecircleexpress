@@ -1623,7 +1623,14 @@ class TransitQuote_Pro_Public {
             $no_destinations = 1;
         };
 
-        return array('vehicle_id' => $vehicle_id,
+        $delivery_date = $this->ajax->param(array('name' => 'delivery_date', 'optional' => true));     
+        $delivery_time = $this->ajax->param(array('name' => 'delivery_time', 'optional' => true));
+
+
+        return array(
+            'delivery_date'=> $delivery_date,
+            'delivery_time'=>$delivery_time,
+            'vehicle_id' => $vehicle_id,
             'service_id' => $service_id,
             'distance' => $distance,
             'return_time' => $return_time,
@@ -1634,8 +1641,6 @@ class TransitQuote_Pro_Public {
     }
 
     private function get_rates_for_journey_options() {
-        $delivery_date = $this->ajax->param(array('name' => 'delivery_date', 'optional' => true));
-        $delivery_time = $this->ajax->param(array('name' => 'delivery_time', 'optional' => true));
 
         $rates = false;
         $query = self::get_rates_query_for_journey_options();
@@ -1643,8 +1648,8 @@ class TransitQuote_Pro_Public {
             //echo 'could not get query';
             return false;
         }
-        if(!empty($delievry_date) && !empty($delivery_time)){
-            $job_rate = self::check_rates_by_job_date($delivery_date, $delivery_time);            
+        if(!empty($this->rate_options['delivery_date']) && !empty($this->rate_options['delivery_time'])){
+            $job_rate = self::check_rates_by_job_date();            
             switch ($job_rate) {
                 case 'holiday':
                     $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_holiday as amount', 'unit_holiday as unit', 'hour_holiday as hour');
@@ -1664,15 +1669,17 @@ class TransitQuote_Pro_Public {
             }
             return $this->cdb->get_rows( 'rates', $query, $fields );
         } else {
+            echo ' no date and time';
+            print_r($this->rate_options);
             return $this->cdb->get_rows( 'rates', $query );
         }
     }
-    function check_rates_by_job_date($delivery_date, $delivery_time) {        
-        if(self::is_holiday($delivery_date)){
+    function check_rates_by_job_date() {        
+        if(self::is_holiday($this->rate_options['delivery_date'])){
             return 'holiday';
-        } else if (self::is_weekend($delivery_date)) {
+        } else if (self::is_weekend($this->rate_options['delivery_date'])) {
             return 'weekend';
-        } else if(self::is_out_of_booking_time($delivery_time)) {
+        } else if(self::is_out_of_booking_time($this->rate_options['delivery_time'])) {
             return 'out of hours';
         } else {
             return 'standard';
