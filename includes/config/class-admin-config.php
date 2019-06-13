@@ -726,7 +726,28 @@ class Admin_Config {
                                                         'type'=>'input',
                                                         'help'=>'Customers can request one or more destinations as part of the same job. If multiple destinations are allowed you can enter a number to limit the number of stops on one route.',
                                                         'default'=>3),
+
+                                                      'use_out_of_hours_rates '=>array(
+                                                        'id'=>'use_out_of_hours_rates ',
+                                                        'label'=>'Enable Out Of Hours Rates',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will use the out of hour rates set in the Rates tab on when a booking time is outside of the Booking Start and End Times.',
+                                                        'default'=>0),
+
+                                                      'use_weekend_rates'=>array(
+                                                        'id'=>'use_weekend_rates',
+                                                        'label'=>'Enable Weekend Rates',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will use the Weekend rates set in the Rates tab when a job is booked for Saturday or Sunday.',
+                                                        'default'=>0),
                                                   
+                                                      'use_holiday_rates'=>array(
+                                                        'id'=>'use_holiday_rates',
+                                                        'label'=>'Enable Holiday Rates',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will use the Holiday rates set in the Rates tab whenever a booking data falls on one of the holidays set in the Holiday Dates tab.',
+                                                        'default'=>0),
+
                                                       'show_deliver_and_return'=>array(
                                                         'id'=>'show_deliver_and_return',
                                                         'label'=>'Charge for  Return Journey',

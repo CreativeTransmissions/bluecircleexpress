@@ -1524,8 +1524,14 @@ class TransitQuote_Pro_Public {
     /*** Front end ajax methods ***/
     public function get_quote() {
         $this->quote = false;
+        $this->job_rate = 'standard';
         $this->response_msg = 'There was an error calculating the quote'; //default error
+        $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
+        $this->use_weekend_rates = self::get_use_weekend_rates();
+        $this->use_holiday_rates = self::get_use_holiday_rates();        
         $this->rate_options = self::get_rate_affecting_options();
+
+
         $this->tax_rate = self::get_tax_rate();
         $this->rounding_type = self::get_rounding_type();
         $this->return_percentage = self::get_return_percentage();
@@ -1551,7 +1557,21 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_return_percentage() {
-        return self::get_setting('', 'return_journey_adjustment', 100);
+        return  (bool) self::get_setting('', 'return_journey_adjustment', 100);
+    }
+
+    public function get_use_out_of_hours_rates() {
+        return  (bool) self::get_setting('', 'use_out_of_hours_rates', 0);
+
+    }
+
+    public function get_use_weekend_rates() {
+        return  (bool) self::get_setting('', 'use_weekend_rates', 0);
+
+    }
+
+    public function get_use_holiday_rates() {
+        return (bool) self::get_setting('', 'use_holiday_rates', 0);
     }
 
     public function calc_quote() {
@@ -1575,6 +1595,7 @@ class TransitQuote_Pro_Public {
         $this->calculation = new TransitQuote_Pro4\TQ_Calculation($calc_config);
 
         $quote = $this->calculation->run();
+        $quote['job_rate'] = $this->job_rate;
         return $quote;
     }
 
@@ -1637,7 +1658,11 @@ class TransitQuote_Pro_Public {
             'deliver_and_return' => $deliver_and_return,
             'return_distance' => $return_distance,
             'no_destinations' => $no_destinations,
-            'hours' => $hours);
+            'hours' => $hours,
+            'use_holiday_rates'=>$this->use_holiday_rates,
+            'use_weekend_rates'=>$this->use_weekend_rates,
+            'use_out_of_hours_rates'=>$this->use_out_of_hours_rates
+        );
     }
 
     private function get_rates_for_journey_options() {
@@ -1649,17 +1674,21 @@ class TransitQuote_Pro_Public {
             return false;
         }
         if(!empty($this->rate_options['delivery_date']) && !empty($this->rate_options['delivery_time'])){
-            $job_rate = self::check_rates_by_job_date();            
-            switch ($job_rate) {
+            $this->job_rate = self::check_rates_by_job_date();
+
+            // default fields use standard rates in case of disabled job rates for holidays, weekends or out of hours
+            $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
+
+            switch ($this->job_rate) {
                 case 'holiday':
-                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_holiday as amount', 'unit_holiday as unit', 'hour_holiday as hour');
-                    break;
+                     $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_holiday as amount', 'unit_holiday as unit', 'hour_holiday as hour');
+                                        break;
                 case 'weekend':
                     $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit_weekend as unit', 'hour_weekend as hour');
-                    break;
+                                        break;
                 case 'out of hours':
-                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_out_of_hours as amount', 'unit_out_of_hours as unit', 'hour_out_of_hours as hour');
-                    break;
+                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_out_of_hours as amount', 'unit_out_of_hours as unit', 'hour_out_of_hours as hour');                      
+                                        break;
                 case 'standard':
                     $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
                     break;
@@ -1673,11 +1702,11 @@ class TransitQuote_Pro_Public {
         }
     }
     function check_rates_by_job_date() {        
-        if(self::is_holiday($this->rate_options['delivery_date'])){
+        if(self::is_holiday($this->rate_options['delivery_date']) && ($this->use_holiday_rates) ){
             return 'holiday';
-        } else if (self::is_weekend($this->rate_options['delivery_date'])) {
+        } else if (self::is_weekend($this->rate_options['delivery_date'])  && ($this->use_weekend_rates) ) {
             return 'weekend';
-        } else if(self::is_out_of_booking_time($this->rate_options['delivery_time'])) {
+        } else if(self::is_out_of_booking_time($this->rate_options['delivery_time']) && ($this->use_out_of_hours_rates) ) {
             return 'out of hours';
         } else {
             return 'standard';
