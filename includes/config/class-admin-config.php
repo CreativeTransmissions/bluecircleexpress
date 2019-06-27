@@ -708,7 +708,7 @@ class Admin_Config {
                                                       'tax_rate'=>array(
                                                         'id'=>'tax_rate',
                                                         'label'=>'Tax Rate',
-                                                        'type'=>'input',
+                                                        'type'=>'number',
                                                         'default'=>0,
                                                         'help'=>'Please enter the percentage to add for tax. Leave this as 0 if you do not wish to add tax to the quote.'),
 

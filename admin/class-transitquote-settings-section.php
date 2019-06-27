@@ -70,6 +70,9 @@ class TransitQuote_Pro_Settings_Section {
                 case 'input':
                     $field = new TransitQuote_Pro_Settings_Field_Input($field_config);
                     break;
+                case 'number':
+                    $field = new TransitQuote_Pro_Settings_Field_Input_Number($field_config);
+                    break;                    
                 case 'radio':
                     $field = new TransitQuote_Pro_Settings_Field_Radio($field_config);
                     break;

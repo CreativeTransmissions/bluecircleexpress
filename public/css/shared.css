@@ -103,6 +103,8 @@ div.rates-list {
     display: block;
     width: 100%;
     clear:  both;
+    height: 8em;
+    margin-bottom: 2em;
 }
 .tq-form .progress h2,
 .tq-form .progress p {

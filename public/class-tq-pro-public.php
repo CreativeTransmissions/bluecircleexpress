@@ -2055,6 +2055,7 @@ class TransitQuote_Pro_Public {
 
         if (self::job_is_available($this->job)) {
             $this->job = self::get_job_details($this->job);
+            return true;
         } else {
             return false;
         }
