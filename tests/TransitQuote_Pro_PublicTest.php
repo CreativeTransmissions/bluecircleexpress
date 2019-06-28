@@ -67,7 +67,12 @@ final class TransitQuote_Pro_PublicTest extends TestCase
 
         $this->assertTrue(($job_id>0));
         $this->assertTrue(is_numeric($job_id));
+
+        $this->assertFalse(empty($public->dispatch_email));
+        $this->assertFalse(empty($public->customer_email));
+
         $public = null;
+
 
 
     }    

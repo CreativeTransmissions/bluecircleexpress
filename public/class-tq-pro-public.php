@@ -2134,8 +2134,9 @@ class TransitQuote_Pro_Public {
 
         if (self::job_is_available($this->job)) {        
             //echo 'success: '.$success.' '.$message;
-            $email = self::email_dispatch('New Job Booking - ref: ' . $this->job['id'] . " " . $this->customer['first_name'] . " " . $this->customer['last_name']);
-            $customer_email = self::email_customer();
+            $this->dispatch_email = self::email_dispatch('New Job Booking - ref: ' . $this->job['id'] . " " . $this->customer['first_name'] . " " . $this->customer['last_name']);
+            
+            $this->customer_email = self::email_customer();
             return $this->job['id'];            
         };
         return false;
