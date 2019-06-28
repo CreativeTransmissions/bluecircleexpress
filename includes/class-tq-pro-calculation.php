@@ -325,7 +325,7 @@ class TQ_Calculation {
 		return $return_cost;
 	}
 	private function calc_time_cost($rate){
-		$this->time_hours = $this->config['hours'];
+		$this->time_hours = (isset($this->config['hours']) ? $this->config['hours'] : 0);
 		$this->time_cost = $this->time_hours * $rate['hour'];
 	}
 
