@@ -2155,23 +2155,43 @@ class TransitQuote_Pro_Public {
 
         $existing_customer = self::get_customer_by_email($email);
         if ($existing_customer === false) {
-            //save new customer as we have a new email address
-            if ($wp_user_id) {
-                $customer = self::save('customers', null, array('wp_user_id' => $wp_user_id));
-            } else {
-                $customer = self::save('customers');
-            }
+            $customer = self::save_new_customer($wp_user_id);
         } else {
-            //save against an existing customer email
-            //we can pass id and it will not be overwritten as it is not in the post data
-            if ($wp_user_id) {
-                $customer = self::save('customers', $existing_customer['id'], array('id' => $existing_customer['id'], 'wp_user_id' => $wp_user_id));
-            } else {
-                $customer = self::save('customers', $existing_customer['id'], array('id' => $existing_customer['id']));
-            }
+            $customer = self::update_customer($existing_customer, $wp_user_id);
         };
+
         return $customer;
     }   
+
+    public function save_new_customer($wp_user_id = null){
+        //save new customer as we have a new email address
+        if ($wp_user_id) {
+            $customer = self::save('customers', null, array('wp_user_id' => $wp_user_id));
+        } else {
+            $customer = self::save('customers');
+        };
+      
+        return $customer;
+    }
+
+    public function update_customer($existing_customer, $wp_user_id = null){
+        if($existing_customer['email']===''){
+            return false;
+        };
+        $customer_post_data = self::get_record_data('customers');
+        //save against an existing customer email
+        //we can pass id and it will not be overwritten as it is not in the post data
+        if ($wp_user_id) {
+            $customer_post_data['wp_user_id'] = $wp_user_id;
+            $customer_post_data['id'] = $existing_customer['id'];
+            $customer = self::save('customers', $existing_customer['id'], $customer_post_data);
+        } else {
+            $customer_post_data['id'] = $existing_customer['id'];            
+            $customer = self::save('customers', $existing_customer['id'], $customer_post_data);
+        };
+             
+        return $customer;
+    }
 
     public function save_journey() {
         //a job could potentially have multiple journeys so save job id against table
@@ -2257,7 +2277,7 @@ class TransitQuote_Pro_Public {
             $journey_order_optional_fields['contact_name'] = $contact_name;
         };
 
-        $contact_phone_field_name = 'address_' . $idx . '_contact_name';
+        $contact_phone_field_name = 'address_' . $idx . '_contact_phone';
         $contact_phone = $this->ajax->param(array('name' => $contact_phone_field_name, 'optional' => true));
         if (!empty($contact_name)) {
             $journey_order_optional_fields['contact_phone'] = $contact_phone;
@@ -2898,6 +2918,7 @@ class TransitQuote_Pro_Public {
 
         return $html_email;
     }
+
     private function email_dispatch($subject) {
 
         //get email addresses to send notifications to
@@ -2926,7 +2947,7 @@ class TransitQuote_Pro_Public {
         if(self::get_job_details_from_id($this->job_id)){
              ob_start();
             include 'partials/emails/email_job_details.php';
-            $html_email = ob_get_clean();
+            $this->html_email = $html_email = ob_get_clean();
 
             //    add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
             //$this->ajax->set_email_debug(true);
