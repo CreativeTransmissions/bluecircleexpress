@@ -2731,7 +2731,6 @@ class TransitQuote_Pro_Public {
 
         if (empty($job['delivery_time'])) {
             self::debug('No delivery_time');
-            var_dump($job);
             return '';
         };
         $job_date = array();
