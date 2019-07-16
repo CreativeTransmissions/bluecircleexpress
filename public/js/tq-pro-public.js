@@ -467,15 +467,28 @@
 
 			initTimePicker: function(){
 				var that = this;
-				var booking_start_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_start_time+'000')['time'];
-				var booking_end_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_end_time+'000')['time'];
 				
-				var interval = TransitQuoteProSettings.time_interval;
+
+				
 
 
-				var $input = $( this.settings.timepickerSelector ).pickatime({
-						min: booking_start_time_datetime,
-						max: booking_end_time_datetime,
+				var pickatimeConfig = this.getPickatimeConfig();
+
+				var $input = $( this.settings.timepickerSelector ).pickatime(pickatimeConfig);
+
+				var picker = $input.pickatime('picker');
+				$( this.settings.timepickerSelector ).on('click', function(){
+					picker.open();
+				});
+
+
+    			var date = new Date();
+    				picker.set('select', date);				
+			},
+
+			getPickatimeConfig: function(){
+
+				var config = {
 						interval: parseInt(TransitQuoteProSettings.time_interval),
 						editable:true,
 						formatSubmit: 'HH:i',
@@ -488,16 +501,22 @@
 						    $('.datepicker').blur();
 						    $('.picker').blur();
 						}
-				})
+				};
 
-				var picker = $input.pickatime('picker');
-				$( this.settings.timepickerSelector ).on('click', function(){
-					picker.open();
-				});
+				if(this.settings.use_out_of_hours_rates==='false'){
+					console.log('Not using out of hours rates');
 
+					var booking_start_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_start_time+'000')['time'];
+					var booking_end_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_end_time+'000')['time'];
 
-    			var date = new Date();
-    				picker.set('select', date);				
+					pickatimeConfig.min = booking_start_time_datetime;
+					pickatimeConfig.max = booking_end_time_datetime;
+
+				} else {
+					console.log('using out of hours rates');
+				};
+
+				return pickatimeConfig;
 			},
 
 			onSetTimePicker: function(context){
