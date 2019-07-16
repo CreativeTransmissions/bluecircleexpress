@@ -2868,7 +2868,7 @@ class TransitQuote_Pro_Public {
             $message = self::get_customer_message();
             ob_start();
             include 'partials/emails/email_customer.php';
-            $html_email = ob_get_clean();
+            $this->customer_html_email = $html_email = ob_get_clean();
             echo $html_email;      
         };
 
@@ -2907,7 +2907,7 @@ class TransitQuote_Pro_Public {
 
         ob_start();
         include 'partials/emails/email_customer.php';
-        $html_email = ob_get_clean();
+        $this->customer_html_email = $html_email = ob_get_clean();
 
         //    add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
         //$this->ajax->set_email_debug(true);
@@ -3273,7 +3273,7 @@ class TransitQuote_Pro_Public {
             switch ($key) {
             case 'description':
                 $field['label'] = 'Information';
-                $field['value'] = $value;
+                $field['value'] = urldecode($value);
                 if ($field['value'] != '') {
                     $out[] = $field;
                 }
@@ -3560,7 +3560,7 @@ class TransitQuote_Pro_Public {
         if (!empty($waypoint['appartment_no'])) {
             $html .= '<li>' . self::get_setting('tq_pro_form_options', 'unit_no_label', 'Unit No') . ':' . $waypoint['appartment_no'] . '</li>';
         };
-        $html .= '<li>Address: ' . stripslashes($waypoint['address']) . '</li>';
+        $html .= '<li>Address: ' . urldecode($waypoint['address']) . '</li>';
         if (!empty($waypoint['postal_code'])) {
             $html .= '<li>Postcode: ' . $waypoint['postal_code'] . '</li>';
         };
@@ -3585,7 +3585,7 @@ class TransitQuote_Pro_Public {
         if (!empty($waypoint['location']['appartment_no'])) {
             $text .= self::get_setting('tq_pro_form_options', 'unit_no_label', 'Unit No') . ": " . $waypoint['location']['appartment_no'] . $line_ending;
         };
-        $text .= "Address: " . stripslashes($waypoint['location']['address']) . $line_ending;
+        $text .= "Address: " . urldecode($waypoint['location']['address']) . $line_ending;
         if (!empty($waypoint['location']['postal_code'])) {
             $text .= "Postcode: " . $waypoint['location']['postal_code'] . $line_ending;
         };
