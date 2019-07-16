@@ -727,8 +727,8 @@ class Admin_Config {
                                                         'help'=>'Customers can request one or more destinations as part of the same job. If multiple destinations are allowed you can enter a number to limit the number of stops on one route.',
                                                         'default'=>3),
 
-                                                      'use_out_of_hours_rates '=>array(
-                                                        'id'=>'use_out_of_hours_rates ',
+                                                      'use_out_of_hours_rates'=>array(
+                                                        'id'=>'use_out_of_hours_rates',
                                                         'label'=>'Enable Out Of Hours Rates',
                                                         'type'=>'checkbox',
                                                         'help'=>'If enabled, this option will use the out of hour rates set in the Rates tab on when a booking time is outside of the Booking Start and End Times.',
