@@ -1557,7 +1557,7 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_return_percentage() {
-        return  (bool) self::get_setting('', 'return_journey_adjustment', 100);
+        return self::get_setting('', 'return_journey_adjustment', 100);
     }
 
     public function get_use_out_of_hours_rates() {
