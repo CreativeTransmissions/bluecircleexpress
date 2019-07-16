@@ -249,6 +249,9 @@ class TransitQuote_Pro_Public {
         // $surcharges = self::get_service_surcharges();
         $ajax_url = admin_url('admin-ajax.php');
 
+        $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
+
+
         $this->ask_for_unit_no = (bool) $this->get_setting('', 'ask_for_unit_no', false);
         $this->ask_for_postcode = (bool) $this->get_setting('', 'ask_for_postcode', false);
         $this->show_contact_name = (bool) $this->get_setting('', 'show_contact_name', false);
@@ -311,6 +314,7 @@ class TransitQuote_Pro_Public {
             'booking_end_time' => $booking_end_time,
             'date_format' => $get_date_format,
             'time_format' => $get_time_format,
+            'use_out_of_hours_rates'=>self::bool_to_text($this->use_out_of_hours_rates),
         );
 
         if (!empty($this->api_key)) {
@@ -1557,7 +1561,7 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_return_percentage() {
-        return  (bool) self::get_setting('', 'return_journey_adjustment', 100);
+        return self::get_setting('', 'return_journey_adjustment', 100);
     }
 
     public function get_use_out_of_hours_rates() {
