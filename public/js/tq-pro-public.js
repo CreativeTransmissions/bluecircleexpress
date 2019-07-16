@@ -412,8 +412,13 @@
             	};
 
         		var todayDate = new Date();
-        		var startOfToday = this.getBookingStartTime();
-        		var endOfToday = this.getBookingEndTime();
+        		if(this.settings.data.use_out_of_hours_rates === 'true'){
+        			var startOfToday = '00:00:000';
+        			var endOfToday = '23:59:000';
+        		} else {
+        			var startOfToday = this.getBookingStartTime();
+        			var endOfToday = this.getBookingEndTime();
+        		};
 
             	if(selectedDate == todayDate){ 
 
@@ -467,10 +472,6 @@
 
 			initTimePicker: function(){
 				var that = this;
-				
-
-				
-
 
 				var pickatimeConfig = this.getPickatimeConfig();
 
@@ -487,8 +488,9 @@
 			},
 
 			getPickatimeConfig: function(){
+				var that = this;
 
-				var config = {
+				var pickatimeConfig = {
 						interval: parseInt(TransitQuoteProSettings.time_interval),
 						editable:true,
 						formatSubmit: 'HH:i',
@@ -503,8 +505,8 @@
 						}
 				};
 
-				if(this.settings.use_out_of_hours_rates==='false'){
-					console.log('Not using out of hours rates');
+				if(this.settings.data.use_out_of_hours_rates==='false'){
+					console.log('Not using out of hours rates: '+this.settings.data.use_out_of_hours_rates);
 
 					var booking_start_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_start_time+'000')['time'];
 					var booking_end_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_end_time+'000')['time'];
@@ -513,7 +515,7 @@
 					pickatimeConfig.max = booking_end_time_datetime;
 
 				} else {
-					console.log('using out of hours rates');
+					console.log('using out of hours rates: '+this.settings.data.use_out_of_hours_rates);
 				};
 
 				return pickatimeConfig;
