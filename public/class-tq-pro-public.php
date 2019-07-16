@@ -1669,7 +1669,7 @@ class TransitQuote_Pro_Public {
         );
     }
 
-    private function get_rates_for_journey_options() {
+    public function get_rates_for_journey_options() {
 
         $rates = false;
         $query = self::get_rates_query_for_journey_options();
@@ -3740,6 +3740,7 @@ class TransitQuote_Pro_Public {
             $notify = true;
         };
         self::email_dispatch($subject, $notify);
+        self::email_customer();
 
         return true;
     }

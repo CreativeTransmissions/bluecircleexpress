@@ -1019,6 +1019,11 @@ class TransitQuote_Pro_Admin {
 		$job_id = get_post_meta($order_id, "job_id", true);
 		if(!empty($job_id)) {
 			$this->plugin->update_payment_status_id($job_id, 4);
+
+			$this->job = $this->plugin->job = $this->plugin->get_job_details_from_id($job_id);
+
+			$subject = 'Payment Accepted for Job Booking - ref: ' . $this->job['job_ref'] . " " . $this->job['customer']['first_name'] . " " . $this->job['customer']['last_name'];
+			$this->plugin->email_dispatch($subject);
 		}
 	}
 
