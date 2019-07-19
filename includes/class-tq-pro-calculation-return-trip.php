@@ -141,8 +141,6 @@ class TQ_CalculationReturnTrip {
 				self::calc_with_final_boundary_rates();
 				break;
 		};
-		echo 'outward_distance: '.$this->distance;
-		echo 'outward_distance cost: '.$this->distance_cost;
 		$this->distance = $this->config['distance'];
 	}
 
