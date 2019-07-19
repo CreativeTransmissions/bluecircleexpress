@@ -1583,10 +1583,11 @@ class TransitQuote_Pro_Public {
         if ($this->rates === false) {
             return false;
         };
+        $include_return_journey = (bool) $this->rate_options['deliver_and_return'];
+
 
         $calc_config = array('debugging' => $this->debug,
             'rates' => $this->rates,
-            'include_return_journey' => (bool) $this->rate_options['deliver_and_return'],
             'distance' => $this->rate_options['distance'],
             'return_percentage' => $this->return_percentage,
             'hours' => $this->rate_options['hours'],
@@ -1596,7 +1597,11 @@ class TransitQuote_Pro_Public {
             'tax_name' => 'VAT',
             'rounding_type' => $this->rounding_type);
 
-        $this->calculation = new TransitQuote_Pro4\TQ_Calculation($calc_config);
+        if($include_return_journey){
+            $this->calculation = new TransitQuote_Pro4\TQ_CalculationReturnTrip($calc_config);
+        } else{
+            $this->calculation = new TransitQuote_Pro4\TQ_Calculation($calc_config);
+        };
 
         $quote = $this->calculation->run();
         $quote['job_rate'] = $this->job_rate;

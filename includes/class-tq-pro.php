@@ -238,6 +238,12 @@ class TransitQuote_Pro4 {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-calculation.php';
 
 		/**
+		 * The class responsible for Calculation methods for return trips
+		 * for the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-calculation-return-trip.php';
+
+		/**
 		 * The class responsible for rates list methods
 		 * for the plugin.
 		 */
