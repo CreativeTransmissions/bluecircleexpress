@@ -248,29 +248,32 @@ class TransitQuote_Pro4 {
 		 * for the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-rates-list.php';
-		$this->loader = new TransitQuote_Pro_Loader();
 
 		/**
 		 * The class responsible for form validation methods
 		 * for the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-form-validator.php';
-		$this->loader = new TransitQuote_Pro_Loader();
 
 		/**
 		 * The class responsible for fetching labels for views
 		 * for the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-label-fetcher.php';
-		$this->loader = new TransitQuote_Pro_Loader();
+
 		/**
 		 * The class responsible for customer 
 		 * for the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-woocommerce-customer.php';
+
+		/**
+		 * The class responsible for formatting quotes
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/formatters/class.tq-pro-quote-formatter.php';
+
 		$this->loader = new TransitQuote_Pro_Loader();
 	}
-
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
