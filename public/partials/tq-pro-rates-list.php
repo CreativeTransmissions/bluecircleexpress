@@ -11,12 +11,12 @@
 ?>
 <div id="feedback"></div>
 <div class="tq-pro-rates-list">
-    <?php $rates_variations = $this->rates_list->get_rate_variations(); ?>
+    <?php $rates_variations = $this->get_rate_variations(); ?>
     <?php foreach ($rates_variations as $key => $varaition) { ?>
 
     	<div class="rates-list">
     		<h3>Rates for:<br/>Service: <?php echo $varaition['service_name'] ?><br/>Vehicle:<?php echo $varaition['vehicle_name']; ?></h3>
-           <?php echo $this->rates_list->render_rates_list($varaition); ?>
+           <?php echo $this->render_rates_list($varaition); ?>
         </div>
 
 <?php }; ?>

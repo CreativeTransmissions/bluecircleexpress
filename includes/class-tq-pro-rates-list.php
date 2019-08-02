@@ -34,12 +34,21 @@ class TQ_Rates_List {
  									'rates'=>array(),
  									'include_return_journey'=>false,
  									'boundary_mode'=>'final',
- 									'tax_rate'=>0);  // final or all
+ 									'tax_rate'=>0,
+ 									'view_path'=>'partials/tq-pro-rates-list.php');  // final or all
 
     public function __construct($config = null) {
         //merge config with defaults so all properties are present
 		$this->config = array_merge($this->default_config, $config);
 		$this->cdb = $this->config['cdb'];
+	}
+
+	public function render_view(){
+        $this->view_path = $this->config['view_path'];
+
+        ob_start();
+        include $this->view_path;
+        return ob_get_clean();		
 	}
 
 	public function get_rate_variations(){

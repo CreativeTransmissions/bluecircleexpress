@@ -1018,13 +1018,10 @@ class TransitQuote_Pro_Public {
             'range_start' => $range_start,
             'range_end' => $range_end,
             'step' => $step,
+            'view_path'=>plugin_dir_path( __FILE__ ).'partials/tq-pro-rates-list.php'
         ));
 
-        $this->view = 'partials/tq-pro-rates-list.php';
-
-        ob_start();
-        include $this->view;
-        return ob_get_clean();
+        return $this->rates_list->render_view();
     }
 
     public function display_TransitQuote_Pro($atts) {
