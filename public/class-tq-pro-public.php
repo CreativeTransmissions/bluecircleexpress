@@ -1870,7 +1870,7 @@ class TransitQuote_Pro_Public {
             $response = array('success' => false,
                 'msg' => 'Sorry, an error occured and we are unable to process this request.');
         };
-		do_action('get_quote', $response);
+		do_action('tq_pro_get_quote', $response);
         $this->ajax->respond($response);
     }
 
@@ -1969,9 +1969,9 @@ class TransitQuote_Pro_Public {
 		if(self::get_job_details_from_id($job_id)){
 			$data = array('data'=>$this->job);
 			if(empty($job_update_id)){//
-				do_action('new_job', $data);
+				do_action('tq_pro_new_job', $data);
 			} else {
-				do_action('updated_job', $data);
+				do_action('tq_pro_updated_job', $data);
 			}
 		}
 		
