@@ -1870,7 +1870,7 @@ class TransitQuote_Pro_Public {
             $response = array('success' => false,
                 'msg' => 'Sorry, an error occured and we are unable to process this request.');
         };
-
+		do_action('get_quote', $response);
         $this->ajax->respond($response);
     }
 
@@ -1961,8 +1961,21 @@ class TransitQuote_Pro_Public {
 
         } else {
             $response = self::build_invalid_job_response();
-        };
+		};
+		
+		// callback hooks for other plugins to use start
+		$job_update_id = $this->ajax->param(array('name' => 'job_id', 'optional' => true));
 
+		if(self::get_job_details_from_id($job_id)){
+			$data = array('data'=>$this->job);
+			if(empty($job_update_id)){//
+				do_action('new_job', $data);
+			} else {
+				do_action('updated_job', $data);
+			}
+		}
+		
+		
         $this->ajax->respond($response);
     }
 
