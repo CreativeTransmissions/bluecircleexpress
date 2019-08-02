@@ -23,6 +23,7 @@
 					this.spinner(false);
 					this.getTab();
 					this.initTab();
+					this.initGlobal();
 					this.spinner(false);
 				},
 
@@ -88,6 +89,19 @@
 							this.initEditTableEvents('jobs');						
 						break;
 					}
+				},
+
+				initGlobal: function(){
+
+					//$('input[type="number"]').on("keypress keyup blur",function (event) {
+						$('input.number').on("keypress keyup blur",function (event) {
+					
+					$(this).val($(this).val().replace(/[^0-9\.]/g,''));
+						if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+						    event.preventDefault();
+						}
+					});
+
 				},
 
 				validateAddTime: function() {

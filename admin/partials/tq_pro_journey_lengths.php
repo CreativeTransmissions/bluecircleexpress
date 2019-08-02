@@ -12,7 +12,7 @@
 		<div class="row row-journey-lengths">
 			<div class="field">
 				<label for="distance">Maximum Distance</label>
-				<input class="input-small" type="text" name="distance" />
+				<input class="input-small number" type="text" name="distance" />
 			</div>
 		</div>
 	</fieldset>

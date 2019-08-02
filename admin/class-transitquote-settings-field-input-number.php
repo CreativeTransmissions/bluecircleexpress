@@ -33,7 +33,7 @@ class TransitQuote_Pro_Settings_Field_Input_Number extends TransitQuote_Pro_Sett
         		$value = $this->config['default'];
            	};
         };
-    	echo '<input type="number" name="'.$this->field_name.'" value="'.$value.'" '.$this->css_class.'/>';
+    	echo '<input class="number" type="text" name="'.$this->field_name.'" value="'.$value.'" '.$this->css_class.'/>';
         echo '<p>'.$this->config['help'].'</p>';
     }
 

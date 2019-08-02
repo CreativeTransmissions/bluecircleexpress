@@ -33,7 +33,7 @@
 			<legend>Upper boundary distance for these rates:</legend>				
 			<div class="inline-field">
 				<label for="distance">Boundary Distance (<?php echo $this->admin->distance_unit; ?>s)</label>
-				<input class="input-long" type="text" name="distance" />
+				<input class="input-long number" type="text" name="distance" />
 			</div>
 		</fieldset>
 	</div>
@@ -42,15 +42,15 @@
 			<legend>Standard Rates</legend>			
 			<div class="inline-field">
 				<label for="amount">Set Price</label>
-				<input class="input-long" type="text" name="amount" />
+				<input class="input-long number" type="text" name="amount" />
 			</div>
 			<div class="inline-field">
 				<label for="unit">Price Per <?php echo $this->admin->distance_unit; ?></label>
-				<input class="input-long" type="text" name="unit" />
+				<input class="input-long number" type="text" name="unit" />
 			</div>
 			<div class="inline-field">
 				<label for="hour">Price Per Hour</label>
-				<input class="input-long" type="text" name="hour" />
+				<input class="input-long number" type="text" name="hour" />
 			</div>
 		</fieldset>				
 	</div>
@@ -59,15 +59,15 @@
 			<legend>Holiday Rates</legend>
 			<div class="inline-field">
 				<label for="hour">Set Price</label>
-				<input class="input-long" type="text" name="amount_holiday" />
+				<input class="input-long number" type="text" name="amount_holiday" />
 			</div>
 			<div class="inline-field">
 				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?> holiday</label>
-				<input class="input-long" type="text" name="unit_holiday" />
+				<input class="input-long number" type="text" name="unit_holiday" />
 			</div>
 			<div class="inline-field">
 				<label for="hour">Price Per Hour holiday</label>
-				<input class="input-long" type="text" name="hour_holiday" />
+				<input class="input-long number" type="text" name="hour_holiday" />
 			</div>
 		</fieldset>
 	</div>
@@ -76,15 +76,15 @@
 			<legend>Weekend Rates</legend>
 			<div class="inline-field">
 				<label for="hour">Set Price Weekend</label>
-				<input class="input-long" type="text" name="amount_weekend" />
+				<input class="input-long number" type="text" name="amount_weekend" />
 			</div>
 			<div class="inline-field">
 				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?> weekend</label>
-				<input class="input-long" type="text" name="unit_weekend" />
+				<input class="input-long number" type="text" name="unit_weekend" />
 			</div>
 			<div class="inline-field">
 				<label for="hour">Price Per Hour weekend</label>
-				<input class="input-long" type="text" name="hour_weekend" />
+				<input class="input-long number" type="text" name="hour_weekend" />
 			</div>
 		</fieldset>
 	</div>
@@ -93,15 +93,15 @@
 			<legend>Out Of Hours Rates</legend>
 			<div class="inline-field">
 				<label for="hour">Set Price out of hours</label>
-				<input class="input-long" type="text" name="amount_out_of_hours" />
+				<input class="input-long number" type="text" name="amount_out_of_hours" />
 			</div>
 			<div class="inline-field">
 				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?> out of hours</label>
-				<input class="input-long" type="text" name="unit_out_of_hours" />
+				<input class="input-long number" type="text" name="unit_out_of_hours" />
 			</div>
 			<div class="inline-field">
 				<label for="hour">Price Per Hour out of hours</label>
-				<input class="input-long" type="text" name="hour_out_of_hours" />
+				<input class="input-long number" type="text" name="hour_out_of_hours" />
 			</div>	
 		</fieldset>
 	</div>

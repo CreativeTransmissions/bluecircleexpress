@@ -498,114 +498,7 @@ class Admin_Config {
                                                                     'default'=>'Short Notice Cost',
                                                                     'help'=>'This will be the label for short notice cost.'
                                                                 )                                                               
-
-                                                          /*     
-                                                                'route_heading_label'=>array(
-                                                                    'id'=>'route_heading_label',
-                                                                    'label'=>'Route Title',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Route',
-                                                                    'help'=>'This will be the title for the route list.'
-                                                                  
-                                                                ),     
-
-                                                                'payment_info_header'=>array(
-                                                                    'id'=>'payment_info_header',
-                                                                    'label'=>'Payment Information Title',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Payment Information',
-                                                                    'help'=>'This will be the title for the Payment Information section.'
-                                                                  
-                                                                ),
-
-                                                               'journey_title'=>array(
-                                                                    'id'=>'journey_title',
-                                                                    'label'=>'journey Information Title',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Date and Time',
-                                                                    'help'=>'This will be the label for the journey information section.'
-                                                                  
-                                                                ),      
-
-                                                               'optimize_route_label '=>array(
-                                                                    'id'=>'optimize_route_label',
-                                                                    'label'=>'Optimize Route Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Fastest Route',
-                                                                    'help'=>'This will be the label for the fastest or direct route (Yes = route has been optmized by Google Directions)'
-                                                                ),
-
-                                                               'deliver_and_return_label '=>array(
-                                                                    'id'=>'deliver_and_return_label',
-                                                                    'label'=>'Return Journey Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Return Journey',
-                                                                    'help'=>'This will be the label for return journey (Yes = quote includes journey back to start location)'
-                                                                ),                                                                
-
-                                                               'address_label '=>array(
-                                                                    'id'=>'address_label',
-                                                                    'label'=>'Address Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Address',
-                                                                    'help'=>'This will be the label for full formatted address'
-                                                                ),
-
-                                                              'street_number_label '=>array(
-                                                                    'id'=>'street_number_label',
-                                                                    'label'=>'Building No Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Building No',
-                                                                    'help'=>'This will be the label for Building Number in address.'
-                                                                ),
-
-                                                              'route_label'=>array(
-                                                                    'id'=>'route_label',
-                                                                    'label'=>'Street Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Street',
-                                                                    'help'=>'This will be the label for Street in address.'
-                                                                ),                                                              
-
-                                                              'postal_town_label'=>array(
-                                                                    'id'=>'postal_town_label',
-                                                                    'label'=>'Postal Town Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Postal Town',
-                                                                    'help'=>'This will be the label for postal town in address.'
-                                                                ),                                                              
-
-                                                              'administrative_area_level_2_label'=>array(
-                                                                    'id'=>'administrative_area_level_2_label',
-                                                                    'label'=>'Area Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Area',
-                                                                    'help'=>'This will be the label for area in address.'
-                                                                ),                                                              
-
-                                                              'administrative_area_level_1_label'=>array(
-                                                                    'id'=>'administrative_area_level_1_label',
-                                                                    'label'=>'Region Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Region',
-                                                                    'help'=>'This will be the label for region in address.'
-                                                                ),
-
-                                                              'country_label'=>array(
-                                                                    'id'=>'country_label',
-                                                                    'label'=>'Country Label',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Country',
-                                                                    'help'=>'This will be the label for country in address.'
-                                                                ),
-                                                               'date_and_time_title'=>array(
-                                                                    'id'=>'date_and_time_title',
-                                                                    'label'=>'Date and Time Title',
-                                                                    'type'=>'input',
-                                                                    'default'=>'Date and Time',
-                                                                    'help'=>'This will be the label for the date and time section.'
-                                                                  
-                                                                )*/
+                                                       
                                                   )
                                               )
                                         )
@@ -656,7 +549,7 @@ class Admin_Config {
                                                     'search_radius'=>array(
                                                       'id'=>'search_radius',
                                                       'label'=>'Search Radius',
-                                                      'type'=>'input',
+                                                      'type'=>'number',
                                                       'help'=>'Restrict search results to within a radius of your business address.'),
                                                     'pick_start_address'=>array(
                                                       'id'=>'pick_start_address',
@@ -723,7 +616,7 @@ class Admin_Config {
                                                       'max_address_pickers'=>array(
                                                         'id'=>'max_address_pickers',
                                                         'label'=>'Maximum Destinations',
-                                                        'type'=>'input',
+                                                        'type'=>'number',
                                                         'help'=>'Customers can request one or more destinations as part of the same job. If multiple destinations are allowed you can enter a number to limit the number of stops on one route.',
                                                         'default'=>3),
 
@@ -759,7 +652,7 @@ class Admin_Config {
                                                       'return_journey_adjustment'=>array(
                                                         'id'=>'return_journey_adjustment',
                                                         'label'=>'Return Journey Adjustment',
-                                                        'type'=>'input',
+                                                        'type'=>'number',
                                                         'help'=>'Enter a percentage to apply to the return journey cost',
                                                         'default'=>100),
 
@@ -777,13 +670,13 @@ class Admin_Config {
                                                       'min_notice_charge'=>array(
                                                         'id'=>'min_notice_charge',
                                                         'label'=>'Minimum Notice Charge',
-                                                        'type'=>'input',
+                                                        'type'=>'number',
                                                         'help'=>'Please enter the additional charge for jobs booked within 24 hours..',
                                                         'default'=>0),
                                                       'min_price'=>array(
                                                         'id'=>'min_price',
                                                         'label'=>'Minimum Price Accepted',
-                                                        'type'=>'input',
+                                                        'type'=>'number',
                                                         'help'=>'If you do not wish to accept jobs below a certain price, enter the minimum price here and the customer will not be able to make a booking.',
                                                         'default'=>0),
                                                       'min_price_message'=>array(
@@ -795,7 +688,7 @@ class Admin_Config {
                                                       'min_distance'=>array(
                                                         'id'=>'min_distance',
                                                         'label'=>'Minimum Distance Accepted',
-                                                        'type'=>'input',
+                                                        'type'=>'number',
                                                         'help'=>'If you do not wish to accept jobs shorter than a specific distance, enter the distance here and the customer will not be able to make a booking.',
                                                         'default'=>0),
                                                       'min_distance_message'=>array(
@@ -808,7 +701,7 @@ class Admin_Config {
                                                       'max_distance'=>array(
                                                         'id'=>'max_distance',
                                                         'label'=>'Maximum Distance Accepted',
-                                                        'type'=>'input',
+                                                        'type'=>'number',
                                                         'help'=>'If you do not wish to accept jobs longer than a specific distance, enter the distance here and the customer will not be able to make a booking.',
                                                         'default'=>0
                                                       ),
@@ -822,7 +715,7 @@ class Admin_Config {
                                                        'min_travel_time'=>array(
                                                         'id'=>'min_travel_time',
                                                         'label'=>'Minimum Travel Time Accepted (hours)',
-                                                        'type'=>'input',
+                                                        'type'=>'number',
                                                         'help'=>'If you do not wish to accept jobs that take less than a specific time, enter the number of hours here and the customer will not be able to make a booking.',
                                                         'default'=>0
                                                       ),
@@ -836,7 +729,7 @@ class Admin_Config {
                                                       'max_travel_time'=>array(
                                                         'id'=>'max_travel_time',
                                                         'label'=>'Maximum Travel Time Accepted (hours)',
-                                                        'type'=>'input',
+                                                        'type'=>'number',
                                                         'help'=>'If you do not wish to accept jobs longer than a specific distance, enter the distance here and the customer will not be able to make a booking.',
                                                         'default'=>0
                                                       ),
@@ -863,7 +756,7 @@ class Admin_Config {
 													  ),
 													  'round_of_currency'=>array(
                                                         'id'=>'round_of_currency',
-                                                        'label'=>'Round off Currency',
+                                                        'label'=>'Currency Decimal Place Rounding',
                                                         'type'=>'select',
                                                         'options'=>array('Round to 2 decimal points','Round to 1 decimal points','Round to integer','Round to nearest 10','Round to nearest 100'),
                                                         'help'=>'Option to choose how much to round the currency.Default is 2 decimal points',
@@ -977,7 +870,7 @@ class Admin_Config {
                                                      'woo_product_id'=>array(
                                                         'id'=>'woo_product_id',
                                                         'label'=>'WooCommerce Product ID',
-                                                        'type'=>'input',
+                                                        'type'=>'number',
                                                         'help'=>'This is the WooCommerce product id that will be used to bill your customers. Changing this setting manually is not recommended.'
                                                      ),
                           													 
