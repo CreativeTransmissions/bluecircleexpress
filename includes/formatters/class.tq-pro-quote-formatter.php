@@ -122,7 +122,7 @@ class TQ_QuoteFormatter {
             case 'rate_hour':
             case 'rate_tax':
             case 'tax_cost':
-            case 'job_rate':
+            case 'rates':
                 $field['value'] = ucfirst($value);
                 $field['type'] = 'text';
                 break;

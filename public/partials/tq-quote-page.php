@@ -43,6 +43,7 @@
     };
 
     if(isset($quote_data)){
+        print_r($quote_data);
         $this->table_renderer->render(array('header'=>'<h3>Quote</h3>', 'data'=>$quote_data)); 
     };
 

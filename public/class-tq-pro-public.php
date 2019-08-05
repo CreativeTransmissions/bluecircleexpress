@@ -72,7 +72,7 @@ class TransitQuote_Pro_Public {
                                                     'rate_tax',
                                                     'tax_cost',
                                                     'total',
-                                                    'job_rate');        
+                                                    'rates');        
         if (self::woocommerce_is_activated()) {
             self::get_woocommerce_config();
         }
@@ -689,7 +689,7 @@ class TransitQuote_Pro_Public {
                                     'output_def'=>$this->quote_fields_for_output,);
 
         $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
-        $quote_data = $this->quote_formatter->format_non_zero_only();
+        $quote_data = $this->quote_formatter->format();
 
 
         $this->view = 'partials/' . $view_name . '.php';
