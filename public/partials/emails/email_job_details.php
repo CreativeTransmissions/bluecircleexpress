@@ -13,6 +13,6 @@ if(isset($this->job['job_date'])){
 };
 $this->job_details_list('Distance and Travel Time',$this->format_journey($this->job['journey']));
 if(isset($this->job['quote'])){
-	$this->job_details_list('Cost',$this->format_quote($this->job['quote']));
+	$this->job_details_list('Cost',$quote_data);
 };
 ?>

@@ -624,21 +624,12 @@ class TransitQuote_Pro_Admin {
 			echo "job not available";
 		}
 
-		$this->quote_fields_for_output = array('distance_cost',
-													'rate_hour',
-													'time_cost',
-													'basic_cost',
-													'rate_tax',
-													'tax_cost',
-													'total',
-													'job_rate');
-
 		$labels = $this->plugin->label_fetcher->fetch_labels_for_view('dashboard');
 
 		$formatter_config = array(	'quote'=>$this->job['quote'],
     								'labels'=>$labels,
 								    'currency'=>$this->currency,
-								    'output_def'=>$this->quote_fields_for_output);
+								    'output_def'=>$this->plugin->quote_fields_for_output);
 
         $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
 		$quote_data = $this->quote_formatter->format();

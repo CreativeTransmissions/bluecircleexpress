@@ -12,8 +12,8 @@
 	};
 
 	$this->job_details_list('Distance and Travel Time',$this->format_journey($this->job['journey']));
-	if(isset($this->job['quote'])){
-		$this->job_details_list('Cost',$this->format_quote($this->job['quote']));
+	if(isset($quote_data)){
+		$this->job_details_list('Cost',$quote_data);
 	};
 
 ?>

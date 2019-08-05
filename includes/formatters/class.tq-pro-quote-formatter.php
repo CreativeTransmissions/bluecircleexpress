@@ -26,7 +26,8 @@ class TQ_QuoteFormatter {
  	private $default_config = array('currency'=>'£',
  									'quote'=>array(), // associative array of quote data
  									'output_def'=>array(),  // output definition: array('field_name1','field_name2')
- 									'tax_name'=>'Tax' // ie VAT etc
+ 									'tax_name'=>'Tax', // ie VAT etc
+                                    'include_zeros'=>true // dont include name/values if value is 0
  									);
 
     public function __construct($config = null) {
@@ -73,6 +74,26 @@ class TQ_QuoteFormatter {
 
         return $output;
 	}
+
+    public function format_non_zero_only(){
+
+        if(!$this->has_required_params()){
+            return false;
+        };
+
+        $output = array();
+        foreach ($this->output_def as $key) {
+            if (!isset($this->quote[$key])) {
+                continue;
+            };
+            if ($this->quote[$key]==0) {
+                continue;
+            };            
+            $output[] = $this->format_field($key);
+        };
+
+        return $output;
+    }
 
 	public function format_field($key){
 		

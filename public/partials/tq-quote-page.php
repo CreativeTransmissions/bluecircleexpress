@@ -18,13 +18,13 @@
     <h3>Delivery Reference: <?php echo $this->job['id']; ?></h3>
 	<div class="contact_details" >
     <?php
-    $this->job_details_quote_table('Contact Details',$this->format_customer($this->job['customer'])); 
+        $this->table_renderer->render(array('header'=>'Contact Details','data'=>$this->format_customer($this->job['customer']))); 
 	?>
 	</div>
 	<div class="additional_information" >
 	<?php
 	if (!empty($this->format_job($this->job))) {
-		$this->job_details_quote_table('Additional Information',$this->format_job($this->job)); 
+        $this->table_renderer->render(array('header'=>'Additional Information','data'=>$this->format_job($this->job))); 
 	}
 	?>
 	</div>
@@ -39,11 +39,11 @@
 <?php
 
     if(isset($this->job['surcharges'])){
-        $this->job_details_quote_table('Surcharges',$this->format_surcharges_web($this->job['surcharges']));
+        $this->table_renderer->render(array('header'=>'Surcharges','data'=>$this->format_surcharges_web($this->job['surcharges']))); 
     };
 
-    if(isset($this->job['quote'])){
-        $this->job_details_quote_table('Cost',$this->format_quote_web($this->job['quote']));
+    if(isset($quote_data)){
+        $this->table_renderer->render(array('header'=>'<h3>Quote</h3>', 'data'=>$quote_data)); 
     };
 
 ?>

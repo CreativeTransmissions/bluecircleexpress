@@ -65,7 +65,14 @@ class TransitQuote_Pro_Public {
         $this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb' => $this->cdb, 'debugging' => $this->debug));
         $this->label_fetcher = new TransitQuote_Pro4\TQ_LabelFetcher(array('public' => $this));
         $this->table_renderer = new TransitQuote_Pro4\TQ_TableRenderer();
-        
+        $this->quote_fields_for_output = array('distance_cost',
+                                                    'rate_hour',
+                                                    'time_cost',
+                                                    'basic_cost',
+                                                    'rate_tax',
+                                                    'tax_cost',
+                                                    'total',
+                                                    'job_rate');        
         if (self::woocommerce_is_activated()) {
             self::get_woocommerce_config();
         }
@@ -648,95 +655,54 @@ class TransitQuote_Pro_Public {
         //get paths for includes
         self::get_paths_for_includes();
 
-        $this->job_id = 8;//$this->ajax->param(array('name' => 'job_id', 'optional' => true));
+        $this->job_id = $this->ajax->param(array('name' => 'job_id', 'optional' => true));
         if (empty($this->job_id)) {
             return '';
-        } else {
-            self::get_job_details_from_id($this->job_id);
-            $this->currency_code = self::get_currency_code();
-            $this->currency_symbol = self::get_currency_symbol();
-            $this->distance_unit = self::get_distance_unit();
-            $this->success_message = self::get_success_message();
-            $this->confirm_quote_before_sending = true;
+        };
+        
+        self::get_job_details_from_id($this->job_id);
+        $this->currency_code = self::get_currency_code();
+        $this->currency_symbol = self::get_currency_symbol();
+        $this->distance_unit = self::get_distance_unit();
+        $this->success_message = self::get_success_message();
+        $this->confirm_quote_before_sending = true;
 
-            $this->distance = $this->job['journey']['distance'];
-            $this->time = $this->job['journey']['time'];
+        $this->distance = $this->job['journey']['distance'];
+        $this->time = $this->job['journey']['time'];
 
-            $this->distance_cost = $this->job['quote']['distance_cost'];
-            $this->time_cost = $this->job['quote']['time_cost'];
+        $this->distance_cost = $this->job['quote']['distance_cost'];
+        $this->time_cost = $this->job['quote']['time_cost'];
 
-            $this->rate_hour = $this->job['quote']['rate_hour'];
+        $this->rate_hour = $this->job['quote']['rate_hour'];
 
-            $this->total_cost = $this->job['quote']['total'];
-            $this->rates = $this->job['quote']['rates'];
+        $this->total_cost = $this->job['quote']['total'];
+        $this->rates = $this->job['quote']['rates'];
 
-            $view_name = 'tq-quote-page';
-            $this->view_labels = self::get_view_labels($view_name);
-            $this->view = 'partials/' . $view_name . '.php';
-            ob_start();
-            include $this->view;
-            return ob_get_clean();
-        }
+        $view_name = 'tq-quote-page';
+        $this->view_labels = self::get_view_labels($view_name);
+
+        $labels = $this->label_fetcher->fetch_labels_for_view('dashboard');
+
+        $formatter_config = array(  'quote'=>$this->job['quote'],
+                                    'labels'=>$labels,
+                                    'currency'=>$this->currency,
+                                    'output_def'=>$this->quote_fields_for_output,);
+
+        $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
+        $quote_data = $this->quote_formatter->format_non_zero_only();
+
+
+        $this->view = 'partials/' . $view_name . '.php';
+        ob_start();
+        include $this->view;
+        return ob_get_clean();
+        
     }
 
     private function get_view_labels($view_name = null) {
         return $this->label_fetcher->fetch_labels_for_view($view_name);
     }
 
-    public function job_details_quote_table($header, $data) {
-        $html = '';
-        $rows = array();
-        foreach ($data as $field) {
-            $type_attribute = '';
-            if (isset($field['type'])) {
-                $type_attribute = ' data-type="' . $field['type'] . '" ';
-            }
-
-            $name_attribute = '';
-            if (isset($field['name'])) {
-                $name_attribute = ' data-name="' . $field['name'] . '" ';
-            };
-
-            $edit_attribute = '';
-            if (isset($field['editable'])) {
-                $edit_attribute = ' class="tq-editable" ';
-            };
-
-            $click_attribute = '';
-            if (isset($field['clickable'])) {
-                $click_attribute = ' class="tq-clickable" ';
-            }
-
-            $update_attribute = '';
-            if (isset($field['update'])) {
-                $update_attribute = ' data-update="' . $field['update'] . '" ';
-            };
-
-            $surcharge_attribute = '';
-            if (isset($field['surcharge_id'])) {
-                $surcharge_attribute = ' data-id="' . $field['surcharge_id'] . '" ';
-            };
-
-            if (empty($field['label'])) {
-                $row = '<tr><td>' . $field['value'] . '</td></tr>';
-
-                $html = '<table><tr><th colspan="1">' . $header . '</th></tr>';
-            } else {
-                $row = '<tr><td>' . $field['label'] . '</td><td>' . $field['value'] . '</td></tr>';
-
-                $html = '<table><tr><th colspan="2">' . $header . '</th></tr>';
-            }
-
-            $rows[] = $row;
-        };
-        if (count($rows) === 0) {
-            $html = '';
-        } else {
-            $html .= implode('', $rows);
-            $html .= '</table>';
-        }
-        echo $html;
-    }
     public function route_details_table($html = false) {
         $route_row_data = self::get_route_list();
         return $this->web_details_list('Route', $route_row_data);
@@ -800,59 +766,6 @@ class TransitQuote_Pro_Public {
                 $field['name'] = 'amount';
                 $out[] = $field;
 
-                break;
-            };
-
-        };
-        return $out;
-    }
-    public function format_quote_web($quote = null) {
-        //format for display in job details view
-        if (empty($quote)) {
-            return false;
-        };
-        $currency = self::get_currency_code();
-        $out = array();
-        $output_order = array('distance_cost', 'tax_cost', 'total', 'rates');
-
-        foreach ($output_order as $key => $field_name) {
-            //init new field
-            $field = array();
-            $value = $quote[$field_name];
-
-            //include only label, value and template_id set to text incase needed for output
-            switch ($field_name) {
-            case 'distance_cost':
-                $field['label'] = 'Delivery Cost <span style="display: inline-block; float: right;">£</span>';
-                $field['value'] = $value;
-                $field['update'] = 'quote';
-                $field['name'] = $field_name;
-                $out[] = $field;
-                break;
-            case 'rates':
-                $field['label'] = 'Rates';
-                $field['value'] = ucfirst($value);
-                $field['update'] = 'quote';
-                $field['name'] = $field_name;
-                $out[] = $field;
-                break;
-            case 'tax_cost':
-                $field['label'] = 'VAT <span style="display: inline-block; float: right;">£</span>';
-                $field['value'] = $value;
-                $field['type'] = 'text';
-                $field['editable'] = false;
-                $field['update'] = 'quote';
-                $field['name'] = $field_name;
-                $out[] = $field;
-                break;
-            case 'total':
-                $field['label'] = 'Total Including VAT <span style="display: inline-block; float: right;">£</span>';
-                $field['value'] = $value;
-                $field['type'] = 'text';
-                $field['editable'] = true;
-                $field['update'] = 'quote';
-                $field['name'] = $field_name;
-                $out[] = $field;
                 break;
             };
 
@@ -2860,6 +2773,18 @@ class TransitQuote_Pro_Public {
         //get details for the job
         if (self::job_is_available()) {
             $this->job = self::get_job_details($this->job);
+
+            $labels = $this->label_fetcher->fetch_labels_for_view('dashboard');
+
+            $formatter_config = array(  'quote'=>$this->job['quote'],
+                                        'labels'=>$labels,
+                                        'currency'=>$this->currency,
+                                        'output_def'=>$this->quote_fields_for_output);
+
+            $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
+            $quote_data = $this->quote_formatter->format_non_zero_only();
+
+
             $message = self::get_customer_message();
             ob_start();
             include 'partials/emails/email_customer.php';
@@ -2900,6 +2825,17 @@ class TransitQuote_Pro_Public {
         //$headers = "Bcc: contact@creativetransmissions.com"."\r\n";
         $headers = "";
 
+        $labels = $this->label_fetcher->fetch_labels_for_view('dashboard');
+
+        $formatter_config = array(  'quote'=>$this->job['quote'],
+                                    'labels'=>$labels,
+                                    'currency'=>$this->currency,
+                                    'output_def'=>$this->quote_fields_for_output);
+
+        $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
+        $quote_data = $this->quote_formatter->format();
+
+
         ob_start();
         include 'partials/emails/email_customer.php';
         $this->customer_html_email = $html_email = ob_get_clean();
@@ -2919,6 +2855,10 @@ class TransitQuote_Pro_Public {
 
     private function email_dispatch($subject) {
 
+        if(!self::get_job_details_from_id($this->job_id)){
+            echo 'email_dispatch: could not get details for job id';
+            return false;
+        };
         //get email addresses to send notifications to
         $notification_addresses = self::get_notification_emails();
 
@@ -2941,28 +2881,33 @@ class TransitQuote_Pro_Public {
         foreach ($this->notification_emails as $key => $address) {
             $headers .= "Bcc: " . $address . "\r\n";
         };
-        $this->view_labels = self::get_view_labels('email_job_details');
-        if(self::get_job_details_from_id($this->job_id)){
-             ob_start();
-            include 'partials/emails/email_job_details.php';
-            $this->html_email = $html_email = ob_get_clean();
-
-            //    add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
-            //$this->ajax->set_email_debug(true);
-                $email = $this->ajax->send_notification($to,
-            $from,
-            $from_name,
-            $subject,
-            $html_email, $headers);
-
-            //    remove_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
-            return $email;
-
-        } else {
-            return false;
-        }
        
-        
+        $this->view_labels = self::get_view_labels('email_job_details');
+        $labels = $this->label_fetcher->fetch_labels_for_view('dashboard');
+
+        $formatter_config = array(  'quote'=>$this->job['quote'],
+                                    'labels'=>$labels,
+                                    'currency'=>$this->currency,
+                                    'output_def'=>$this->quote_fields_for_output);
+
+        $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
+        $quote_data = $this->quote_formatter->format();
+
+        ob_start();
+        include 'partials/emails/email_job_details.php';
+        $this->html_email = $html_email = ob_get_clean();
+
+        //    add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
+        //$this->ajax->set_email_debug(true);
+            $email = $this->ajax->send_notification($to,
+        $from,
+        $from_name,
+        $subject,
+        $html_email, $headers);
+
+        //    remove_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
+        return $email;
+
     }
 
     public function display_internal_email_preview($atts) {
