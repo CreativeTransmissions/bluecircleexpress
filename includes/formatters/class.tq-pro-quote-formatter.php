@@ -86,8 +86,11 @@ class TQ_QuoteFormatter {
             if (!isset($this->quote[$key])) {
                 continue;
             };
-            if ($this->quote[$key]==0) {
-                continue;
+            $value = $this->quote[$key];
+            if (is_numeric($value)) {
+                if($value==0){
+                    continue;
+                };
             };            
             $output[] = $this->format_field($key);
         };
