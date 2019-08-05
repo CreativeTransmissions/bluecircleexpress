@@ -31,7 +31,10 @@ class TQ_LabelFetcher {
         //merge config with defaults so all properties are present
 		$this->config = array_merge($this->default_config, $config);
 		$this->public = $this->config['public'];
+		$this->currency = $this->public->get_currency_code();
+        $this->tax_name = $this->public->get_setting('', 'tax_name', 'VAT');
 	}
+
 
 	public function fetch_labels_for_view($view = null){
 		switch ($view) {
@@ -103,8 +106,15 @@ class TQ_LabelFetcher {
 						'date_and_time_title' => $this->public->get_setting('tq_pro_form_options','date_and_time_title', 'Date and Time'),
 						'delivery_cost_label' => $this->public->get_setting('tq_pro_form_options','delivery_cost_label', 'Delivery Cost'),
 						'total_cost_label' => $this->public->get_setting('tq_pro_form_options','total_cost_label', 'Total Cost'),
-						'tax_name' => $this->public->get_setting('tq_pro_form_options','tax_name', 'VAT')						
-        			);
+						'tax_name' => $this->public->get_setting('tq_pro_form_options','tax_name', 'VAT'),
+						'distance_cost'=> $this->public->get_setting('tq_pro_form_options','distance_cost_label', 'Distance Cost'),
+ 						'rate_hour'=>'Hourly Rate (' . $this->currency . ')',
+                        'time_cost'=>'Time Cost (' . $this->currency . ')',
+                        'basic_cost'=>'Subtotal (' . $this->currency . ')',
+                        'rate_tax'=>$this->tax_name.' Rate (%)',
+                        'tax_cost'=>$this->tax_name.' (' . $this->currency . ')',
+                        'total'=>'Total (' . $this->currency . ')',
+                        'job_rate'=>'Rates');
 	}
 
 	private function fetch_customer_email_labels(){

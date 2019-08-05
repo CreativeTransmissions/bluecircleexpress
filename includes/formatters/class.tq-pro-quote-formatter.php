@@ -25,25 +25,34 @@ class TQ_QuoteFormatter {
 
  	private $default_config = array('currency'=>'£',
  									'quote'=>array(), // associative array of quote data
- 									'output_def'=>array(),  // output definition: array(array('field_name1'=>'field_label1'),array('field_name2'=>'field_label2'))
+ 									'output_def'=>array(),  // output definition: array('field_name1','field_name2')
  									'tax_name'=>'Tax' // ie VAT etc
  									);
 
     public function __construct($config = null) {
         //merge config with defaults so all properties are present
 		$this->config = array_merge($this->default_config, $config);
-		$this->output_def = $this->config['output_def'];
-		$this->quote = $this->config['quote'];
 	}
 
 	public function has_required_params(){
-        if (empty($this->quote)) {
+        if (empty($this->config['quote'])) {
+            echo 'TQ_QuoteFormatter: no quote in params';            
             return false;
         };
+        $this->quote = $this->config['quote'];
 
-        if (empty($this->output_def)) {
+        if (empty($this->config['output_def'])) {
+            echo 'TQ_QuoteFormatter: no output_def in params';
+
             return false;
         };
+        $this->output_def = $this->config['output_def'];
+
+        if (empty($this->config['labels'])) {
+            echo 'TQ_QuoteFormatter: no labels in params';
+            return false;
+        };
+        $this->labels = $this->config['labels'];
 
         return true; 
 	}
@@ -55,22 +64,21 @@ class TQ_QuoteFormatter {
 		};
 
  		$output = array();
-        foreach ($this->config['output_def'] as $key => $label) {
-            echo 'format: '.$key;
+        foreach ($this->output_def as $key) {
             if (!isset($this->quote[$key])) {
-                echo ' not set.';
                 continue;
             };
-            $output[] = $this->format_field($key, $label);
+            $output[] = $this->format_field($key);
         };
 
         return $output;
 	}
 
-	public function format_field($key, $label){
+	public function format_field($key){
 		
         $name = $key;        
 		$valueType = $this->format_value($key);
+        $label = $this->labels[$key];
 
 		$field = array('label'=>$label,
                         'name'=>$name,
@@ -82,9 +90,6 @@ class TQ_QuoteFormatter {
 	}
 
 	public function format_value($key){
-
-          echo ' *** format_value key: '.$key;
-
 		$value = $this->quote[$key];
         $field = array();
  		switch ($key) {

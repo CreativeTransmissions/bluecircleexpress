@@ -1,5 +1,5 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE );
+error_reporting(E_ERROR | E_PARSE );
  ini_set('display_errors', 1);
 /**
  * The admin-specific functionality of the plugin.
@@ -57,6 +57,8 @@ class TransitQuote_Pro_Admin {
 		$this->plugin = new TransitQuote_Pro_Public($plugin_name,  $version, $plugin_slug);
 		$this->prefix = $this->plugin->get_prefix();
 		$this->is_transitteam_active = $this->is_transitteam_active();
+
+
 	}
 
 	/**
@@ -622,6 +624,24 @@ class TransitQuote_Pro_Admin {
 			echo "job not available";
 		}
 
+		$this->quote_fields_for_output = array('distance_cost',
+													'rate_hour',
+													'time_cost',
+													'basic_cost',
+													'rate_tax',
+													'tax_cost',
+													'total',
+													'job_rate');
+
+		$labels = $this->plugin->label_fetcher->fetch_labels_for_view('dashboard');
+
+		$formatter_config = array(	'quote'=>$this->job['quote'],
+    								'labels'=>$labels,
+								    'currency'=>$this->currency,
+								    'output_def'=>$this->quote_fields_for_output);
+
+        $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
+		$quote_data = $this->quote_formatter->format();
 		//output the view which will be returned via ajax and inserted into the hidden
 		include('partials/tq_pro_job_details.php'); 
 	}

@@ -63,6 +63,9 @@ class TransitQuote_Pro_Public {
         $this->prefix = 'tq_pro4';
         $this->cdb = TransitQuote_Pro4::get_custom_db();
         $this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb' => $this->cdb, 'debugging' => $this->debug));
+        $this->label_fetcher = new TransitQuote_Pro4\TQ_LabelFetcher(array('public' => $this));
+        $this->table_renderer = new TransitQuote_Pro4\TQ_TableRenderer();
+        
         if (self::woocommerce_is_activated()) {
             self::get_woocommerce_config();
         }
@@ -677,8 +680,7 @@ class TransitQuote_Pro_Public {
     }
 
     private function get_view_labels($view_name = null) {
-        $label_fetcher = new TransitQuote_Pro4\TQ_LabelFetcher(array('public' => $this));
-        return $label_fetcher->fetch_labels_for_view($view_name);
+        return $this->label_fetcher->fetch_labels_for_view($view_name);
     }
 
     public function job_details_quote_table($header, $data) {
@@ -2608,29 +2610,7 @@ class TransitQuote_Pro_Public {
         $text .= implode("\r\n", $rows);
         echo $text . "\r\n\r\n";
     }
-    public function job_details_table($header, $data) {
-
-        $rows = array();
-        foreach ($data as $field) {
-            if (empty($field['label'])) {
-                $row = '<td>' . $field['value'] . '</td>';
-                $html = '<table><tr><th colspan="1">' . $header . '</th></tr><tr>';
-            } else {
-                $row = '<td>' . $field['label'] . '</td><td>' . $field['value'] . '</td>';
-                $html = '<table><tr><th colspan="2">' . $header . '</th></tr><tr>';
-            }
-
-            $rows[] = $row;
-        };
-
-        if (count($rows) === 0) {
-            echo '<table><tr><th colspan="1">' . $header . '</th></tr><tr><tr><td>No information available.</td></tr>';
-        };
-        $html .= implode('</tr><tr>', $rows);
-        $html .= '</tr></table>';
-        echo $html;
-    }
-
+  
     public function get_job($job_id = null) {
         //get job record from property or database
         if (empty($job_id)) {
@@ -3530,8 +3510,10 @@ class TransitQuote_Pro_Public {
         foreach ($waypoints as $key => $waypoint) {
             $route_row_data[] = array('value' => $this->format_waypoint($waypoint));
         };
-
-        return $this->job_details_table('<h3>Route</h3>', $route_row_data);
+        $this->table_renderer = new TransitQuote_Pro4\TQ_TableRenderer();        
+        $html = $this->table_renderer->render_single_col(array('header'=>'<h3>Route</h3>',
+                                                                'data'=> $route_row_data)); 
+        return $html;
     }
 
     public function route_details_list() {
