@@ -454,7 +454,7 @@ select {
     position: absolute;
     background-repeat: no-repeat;
     right: 20px;
-    top: 18px;
+    bottom: 0.5em;
     font-family: "untitled-font-2" !important;
     font-style: normal !important;
     font-size: 21px;
