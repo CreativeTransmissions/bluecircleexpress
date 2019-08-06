@@ -246,7 +246,9 @@
     width: 100%;
 }
 p.radio-group-label {
+    font-size: 12px;    
     margin-bottom: 0;
+    margin-top: 0.25em;    
 }
 .radio-label {
     display: block;
@@ -262,7 +264,11 @@ p.radio-group-label {
     height: 50px;
     font-family: 'Montserrat', sans-serif;
     padding-left: 45px;
-    line-height: 50px;
+    line-height: 1em;
+    padding-top: 0.5em;
+}
+.radio-label.double-height{
+    padding-top: 0.25em;
 }
 .radio-placeholder {
     font-family: 'Montserrat', sans-serif;
@@ -287,8 +293,8 @@ p.radio-group-label {
     box-sizing: border-box;
 }
 .radio-label .checkmark:after {
-    top: 1px;
-    left: 1px;
+    top: 25%;
+    left: 25%;
     width: 10px;
     height: 10px;
     border-radius: 50%;

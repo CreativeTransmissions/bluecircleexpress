@@ -3857,7 +3857,7 @@ class TransitQuote_Pro_Public {
         $form_background_color = self::get_setting('tq_pro_form_options', 'form_background_color', '#fbfbfb');
         echo "
 			<style>
-				.requestform form#quote-form.tq-form.tq-primary-color{
+				.requestform form#quote-form.tq-form.tq-primary-color {
 					color: $form_text_color !important;
 				}
 				.requestform form#quote-form.tq-form .tq-form-title-color{
@@ -3867,12 +3867,16 @@ class TransitQuote_Pro_Public {
 					background-color: $form_background_color !important;
 				}
 
+                .tq-form .radio-label span.checkmark{
+                    background-color:  $form_text_color !important;
+                }
 				.requestform form#quote-form button.tq-button,
 				.woocommerce a.button,
 				.woocommerce button.button  {
 					background-color:  $form_text_color !important;
 					color: $form_background_color !important;
 				}
+                .
 			</style>";
     }
 

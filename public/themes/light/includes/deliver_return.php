@@ -13,7 +13,7 @@ switch ($this->show_deliver_and_return) {
                     </div>
                     <div class="half right">
                         <div class="radio-label">
-                            <label for="deliver_and_return" class="radio-placeholder radio-label">Deliver and Return</label>
+                            <label for="deliver_and_return" class="radio-placeholder radio-label double-height">Deliver and Return</label>
                             <input type="radio" id="deliver_and_return2" name="deliver_and_return" value="1"/>
                             <span class="checkmark"></span>
                         </div>
