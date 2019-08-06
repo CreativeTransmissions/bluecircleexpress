@@ -48,8 +48,7 @@ class TQ_TableRenderer {
     public function render($params = null) {
         $this->params = $params;
         if(!$this->has_required_params()){
-            echo 'TQ_TableRenderer: Missing params';
-            print_r($this->params);
+            //echo 'TQ_TableRenderer: Missing params';
             return false;
         };
 
@@ -82,8 +81,8 @@ class TQ_TableRenderer {
     public function render_single_col($params = null) {
         $this->params = $params;
         if(!$this->has_required_params()){
-            echo 'TQ_TableRenderer: Missing params';
-            print_r($this->params);
+            //echo 'TQ_TableRenderer: Missing params';
+           // print_r($this->params);
             return false;
         };
 
