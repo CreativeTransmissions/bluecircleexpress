@@ -37,20 +37,20 @@ class TQ_QuoteFormatter {
 
 	public function has_required_params(){
         if (empty($this->config['quote'])) {
-            echo 'TQ_QuoteFormatter: no quote in params';            
+        //    echo 'TQ_QuoteFormatter: no quote in params';            
             return false;
         };
         $this->quote = $this->config['quote'];
 
         if (empty($this->config['output_def'])) {
-            echo 'TQ_QuoteFormatter: no output_def in params';
+           // echo 'TQ_QuoteFormatter: no output_def in params';
 
             return false;
         };
         $this->output_def = $this->config['output_def'];
 
         if (empty($this->config['labels'])) {
-            echo 'TQ_QuoteFormatter: no labels in params';
+           // echo 'TQ_QuoteFormatter: no labels in params';
             return false;
         };
         $this->labels = $this->config['labels'];

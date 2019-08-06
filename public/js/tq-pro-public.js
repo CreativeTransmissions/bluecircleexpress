@@ -712,7 +712,8 @@
 				});
 
 				this.addEventHandlerChangeVehicle();
-				this.addEventHandlerChangeService();				
+				this.addEventHandlerChangeService();
+				this.addEventHandlerDeliverReturn();
 				return true;
 			},
 
@@ -737,6 +738,31 @@
 				});
 
 			},					
+
+			addEventHandlerDeliverReturn: function(){
+				var that = this;
+				$('.tq-form select[name="deliver_and_return"]').on('change', function (e) {
+					var recalculate = that.quoteAlreadyCalculated();
+					that.clearQuoteFields();
+					that.calculator.changeDeliverReturn(this, recalculate);
+				});
+
+				$('.tq-form input[type=radio][name="deliver_and_return"]').on('change', function (e) {
+					var recalculate = that.quoteAlreadyCalculated();
+					that.clearQuoteFields();
+					that.calculator.changeDeliverReturn(this, recalculate);
+				});
+			},
+
+			quoteAlreadyCalculated: function () {
+				//has quote been generated
+				var totalCost = $('input[name="total"]').val();
+				if (!totalCost) {
+					return false;
+				} else {
+					return true;
+				}
+			},
 
 			scrollToMap: function(){
 					$('html, body').animate({
@@ -960,7 +986,25 @@
 				$('#breakdown').val(JSON.stringify(quote.breakdown));
 			},
 
+			clearQuoteFields: function(){
+				$('.tq-form .quote-currency').hide();
+				$('.totalCost').html('Calculating..');
+				$('.basicCost').html('');
+				$('.rateTax').html('');
+				$('.taxCost').html('');
+				$('.hourCost').val('');
+				$('span#jobRate').html('');
+
+				$('input[name="distance_cost"]').val('');
+				$('input[name="total"]').val('');
+				$('input[name="rate_tax"]').val('');
+				$('input[name="tax_cost"]').val('');
+				$('input[name="basic_cost"]').val('');
+				$('#breakdown').val('');
+			},
+
 			showQuoteFields: function(){
+				$('.tq-form .quote-currency').show();
 				$('.quote-fields').removeClass('hidden');
 				$('.quote-fields').show();
 				$('.quote-success').show();

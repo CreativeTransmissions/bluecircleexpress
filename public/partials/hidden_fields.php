@@ -12,3 +12,14 @@
 <input type="hidden" id="rate_tax" name="rate_tax" value=""/>
 <input type="hidden" id="tax_cost" name="tax_cost" value=""/>
 <input type="hidden" id="breakdown" name="breakdown" value=""/>
+<?php
+    $has_services = $this->has_services(); 
+    $has_vehicles = $this->has_vehicles();
+	if(!$has_vehicles){
+		echo '<input type="hidden" name="vehicle_id" value="'.$this->single_vehicle_id.'"/>';
+	};
+
+	if(!$has_services){
+		echo '<input type="hidden" name="service_id" value="'.$this->single_service_id.'"/>';
+	};	
+?>

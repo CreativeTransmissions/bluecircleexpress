@@ -35,8 +35,11 @@
 																'data'=>$this->plugin->format_customer($this->job['customer']))); ?>
 		</div>
 		<div class="half job_details_job">
-			<?php $this->plugin->table_renderer->render(array('header'=>'<h3>Journey Information</h3>',
-																'data'=>$this->plugin->format_job($this->job))); ?>
+			<?php $job_data = $this->plugin->format_job($this->job);
+					if(!empty($job_data)){
+						$this->plugin->table_renderer->render(array('header'=>'<h3>Journey Information</h3>',
+																'data'=>$this->plugin->format_job($this->job)));
+			} ?>
 		</div>
 		<?php }; ?>
 	</div>

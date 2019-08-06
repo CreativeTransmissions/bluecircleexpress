@@ -1414,26 +1414,33 @@ class TransitQuote_Pro_Public {
     }
 
     public function has_services() {
+        $this->single_service_id = 1;
         // is there more than one service?
-
+        $services = $this->cdb->get_rows('services');
         // is there more than one services in the services table?
-        if ($this->cdb->get_count('services') > 1) {
+        if (count($services)> 1) {
             // do we have rates for more than one service in the rates table?
             if ($this->cdb->get_count_distinct('rates', 'service_id') > 1) {
                 return true;
             };
+        } else {
+            $this->single_service_id =  $services[0]['id'];
         };
         return false;
     }
 
     public function has_vehicles() {
+        $this->single_vehicle_id = 1;
         // is there more than one vehicle?
-        if ($this->cdb->get_count('vehicles') > 1) {
+        $vehicles = $this->cdb->get_rows('vehicles');
+        if (count($vehicles)> 1) {
             // do we have rates for more than one service in the rates table?
             if ($this->cdb->get_count_distinct('rates', 'vehicle_id') > 1) {
                 return true;
             };
-        };
+        } else {
+            $this->single_vehicle_id =  $vehicles[0]['id'];
+        }
         return false;
     }
 
