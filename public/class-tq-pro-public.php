@@ -689,7 +689,7 @@ class TransitQuote_Pro_Public {
                                     'output_def'=>$this->quote_fields_for_output,);
 
         $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
-        $quote_data = $this->quote_formatter->format();
+        $quote_data = $this->quote_formatter->format_non_zero_only();
 
 
         $this->view = 'partials/' . $view_name . '.php';
