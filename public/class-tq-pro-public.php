@@ -2860,7 +2860,7 @@ class TransitQuote_Pro_Public {
         return $html_email;
     }
 
-    private function email_dispatch($subject) {
+    public function email_dispatch($subject) {
 
         if(!self::get_job_details_from_id($this->job_id)){
             echo 'email_dispatch: could not get details for job id';
