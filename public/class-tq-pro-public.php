@@ -3460,6 +3460,7 @@ class TransitQuote_Pro_Public {
     public function render_route_details($waypoints) {
         $route_row_data = array();
         foreach ($waypoints as $key => $waypoint) {
+            echo json_encode($waypoint);
             $route_row_data[] = array('value' => $this->format_waypoint($waypoint));
         };
         $this->table_renderer = new TransitQuote_Pro4\TQ_TableRenderer();        
