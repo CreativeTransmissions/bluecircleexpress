@@ -53,6 +53,17 @@ class TQ_ListRenderer {
         return $html;
     }
 
+    public function generate($params = null) {
+        $this->params = $params;
+        if(!$this->has_required_params()){
+            //echo 'TQ_ListRenderer: Missing params';
+            return false;
+        };
+
+        $html = $this->generate_html();
+        return $html;
+    }
+
     public function generate_html(){
 
         if (count($this->data) === 0) {
@@ -63,6 +74,9 @@ class TQ_ListRenderer {
 
             $this->rows = array();
             foreach ($this->data as $field) {
+                if(!isset($field['value'])){
+                    continue;
+                };
                 if(!isset($field['label'])){
                     $this->rows[] = '<li>' . $field['value'] . '</li>';
                 } else if (empty($field['label'])) {
@@ -72,11 +86,11 @@ class TQ_ListRenderer {
                 }
             };
 
-            $html = '<ul class="tq-list"><li>';
-            $html .= implode('</li><li>', $this->rows);            
+            $html = '<ul class="tq-list">';
+            $html .= implode('', $this->rows);            
         };
 
-        $html .= '</li></ul>';
+        $html .= '</ul>';
         return $html;        
     }
 
