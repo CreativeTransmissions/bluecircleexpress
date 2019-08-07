@@ -23,7 +23,7 @@
 namespace TransitQuote_Pro4;
 class TQ_WaypointFormatter {
 
- 	private $default_config = array('waypoint'=>array(), // associative array of waypoint data
+ 	private $default_config = array('waypoints'=>array(), // associative array of waypoint data
  									'output_def'=>array(),  // output definition: array('field_name1','field_name2')
                                     'labels'=>array() // array('appartment_no'=>'Unit No', 'postal_code'=>'Postcode'),
  									);
@@ -32,15 +32,16 @@ class TQ_WaypointFormatter {
         //merge config with defaults so all properties are present
 		$this->config = array_merge($this->default_config, $config);
         $this->labels = array();
+        $this->output = array();
 	}
 
 	public function has_required_params(){
 
-        if (empty($this->config['waypoint'])) {
+        if (empty($this->config['waypoints'])) {
             echo 'TQ_waypointFormatter: no waypoint in params';            
             return false;
         };
-        $this->waypoint = $this->config['waypoint'];
+        $this->waypoints = $this->config['waypoints'];
 
         if (empty($this->config['output_def'])) {
             echo 'TQ_waypointFormatter: no output_def in params';
@@ -62,16 +63,28 @@ class TQ_WaypointFormatter {
 			return false;
 		};
 
- 		$output = array();
+        foreach ($this->waypoints as $waypoint) {
+            $formatted_waypoint = $this->format_waypoint($waypoint);
+            if(is_array($formatted_waypoint)){
+                $this->output[] = $formatted_waypoint;
+            }
+        }
+ 		return $this->output;
+	}
+
+    public function format_waypoint($waypoint){
+
+        $output = array();
         foreach ($this->output_def as $key) {
-            if (!isset($this->waypoint[$key])) {
+            if (!isset($waypoint[$key])) {
                 continue;
             };
-            $output[] = $this->format_field($key);
+            $value = $waypoint[$key];            
+            $output[] = $this->format_field($value, $key);
         };
 
         return $output;
-	}
+    }
 
     public function format_not_empty_only(){
 
@@ -79,25 +92,40 @@ class TQ_WaypointFormatter {
             return false;
         };
 
+        foreach ($this->waypoints as $waypoint) {
+            $formatted_waypoint = $this->format_waypoint_not_empty($waypoint);
+            if(is_array($formatted_waypoint)){
+                $this->output[] = $formatted_waypoint;
+            }
+        }
+        return $this->output;
+    }
+
+    public function format_waypoint_not_empty($waypoint){
+
         $output = array();
         foreach ($this->output_def as $key) {
-            if (!isset($this->waypoint[$key])) {
+            if (!isset($waypoint[$key])) {
                 continue;
             };
-            $value = $this->waypoint[$key];
+            if (empty($waypoint[$key])) {
+                continue;
+            };            
+            $value = $waypoint[$key];
             if($value===''){
                 continue;
             };
-            $output[] = $this->format_field($key);
+            $output[] = $this->format_field($value, $key);
         };
 
         return $output;
     }
 
-	public function format_field($key){
+
+	public function format_field($value, $key){
 		
         $name = $key;        
-		$valueType = $this->format_value($key);
+		$valueType = $this->format_value($value, $key);
 
 		$field = array( 'name'=>$name,
 						'value'=>$valueType['value'],
@@ -113,8 +141,7 @@ class TQ_WaypointFormatter {
 		return $field;
 	}
 
-	public function format_value($key){
-		$value = $this->waypoint[$key];
+	public function format_value($value, $key){
         $field = array();
  		switch ($key) {
             case 'lat':

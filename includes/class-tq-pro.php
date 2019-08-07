@@ -282,6 +282,16 @@ class TransitQuote_Pro4 {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/renderers/class.tq-table-renderer.php';
 
+		/**
+		 * The class responsible for rendering lists
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/renderers/class.tq-list-renderer.php';
+
+		/**
+		 * The class responsible for rendering plain text email content
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/renderers/class.tq-email-renderer.php';
+		
 		$this->loader = new TransitQuote_Pro_Loader();
 	}
 	/**
