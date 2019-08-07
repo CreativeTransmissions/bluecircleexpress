@@ -217,6 +217,10 @@ class TransitQuote_Pro_Public {
                 return true;
             }
 
+            if (strrpos(strtolower($post->post_content), '[my_booking') > -1) {
+                // we have found a post with the short code
+                return true;
+            }
         };
         return false;
 
@@ -622,7 +626,7 @@ class TransitQuote_Pro_Public {
         }
 
         if ($success === false) {
-            $this->api_setup_message = '<p>To use TransitQuote Pro please update your settingss follows:</p><ul>' . $this->api_setup_message . '</ul>';
+            $this->api_setup_message = '<p>To use TransitQuote Pro please update your settings as follows:</p><ul>' . $this->api_setup_message . '</ul>';
         }
 
         return $success;
@@ -694,6 +698,17 @@ class TransitQuote_Pro_Public {
         $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
         $quote_data = $this->quote_formatter->format_non_zero_only();
 
+        $waypoint_formatter_config = array( 'waypoints'=>$this->job['stops'],
+                                            'labels'=>$labels,
+                                            'output_def'=>array('address',
+                                                        'appartment_no',
+                                                        'postal_code',
+                                                        'contact_name',
+                                                        'contact_phone'));
+
+        $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
+        $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
+
 
         $this->view = 'partials/' . $view_name . '.php';
         ob_start();
@@ -704,31 +719,6 @@ class TransitQuote_Pro_Public {
 
     private function get_view_labels($view_name = null) {
         return $this->label_fetcher->fetch_labels_for_view($view_name);
-    }
-
-    public function route_details_table($html = false) {
-        $route_row_data = self::get_route_list();
-        return $this->web_details_list('Route', $route_row_data);
-    }
-
-    public function web_details_list($header, $data) {
-        //return job details info in list for text email
-        $html = '<table><tr><th colspan="1">' . $header . '</th></tr>';
-
-        $rows = array();
-        foreach ($data as $field) {
-            if (!empty($field['value'])) {
-                if (empty($field['label'])) {
-                    $rows[] = '<tr><td>' . $field['value'] . '</td></tr>';
-                } else {
-                    $rows[] = '<tr><td>' . $field['label'] . '</td><td>' . $field['value'] . '</td></tr>';
-                }
-            }
-        };
-        $html .= implode('', $rows);
-        $html .= '</table>';
-        echo $html;
-
     }
 
     private function get_route_list() {

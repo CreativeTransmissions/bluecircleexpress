@@ -28,9 +28,10 @@
 	}
 	?>
 	</div>
-	<?php
-    $this->route_details_table();
-?>
+    <div class="tq-route-information" >
+        <?php $this->route_renderer->render(array('header'=>'<h3>Route</h3>',
+                                                          'data'=>$formatted_waypoints)); ?>
+    </div>
 <table class="tq-quote-table">
     <tr><th colspan="2">Date and Time</th></tr>
     <tr><td>Collection Date</td><td><?php echo $this->job['job_date'][0]['value']; ?></td></tr>

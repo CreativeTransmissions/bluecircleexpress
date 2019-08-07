@@ -48,6 +48,10 @@ Feel free to use them for the intended purpose
 .tq-form .capitalize {
     text-transform: capitalize;
 }
+.tq-route-information ul {
+    list-style: none;
+    list-style-type: none;
+}
 /************************* Reserved CSS Classes ***********************
 Never use these classes for styling!! They are for use by jQuery code
 They should only appear as demonstrated in the html snippets

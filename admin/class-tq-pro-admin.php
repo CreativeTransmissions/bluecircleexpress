@@ -645,20 +645,8 @@ class TransitQuote_Pro_Admin {
         $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
 		$formatted_waypoints = $this->waypoint_formatter->format();
 
-		
-		$route_html = $this->render_route($formatted_waypoints);
 		//output the view which will be returned via ajax and inserted into the hidden
 		include('partials/tq_pro_job_details.php'); 
-	}
-
-	public function render_route($formatted_waypoints){
-		$route_html = array(); //array of ul's each containing the address data
-		$list_renderer = new TransitQuote_Pro4\TQ_ListRenderer();
-		foreach ($formatted_waypoints as $key => $waypoint) {
-			$waypoint_html = $list_renderer->generate(array('data'=>$waypoint));
-			$route_html[] = array('value'=>$waypoint_html);
-		};
-		return $route_html;
 	}
 
 	public function render_transaction_details($transaction_id){
