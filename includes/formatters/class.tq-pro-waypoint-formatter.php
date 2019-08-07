@@ -24,15 +24,18 @@ namespace TransitQuote_Pro4;
 class TQ_WaypointFormatter {
 
  	private $default_config = array('waypoint'=>array(), // associative array of waypoint data
- 									'output_def'=>array()  // output definition: array('field_name1','field_name2')
+ 									'output_def'=>array(),  // output definition: array('field_name1','field_name2')
+                                    'labels'=>array() // array('appartment_no'=>'Unit No', 'postal_code'=>'Postcode'),
  									);
 
     public function __construct($config = null) {
         //merge config with defaults so all properties are present
 		$this->config = array_merge($this->default_config, $config);
+        $this->labels = array();
 	}
 
 	public function has_required_params(){
+
         if (empty($this->config['waypoint'])) {
             echo 'TQ_waypointFormatter: no waypoint in params';            
             return false;
@@ -46,7 +49,11 @@ class TQ_WaypointFormatter {
         };
         $this->output_def = $this->config['output_def'];
 
-        return true; 
+        if (!empty($this->config['labels'])) {
+            $this->labels = $this->config['labels'];
+        };
+
+        return true;
 	}
 
 	public function format(){
@@ -96,6 +103,12 @@ class TQ_WaypointFormatter {
 						'value'=>$valueType['value'],
                         'type'=>$valueType['type']
                     );
+
+        if(isset($this->labels[$key])){
+            if(!empty($this->labels[$key])){
+                $field['label'] = $this->labels[$key];
+            };
+        };
 
 		return $field;
 	}

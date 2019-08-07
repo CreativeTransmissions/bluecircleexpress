@@ -15,7 +15,7 @@ final class TQ_WaypointFormatterTest extends TestCase
         $this->example_waypoint_2 = json_decode('{"id":"6","address":"CeX, Union Street, Glasgow, UK","appartment_no":"","street_number":"28 - 40","postal_town":"Glasgow","route":"Union Street","administrative_area_level_2":"","administrative_area_level_1":"Scotland","country":"United Kingdom","postal_code":"G1 3QX","lat":"55.85886300000000000000","lng":"-4.25660400000000000000","place_id":"ChIJtd1djZ5GiEgRHQ0WFQ1lxd4","created":"2019-08-07 10:00:05","modified":"2019-08-07 10:00:05","contact_name":"","contact_phone":"93478534957"}', true);
 
 
-        $this->expected_output_1 = json_decode('[{"name":"appartment_no","value":"2\/1","type":"text"},{"name":"street_number","value":"385","type":"text"},{"name":"postal_town","value":"Glasgow","type":"text"},{"name":"route","value":"Dumbarton Road","type":"text"},{"name":"administrative_area_level_2","value":"Glasgow City","type":"text"},{"name":"administrative_area_level_1","value":"Scotland","type":"text"},{"name":"country","value":"United Kingdom","type":"text"},{"name":"postal_code","value":"G11 6BE","type":"text"},{"name":"lat","value":"55.87069900000000000000","type":"number"},{"name":"lng","value":"-4.30828000000000000000","type":"number"},{"name":"contact_name","value":"Andrew","type":"text"},{"name":"contact_phone","value":"123123123123","type":"text"}]', true);
+        $this->expected_output_1 = json_decode('[{"name":"appartment_no","value":"2\/1","type":"text","label":"Unit No"},{"name":"street_number","value":"385","type":"text"},{"name":"postal_town","value":"Glasgow","type":"text"},{"name":"route","value":"Dumbarton Road","type":"text"},{"name":"administrative_area_level_2","value":"Glasgow City","type":"text"},{"name":"administrative_area_level_1","value":"Scotland","type":"text"},{"name":"country","value":"United Kingdom","type":"text"},{"name":"postal_code","value":"G11 6BE","type":"text"},{"name":"lat","value":"55.87069900000000000000","type":"number"},{"name":"lng","value":"-4.30828000000000000000","type":"number"},{"name":"contact_name","value":"Andrew","type":"text"},{"name":"contact_phone","value":"123123123123","type":"text"}]', true);
 
         $this->expected_output_2_not_empty = json_decode('[{"name":"street_number","value":"28 - 40","type":"text"},{"name":"postal_town","value":"Glasgow","type":"text"},{"name":"route","value":"Union Street","type":"text"},{"name":"administrative_area_level_1","value":"Scotland","type":"text"},{"name":"country","value":"United Kingdom","type":"text"},{"name":"postal_code","value":"G1 3QX","type":"text"},{"name":"lat","value":"55.85886300000000000000","type":"number"},{"name":"lng","value":"-4.25660400000000000000","type":"number"},{"name":"contact_phone","value":"93478534957","type":"text"}]', true);        
     }
@@ -23,6 +23,7 @@ final class TQ_WaypointFormatterTest extends TestCase
     public function test_format() {
 
     	$formatter_config = array( 'waypoint'=>$this->example_waypoint_1,
+                                    'labels'=>array('appartment_no'=>'Unit No'),
 								    'output_def'=>array('appartment_no',
                                                         'street_number',
                                                         'postal_town',
