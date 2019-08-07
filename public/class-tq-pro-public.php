@@ -1,5 +1,5 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE );
+ error_reporting(E_ERROR | E_PARSE );
 ini_set('display_errors', 1);
  ini_set('display_errors', 1);
 /**
@@ -65,6 +65,9 @@ class TransitQuote_Pro_Public {
         $this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb' => $this->cdb, 'debugging' => $this->debug));
         $this->label_fetcher = new TransitQuote_Pro4\TQ_LabelFetcher(array('public' => $this));
         $this->table_renderer = new TransitQuote_Pro4\TQ_TableRenderer();
+        $this->route_renderer = new TransitQuote_Pro4\TQ_RouteRenderer();
+
+
         $this->quote_fields_for_output = array('distance_cost',
                                                     'rate_hour',
                                                     'time_cost',

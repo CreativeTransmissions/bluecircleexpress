@@ -3,8 +3,8 @@
 	<?php if(!empty($this->job['stops'])){ ?>
 		<div class="row">
 			<div class="full job_details_job">
-			<?php $this->plugin->table_renderer->render_single_col(array('header'=>'<h3>Route</h3>',
-																		 'data'=>$route_html)); ?>
+			<?php $this->plugin->route_renderer->render(array('header'=>'<h3>Route</h3>',
+																		 'data'=>$formatted_waypoints)); ?>
 			</div>
 		</div>
 	<?php }; ?> 
