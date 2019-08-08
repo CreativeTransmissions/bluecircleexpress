@@ -2893,6 +2893,11 @@ class TransitQuote_Pro_Public {
         $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
         $quote_data = $this->quote_formatter->format();
 
+        $customer_data = $this->format_customer($this->job['customer']);
+        $job_data = $this->format_job($this->job);
+        $journey_data = $this->format_journey($this->job['journey']);
+
+        $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
         ob_start();
         include 'partials/emails/email_job_details.php';
         $this->html_email = $html_email = ob_get_clean();
