@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Define Quote Formatter  functionality
+ * Define Route Renderer  functionality
  *
  * @link       http://example.com
  * @since      1.0.0
@@ -21,7 +21,7 @@
  * @author     Andrew van Duivenbode <hq@customgooglemaptools.com>
  */
 namespace TransitQuote_Pro4;
-class TQ_EmailRenderer {
+class TQ_RouteEmailRenderer {
 
     private $default_config = array();
 
@@ -30,64 +30,75 @@ class TQ_EmailRenderer {
         $this->config = array_merge($this->default_config, $config);
         $this->data = null;
         $this->header = null;
-        $this->body = '';
     }
 
     public function has_required_params(){
         if (empty($this->params['data'])) {
+            echo 'NO DATA!';
             return false;
         };
         $this->data = $this->params['data'];
 
+        if (empty($this->params['labels'])) {
+            echo 'NO labels!';
+            return false;
+        };
+        $this->labels = $this->params['labels'];
+
         if (!empty($this->params['header'])) {
             $this->header = $this->params['header'];
         };
+
         return true; 
     }
 
     public function render($params = null) {
-        $this->data = null;
-        $this->header = null;
-        $this->body = '';          
         $this->params = $params;
-
         if(!$this->has_required_params()){
-            //echo 'TQ_EmailRenderer: Missing params';
+            echo 'TQ_RouteEmailRenderer: Missing params';
             return false;
         };
 
-        $body = '';
-        if(!empty($this->header)){
-             $body .= $this->header . "\r\n\r\n";
-        }
-
-        $body .= $this->generate_content_section();
+        $body = $this->generate_body();
         echo $body;
         return $body;
     }
 
-    public function generate_content_section(){
+ 
+    public function generate_body(){
 
+        $this->waypoint_text_lists = $this->generate_list_for_each_waypoint();
         $body = '';
 
         $this->rows = array();
-        foreach ($this->data as $field) {
-            if(!isset($field['value'])){
-                continue;
-            };
-            if(!isset($field['label'])){
-                $this->rows[] = $field['value'];
-            } else if (empty($field['label'])) {
-                $this->rows[] = $field['value'];
-            } else {
-                $this->rows[] = $field['label'].': '.$field['value'];                    
-            }
+        foreach ($this->waypoint_text_lists as $list_html) {
+            $this->rows[] = $list_html['value'];
         };
-        $body .= implode("\r\n", $this->rows);            
-   
+
+        if(!empty($this->header)){
+             $body .= $this->header . "\r\n\r\n";
+        };
+        
+        $body .= implode("\r\n", $this->rows);             
+        
         $body .= "\r\n\r\n";
         return $body;        
     }
+
+   public function generate_list_for_each_waypoint(){
+       $waypoint_text_lists = array(); //array of ul's each containing the address data
+        $email_renderer = new TQ_EmailRenderer();
+        $header = $this->labels['collection_address_label'];
+        foreach ($this->data as $key=>$waypoint) {
+            if($key>0){
+                $header = $this->labels['destination_address_label'];
+            };
+            $waypoint_text = $email_renderer->render(array('header'=>$header,'data'=>$waypoint));
+            $waypoint_text_lists[] = array('value'=>$waypoint_text);
+        };
+        return $waypoint_text_lists;
+    }
+
 }
 
 ?>

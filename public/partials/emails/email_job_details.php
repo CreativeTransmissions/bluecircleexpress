@@ -7,7 +7,8 @@ $this->email_renderer->render(array('header'=>'Additional Info','data'=>$job_dat
 if(!empty($this->job['payment'])){
 	$this->email_renderer->render(array('header'=>'Payment Information','data'=>$payment_data)); 
 };
-$this->route_details_list();
+$route_params = array('header'=>$labels['route_label'], 'labels'=>$labels, 'data'=>$formatted_waypoints);
+$this->route_email_renderer->render($route_params);
 if(isset($this->job['job_date'])){
 	$this->email_renderer->render(array('header'=>'Pick Up Date','data'=>$this->job['job_date']));
 };

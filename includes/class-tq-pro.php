@@ -288,6 +288,12 @@ class TransitQuote_Pro4 {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/renderers/class.tq-list-renderer.php';
 
 		/**
+		 * The class responsible for rendering plain text route email content
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/renderers/class.tq-route-email-renderer.php';
+
+
+		/**
 		 * The class responsible for rendering plain text email content
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/renderers/class.tq-email-renderer.php';

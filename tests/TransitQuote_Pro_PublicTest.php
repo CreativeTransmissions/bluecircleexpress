@@ -193,7 +193,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
             $test_value = strtolower($test_value);
 
             echo '** delivery_time for test: '.$test_value;
-        };     
+        };
         return urldecode($test_value);
     }
 

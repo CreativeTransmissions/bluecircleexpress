@@ -143,6 +143,7 @@ class TQ_WaypointFormatter {
 
 	public function format_value($value, $key){
         $field = array();
+        $value = urldecode($value);
  		switch ($key) {
             case 'lat':
             case 'lng':
@@ -151,7 +152,7 @@ class TQ_WaypointFormatter {
                 break;
 
             default:
-                $field['value'] = ucfirst($value);
+                $field['value'] = $value;
                 $field['type'] = 'text';
                 break;                
           };

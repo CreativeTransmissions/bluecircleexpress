@@ -8,7 +8,7 @@ ini_set('display_errors', 1);
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    TransitQuote_Pro
+ * @package    TransitQuote_Prof
  * @subpackage TransitQuote_Pro/public
  */
 
@@ -2064,12 +2064,10 @@ class TransitQuote_Pro_Public {
 
         if (self::job_is_available($this->job)) {
             $this->job = self::get_job_details($this->job);
-        };
-
-        if (self::job_is_available($this->job)) {        
+         
             //echo 'success: '.$success.' '.$message;
             $this->dispatch_email = self::email_dispatch('New Job Booking - ref: ' . $this->job['id'] . " " . $this->customer['first_name'] . " " . $this->customer['last_name']);
-            
+
             $this->customer_email = self::email_customer();
             return $this->job['id'];            
         };
@@ -2774,7 +2772,7 @@ class TransitQuote_Pro_Public {
         if (self::job_is_available()) {
             $this->job = self::get_job_details($this->job);
 
-            $labels = $this->label_fetcher->fetch_labels_for_view('dashboard');
+            $labels = $this->label_fetcher->fetch_labels_for_view('email_job_details');
 
             $formatter_config = array(  'quote'=>$this->job['quote'],
                                         'labels'=>$labels,
@@ -2785,15 +2783,29 @@ class TransitQuote_Pro_Public {
             $quote_data = $this->quote_formatter->format_non_zero_only();
 
 
+            $waypoint_formatter_config = array( 'waypoints'=>$this->job['stops'],
+                                                'labels'=>$labels,
+                                                'output_def'=>array('address',
+                                                            'appartment_no',
+                                                            'postal_code',
+                                                            'contact_name',
+                                                            'contact_phone'));
+
+            $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
+            $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
+
+            $customer_data = $this->format_customer($this->job['customer']);
+            $job_data = $this->format_job($this->job);
+            $journey_data = $this->format_journey($this->job['journey']);
+
+            $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
+
             $message = self::get_customer_message();
             ob_start();
             include 'partials/emails/email_customer.php';
             $this->customer_html_email = $html_email = ob_get_clean();
             echo $html_email;      
         };
-
-
-
         
     }
 
@@ -2825,6 +2837,8 @@ class TransitQuote_Pro_Public {
         //$headers = "Bcc: contact@creativetransmissions.com"."\r\n";
         $headers = "";
 
+          $contact_section_title = self::get_setting('tq_pro_form_options','contact_section_title', 'Contact Section Title');
+        $this->view_labels = self::get_view_labels('email_job_details');
         $labels = $this->label_fetcher->fetch_labels_for_view('dashboard');
 
         $formatter_config = array(  'quote'=>$this->job['quote'],
@@ -2833,7 +2847,25 @@ class TransitQuote_Pro_Public {
                                     'output_def'=>$this->quote_fields_for_output);
 
         $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
-        $quote_data = $this->quote_formatter->format();
+        $quote_data = $this->quote_formatter->format_non_zero_only();
+
+        $waypoint_formatter_config = array( 'waypoints'=>$this->job['stops'],
+                                                'labels'=>$labels,
+                                                'output_def'=>array('address',
+                                                            'appartment_no',
+                                                            'postal_code',
+                                                            'contact_name',
+                                                            'contact_phone'));
+
+        $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
+        $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
+
+        $customer_data = $this->format_customer($this->job['customer']);
+        $job_data = $this->format_job($this->job);
+        $journey_data = $this->format_journey($this->job['journey']);
+
+        $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
+        $this->route_email_renderer = new TransitQuote_Pro4\TQ_RouteEmailRenderer();
 
 
         ob_start();
@@ -2882,6 +2914,7 @@ class TransitQuote_Pro_Public {
             $headers .= "Bcc: " . $address . "\r\n";
         };
        
+         $contact_section_title = self::get_setting('tq_pro_form_options','contact_section_title', 'Contact Section Title');
         $this->view_labels = self::get_view_labels('email_job_details');
         $labels = $this->label_fetcher->fetch_labels_for_view('dashboard');
 
@@ -2891,13 +2924,26 @@ class TransitQuote_Pro_Public {
                                     'output_def'=>$this->quote_fields_for_output);
 
         $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
-        $quote_data = $this->quote_formatter->format();
+        $quote_data = $this->quote_formatter->format_non_zero_only();
+
+        $waypoint_formatter_config = array( 'waypoints'=>$this->job['stops'],
+                                                'labels'=>$labels,
+                                                'output_def'=>array('address',
+                                                            'appartment_no',
+                                                            'postal_code',
+                                                            'contact_name',
+                                                            'contact_phone'));
+
+        $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
+        $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
 
         $customer_data = $this->format_customer($this->job['customer']);
         $job_data = $this->format_job($this->job);
         $journey_data = $this->format_journey($this->job['journey']);
 
         $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
+        $this->route_email_renderer = new TransitQuote_Pro4\TQ_RouteEmailRenderer();
+
         ob_start();
         include 'partials/emails/email_job_details.php';
         $this->html_email = $html_email = ob_get_clean();
