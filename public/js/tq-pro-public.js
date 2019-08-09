@@ -146,7 +146,7 @@
 					transportationMode: this.settings.data.transportation_mode,
 					askForUnitNo: this.settings.data.ask_for_unit_no,
 					askForPostCode: this.settings.data.ask_for_postcode,
-					destinationAddressLabel: this.settings.data.destinationAddressLabel,
+					destinationAddressLabel: this.settings.data.destination_address_label,
 					units: this.settings.data.distance_unit, // imperial or metric
 					geolocate: this.geolocate,
 					// Google Map Options
@@ -506,7 +506,7 @@
 				};
 
 				if(this.settings.data.use_out_of_hours_rates==='false'){
-					console.log('Not using out of hours rates: '+this.settings.data.use_out_of_hours_rates);
+					this.log('Not using out of hours rates: '+this.settings.data.use_out_of_hours_rates);
 
 					var booking_start_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_start_time+'000')['time'];
 					var booking_end_time_datetime = this.dateTimeConverter(TransitQuoteProSettings.booking_end_time+'000')['time'];
@@ -515,7 +515,7 @@
 					pickatimeConfig.max = booking_end_time_datetime;
 
 				} else {
-					console.log('using out of hours rates: '+this.settings.data.use_out_of_hours_rates);
+					this.log('using out of hours rates: '+this.settings.data.use_out_of_hours_rates);
 				};
 
 				return pickatimeConfig;
