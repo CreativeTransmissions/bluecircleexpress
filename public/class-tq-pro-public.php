@@ -66,6 +66,7 @@ class TransitQuote_Pro_Public {
         $this->label_fetcher = new TransitQuote_Pro4\TQ_LabelFetcher(array('public' => $this));
         $this->table_renderer = new TransitQuote_Pro4\TQ_TableRenderer();
         $this->route_renderer = new TransitQuote_Pro4\TQ_RouteRenderer();
+        $this->max_address_pickers = $this->get_setting('tq_pro_quote_options', 'max_address_pickers', '1');
 
 
         $this->quote_fields_for_output = array('distance_cost',

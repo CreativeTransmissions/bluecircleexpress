@@ -34,7 +34,8 @@
                             <input class="right" type="text" id="address_0_contact_phone" data-parsley-maxlength="45" name="address_0_contact_phone" placeholder="<?php echo $this->view_labels['contact_phone_label']; ?>" value=""/>
                         </div>
                     <?php }?>
-                    <?php if($this->max_address_pickers){ ?>
+                    <?php
+                     if($this->max_address_pickers>2){ ?>
                         <a href="#" class="add-waypoint no-address-0" id="address_0_add_waypoint">Insert Destination...</a>
                     <?php } ?>
                         
