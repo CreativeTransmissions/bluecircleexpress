@@ -15,10 +15,10 @@
 																'data'=>$this->job['job_date'])); ?>
 		</div>
 		<?php }; ?>
-		<?php if(isset($this->job['journey'])){ ?>
+		<?php if(!empty($journey_data)){ ?>
 		<div class="third job_details_journey">
 			<?php $this->plugin->table_renderer->render(array('header'=>'<h3>Distance and Travel Time</h3>',
-																'data'=>$this->plugin->format_journey($this->job['journey']))); ?>
+																'data'=>$journey_data)); ?>
 		</div>
 		<?php }; ?>
 		<?php if(isset($quote_data)){ ?>
@@ -33,13 +33,12 @@
 	<?php if(!empty($this->job['customer'])){ ?>
 		<div class="half job_details_customer">
 			<?php $this->plugin->table_renderer->render(array('header'=>'<h3>Customer Details</h3>',
-																'data'=>$cusomer_data)); ?>
+																'data'=>$customer_data)); ?>
 		</div>
 		<div class="half job_details_job">
-			<?php $job_data = $this->plugin->format_job($this->job);
-					if(!empty($job_data)){
-						$this->plugin->table_renderer->render(array('header'=>'<h3>Journey Information</h3>',
-																'data'=>$this->plugin->format_job($this->job)));
+			<?php if(!empty($job_data)){
+						$this->plugin->table_renderer->render(array('header'=>'<h3>Job Details</h3>',
+																	'data'=>$job_data));
 			} ?>
 		</div>
 		<?php }; ?>

@@ -36,7 +36,6 @@ final class TQ_JobFormatterTest extends TestCase
         $this->formatter = new TransitQuote_Pro4\TQ_JobFormatter($formatter_config);
 
         $output = $this->formatter->format();
-        echo json_encode($output);
         $this->assertTrue(is_array($output), ' not an array');
 
 
@@ -62,7 +61,6 @@ final class TQ_JobFormatterTest extends TestCase
         $this->formatter = new TransitQuote_Pro4\TQ_JobFormatter($formatter_config);
 
         $output = $this->formatter->format_not_empty_only();
-        echo json_encode($output);
         $this->assertTrue(is_array($output), ' not an array');
 
         $this->assertCount(2, $output, ' not 2 elements');

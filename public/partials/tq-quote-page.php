@@ -18,13 +18,13 @@
     <h3>Delivery Reference: <?php echo $this->job['id']; ?></h3>
 	<div class="contact_details" >
     <?php
-        $this->table_renderer->render(array('header'=>'Contact Details','data'=>'data'=>$cusomer_data)); ?>
+        $this->table_renderer->render(array('header'=>'Contact Details','data'=>'data'=>$customer_data)); ?>
 	?>
 	</div>
 	<div class="additional_information" >
 	<?php
-	if (!empty($this->format_job($this->job))) {
-        $this->table_renderer->render(array('header'=>'Additional Information','data'=>$this->format_job($this->job))); 
+	if (!empty($job_data)) {
+        $this->table_renderer->render(array('header'=>'Additional Information','data'=>$job_data)); 
 	}
 	?>
 	</div>

@@ -648,6 +648,23 @@ class TransitQuote_Pro_Admin {
         $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
         $customer_data = $this->customer_formatter->format($this->job['customer']);
 
+
+        $formatter_config = array( 'job'=>$this->job,
+                                    'labels'=>$labels,
+                                    'services'=>$this->plugin->services,
+                                    'vehicles'=>$this->plugin->vehicles);
+
+        $this->job_formatter = new TransitQuote_Pro4\TQ_JobFormatter($formatter_config);
+        $job_data = $this->job_formatter->format();
+
+    	$journey_formatter_config = array( 'journey'=>$this->job['journey'],
+                                    'labels'=>$labels,
+                                    'distance_unit'=>$this->distance_unit);
+                                                    
+        $this->journey_formatter = new TransitQuote_Pro4\TQ_JourneyFormatter($journey_formatter_config);
+        $journey_data = $this->journey_formatter->format();
+
+
 		//output the view which will be returned via ajax and inserted into the hidden
 		include('partials/tq_pro_job_details.php'); 
 	}

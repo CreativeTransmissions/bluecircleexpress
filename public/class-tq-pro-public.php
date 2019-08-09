@@ -690,6 +690,7 @@ class TransitQuote_Pro_Public {
         $this->total_cost = $this->job['quote']['total'];
         $this->rates = $this->job['quote']['rates'];
 
+
         $view_name = 'tq-quote-page';
         $this->view_labels = self::get_view_labels($view_name);
 
@@ -717,7 +718,16 @@ class TransitQuote_Pro_Public {
         $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
         $customer_data = $this->customer_formatter->format($this->job['customer']);
         
-        $this->view = 'partials/' . $view_name . '.php';
+
+        $job_formatter_config = array(  'job'=>$this->job,
+                                        'labels'=>$labels,
+                                        'services'=>$this->services,
+                                        'vehicles'=>$this->vehicles);
+
+        $this->job_formatter = new TransitQuote_Pro4\TQ_JobFormatter($job_formatter_config);
+        $job_data = $this->job_formatter->format_not_empty_only();
+
+        $this->view = 'partials/tq-quote-page.php';
         ob_start();
         include $this->view;
         return ob_get_clean();
@@ -2804,8 +2814,21 @@ class TransitQuote_Pro_Public {
             $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
             $customer_data = $this->customer_formatter->format($this->job['customer']);
 
-            $job_data = $this->format_job($this->job);
-            $journey_data = $this->format_journey($this->job['journey']);
+            $job_formatter_config = array(  'job'=>$this->job,
+                                            'labels'=>$labels,
+                                            'services'=>$this->services,
+                                            'vehicles'=>$this->vehicles);
+
+            $this->job_formatter = new TransitQuote_Pro4\TQ_JobFormatter($job_formatter_config);
+            $job_data = $this->job_formatter->format_not_empty_only();
+
+
+            $journey_formatter_config = array( 'journey'=>$this->job['journey'],
+                                        'labels'=>$labels,
+                                        'distance_unit'=>$this->distance_unit);
+                                                        
+            $this->journey_formatter = new TransitQuote_Pro4\TQ_JourneyFormatter($journey_formatter_config);
+            $journey_data = $this->journey_formatter->format();
 
             $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
 
@@ -2872,10 +2895,20 @@ class TransitQuote_Pro_Public {
         $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
         $customer_data = $this->customer_formatter->format($this->job['customer']);
 
-        $job_data = $this->format_job($this->job);
+        $formatter_config = array( 'job'=>$this->job,
+                                    'labels'=>$labels,
+                                    'services'=>$this->services,
+                                    'vehicles'=>$this->vehicles);
 
-        $journey_data = $this->format_journey($this->job['journey']);
+        $this->formatter = new TransitQuote_Pro4\TQ_JobFormatter($formatter_config);
+        $job_data = $this->formatter->format_not_empty_only();
 
+        $journey_formatter_config = array( 'journey'=>$this->job['journey'],
+                                    'labels'=>$labels,
+                                    'distance_unit'=>$this->distance_unit);
+                                                    
+        $this->journey_formatter = new TransitQuote_Pro4\TQ_JourneyFormatter($journey_formatter_config);
+        $journey_data = $this->journey_formatter->format();
 
         $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
         $this->route_email_renderer = new TransitQuote_Pro4\TQ_RouteEmailRenderer();
@@ -2953,8 +2986,21 @@ class TransitQuote_Pro_Public {
         $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
         $customer_data = $this->customer_formatter->format($this->job['customer']);
 
-        $job_data = $this->format_job($this->job);
-        $journey_data = $this->format_journey($this->job['journey']);
+
+        $job_formatter_config = array( 'job'=>$this->job,
+                                    'labels'=>$labels,
+                                    'services'=>$this->services,
+                                    'vehicles'=>$this->vehicles);
+
+        $this->job_formatter = new TransitQuote_Pro4\TQ_JobFormatter($job_formatter_config);
+        $job_data = $this->job_formatter->format_not_empty_only();
+
+        $journey_formatter_config = array( 'journey'=>$this->job['journey'],
+                                    'labels'=>$labels,
+                                    'distance_unit'=>$this->distance_unit);
+                                                    
+        $this->journey_formatter = new TransitQuote_Pro4\TQ_JourneyFormatter($journey_formatter_config);
+        $journey_data = $this->journey_formatter->format();
 
         $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
         $this->route_email_renderer = new TransitQuote_Pro4\TQ_RouteEmailRenderer();
@@ -3207,96 +3253,6 @@ class TransitQuote_Pro_Public {
         return self::get_setting('', 'from_name', null);
     }
 
-    public function format_customer($customer) {
-
-        //format for display in job details view
-        $out = array();
-        foreach ($customer as $key => $value) {
-
-            //init new field
-            $field = array();
-
-            //include only label, value and template_id set to text incase needed for output
-            switch ($key) {
-            case 'first_name':
-                $field['label'] = 'First Name';
-                $field['value'] = $value;
-                $out[] = $field;
-                break;
-            case 'last_name':
-                $field['label'] = 'Last Name';
-                $field['value'] = $value;
-                $out[] = $field;
-                break;
-            case 'email':
-                $field['label'] = 'Email Address';
-                $field['value'] = $value;
-                $out[] = $field;
-                break;
-            case 'phone':
-                $field['label'] = 'Phone Number';
-                $field['value'] = $value;
-                $out[] = $field;
-                break;
-            };
-
-        };
-        return $out;
-    }
-    public function format_table($data) {
-        //format for display in job details view
-        $out = array();
-        foreach ($data as $key => $value) {
-            //init new field
-            $field = array();
-            //include only label, value and template_id set to text incase needed for output
-            switch ($key) {
-            case 'id':
-            case 'created':
-            case 'modified':
-                break;
-            default:
-                $field['label'] = $key;
-                $field['value'] = $value;
-                $out[] = $field;
-            };
-        };
-        return $out;
-    }
-
-    public function format_job($job) {
-
-        //format for display in job details view
-        $out = array();
-        foreach ($job as $key => $value) {
-            //init new field
-            $field = array();
-            //include only label, value and template_id set to text incase needed for output
-            switch ($key) {
-            case 'description':
-                $field['label'] = 'Information';
-                $field['value'] = urldecode($value);
-                if ($field['value'] != '') {
-                    $out[] = $field;
-                }
-                break;
-            case 'service_id':
-                if (self::using_service_types($value)) {
-                    $out[] = self::format_service_type($value);
-                };
-                break;
-            case 'vehicle_id':
-                if (self::using_vehicle_types($value)) {
-                    $out[] = self::format_vehicle_type($value);
-                };
-                break;
-            default:
-                break;
-            };
-        };
-        return $out;
-    }
-
     public function index_array_by_db_id($array) {
         $indexed_array = array();
         foreach ($array as $key => $record) {
@@ -3305,49 +3261,6 @@ class TransitQuote_Pro_Public {
         return $indexed_array;
     }
 
-    private function format_service_type($value) {
-        $field = array('label' => 'Service');
-        $service_name = '';
-        if (isset($this->services[$value])) {
-            $service_name = $this->services[$value]['name'];
-        };
-        $field['value'] = $service_name;
-        return $field;
-    }
-
-    private function format_vehicle_type($value) {
-        $field = array('label' => 'Vehicle');
-        $vehicle_name = '';
-        if (isset($this->vehicles[$value])) {
-            $vehicle_name = $this->vehicles[$value]['name'];
-        };
-        $field['value'] = $vehicle_name;
-        return $field;
-    }
-
-    public function format_journey($journey) {
-        $distance_unit = self::get_distance_unit();
-        //format for display in job details view
-        $out = array();
-        foreach ($journey as $key => $value) {
-            //init new field
-            $field = array();
-            //include only label, value and template_id set to text incase needed for output
-            switch ($key) {
-            case 'distance':
-                $field['label'] = 'Distance (' . $distance_unit . 's)';
-                $field['value'] = $value;
-                $out[] = $field;
-                break;
-            case 'time':
-                $field['label'] = 'Estimated Travel Time (Hours)';
-                $field['value'] = number_format((float) $value, 2, '.', '');
-                $out[] = $field;
-                break;
-            };
-        };
-        return $out;
-    }
     public function format_location($loc) {
         //format for display in customise forms
         $out = array();
