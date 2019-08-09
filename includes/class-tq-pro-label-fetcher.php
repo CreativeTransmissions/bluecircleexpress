@@ -81,7 +81,7 @@ class TQ_LabelFetcher {
 
 						'journey_title' => $this->public->get_setting('tq_pro_form_options','journey_title', ''),
 						'payment_info_header' => $this->public->get_setting('tq_pro_form_options','payment_info_header', ''),
-						'distance_label' => $this->public->get_setting('tq_pro_form_options','distance_label', ''),						
+						'distance' => $this->public->get_setting('tq_pro_form_options','distance', ''),						
 						'time_label' => $this->public->get_setting('tq_pro_form_options','time_label', ''),
 						'optimize_route_label' => $this->public->get_setting('tq_pro_form_options','optimize_route_label', ''),
 						'deliver_and_return_label' => $this->public->get_setting('tq_pro_form_options','deliver_and_return_label', ''),
@@ -144,7 +144,7 @@ class TQ_LabelFetcher {
 
 						'journey_title' => $this->public->get_setting('tq_pro_form_options','journey_title', ''),
 						'payment_info_header' => $this->public->get_setting('tq_pro_form_options','payment_info_header', ''),
-						'distance_label' => $this->public->get_setting('tq_pro_form_options','distance_label', ''),						
+						'distance' => $this->public->get_setting('tq_pro_form_options','distance', ''),						
 						'time_label' => $this->public->get_setting('tq_pro_form_options','time_label', ''),
 						'optimize_route_label' => $this->public->get_setting('tq_pro_form_options','optimize_route_label', ''),
 						'deliver_and_return_label' => $this->public->get_setting('tq_pro_form_options','deliver_and_return_label', ''),
@@ -200,7 +200,7 @@ class TQ_LabelFetcher {
 						'vehicle_label' => $this->public->get_setting('tq_pro_form_options','vehicle_label', 'Vehicle'),
 						'journey_title' => $this->public->get_setting('tq_pro_form_options','journey_title', ''),
 						'payment_info_header' => $this->public->get_setting('tq_pro_form_options','payment_info_header', ''),
-						'distance_label' => $this->public->get_setting('tq_pro_form_options','distance_label', ''),						
+						'distance' => $this->public->get_setting('tq_pro_form_options','distance', ''),						
 						'time_label' => $this->public->get_setting('tq_pro_form_options','time_label', ''),
 						'optimize_route_label' => $this->public->get_setting('tq_pro_form_options','optimize_route_label', ''),
 						'deliver_and_return_label' => $this->public->get_setting('tq_pro_form_options','deliver_and_return_label', ''),

@@ -8,7 +8,7 @@
         <h3><span class="quote-currency"><?php echo $this->currency_symbol; ?></span><span class="totalCost"></span>
         </h3>
         <ul>
-            <li><?php echo $this->view_labels['distance_label']; ?> (<?php echo $this->distance_unit; ?>s): <span id="distance"></span></li>
+            <li><?php echo $this->view_labels['distance']; ?> (<?php echo $this->distance_unit; ?>s): <span id="distance"></span></li>
             <li class="<?php echo $drive_time_hidden_class; ?>"><?php echo $this->view_labels['time_label']; ?>: <span id="hours"></span></li>
             <li class="hidden"><?php echo $this->view_labels['short_notice_cost_label']; ?>: <?php echo $this->currency_symbol; ?><span class="noticeCost"></span></li>
             <li class="field"><?php echo $this->view_labels['sub_total_label']; ?>: <?php echo $this->currency_symbol; ?><span class="basicCost"></span></li>

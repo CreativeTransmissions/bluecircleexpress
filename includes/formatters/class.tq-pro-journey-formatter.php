@@ -23,9 +23,9 @@
 namespace TransitQuote_Pro4;
 class TQ_JourneyFormatter {
 
- 	private $default_config = array(
+ 	private $default_config = array('distance_unit',
  									'journey'=>array(), // associative array of journey data
- 									'output_def'=>array()  // output definition: array('field_name1','field_name2')
+ 									'output_def'=>array('distance','time')  // output definition: array('field_name1','field_name2')
  									);
 
     public function __construct($config = null) {
@@ -47,11 +47,19 @@ class TQ_JourneyFormatter {
         };
         $this->output_def = $this->config['output_def'];
 
-        if (empty($this->config['labels'])) {
-           // echo 'TQ_JourneyFormatter: no labels in params';
+
+        if (empty($this->config['distance_unit'])) {
+           // echo 'TQ_JourneyFormatter: no distance_unit in params';
+
             return false;
         };
-        $this->labels = $this->config['labels'];
+        $this->distance_unit = $this->config['distance_unit'];
+
+        if (!empty($this->config['labels'])) {
+           // echo 'TQ_JourneyFormatter: no labels in params';
+            $this->labels = $this->config['labels'];
+
+        };
 
         return true; 
 	}
@@ -113,6 +121,17 @@ class TQ_JourneyFormatter {
 		$value = $this->journey[$key];
         $field = array();
  		switch ($key) {
+            case 'distance':
+                $field['label'] = 'Distance (' . $this->distance_unit . 's)';
+                $field['value'] = number_format((float) $value, 2, '.', '');
+                $field['type'] = 'number';                
+                break;
+            case 'time':
+                $field['label'] = 'Estimated Travel Time (Hours)';
+                $field['value'] = number_format((float) $value, 2, '.', '');
+                $field['type'] = 'number';
+                break;                
+                break;            
             default:
                 $field['value'] = $value;
                 $field['type'] = 'text';
