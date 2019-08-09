@@ -81,6 +81,11 @@ class TransitQuote_Pro_Public {
         }
         $this->dbui = new TransitQuote_Pro4\CT_DBUI(array('cdb' => $this->cdb));
         $this->tq_woocommerce_customer = new TransitQuote_Pro4\TQ_WooCommerceCustomer(array('cdb' => $this->cdb, 'public' => $this, 'debug' => $this->debug));
+        $services = self::get_services();
+        $this->services = $this->index_array_by_db_id($services);
+
+        $vehicles = self::get_vehicles();
+        $this->vehicles = $this->index_array_by_db_id($vehicles);        
     }
 
     public function enqueue_styles() {
@@ -134,11 +139,11 @@ class TransitQuote_Pro_Public {
         self::dequeue_maps(); // uncomment to debug multiple maps installs
 
         wp_enqueue_script($this->plugin_slug . '-gmapsapi', '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places' . $this->api_string, '', 3.14, True);
-        wp_enqueue_script($this->plugin_slug . '-jqui', '//code.jquery.com/ui/1.10.4/jquery-ui.js', '', 1.10, True);
+        wp_enqueue_script($this->plugin_slug . '-jqui', '//code.jquery.com/ui/1.10.4/jquery-ui.js', array('jquery'), 1.10, True);
 
-        wp_enqueue_script($this->plugin_slug . '-jqui-maps', plugins_url('js/jquery.ui.map.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-gmapsapi'), '', True); //was commented
+        wp_enqueue_script($this->plugin_slug . '-jqui-maps', plugins_url('js/jquery.ui.map.js', __FILE__), array($this->plugin_slug . '-jqui', $this->plugin_slug . '-gmapsapi'), '', True); //was commented
 
-        wp_enqueue_script($this->plugin_slug . '-picker', plugins_url('js/picker.js', __FILE__), array('jquery', $this->plugin_slug . '-gmapsapi'), '', True);
+        wp_enqueue_script($this->plugin_slug . '-picker', plugins_url('js/picker.js', __FILE__), array($this->plugin_slug . '-jqui-maps'), '', True);
         wp_enqueue_script($this->plugin_slug . '-picker-date', plugins_url('js/picker.date.js', __FILE__), array('jquery', $this->plugin_slug . '-picker'), '', True);
         wp_enqueue_script($this->plugin_slug . '-picker-time', plugins_url('js/picker.time.js', __FILE__), array('jquery', $this->plugin_slug . '-picker-date'), '', True);
         wp_enqueue_script($this->plugin_slug . '-picker-legacy', plugins_url('js/legacy.js', __FILE__), array('jquery', $this->plugin_slug . '-picker-time'), '', True);
@@ -2859,10 +2864,17 @@ class TransitQuote_Pro_Public {
 
         $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
         $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
+        echo ' CUSTOMER-->';
 
+        echo json_encode($this->job['customer']);
         $customer_data = $this->format_customer($this->job['customer']);
         $job_data = $this->format_job($this->job);
+        echo ' JOB-->';
+
+        echo json_encode($this->job);
+        echo ' JOURNEY-->';
         $journey_data = $this->format_journey($this->job['journey']);
+        echo json_encode($this->job['journey']);
 
         $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
         $this->route_email_renderer = new TransitQuote_Pro4\TQ_RouteEmailRenderer();
@@ -3250,11 +3262,7 @@ class TransitQuote_Pro_Public {
     }
 
     public function format_job($job) {
-        $services = self::get_services();
-        $this->services = $this->index_array_by_db_id($services);
 
-        $vehicles = self::get_vehicles();
-        $this->vehicles = $this->index_array_by_db_id($vehicles);
         //format for display in job details view
         $out = array();
         foreach ($job as $key => $value) {

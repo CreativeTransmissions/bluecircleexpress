@@ -278,6 +278,21 @@ class TransitQuote_Pro4 {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/formatters/class.tq-pro-waypoint-formatter.php';
 
 		/**
+		 * The class responsible for formatting waypoints
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/formatters/class.tq-pro-customer-formatter.php';
+
+		/**
+		 * The class responsible for formatting waypoints
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/formatters/class.tq-pro-job-formatter.php';
+						/**
+		 * The class responsible for formatting waypoints
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/formatters/class.tq-pro-journey-formatter.php';
+
+
+		/**
 		 * The class responsible for rendering tables
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/renderers/class.tq-table-renderer.php';
