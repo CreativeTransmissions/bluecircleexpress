@@ -645,6 +645,9 @@ class TransitQuote_Pro_Admin {
         $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
 		$formatted_waypoints = $this->waypoint_formatter->format();
 
+        $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
+        $customer_data = $this->customer_formatter->format($this->job['customer']);
+
 		//output the view which will be returned via ajax and inserted into the hidden
 		include('partials/tq_pro_job_details.php'); 
 	}

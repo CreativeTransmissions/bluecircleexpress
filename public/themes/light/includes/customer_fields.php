@@ -29,9 +29,9 @@
         </div>
         <div class="full bt-flabels__wrapper">
             <span class="sub_title">
-                <i class="icon icon-icn-description"></i><?php echo $this->view_labels['job_info_label']; ?>
+                <i class="icon icon-icn-description"></i><?php echo $this->view_labels['description']; ?>
             </span>
-            <textarea tabindex="5" name="description" id="description" placeholder="Enter <?php echo $this->view_labels['job_info_label']; ?>"></textarea>
+            <textarea tabindex="5" name="description" id="description" placeholder="Enter <?php echo $this->view_labels['description']; ?>"></textarea>
             <span class="bt-flabels__error-desc">Required / Invalid </span>
         </div>
     </div>

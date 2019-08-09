@@ -714,7 +714,9 @@ class TransitQuote_Pro_Public {
         $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
         $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
 
-
+        $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
+        $customer_data = $this->customer_formatter->format($this->job['customer']);
+        
         $this->view = 'partials/' . $view_name . '.php';
         ob_start();
         include $this->view;
@@ -2799,7 +2801,9 @@ class TransitQuote_Pro_Public {
             $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
             $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
 
-            $customer_data = $this->format_customer($this->job['customer']);
+            $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
+            $customer_data = $this->customer_formatter->format($this->job['customer']);
+
             $job_data = $this->format_job($this->job);
             $journey_data = $this->format_journey($this->job['journey']);
 
@@ -2864,17 +2868,14 @@ class TransitQuote_Pro_Public {
 
         $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
         $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
-        echo ' CUSTOMER-->';
 
-        echo json_encode($this->job['customer']);
-        $customer_data = $this->format_customer($this->job['customer']);
+        $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
+        $customer_data = $this->customer_formatter->format($this->job['customer']);
+
         $job_data = $this->format_job($this->job);
-        echo ' JOB-->';
 
-        echo json_encode($this->job);
-        echo ' JOURNEY-->';
         $journey_data = $this->format_journey($this->job['journey']);
-        echo json_encode($this->job['journey']);
+
 
         $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
         $this->route_email_renderer = new TransitQuote_Pro4\TQ_RouteEmailRenderer();
@@ -2949,7 +2950,9 @@ class TransitQuote_Pro_Public {
         $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
         $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
 
-        $customer_data = $this->format_customer($this->job['customer']);
+        $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
+        $customer_data = $this->customer_formatter->format($this->job['customer']);
+
         $job_data = $this->format_job($this->job);
         $journey_data = $this->format_journey($this->job['journey']);
 

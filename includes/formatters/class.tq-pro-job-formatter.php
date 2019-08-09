@@ -27,7 +27,7 @@ class TQ_JobFormatter {
                                     'job'=>array(), // associative array of job data
                                     'services'=>array(), // associative array of job data
  									'vehicles'=>array(), // associative array of job data
- 									'output_def'=>array()  // output definition: array('field_name1','field_name2')
+ 									'output_def'=>array('description','service_id','vehicle_id')  // output definition: array('field_name1','field_name2')
  									);
 
     public function __construct($config = null) {
@@ -37,17 +37,28 @@ class TQ_JobFormatter {
 
 	public function has_required_params(){
         if (empty($this->config['job'])) {
-        //    echo 'TQ_JobFormatter: no job in params';            
+            //echo 'TQ_JobFormatter: no job in params'; 
             return false;
         };
         $this->job = $this->config['job'];
 
         if (empty($this->config['output_def'])) {
-           // echo 'TQ_JobFormatter: no output_def in params';
-
+            //echo 'TQ_JobFormatter: no output_def in params';
             return false;
         };
         $this->output_def = $this->config['output_def'];
+
+        if (empty($this->config['vehicles'])) {
+            //echo 'TQ_JobFormatter: no vehicles in params';
+            return false;
+        };        
+        $this->vehicles = $this->config['vehicles'];
+
+        if (empty($this->config['services'])) {
+           // echo 'TQ_JobFormatter: no services in params';
+            return false;
+        };        
+        $this->services = $this->config['services'];
 
         if (empty($this->config['labels'])) {
            // echo 'TQ_JobFormatter: no labels in params';
@@ -82,6 +93,7 @@ class TQ_JobFormatter {
         };
 
         $output = array();
+
         foreach ($this->output_def as $key) {
             if (!isset($this->job[$key])) {
                 continue;
@@ -97,7 +109,6 @@ class TQ_JobFormatter {
     }
 
 	public function format_field($key){
-		
         $name = $key;        
 		$valueType = $this->format_value($key);
         $label = $this->labels[$key];
@@ -116,14 +127,21 @@ class TQ_JobFormatter {
         $field = array();
  		switch ($key) {
             case 'service_id':
-                if (self::using_service_types($value)) {
-                    $out[] = self::format_service_type($value);
+                $service_name = '';
+                if (isset($this->services[$value])) {
+                    $service_name = $this->services[$value]['name'];
                 };
+                $field['value'] = $service_name;
+                $field['type'] = 'text';
+
                 break;
             case 'vehicle_id':
-                if (self::using_vehicle_types($value)) {
-                    $out[] = self::format_vehicle_type($value);
+                $vehicle_name = '';
+                if (isset($this->vehicles[$value])) {
+                    $vehicle_name = $this->vehicles[$value]['name'];
                 };
+                $field['value'] = $vehicle_name;
+                $field['type'] = 'text';
                 break;            
             default:
                 $field['value'] = urldecode($value);
@@ -135,24 +153,5 @@ class TQ_JobFormatter {
 
 	}
 
-    private function format_service_type($value) {
-        $field = array('label' => 'Service');
-        $service_name = '';
-        if (isset($this->services[$value])) {
-            $service_name = $this->services[$value]['name'];
-        };
-        $field['value'] = $service_name;
-        return $field;
-    }
-
-    private function format_vehicle_type($value) {
-        $field = array('label' => 'Vehicle');
-        $vehicle_name = '';
-        if (isset($this->vehicles[$value])) {
-            $vehicle_name = $this->vehicles[$value]['name'];
-        };
-        $field['value'] = $vehicle_name;
-        return $field;
-    }
 }
 ?>

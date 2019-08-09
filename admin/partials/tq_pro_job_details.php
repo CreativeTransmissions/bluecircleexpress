@@ -33,7 +33,7 @@
 	<?php if(!empty($this->job['customer'])){ ?>
 		<div class="half job_details_customer">
 			<?php $this->plugin->table_renderer->render(array('header'=>'<h3>Customer Details</h3>',
-																'data'=>$this->plugin->format_customer($this->job['customer']))); ?>
+																'data'=>$cusomer_data)); ?>
 		</div>
 		<div class="half job_details_job">
 			<?php $job_data = $this->plugin->format_job($this->job);
