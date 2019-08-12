@@ -1,5 +1,5 @@
-<div class="transit_inner cost <?php echo $hide_section; ?> quote-fields"> <!-- Estimate cost section start here -->
-    <div class="transit_header">   <!-- Delivery Address section start here -->
+<div class="transit_inner cost <?php echo $hide_section; ?> quote-fields">
+    <div class="transit_header tq-form-title-color">  
         <h2><?php echo $this->view_labels['quote_section_title']; ?></h2>
     </div>
     <div class="transit_body quote-success tq-form-bg-color">
