@@ -804,14 +804,14 @@ class Admin_Config {
                                                         'id'=>'customer_subject',
                                                         'label'=>'Customer Quote Email Subject',
                                                         'type'=>'input',
-                                                        'help'=>'Please enter the email subject for customer quote emails.<br/>Example: <b>Your Tranporation Quote</b>',
-                                                        'default'=>'Your Tranporation Quote'),
+                                                        'help'=>'Please enter the email subject for customer quote emails.<br/>Example: <b>Your Transportation Quote</b>',
+                                                        'default'=>'Your Transportation Quote'),
                                                       'customer_message'=>array(
                                                         'id'=>'customer_message',
                                                         'label'=>'Customer Quote Email Message',
                                                         'type'=>'textarea',
                                                         'help'=>'Please enter the message to your customer that will appear above the journey details and quote.',
-                                                        'default'=>'Thank you for your order. Your tranporation details and quote are below.')
+                                                        'default'=>'Thank you for your order. Your Transportation details and quote are below.')
                                                     )
                                               ))
                               ),
