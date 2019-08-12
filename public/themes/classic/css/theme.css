@@ -580,8 +580,8 @@ form.tq-form select option{
 	color: #000;
 }
 .tq-form .add-waypoint {
-		float: left;
-	}
+	float: left;
+}
 
 @media screen and (max-width: 800px){
 	.bt-flabels__error-desc{

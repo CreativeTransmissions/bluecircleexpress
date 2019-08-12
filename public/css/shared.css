@@ -133,8 +133,17 @@ div.rates-list {
 
 .entry-content .tq-email-preview br,
 .tq-email-preview br {
-margin: 0;
-padding: 0;
+    margin: 0;
+    padding: 0;
+}
+.entry-content .tq-email-preview,
+.tq-email-preview { 
+    background: #eee;
+    padding: 2em;
+    font-size: 16px;
+    font-family: courier;
+    color: #000;
+    font-weight: bold;
 }
 
 @media screen and (max-width:767px) {

@@ -80,7 +80,7 @@ class TQ_RouteEmailRenderer {
             $this->rows[] = $list_html['value'];
         };
 
-        $body .= implode("\r\n", $this->rows);             
+        $body .= implode("\r\n\r\n", $this->rows);             
         
         $body .= "\r\n";
         return $body;        
