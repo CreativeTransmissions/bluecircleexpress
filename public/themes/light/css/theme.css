@@ -75,6 +75,8 @@
     height: auto;
     line-height: auto;
     margin-left: auto;
+    margin-right: 0.5em;    
+    vertical-align: middle;    
 }
 .tq-form .datepicker {
     left: auto;
