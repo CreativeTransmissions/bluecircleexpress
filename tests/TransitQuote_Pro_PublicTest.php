@@ -100,18 +100,18 @@ final class TransitQuote_Pro_PublicTest extends TestCase
 
         // now load and check we have the right info
         $public->get_job_details_from_id($job_id);
-
+var_dump($public->dispatch_email);
         foreach ($this->test_for_email_post_data as $key => $value) {
             if($this->is_param_for_emmail($key)){
                 $test_value = $this->format_param_for_email($key, $value);
-                $this->assertContains($test_value, $public->html_email, $test_value.' key: '.$key.' is not in dipatch html_email');                
+                $this->assertContains($test_value, $public->dispatch_email, $test_value.' key: '.$key.' is not in dipatch html_email: ');                
             };
         };
 
         foreach ($this->test_for_email_post_data as $key => $value) {
             if($this->is_param_for_emmail($key)){
                 $test_value = $this->format_param_for_email($key, $value);
-                $this->assertContains($test_value, $public->customer_html_email, $test_value.' key: '.$key.' is not in customer_html_email');                
+                $this->assertContains($test_value, $public->customer_email, $test_value.' key: '.$key.' is not in customer_html_email');                
             };
         };
         $public = null;

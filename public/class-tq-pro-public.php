@@ -1,6 +1,5 @@
 <?php
  error_reporting(E_ERROR | E_PARSE );
-ini_set('display_errors', 1);
  ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
@@ -2090,9 +2089,9 @@ class TransitQuote_Pro_Public {
             $this->job = self::get_job_details($this->job);
          
             //echo 'success: '.$success.' '.$message;
-            $this->dispatch_email = self::email_dispatch('New Job Booking - ref: ' . $this->job['id'] . " " . $this->customer['first_name'] . " " . $this->customer['last_name']);
+            $this->dispatch_email_success = self::email_dispatch('New Job Booking - ref: ' . $this->job['id'] . " " . $this->customer['first_name'] . " " . $this->customer['last_name']);
 
-            $this->customer_email = self::email_customer();
+            $this->customer_email_success = self::email_customer();
             return $this->job['id'];            
         };
         return false;
@@ -2866,10 +2865,10 @@ class TransitQuote_Pro_Public {
 
     }
 
-    private function email_customer() {
+    public function email_customer() {
         
         $email_config = $this->build_email_config('email_customer');
-        $success = $this->send_email();
+        $success = $this->send_email($email_config);
         return $success;
     }
 
@@ -2901,7 +2900,7 @@ class TransitQuote_Pro_Public {
         ob_start();
 
         include 'partials/emails/'.$email_view_name.'.php';
-        $this->customer_html_email = $html_email = ob_get_clean(); 
+        $this->customer_email = $html_email = ob_get_clean(); 
 
         $email_config = array(  'to'=>$to,
                                 'from'=>$from,
@@ -2946,7 +2945,7 @@ class TransitQuote_Pro_Public {
         ob_start();
 
         include 'partials/emails/'.$email_view_name.'.php';
-        $this->customer_html_email = $html_email = ob_get_clean(); 
+        $this->dispatch_email = $html_email = ob_get_clean(); 
 
         $email_config = array(  'to'=>$to,
                                 'from'=>$from,
@@ -3034,20 +3033,27 @@ class TransitQuote_Pro_Public {
         return $this->quote_formatter->format_non_zero_only();
     }
 
-    public function send_email(){
+    public function send_email($email_config){
         //    add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
 
-        $success = $this->send_email($email_config);
+        $success = $this->ajax->send_notification($email_config['to'],
+            $email_config['from'],
+            $email_config['from_name'],
+            $email_config['subject'],
+            $email_config['html_email'],
+            $email_config['headers']
+        );
         //$this->ajax->set_email_debug(true);
        
-
+        return $success;
         //    remove_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
+
     }
 
     private function email_dispatch($subject) {
         
         $email_config = $this->build_email_config_dispatch('email_job_details', $subject);
-        $success = $this->send_email();
+        $success = $this->send_email($email_config);
         return $success;
     }
 
