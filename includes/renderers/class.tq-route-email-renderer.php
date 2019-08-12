@@ -66,22 +66,23 @@ class TQ_RouteEmailRenderer {
 
  
     public function generate_body(){
+        $body = '';
+        if(!empty($this->header)){
+             $body .= $this->header . "\r\n";
+        };
 
         $this->waypoint_text_lists = $this->generate_list_for_each_waypoint();
-        $body = '';
+
+        
 
         $this->rows = array();
         foreach ($this->waypoint_text_lists as $list_html) {
             $this->rows[] = $list_html['value'];
         };
 
-        if(!empty($this->header)){
-             $body .= $this->header . "\r\n\r\n";
-        };
-        
         $body .= implode("\r\n", $this->rows);             
         
-        $body .= "\r\n\r\n";
+        $body .= "\r\n";
         return $body;        
     }
 
@@ -93,7 +94,9 @@ class TQ_RouteEmailRenderer {
             if($key>0){
                 $header = $this->labels['destination_address_label'];
             };
-            $waypoint_text = $email_renderer->render(array('header'=>$header,'data'=>$waypoint));
+
+            $email_renderer->data = $waypoint;
+            $waypoint_text = $header. "\r\n".$email_renderer->generate_content_section();
             $waypoint_text_lists[] = array('value'=>$waypoint_text);
         };
         return $waypoint_text_lists;

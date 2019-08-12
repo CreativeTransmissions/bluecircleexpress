@@ -42,6 +42,13 @@ class TQ_EmailRenderer {
         if (!empty($this->params['header'])) {
             $this->header = $this->params['header'];
         };
+
+        $this->labels = $this->params['labels'];
+
+        if (!empty($this->params['labels'])) {
+            $this->header = $this->params['labels'];
+        };
+
         return true; 
     }
 

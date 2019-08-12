@@ -2787,7 +2787,8 @@ class TransitQuote_Pro_Public {
         $this->job = self::get_job($job_id);
 
         //get details for the job
-        if (self::job_is_available()) {
+        if (self::job_is_available()) {  
+
             $this->job = self::get_job_details($this->job);
 
             $labels = $this->label_fetcher->fetch_labels_for_view('email_job_details');
@@ -2831,6 +2832,8 @@ class TransitQuote_Pro_Public {
             $this->journey_formatter = new TransitQuote_Pro4\TQ_JourneyFormatter($journey_formatter_config);
             $journey_data = $this->journey_formatter->format();
 
+    $route_params = array('header'=>$labels['route_label'], 'labels'=>$labels, 'data'=>$formatted_waypoints);
+
             $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
 
             $message = self::get_customer_message();
@@ -2858,6 +2861,13 @@ class TransitQuote_Pro_Public {
     }
 
     private function email_customer() {
+        
+        $email_config = $this->build_email_config();
+        $success = $this->send_email();
+        return $success;
+    }
+
+    public function build_email_config(){
         //send email to customer
 
         $to = self::get_customer_email();
@@ -2865,6 +2875,8 @@ class TransitQuote_Pro_Public {
         $from_name = self::get_from_name();
         $subject = self::get_customer_subject();
         $message = self::get_customer_message();
+
+
 
         //test address
         //$headers = "Bcc: contact@creativetransmissions.com"."\r\n";
@@ -2893,43 +2905,56 @@ class TransitQuote_Pro_Public {
         $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
         $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
 
-        $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
-        $customer_data = $this->customer_formatter->format($this->job['customer']);
+        $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer'],
+                                                                                    'labels'=>$labels));
+        $customer_data = $this->customer_formatter->format();
 
-        $formatter_config = array( 'job'=>$this->job,
+        $services = self::get_services();
+        $this->services = $this->index_array_by_db_id($services);
+
+        $vehicles = self::get_vehicles();
+        $this->vehicles = $this->index_array_by_db_id($vehicles); 
+        $job_formatter_config = array( 'job'=>$this->job,
                                     'labels'=>$labels,
                                     'services'=>$this->services,
                                     'vehicles'=>$this->vehicles);
-
-        $this->formatter = new TransitQuote_Pro4\TQ_JobFormatter($formatter_config);
-        $job_data = $this->formatter->format_not_empty_only();
-
+ 
+        $this->job_formatter = new TransitQuote_Pro4\TQ_JobFormatter($job_formatter_config);
+        $job_data = $this->job_formatter->format_not_empty_only();
+        
         $journey_formatter_config = array( 'journey'=>$this->job['journey'],
                                     'labels'=>$labels,
                                     'distance_unit'=>$this->distance_unit);
                                                     
         $this->journey_formatter = new TransitQuote_Pro4\TQ_JourneyFormatter($journey_formatter_config);
-        $journey_data = $this->journey_formatter->format();
-
+        $journey_data = $this->journey_formatter->format_not_empty_only();
+    
         $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
         $this->route_email_renderer = new TransitQuote_Pro4\TQ_RouteEmailRenderer();
-
+        $route_params = array('header'=>$labels['route_label'], 'labels'=>$labels, 'data'=>$formatted_waypoints);
 
         ob_start();
         include 'partials/emails/email_customer.php';
-        $this->customer_html_email = $html_email = ob_get_clean();
+        $this->customer_html_email = $html_email = ob_get_clean(); 
 
+        $email_config = array(  'to'=>$to,
+                                'from'=>$from,
+                                'from_name'=>$from_name,
+                                'subject'=>$subject,
+                                'html_email'=>$html_email,
+                                'headers'=>$headers);
+
+        return $email_config;
+
+    }
+    public function send_email(){
         //    add_filter('wp_mail_content_type', array( $this, 'set_content_type' ) );
+
+        $success = $this->send_email($email_config);
         //$this->ajax->set_email_debug(true);
-        $email = $this->ajax->send_notification($to,
-            $from,
-            $from_name,
-            $subject,
-            $html_email, $headers);
+       
 
         //    remove_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
-
-        return $html_email;
     }
 
     public function email_dispatch($subject) {
@@ -3036,14 +3061,15 @@ class TransitQuote_Pro_Public {
         $this->job_id = $this->ajax->param(array('name' => 'job_id', 'optional' => true));
         if (empty($this->job_id)) {
             return '';
-        } else {
-            echo 'Email from job: ' . $this->job_id . '<br/><br/>';
-            $this->view_labels = self::get_view_labels('email_job_details');
-            self::get_job_details_from_id($this->job_id);
-            ob_start();
-            include 'partials/emails/email_job_details.php';
-            $html_email = ob_get_clean();
         };
+
+        echo 'Email from job: ' . $this->job_id . '<br/><br/>';
+        $this->view_labels = self::get_view_labels('email_job_details');
+        self::get_job_details_from_id($this->job_id);
+        ob_start();
+        include 'partials/emails/email_job_details.php';
+        $html_email = ob_get_clean();
+        ;
         return nl2br($html_email);
     }
 
@@ -3059,17 +3085,16 @@ class TransitQuote_Pro_Public {
 
         $this->job_id = $this->ajax->param(array('name' => 'job_id', 'optional' => true));
         if (empty($this->job_id)) {
-
             return 'no job id';
-        } else {
-            echo 'Email for job ref: ' . $this->job_id . '<br/><br/>';
-            $this->view_labels = self::get_view_labels('email_customer');
-            self::get_job_details_from_id($this->job_id);
-            ob_start();
-            include 'partials/emails/email_customer.php';
-            $html_email = ob_get_clean();
         };
-        return nl2br($html_email);
+ 
+        echo 'Email for job ref: ' . $this->job_id . '<br/><br/>';
+        $this->view_labels = self::get_view_labels('email_customer');
+        self::get_job_details_from_id($this->job_id);
+        $email_config = $this->build_email_config();
+        $html = nl2br($email_config['html_email']);
+        $html = str_replace('<br/><br/>', '<br/>', $html);
+        return $html;
     }
 
     public function get_api_string() {

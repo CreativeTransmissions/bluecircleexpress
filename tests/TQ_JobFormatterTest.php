@@ -45,8 +45,17 @@ final class TQ_JobFormatterTest extends TestCase
         	$this->assertArrayHasKey('name' ,$field);
         	$this->assertArrayHasKey('type' ,$field);
         	$this->assertArrayHasKey('value' ,$field);
+            $this->assertArrayHasKey('value' ,$field);
         };
         
+        $this->assertEquals('Service',$output[1]['label']);
+        $this->assertEquals('Standard',$output[1]['value']);
+
+        $this->assertEquals('Vehicle',$output[2]['label']);
+        $this->assertEquals('Van',$output[2]['value']);
+
+
+
         $this->assertEquals($output, $this->expected_output_1);
 
     }
