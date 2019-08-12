@@ -195,8 +195,9 @@
     display: inline-block;
     text-align: right;
     font-weight: 500;
-    margin-top: 3em;
     float: right;
+    font-size: 0.75em;
+    margin-top: 1em;    
 }
 .transit_noadress a {
     text-decoration: none;
