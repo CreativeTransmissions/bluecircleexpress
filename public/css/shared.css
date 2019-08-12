@@ -131,6 +131,12 @@ div.rates-list {
     position: relative !important;
 }
 
+.entry-content .tq-email-preview br,
+.tq-email-preview br {
+margin: 0;
+padding: 0;
+}
+
 @media screen and (max-width:767px) {
     .tq-form .half {
         display: block;

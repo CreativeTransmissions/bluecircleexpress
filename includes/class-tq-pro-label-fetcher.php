@@ -45,7 +45,7 @@ class TQ_LabelFetcher {
 				return $this->fetch_booking_view_labels();
 				break;
 			case 'email_customer':			
-				return $this->fetch_booking_view_labels();
+				return $this->fetch_customer_email_labels();
 				break;
 			case 'email_job_details':			
 				return $this->fetch_booking_view_labels();
@@ -229,7 +229,14 @@ class TQ_LabelFetcher {
 						'delivery_cost_label' => $this->public->get_setting('tq_pro_form_options','delivery_cost_label', 'Delivery Cost'),
 						'total_cost_label' => $this->public->get_setting('tq_pro_form_options','total_cost_label', 'Total Cost'),
 						'tax_name' => $this->public->get_setting('tq_pro_form_options','tax_name', 'VAT'),
-                        'rates'=>'Rates'						
+						'distance_cost'=> $this->public->get_setting('tq_pro_form_options','distance_cost_label', 'Distance Cost'),
+ 						'rate_hour'=>'Hourly Rate (' . $this->currency . ')',
+                        'time_cost'=>'Time Cost (' . $this->currency . ')',
+                        'basic_cost'=>'Subtotal (' . $this->currency . ')',
+                        'rate_tax'=>$this->tax_name.' Rate (%)',
+                        'tax_cost'=>$this->tax_name.' (' . $this->currency . ')',
+                        'total'=>'Total (' . $this->currency . ')',
+                        'rates'=>'Rates'					
         			);
 	}	
 }

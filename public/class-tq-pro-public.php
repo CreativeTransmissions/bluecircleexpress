@@ -2876,26 +2876,23 @@ class TransitQuote_Pro_Public {
         $subject = self::get_customer_subject();
         $message = self::get_customer_message();
 
-
-
-        //test address
-        //$headers = "Bcc: contact@creativetransmissions.com"."\r\n";
         $headers = "";
 
-          $contact_section_title = self::get_setting('tq_pro_form_options','contact_section_title', 'Contact Section Title');
-        $this->view_labels = self::get_view_labels('email_job_details');
-        $labels = $this->label_fetcher->fetch_labels_for_view('dashboard');
 
+        $this->labels = $this->label_fetcher->fetch_labels_for_view('email_customer');
+
+        // format quote for output
         $formatter_config = array(  'quote'=>$this->job['quote'],
-                                    'labels'=>$labels,
+                                    'labels'=>$this->labels,
                                     'currency'=>$this->currency,
                                     'output_def'=>$this->quote_fields_for_output);
 
         $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
         $quote_data = $this->quote_formatter->format_non_zero_only();
 
+        // format waypoints for output
         $waypoint_formatter_config = array( 'waypoints'=>$this->job['stops'],
-                                                'labels'=>$labels,
+                                                'labels'=>$this->labels,
                                                 'output_def'=>array('address',
                                                             'appartment_no',
                                                             'postal_code',
@@ -2905,35 +2902,40 @@ class TransitQuote_Pro_Public {
         $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
         $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
 
+        // format customer data for output
         $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer'],
-                                                                                    'labels'=>$labels));
+                                                                                    'labels'=>$this->labels));
         $customer_data = $this->customer_formatter->format();
 
+        //format job data for output
         $services = self::get_services();
         $this->services = $this->index_array_by_db_id($services);
 
         $vehicles = self::get_vehicles();
         $this->vehicles = $this->index_array_by_db_id($vehicles); 
+
         $job_formatter_config = array( 'job'=>$this->job,
-                                    'labels'=>$labels,
+                                    'labels'=>$this->labels,
                                     'services'=>$this->services,
                                     'vehicles'=>$this->vehicles);
  
         $this->job_formatter = new TransitQuote_Pro4\TQ_JobFormatter($job_formatter_config);
         $job_data = $this->job_formatter->format_not_empty_only();
         
+        // format journey data for output
         $journey_formatter_config = array( 'journey'=>$this->job['journey'],
-                                    'labels'=>$labels,
+                                    'labels'=>$this->labels,
                                     'distance_unit'=>$this->distance_unit);
                                                     
         $this->journey_formatter = new TransitQuote_Pro4\TQ_JourneyFormatter($journey_formatter_config);
         $journey_data = $this->journey_formatter->format_not_empty_only();
     
+        // instanciate renderers
         $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
         $this->route_email_renderer = new TransitQuote_Pro4\TQ_RouteEmailRenderer();
-        $route_params = array('header'=>$labels['route_label'], 'labels'=>$labels, 'data'=>$formatted_waypoints);
 
         ob_start();
+
         include 'partials/emails/email_customer.php';
         $this->customer_html_email = $html_email = ob_get_clean(); 
 
@@ -3092,8 +3094,9 @@ class TransitQuote_Pro_Public {
         $this->view_labels = self::get_view_labels('email_customer');
         self::get_job_details_from_id($this->job_id);
         $email_config = $this->build_email_config();
-        $html = nl2br($email_config['html_email']);
-        $html = str_replace('<br/><br/>', '<br/>', $html);
+        $html = str_replace("\r\n\r\n\r\n", '<br/>', $email_config['html_email']);
+        $html = str_replace("\r\n", '<br/>', $html);
+        $html = '<div class="tq-email-preview">'.$html.'</div>';
         return $html;
     }
 
