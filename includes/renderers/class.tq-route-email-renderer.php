@@ -68,7 +68,7 @@ class TQ_RouteEmailRenderer {
     public function generate_body(){
         $body = '';
         if(!empty($this->header)){
-             $body .= $this->header . "\r\n";
+             $body .= $this->header . "\r\n\r\n";
         };
 
         $this->waypoint_text_lists = $this->generate_list_for_each_waypoint();
@@ -80,7 +80,7 @@ class TQ_RouteEmailRenderer {
             $this->rows[] = $list_html['value'];
         };
 
-        $body .= implode("\r\n\r\n", $this->rows);             
+        $body .= implode("\r\n", $this->rows);             
         
         $body .= "\r\n";
         return $body;        

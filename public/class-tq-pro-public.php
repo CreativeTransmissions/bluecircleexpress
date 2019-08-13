@@ -2998,11 +2998,12 @@ class TransitQuote_Pro_Public {
     }
 
     public function format_journey_for_email(){
+        $this->distance_unit = self::get_distance_unit();
+
         // format journey data for output
         $journey_formatter_config = array( 'journey'=>$this->job['journey'],
-                                    'labels'=>$this->labels,
-                                    'distance_unit'=>$this->distance_unit);
-                                                    
+                                            'labels'=>$this->labels,
+                                            'distance_unit'=>$this->distance_unit);
         $this->journey_formatter = new TransitQuote_Pro4\TQ_JourneyFormatter($journey_formatter_config);
         return $this->journey_formatter->format_not_empty_only();        
 
@@ -3079,8 +3080,7 @@ class TransitQuote_Pro_Public {
             $subject = 'New Job Booking - ref: ' . $this->job['id'] . " " . $this->customer['first_name'] . " " . $this->customer['last_name'];
 
             $email_config = $this->build_email_config('email_job_details', $subject);
-            $html = str_replace("\r\n\r\n\r\n", '<br/>', $email_config['html_email']);
-            $html = str_replace("\r\n", '<br/>', $html);
+            $html = str_replace("\r\n", '<br/>', $email_config['html_email']);
             $html = '<div class="tq-email-preview">'.$html.'</div>';
             return $html;
         } else {
@@ -3110,8 +3110,7 @@ class TransitQuote_Pro_Public {
         if(self::get_job_details_from_id($this->job_id)){
 
             $email_config = $this->build_email_config('email_customer');
-            $html = str_replace("\r\n\r\n\r\n", '<br/>', $email_config['html_email']);
-            $html = str_replace("\r\n", '<br/>', $html);
+            $html = str_replace("\r\n", '<br/>', $email_config['html_email']);
             $html = '<div class="tq-email-preview">'.$html.'</div>';
             return $html;
         } else {

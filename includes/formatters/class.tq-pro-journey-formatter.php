@@ -35,28 +35,25 @@ class TQ_JourneyFormatter {
 
 	public function has_required_params(){
         if (empty($this->config['journey'])) {
-        //    echo 'TQ_JourneyFormatter: no journey in params';            
+           //echo 'TQ_JourneyFormatter: no journey in params';            
             return false;
         };
         $this->journey = $this->config['journey'];
 
-        if (empty($this->config['output_def'])) {
-           // echo 'TQ_JourneyFormatter: no output_def in params';
-
-            return false;
+        if (!empty($this->config['output_def'])) {
+            $this->output_def = $this->config['output_def'];
         };
-        $this->output_def = $this->config['output_def'];
 
 
         if (empty($this->config['distance_unit'])) {
-           // echo 'TQ_JourneyFormatter: no distance_unit in params';
+            //echo 'TQ_JourneyFormatter: no distance_unit in params';
 
             return false;
         };
         $this->distance_unit = $this->config['distance_unit'];
 
         if (!empty($this->config['labels'])) {
-           // echo 'TQ_JourneyFormatter: no labels in params';
+            // echo 'TQ_JourneyFormatter: no labels in params';
             $this->labels = $this->config['labels'];
 
         };
@@ -67,6 +64,7 @@ class TQ_JourneyFormatter {
 	public function format(){
 
 		if(!$this->has_required_params()){
+            echo 'doesnt have requried params';
 			return false;
 		};
 
@@ -103,44 +101,30 @@ class TQ_JourneyFormatter {
     }
 
 	public function format_field($key){
-		
-        $name = $key;        
-		$valueType = $this->format_value($key);
-        $label = $this->labels[$key];
-
-		$field = array('label'=>$label,
-                        'name'=>$name,
-						'value'=>$valueType['value'],
-                        'type'=>$valueType['type']
-                    );
-
-		return $field;
-	}
-
-	public function format_value($key){
 		$value = $this->journey[$key];
         $field = array();
- 		switch ($key) {
+        $field['name'] = $key;
+        switch ($key) {
             case 'distance':
-                $field['label'] = 'Distance (' . $this->distance_unit . 's)';
+                $field['label'] = $this->labels[$key].' (' . $this->distance_unit . 's)';
                 $field['value'] = number_format((float) $value, 2, '.', '');
                 $field['type'] = 'number';                
                 break;
             case 'time':
-                $field['label'] = 'Estimated Travel Time (Hours)';
+                $field['label'] = $this->labels[$key].' (Hours)';
                 $field['value'] = number_format((float) $value, 2, '.', '');
                 $field['type'] = 'number';
-                break;                
                 break;            
             default:
+                $field['label'] = $this->labels[$key];
                 $field['value'] = $value;
                 $field['type'] = 'text';
                 break;                
           };
 
           return $field;
-
 	}
+
 
 }
 ?>
