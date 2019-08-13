@@ -46,14 +46,13 @@ class TQ_JourneyFormatter {
 
 
         if (empty($this->config['distance_unit'])) {
-            //echo 'TQ_JourneyFormatter: no distance_unit in params';
+            echo 'TQ_JourneyFormatter: no distance_unit in params';
 
             return false;
         };
         $this->distance_unit = $this->config['distance_unit'];
 
         if (!empty($this->config['labels'])) {
-            // echo 'TQ_JourneyFormatter: no labels in params';
             $this->labels = $this->config['labels'];
 
         };
@@ -64,7 +63,7 @@ class TQ_JourneyFormatter {
 	public function format(){
 
 		if(!$this->has_required_params()){
-            echo 'doesnt have requried params';
+            echo 'TQ_JourneyFormatter: doesnt have requried params';
 			return false;
 		};
 

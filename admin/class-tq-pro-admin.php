@@ -593,7 +593,26 @@ class TransitQuote_Pro_Admin {
 
 		switch ($table_name) {
 			case 'jobs_table':
-				self::render_job_details($row_id);
+
+				$this->job = self::get_job($row_id);
+
+				if($this->job===false){
+					//couldnt find a job record
+					$this->ajax->log_error(array('name'=>'Could not details for request',
+		                            'value'=>'job_id: '.$row_id));
+
+					//return error to display on screen
+					$this->ajax->respond('Could not load request reference: '.$row_id);
+					return false;
+				};
+
+				//get related data
+				if($this->plugin->job_is_available($this->job)){
+					$this->job = $this->plugin->get_job_details($this->job);
+				};
+
+				$this->labels = $this->plugin->label_fetcher->fetch_labels_for_view('dashboard');
+				self::render_job_details();
 				break;
 			case 'transactions_paypal_table':
 				self::render_transaction_details($row_id);
@@ -603,31 +622,12 @@ class TransitQuote_Pro_Admin {
 		die();
 	}
 
-	private function render_job_details($job_id){
+	public function render_job_details(){
 		//load the job record from the database
-		$this->job = self::get_job($job_id);
 
-		if($this->job===false){
-			//couldnt find a job record
-			$this->ajax->log_error(array('name'=>'Could not details for request',
-                            'value'=>'job_id: '.$job_id));
-
-			//return error to display on screen
-			$this->ajax->respond('Could not load request reference: '.$job_id);
-			return false;
-		};
-
-		//get related data
-		if($this->plugin->job_is_available($this->job)){
-			$this->job = $this->plugin->get_job_details($this->job);
-		} else {
-			echo "job not available";
-		}
-
-		$labels = $this->plugin->label_fetcher->fetch_labels_for_view('dashboard');
 
 		$formatter_config = array(	'quote'=>$this->job['quote'],
-    								'labels'=>$labels,
+    								'labels'=>$this->labels,
 								    'currency'=>$this->currency,
 								    'output_def'=>$this->plugin->quote_fields_for_output);
 
@@ -635,7 +635,7 @@ class TransitQuote_Pro_Admin {
 		$quote_data = $this->quote_formatter->format();
 
 		$waypoint_formatter_config = array(	'waypoints'=>$this->job['stops'],
-    										'labels'=>$labels,
+    										'labels'=>$this->labels,
 										    'output_def'=>array('address',
 										    			'appartment_no',
                                                         'postal_code',
@@ -645,12 +645,13 @@ class TransitQuote_Pro_Admin {
         $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
 		$formatted_waypoints = $this->waypoint_formatter->format();
 
-        $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
+        $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer'],
+    																				'labels'=>$this->labels));
         $customer_data = $this->customer_formatter->format($this->job['customer']);
 
 
         $formatter_config = array( 'job'=>$this->job,
-                                    'labels'=>$labels,
+                                    'labels'=>$this->labels,
                                     'services'=>$this->plugin->services,
                                     'vehicles'=>$this->plugin->vehicles);
 
@@ -658,15 +659,18 @@ class TransitQuote_Pro_Admin {
         $job_data = $this->job_formatter->format();
 
     	$journey_formatter_config = array( 'journey'=>$this->job['journey'],
-                                    'labels'=>$labels,
+                                    'labels'=>$this->labels,
                                     'distance_unit'=>$this->distance_unit);
-                                                    
+                                                   
         $this->journey_formatter = new TransitQuote_Pro4\TQ_JourneyFormatter($journey_formatter_config);
         $journey_data = $this->journey_formatter->format();
 
 
 		//output the view which will be returned via ajax and inserted into the hidden
-		include('partials/tq_pro_job_details.php'); 
+        ob_start();
+        include('partials/tq_pro_job_details.php'); 
+        $this->job_details_html = ob_get_clean(); 		
+        echo $this->job_details_html;
 	}
 
 	public function render_transaction_details($transaction_id){

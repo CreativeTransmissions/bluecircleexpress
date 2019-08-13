@@ -37,31 +37,29 @@ class TQ_JobFormatter {
 
 	public function has_required_params(){
         if (empty($this->config['job'])) {
-            //echo 'TQ_JobFormatter: no job in params'; 
+            echo 'TQ_JobFormatter: no job in params'; 
             return false;
         };
         $this->job = $this->config['job'];
 
-        if (empty($this->config['output_def'])) {
-            //echo 'TQ_JobFormatter: no output_def in params';
-            return false;
+        if (!empty($this->config['output_def'])) {
+            $this->output_def = $this->config['output_def'];
         };
-        $this->output_def = $this->config['output_def'];
 
         if (empty($this->config['vehicles'])) {
-            //echo 'TQ_JobFormatter: no vehicles in params';
+            echo 'TQ_JobFormatter: no vehicles in params';
             return false;
         };        
         $this->vehicles = $this->config['vehicles'];
 
         if (empty($this->config['services'])) {
-           // echo 'TQ_JobFormatter: no services in params';
+            echo 'TQ_JobFormatter: no services in params';
             return false;
         };        
         $this->services = $this->config['services'];
 
         if (empty($this->config['labels'])) {
-           // echo 'TQ_JobFormatter: no labels in params';
+            echo 'TQ_JobFormatter: no labels in params';
             return false;
         };
         $this->labels = $this->config['labels'];

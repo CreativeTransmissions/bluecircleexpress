@@ -1,5 +1,22 @@
 <div id="job_details" class="job-details">
-	
+	<div class="row">
+		<?php if(!empty($this->job['customer'])){ ?>
+			<div class="half job_details_customer">
+				<?php $this->plugin->table_renderer->render(array('header'=>'<h3>Customer Details</h3>',
+																	'data'=>$customer_data)); ?>
+			</div>
+			<div class="half job_details_job">
+				<?php if(!empty($job_data)){
+							$this->plugin->table_renderer->render(array('header'=>'<h3>Job Details</h3>',
+																		'data'=>$job_data));
+				} else {
+					echo 'NO JOB DATA!';
+				} ?>
+			</div>
+			<?php }; ?>
+		</div>
+		
+
 	<?php if(!empty($this->job['stops'])){ ?>
 		<div class="row">
 			<div class="full job_details_job">
@@ -29,19 +46,4 @@
 		</div>
 		<?php }; ?>
 	</div>
-<div class="row">
-	<?php if(!empty($this->job['customer'])){ ?>
-		<div class="half job_details_customer">
-			<?php $this->plugin->table_renderer->render(array('header'=>'<h3>Customer Details</h3>',
-																'data'=>$customer_data)); ?>
-		</div>
-		<div class="half job_details_job">
-			<?php if(!empty($job_data)){
-						$this->plugin->table_renderer->render(array('header'=>'<h3>Job Details</h3>',
-																	'data'=>$job_data));
-			} ?>
-		</div>
-		<?php }; ?>
-	</div>
-	
-</div>
+</div>	

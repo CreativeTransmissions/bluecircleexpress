@@ -132,6 +132,10 @@ input.wide {
 	background-color: #fff;
 }
 
+.settings-table tr.expand td .job-details .job_details_customer {
+	margin-bottom: 1em;
+}
+
 .settings-table th {
 	background-color: #e0e0e0;
 	border: solid 1px #bbb;
