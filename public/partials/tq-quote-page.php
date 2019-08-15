@@ -18,7 +18,7 @@
     <h3>Delivery Reference: <?php echo $this->job['id']; ?></h3>
 	<div class="contact_details" >
     <?php
-        $this->table_renderer->render(array('header'=>'Contact Details','data'=>'data'=>$customer_data)); ?>
+        $this->table_renderer->render(array('header'=>'Contact Details','data'=>$customer_data)); 
 	?>
 	</div>
 	<div class="additional_information" >

@@ -69,14 +69,33 @@
 .icon-icn-vehicle:before {
     content: "\6b";
 }
+/*my booking styles */
+div.contact_details table td:nth-child(1) {
+   width: 10em !important;
+}
 
+div.my-booking table tr td:nth-child(1) {
+   width: 30em !important;
+}
+
+table.route-details-table th{
+    padding-bottom: 1em;
+}
+.my-booking table {
+    border: solid  1px #333;
+    border-collapse: collapse;
+    margin: 1em;
+}
+.my-booking table td,
+.my-booking table th {
+    border: solid  1px #333;
+    padding: 0.5em;
+}
 .tq-form i.icon {
     width: auto;
     height: auto;
     line-height: auto;
     margin-left: auto;
-    margin-right: 0.5em;    
-    vertical-align: middle;    
 }
 .tq-form .datepicker {
     left: auto;
@@ -92,8 +111,9 @@
 .tq-form .remove-address{
     display: inline-block;
     margin-left: 1em;
-    margin-top: 1em;
-    font-size: 0.75em;
+    margin-top: 1.5em;
+    margin-top: 2.25em;
+    font-size: 0.75em;;
 }
 
 /*Font Integration*/
@@ -134,6 +154,12 @@
 .transit_inner.cost .transit_body  ul {
     margin: 0;
     padding: 0;
+    list-style-type: none;
+}
+
+.tq-form .picker__holder ul,
+.entry-content .tq-form .picker__holder ul{
+    list-style: none;
     list-style-type: none;
 }
 .transit_inner.cost .transit_body  ul li {
@@ -186,6 +212,7 @@
     display: block;
     margin: 1% 0 1% 0;
     float: left;
+    clear: left;    
 }
 .transit_body .sub_title i {
     margin-right: 12px;
@@ -198,8 +225,7 @@
     text-align: right;
     font-weight: 500;
     float: right;
-    font-size: 0.75em;
-    margin-top: 1em;    
+    margin-top: 0;
 }
 .transit_noadress a {
     text-decoration: none;
@@ -216,7 +242,7 @@
     background: #fff;
     height: 60px;
     border: none;
-    box-shadow: 0px 1px 4px 1px rgba(86,86,86,0.12);	
+    box-shadow: 0px 1px 4px 1px rgba(86,86,86,0.12);    
     box-sizing: border-box;
     padding-left: 2%;
     font-size:18px;
@@ -266,11 +292,12 @@ p.radio-group-label {
     font-size: 14px;
     height: 50px;
     font-family: 'Montserrat', sans-serif;
-    padding-left: 45px;
+    padding-left: 3em;
     line-height: 1em;
     padding-top: 0.5em;
+    vertical-align: middle;
 }
-.radio-label.double-height{
+.radio-label.double-height {
     padding-top: 0.25em;
 }
 .radio-placeholder {
@@ -291,13 +318,12 @@ p.radio-group-label {
     left: 10px;
     height: 20px;
     width: 20px;
-    background-color: transparent;
     border-radius: 50%;
     box-sizing: border-box;
 }
 .radio-label .checkmark:after {
-    top: 25%;
-    left: 25%;
+    top: 5px;
+    left: 5px;
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -457,7 +483,7 @@ select {
     position: absolute;
     background-repeat: no-repeat;
     right: 20px;
-    bottom: 0.5em;
+    top: 18px;
     font-family: "untitled-font-2" !important;
     font-style: normal !important;
     font-size: 21px;
@@ -469,6 +495,11 @@ select {
 .transit_inner.cost .transit_body ul li.hidden{
     display: none;
 }
+
+/* woocommerce overrides */
+#add_payment_method #payment ul.payment_methods li img, .woocommerce-cart #payment ul.payment_methods li img, .woocommerce-checkout #payment ul.payment_methods li img{    width: 4em;
+}
+
 /*Media query start*/
 @media screen and (max-width:991px){
     .half .left .sub_title, .half .right .sub_title {margin-bottom: 5px; margin-top: 20px;}

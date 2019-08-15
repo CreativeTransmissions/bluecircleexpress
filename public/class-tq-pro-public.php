@@ -721,7 +721,7 @@ class TransitQuote_Pro_Public {
         $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
         $formatted_waypoints = $this->waypoint_formatter->format_not_empty_only();
 
-        $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer']));
+        $this->customer_formatter = new TransitQuote_Pro4\TQ_CustomerFormatter(array('customer'=>$this->job['customer'], 'labels'=>$labels));
         $customer_data = $this->customer_formatter->format($this->job['customer']);
         
 
@@ -3878,29 +3878,28 @@ class TransitQuote_Pro_Public {
         $title_background_color = self::get_setting('tq_pro_form_options', 'title_background_color', '#e8e8e8');
         $form_text_color = self::get_setting('tq_pro_form_options', 'form_color', '#3e80fa');
         $form_background_color = self::get_setting('tq_pro_form_options', 'form_background_color', '#fbfbfb');
-        echo "
-			<style>
+        echo '<style type="text/css">
 				.requestform form#quote-form.tq-form.tq-primary-color {
-					color: $form_text_color !important;
+					color: '.$form_text_color.' !important;
 				}
 				.requestform form#quote-form.tq-form .tq-form-title-color{
-					background-color: $title_background_color !important;
+					background-color: '.$title_background_color.' !important;
 				}
 				.requestform form#quote-form.tq-form .tq-form-bg-color{
-					background-color: $form_background_color !important;
+					background-color: '.$form_background_color.' !important;
 				}
 
-                .tq-form .radio-label span.checkmark{
-                    background-color:  $form_text_color !important;
+                .tq-form .radio-label .checkmark {
+                    background-color:  '.$form_text_color.' !important;
                 }
 				.requestform form#quote-form button.tq-button,
 				.woocommerce a.button,
 				.woocommerce button.button  {
-					background-color:  $form_text_color !important;
-					color: $form_background_color !important;
+					background-color:  '.$form_text_color.' !important;
+					color: '.$form_background_color.' !important;
 				}
                 .
-			</style>";
+			</style>';
     }
 
     /*
