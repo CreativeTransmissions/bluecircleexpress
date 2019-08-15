@@ -91,7 +91,6 @@
             <!-- DATE FIELDS STARTS -->
             <?php include "date_time.php";?>
             <!-- DATE FIELDS STARTS -->
-        </div>
     </div>
 </div>
 
