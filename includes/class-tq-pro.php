@@ -343,7 +343,7 @@ class TransitQuote_Pro4 {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new TransitQuote_Pro_Admin( $this->get_plugin_name(),  $this->get_version(), $this->get_plugin_slug());
+		$this->plugin_admin = $plugin_admin = new TransitQuote_Pro_Admin( $this->get_plugin_name(),  $this->get_version(), $this->get_plugin_slug());
 
 		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . $this->get_plugin_slug() . '.php' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );

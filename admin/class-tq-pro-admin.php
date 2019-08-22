@@ -351,7 +351,7 @@ class TransitQuote_Pro_Admin {
 		return $this->cdb->get_row('jobs',$job_id);
     }
 
-	private function get_jobs($filters = null, $params = null){
+	public function get_jobs($filters = null, $params = null){
 
     	$filter_sql = self::get_filter_sql($filters);
     	$order_sql = self::get_order_sql($params);
@@ -436,7 +436,6 @@ class TransitQuote_Pro_Admin {
 		order by ".$order_sql.";";
 
 		$data = $this->cdb->query($sql);
-		//$this->cdb->last_query;
 		return $data;
     }
 
@@ -444,9 +443,21 @@ class TransitQuote_Pro_Admin {
 		//current and future only
     	$clauses = array();
 
-		$filter_sql = " where date(jobs.created) <= '".$filters['to_date']."' and date(jobs.created) >= '".$filters['from_date']."'";
+    	if((empty($filters['to_date']))&&(empty($filters['from_date']))) {
+			$filter_sql = "";
+    	} else {
+    		if(empty($filters['to_date'])){
+    			$filter_sql = " where date(jobs.created) >= '".$filters['from_date']."'";
+    		};
+    		if(empty($filters['from_date'])){
+    			$filter_sql = " where date(jobs.created) <= '".$filters['to_date']."'";
+    		};
+    	};
 
 		if(!empty($filters)){
+			if($filter_sql === ""){
+				$filter_sql = " WHERE 1=1 ";
+			};
 			foreach ($filters as $name => $values) {
 				if(($name!='to_date')&&($name!='from_date')){
 		     		if(strpos($name, '.')==-1){
@@ -517,7 +528,14 @@ class TransitQuote_Pro_Admin {
 
 	private function get_filter($filter_name){
 		//get current filter by name
-		return $this->cdb->get_row('table_filters',$filter_name,'name');
+		$user = wp_get_current_user();
+		$filters = $this->cdb->get_rows('table_filters', 
+			array("name" => $filter_name, "wp_user_id" => $user->ID), array(), null, false);
+		if(empty($filters)){
+			return false;
+		} else {
+			return $filters[0];	
+		}
 	}
 
 	public function filter_status_types(){
@@ -949,6 +967,9 @@ class TransitQuote_Pro_Admin {
 	}
 
 	public function get_job_filters(){
+		if(!isset($this->cdb)){
+			$this->cdb = TransitQuote_Pro4::get_custom_db();
+		};
 		//return filter status for jobs table
 		//use field name for the table being filtered
 		if(!isset($this->job_filters)){
@@ -1015,7 +1036,9 @@ class TransitQuote_Pro_Admin {
 	private function render_empty_table($table){
 		switch ($table) {
 			case 'jobs':
-				$empty_colspan = 9;
+				if($this->is_transitteam_active()){
+					$empty_colspan = 10;	
+				};
 				$table_output_name = $table;
 				break;
 			case 'customers':
