@@ -970,6 +970,15 @@ private function config_table_filters(){
       'default' => '',
       'format' => '%s',
     ),
+    'wp_user_id' => 
+    array (
+      'name' => 'wp_user_id',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',
