@@ -297,7 +297,13 @@ p.radio-group-label {
     padding-top: 0.5em;
     vertical-align: middle;
 }
-.radio-label.double-height {
+form.tq-form div.radio-label.deliver-return{
+    min-width: 10.5em;
+}
+form.tq-form div.radio-label label{
+}
+
+.tq-form  .radio-label.double-height {
     padding-top: 0.25em;
 }
 .radio-placeholder {
