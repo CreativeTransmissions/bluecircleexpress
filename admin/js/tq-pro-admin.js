@@ -942,7 +942,7 @@
 				},
 
 				hideRow: function(dataId){
-					//expand the hidden row in a table
+					//hide the expanded/hidden row in a table
 					var that = this;
 
 					//get the row for the data id
@@ -996,6 +996,8 @@
 						$(nextRow).hide();
 						return false;
 					} else {
+					console.log('nextRow is not visible');
+					console.log(nextRow);						
 						//row is hidden so display a loading message and show the row
 						$(nextRow).html('<td colspan="100" class="job-loading">Loading details...</td>');
 						$(nextRow).show();	

@@ -2884,7 +2884,6 @@ class TransitQuote_Pro_Public {
         $headers = "";
 
 
-        $this->labels = $this->label_fetcher->fetch_labels_for_view($email_view_name);
 
         $customer_data = $this->format_customer_for_email();
         $job_data =  $this->format_job_for_email();
@@ -2893,14 +2892,12 @@ class TransitQuote_Pro_Public {
         $quote_data = $this->format_quote_for_email();
 
     
-        // instanciate renderers
-        $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
-        $this->route_email_renderer = new TransitQuote_Pro4\TQ_RouteEmailRenderer();
-
-        ob_start();
-
-        include 'partials/emails/'.$email_view_name.'.php';
-        $this->customer_email = $html_email = ob_get_clean(); 
+        $html_email = $this->render_email(array('customer_data'=>$customer_data,
+                                                'job_data'=>$job_data,
+                                                'journey_data'=>$journey_data,
+                                                'formatted_waypoints'=>$formatted_waypoints,
+                                                'quote_data'=>$quote_data,
+                                                'email_view_name'=>$email_view_name));
 
         $email_config = array(  'to'=>$to,
                                 'from'=>$from,
@@ -2913,6 +2910,25 @@ class TransitQuote_Pro_Public {
 
     }
 
+    public function render_email($data){
+
+        $customer_data = $data['customer_data'];
+        $job_data = $data['job_data'];
+        $journey_data = $data['journey_data'];
+        $formatted_waypoints = $data['formatted_waypoints'];
+        $quote_data = $data['quote_data'];
+        $this->labels = $this->label_fetcher->fetch_labels_for_view($email_view_name);
+
+        // instanciate renderers
+        $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
+        $this->route_email_renderer = new TransitQuote_Pro4\TQ_RouteEmailRenderer();
+
+        ob_start();
+
+        include 'partials/emails/'.$data['email_view_name'].'.php';
+        return $this->email_body = ob_get_clean(); 
+    }
+    
     public function build_email_config_dispatch($email_view_name, $subject){
         //send email to customer
 

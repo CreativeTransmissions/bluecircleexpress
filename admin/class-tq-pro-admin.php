@@ -374,7 +374,7 @@ class TransitQuote_Pro_Admin {
 			$jobs_assignment_table_name = $this->cdb->get_table_full_name('job_assignments');
 			$driver_sql_field = ', d.id as driver_id ';
 			$driver_sql = " left join ".$jobs_assignment_table_name." ja on jobs.id = ja.job_id left join ".$drivers_table_name." d on d.id = ja.driver_id ";
-	    }
+	    };
 
 		$sql = "SELECT distinct	jobs.id,
     							jobs.id as job_id,
@@ -441,10 +441,11 @@ class TransitQuote_Pro_Admin {
 
     private function get_filter_sql($filters){
 		//current and future only
-    	$clauses = array();
+	   	$clauses = array();
+		$filter_sql = " WHERE 1=1 "; // initialized where statement
 
     	if((empty($filters['to_date']))&&(empty($filters['from_date']))) {
-			$filter_sql = "";
+			$filter_sql = " WHERE 1=1 "; // initialized where statement
     	} else {
     		if(empty($filters['to_date'])){
     			$filter_sql = " where date(jobs.created) >= '".$filters['from_date']."'";
@@ -455,9 +456,6 @@ class TransitQuote_Pro_Admin {
     	};
 
 		if(!empty($filters)){
-			if($filter_sql === ""){
-				$filter_sql = " WHERE 1=1 ";
-			};
 			foreach ($filters as $name => $values) {
 				if(($name!='to_date')&&($name!='from_date')){
 		     		if(strpos($name, '.')==-1){
@@ -658,7 +656,9 @@ class TransitQuote_Pro_Admin {
 										    			'appartment_no',
                                                         'postal_code',
                                                         'contact_name',
-                                                        'contact_phone'));
+                                                        'contact_phone',
+                                                        'lat',
+                                                        'lng'));
 
         $this->waypoint_formatter = new TransitQuote_Pro4\TQ_WaypointFormatter($waypoint_formatter_config);
 		$formatted_waypoints = $this->waypoint_formatter->format();
