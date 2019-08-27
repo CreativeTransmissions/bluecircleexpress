@@ -21,9 +21,11 @@ final class TransitQuote_Pro_PublicTest extends TestCase
         $this->expected_dispatch_email = urldecode('New+Job+Request+received%0D%0A%0D%0ACustomer+Details%0D%0A%0D%0AFirst+Name%3A+TestFirstName2%0D%0ALast+Name%3A+TestLastName%0D%0AEmail+Address%3A+customer2%40email.com%0D%0APhone+Number%3A+9999999%0D%0A%0D%0AAdditional+Info%0D%0A%0D%0ADelivery+Details%3A+Test+Description%0D%0AService%3A+Standard%0D%0AVehicle%3A+%0D%0A%0D%0ARoute%0D%0A%0D%0ACollection+Address%0D%0A10+Union+Street%2C+Aberdeen%2C+UK%0D%0A1a%0D%0AAB11+5BU%0D%0AContact1%0D%0A1111111%0D%0A%0D%0A%0D%0ADestination+Address%0D%0A10+Academy+Street%2C+Inverness%2C+UK%0D%0A2b%0D%0AIV2+3TL%0D%0Acontact3%0D%0A3333333%0D%0A%0D%0A%0D%0ADestination+Address%0D%0A100+Argyle+Street%2C+Glasgow%2C+UK%0D%0A3c%0D%0AG2+8BH%0D%0AContact2%0D%0A2222222%0D%0A%0D%0A%0D%0APick+Up+Date%0D%0A%0D%0APick+Up+Date%3A+July+4%2C+2019%0D%0APick+Up+Time%3A+8%3A30+am%0D%0A%0D%0ADistance+and+Travel+Time%0D%0A%0D%0ADistance+%28Kilometers%29%3A+272.14%0D%0AEstimated+Travel+Time+%28Hours%29%3A+5.70%0D%0A%0D%0ACost%0D%0A%0D%0ADistance+Cost%3A+214.11%0D%0ASubtotal+%28GBP%29%3A+214.11%0D%0AVAT+Rate+%28%25%29%3A+20%0D%0AVAT+%28GBP%29%3A+42.82%0D%0ATotal+%28GBP%29%3A+256.93%0D%0ARates%3A+Standard%0D%0A%0D%0A');
 
         $this->expected_customer_email = urldecode('Thank+you+for+your+order.+Your+Transportation+details+and+quote+are+below.%0D%0A%0D%0AYour+Contact+Information%0D%0A%0D%0AFirst+Name%3A+TestFirstName2%0D%0ALast+Name%3A+TestLastName%0D%0AEmail+Address%3A+customer2%40email.com%0D%0APhone+Number%3A+9999999%0D%0A%0D%0AJob+Details%0D%0A%0D%0ADelivery+Details%3A+Test+Description%0D%0AService%3A+Standard%0D%0AVehicle%3A+%0D%0A%0D%0ARoute%0D%0A%0D%0ACollection+Address%0D%0A10+Union+Street%2C+Aberdeen%2C+UK%0D%0A1a%0D%0AAB11+5BU%0D%0AContact1%0D%0A1111111%0D%0A%0D%0A%0D%0ADestination+Address%0D%0A10+Academy+Street%2C+Inverness%2C+UK%0D%0A2b%0D%0AIV2+3TL%0D%0Acontact3%0D%0A3333333%0D%0A%0D%0A%0D%0ADestination+Address%0D%0A100+Argyle+Street%2C+Glasgow%2C+UK%0D%0A3c%0D%0AG2+8BH%0D%0AContact2%0D%0A2222222%0D%0A%0D%0A%0D%0ACollection+Date%0D%0A%0D%0APick+Up+Date%3A+July+4%2C+2019%0D%0APick+Up+Time%3A+8%3A30+am%0D%0A%0D%0ADistance+and+Travel+Time%0D%0A%0D%0ADistance+%28Kilometers%29%3A+272.14%0D%0AEstimated+Travel+Time+%28Hours%29%3A+5.70%0D%0A%0D%0ACost%0D%0A%0D%0ADistance+Cost%3A+214.11%0D%0ASubtotal+%28GBP%29%3A+214.11%0D%0AVAT+Rate+%28%25%29%3A+20%0D%0AVAT+%28GBP%29%3A+42.82%0D%0ATotal+%28GBP%29%3A+256.93%0D%0ARates%3A+Standard%0D%0A%0D%0A');
+
+        $this->test_filter_status_types_data = json_decode('{"filter_status_types[]":"7","action":"filter_status_types","from_date":"2019-07-27","to_date":"2019-08-27","orderby":"","order":""}', true);
     }
    
-
+/*
     public function test_save_job() {
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.3');
 
@@ -40,7 +42,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
         $public = null;
 
     }
-
+*/
     public function test_save_job_multiple_addresses() {
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.3');
 
@@ -82,6 +84,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
 
     }  
 
+/*
     public function test_all_email_fields() {
         $this->public = $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.3');
 
@@ -214,5 +217,5 @@ final class TransitQuote_Pro_PublicTest extends TestCase
           $this->assertTrue(is_array($rates));
        //   $this->assertTrue(count($rates)>0);
     }
-
+*/
 }

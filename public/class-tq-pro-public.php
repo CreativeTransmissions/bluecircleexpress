@@ -2892,7 +2892,7 @@ class TransitQuote_Pro_Public {
         $quote_data = $this->format_quote_for_email();
 
     
-        $html_email = $this->render_email(array('customer_data'=>$customer_data,
+        $this->customer_email = $this->render_email(array('customer_data'=>$customer_data,
                                                 'job_data'=>$job_data,
                                                 'journey_data'=>$journey_data,
                                                 'formatted_waypoints'=>$formatted_waypoints,
@@ -2903,7 +2903,7 @@ class TransitQuote_Pro_Public {
                                 'from'=>$from,
                                 'from_name'=>$from_name,
                                 'subject'=>$subject,
-                                'html_email'=>$html_email,
+                                'html_email'=>$this->customer_email,
                                 'headers'=>$headers);
 
         return $email_config;

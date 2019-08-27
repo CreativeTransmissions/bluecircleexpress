@@ -1,5 +1,5 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE );
+error_reporting(E_ERROR | E_PARSE );
  ini_set('display_errors', 1);
 /**
  * The admin-specific functionality of the plugin.
@@ -515,13 +515,26 @@ class TransitQuote_Pro_Admin {
 		if(is_array($values)){
 			$values = implode(',', $values);
 		};
+		
+		$user = wp_get_current_user();
+
 		$record_data = array('name'=>$filter_name,
-					'filter_values'=>$values);
+							'wp_user_id' => $user->ID,
+							'filter_values'=>$values);
+
 		$current_filter = self::get_filter($filter_name);
-		if($current_filter!==false){
+
+		if($current_filter!==false){ // update
 			$record_data['id'] = $current_filter['id'];
 		};
-		return $this->plugin->save_record('table_filters', $record_data);
+
+		$filter_row_id = $this->cdb->update_row('table_filters', $record_data);
+		//var_dump($filter_row_id);
+		if(empty($filter_row_id)){
+			return false;
+		};
+
+		return true;
 	}
 
 	private function get_filter($filter_name){
@@ -537,26 +550,40 @@ class TransitQuote_Pro_Admin {
 	}
 
 	public function filter_status_types(){
+		if(!isset($this->ajax)){
+			$this->ajax = new TransitQuote_Pro4\CT_AJAX();
+		};
+
+		if(!isset($this->cdb)){
+			$this->cdb = TransitQuote_Pro4::get_custom_db();
+		};
+		if(!isset($this->dbui)){
+			$this->dbui = new TransitQuote_Pro4\CT_DBUI(array('cdb'=>$this->cdb));
+		};
 		//get check box name / value array from post data
-		$filter_status_types = $this->ajax->param(array('name'=>'filter_status_types',
-														'type'=>'array',
+		$status_types_to_filter = $this->ajax->param(array('name'=>'filter_status_types',
 														'optional'=>true));
 
 		//dont filter if there is nothing selected
-		if(empty($filter_status_types)){
+		if(empty($status_types_to_filter)){
 			$this->job_filters = false;
-		} else {
-			//save the filter state to the database 
-			self::set_filter('status_type_id', $filter_status_types);
 		};
-
+		
+		//save the filter state to the database 
+		if(!self::set_filter('status_type_id', $status_types_to_filter)){
+			$response = array('success' => 'false',
+                            	'msg'=>'Unable to save filters');
+		};
+	
 		//get the filtered table rows
-		$html = self::load_table('jobs');
+		$this->jobs_table_html = self::load_table('jobs');
 
 		//return success message and table rows html
 		$response = array('success' => 'true',
                                 	'msg'=>'Updated filters ok',
-                                	'html'=>$html);
+                                	'html'=>$this->jobs_table_html,
+                                	'no_rows'=>count($this->load_table_params['data']),
+                                	'filters'=>$this->status_filters);
 
 		$this->ajax->respond($response);
 	}
@@ -804,10 +831,10 @@ class TransitQuote_Pro_Admin {
 					//get data
 					$filters = array();
 					$date_filters = self::get_date_filters();
-					$status_filters = self::get_job_filters(); // status filters
+					$this->status_filters = self::get_job_filters(); // status filters
 
-					if(!empty($status_filters)){
-						$filters = array_merge($filters, $status_filters);
+					if(!empty($this->status_filters)){
+						$filters = array_merge($filters, $this->status_filters);
 
 					};
 					
@@ -816,9 +843,9 @@ class TransitQuote_Pro_Admin {
 					};
 
 					$params = self::get_sort_params();
-					
+
 					$job_data = $this->get_jobs($filters, $params);
-					
+
 					$defaults = array(
 									'data'=>$job_data,
 									'fields'=>array(
@@ -929,9 +956,9 @@ class TransitQuote_Pro_Admin {
 		};
 
 		if(is_array($defaults)){
-			$params = array_merge($defaults, $params);
+			$this->load_table_params = $params = array_merge($defaults, $params);
 		} else {
-			$params = $defaults;
+			$this->load_table_params = $params = $defaults;
 		};
 
 		if(isset($params['data'])){
@@ -945,7 +972,7 @@ class TransitQuote_Pro_Admin {
 		};
 
 		if($rows===false){
-			$response = array('success'=>'false',
+			return  array('success'=>'false',
 								'msg'=>'could not run query',
 								'sql'=> $this->dbui->cdb->last_query);
 		};
@@ -970,23 +997,17 @@ class TransitQuote_Pro_Admin {
 		if(!isset($this->cdb)){
 			$this->cdb = TransitQuote_Pro4::get_custom_db();
 		};
-		//return filter status for jobs table
+		//return filter status for jobs table and wp user id
 		//use field name for the table being filtered
-		if(!isset($this->job_filters)){
-			$status_filter = self::get_filter('status_type_id');
-			if(empty($status_filter)){
-				$this->job_filters = false;
-			} else {
-				//there is a filter row
-				if($status_filter['filter_values']!=''){
-					$values = explode(',', $status_filter['filter_values']);
-					$this->job_filters = array('status_type_id'=>$values);
-				} else {
-					$this->job_filters = false;
-				}
-			}
-
+		$this->job_filters = self::get_filter('status_type_id');
+		
+		//there is a filter row
+		if($this->job_filters['filter_values']!=''){
+			//change values to array
+			$values = explode(',', $this->job_filters['filter_values']);
+			$this->job_filters = array('status_type_id'=>$values);
 		};
+
 		return $this->job_filters;
 	}
 
@@ -1036,10 +1057,12 @@ class TransitQuote_Pro_Admin {
 	private function render_empty_table($table){
 		switch ($table) {
 			case 'jobs':
+				$empty_colspan = 9;
 				if($this->is_transitteam_active()){
 					$empty_colspan = 10;	
 				};
 				$table_output_name = $table;
+					return '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no jobs with the selected status in the database.</td></tr>';				
 				break;
 			case 'customers':
 				$empty_colspan = 4;
