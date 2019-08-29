@@ -471,7 +471,7 @@ class TransitQuote_Pro_Admin {
 		    	}
 	    	};
 	    	if(count($clauses)>0){
-	    		$filter_sql .= ' and '.implode(' AND ', $clauses);  		    		
+	    		$filter_sql .= ' and '.implode(' AND ', $clauses);  		
 	    	}
     	};
 
@@ -512,24 +512,24 @@ class TransitQuote_Pro_Admin {
     }
 
 	private function set_filter($filter_name, $values){
+		$filter_status_ids = '';
 		if(is_array($values)){
-			$values = implode(',', $values);
+			$filter_status_ids = implode(',', $values);
 		};
 		
 		$user = wp_get_current_user();
 
 		$record_data = array('name'=>$filter_name,
 							'wp_user_id' => $user->ID,
-							'filter_values'=>$values);
+							'filter_values'=>$filter_status_ids);
 
 		$current_filter = self::get_filter($filter_name);
 
 		if($current_filter!==false){ // update
 			$record_data['id'] = $current_filter['id'];
 		};
-
 		$filter_row_id = $this->cdb->update_row('table_filters', $record_data);
-		//var_dump($filter_row_id);
+		//var_dump($record_data);
 		if(empty($filter_row_id)){
 			return false;
 		};
@@ -568,7 +568,7 @@ class TransitQuote_Pro_Admin {
 		if(empty($status_types_to_filter)){
 			$this->job_filters = false;
 		};
-		
+
 		//save the filter state to the database 
 		if(!self::set_filter('status_type_id', $status_types_to_filter)){
 			$response = array('success' => 'false',
@@ -813,7 +813,7 @@ class TransitQuote_Pro_Admin {
 					//returning whole table so get rates sorted for admin panel with 0 at the end
 
 					$filters = self::get_rates_filters();
-				//	print_r($filters);
+
 					$rates_data = $this->plugin->get_rates_list($filters);
 					$defaults['data'] = $rates_data; //supply data instead of running a query
 				};
@@ -997,14 +997,15 @@ class TransitQuote_Pro_Admin {
 		if(!isset($this->cdb)){
 			$this->cdb = TransitQuote_Pro4::get_custom_db();
 		};
+		$this->job_filters = array('status_type_id'=>'null');
 		//return filter status for jobs table and wp user id
 		//use field name for the table being filtered
-		$this->job_filters = self::get_filter('status_type_id');
+		$job_filters = self::get_filter('status_type_id');
 		
 		//there is a filter row
-		if($this->job_filters['filter_values']!=''){
+		if($job_filters['filter_values']!=''){
 			//change values to array
-			$values = explode(',', $this->job_filters['filter_values']);
+			$values = explode(',', $job_filters['filter_values']);
 			$this->job_filters = array('status_type_id'=>$values);
 		};
 
