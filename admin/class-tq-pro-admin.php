@@ -549,6 +549,28 @@ class TransitQuote_Pro_Admin {
 		}
 	}
 
+	public function filter_status_types_callback(){
+		
+		$success = $this->filter_status_types();
+		if($success){
+
+			//get the filtered table rows
+			$this->jobs_table_html = self::load_table('jobs');
+
+			//return success message and table rows html
+			$response = array('success' => 'true',
+	                                	'msg'=>'Updated filters ok',
+	                                	'html'=>$this->jobs_table_html,
+	                                	'no_rows'=>count($this->load_table_params['data']),
+	                                	'filters'=>$this->status_filters);
+		} else {
+			$response = array('success' => 'false',
+	                            	'msg'=>'Unable to save filters');
+		};
+
+		$this->ajax->respond($response);
+	}
+
 	public function filter_status_types(){
 		if(!isset($this->ajax)){
 			$this->ajax = new TransitQuote_Pro4\CT_AJAX();
@@ -571,21 +593,11 @@ class TransitQuote_Pro_Admin {
 
 		//save the filter state to the database 
 		if(!self::set_filter('status_type_id', $status_types_to_filter)){
-			$response = array('success' => 'false',
-                            	'msg'=>'Unable to save filters');
+			return false;
 		};
-	
-		//get the filtered table rows
-		$this->jobs_table_html = self::load_table('jobs');
 
-		//return success message and table rows html
-		$response = array('success' => 'true',
-                                	'msg'=>'Updated filters ok',
-                                	'html'=>$this->jobs_table_html,
-                                	'no_rows'=>count($this->load_table_params['data']),
-                                	'filters'=>$this->status_filters);
+		return true;
 
-		$this->ajax->respond($response);
 	}
 	
 	private function get_transactions($filters = null){

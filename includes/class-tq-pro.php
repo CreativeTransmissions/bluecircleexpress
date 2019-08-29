@@ -362,7 +362,7 @@ class TransitQuote_Pro4 {
 		$this->loader->add_action( 'wp_ajax_update_job_status', $plugin_admin, 'update_job_status_callback');
 		$this->loader->add_action( 'wp_ajax_update_payment_type', $plugin_admin, 'update_payment_type_callback');
 		$this->loader->add_action( 'wp_ajax_update_payment_status', $plugin_admin, 'update_payment_status_callback');
-		$this->loader->add_action( 'wp_ajax_filter_status_types', $plugin_admin, 'filter_status_types');
+		$this->loader->add_action( 'wp_ajax_filter_status_types', $plugin_admin, 'filter_status_types_callback');
 		$this->loader->add_action( 'wp_ajax_test_customer_email', $plugin_admin, 'test_customer_email_callback');
 		$this->loader->add_action( 'wp_ajax_test_dispatch_email', $plugin_admin, 'test_dispatch_email_callback');
 		$this->loader->add_action( 'woocommerce_order_status_completed', $plugin_admin, 'woocommerce_order_marked_completed');
