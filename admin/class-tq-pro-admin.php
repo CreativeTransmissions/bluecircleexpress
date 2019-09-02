@@ -355,6 +355,10 @@ class TransitQuote_Pro_Admin {
 
     	$filter_sql = self::get_filter_sql($filters);
     	$order_sql = self::get_order_sql($params);
+		
+		if(!isset($this->cdb)){
+			$this->cdb = TransitQuote_Pro4::get_custom_db();
+		};
 
 	    $jobs_table_name = $this->cdb->get_table_full_name('jobs');
 	    $journeys_table_name = $this->cdb->get_table_full_name('journeys');
