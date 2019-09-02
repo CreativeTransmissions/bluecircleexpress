@@ -33,25 +33,6 @@ class TQ_EmailRenderer {
         $this->body = '';
     }
 
-    public function has_required_params(){
-        if (empty($this->params['data'])) {
-            return false;
-        };
-        $this->data = $this->params['data'];
-
-        if (!empty($this->params['header'])) {
-            $this->header = $this->params['header'];
-        };
-
-        $this->labels = $this->params['labels'];
-
-        if (!empty($this->params['labels'])) {
-            $this->header = $this->params['labels'];
-        };
-
-        return true; 
-    }
-
     public function render($params = null) {
         $this->data = null;
         $this->header = null;
@@ -71,6 +52,24 @@ class TQ_EmailRenderer {
         $body .= $this->generate_content_section();
         echo $body;
         return $body;
+    }
+
+    public function has_required_params(){
+        if (empty($this->params['data'])) {
+            return false;
+        };
+        $this->data = $this->params['data'];
+
+        if (!empty($this->params['header'])) {
+            $this->header = $this->params['header'];
+        };
+
+        if (empty($this->params['labels'])) {
+            return false;
+        };
+        $this->labels = $this->params['labels'];
+
+        return true; 
     }
 
     public function generate_content_section(){
