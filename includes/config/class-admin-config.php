@@ -539,7 +539,7 @@ class Admin_Config {
                                                       'id'=>'start_location',
                                                       'label'=>'Business Address',
                                                       'type'=>'addresspicker',
-                                                      'help'=>'The selected place should be your business address or the center of your operating area. The place search results that your customers recieve will be places closest to your business address. You can further restrict this by setting a search radius.'),
+                                                      'help'=>'The selected place should be your business address or the center of your operating area. The place search results that your customers receive will be places closest to your business address. You can further restrict this by setting a search radius.'),
                                                     'restrict_to_country'=>array(
                                                       'id'=>'restrict_to_country',
                                                       'label'=>'Restrict To Country',
@@ -788,17 +788,17 @@ class Admin_Config {
                                                         'id'=>'notify',
                                                         'label'=>'Send New Job Emails To',
                                                         'type'=>'input',
-                                                        'help'=>'Please enter the email addresses that will recieve new job requests. You can enter more than one by separating them with a comma.<br/>Example: <b>boss@mycompany.com, staff@mycompany.com</b>'),
+                                                        'help'=>'Please enter the email addresses that will receive new job requests. You can enter more than one by separating them with a comma.<br/>Example: <b>boss@mycompany.com, staff@mycompany.com</b>'),
                                                       'from_address'=>array(
                                                         'id'=>'from_address',
                                                         'label'=>'Reply Address for Customer Quote Emails',
-                                                        'help'=>'Please enter the <em>From</em> email address that customers will recieve their quote emails from.<br/>Example: <b>customerservice@mycompany.com</b>',
+                                                        'help'=>'Please enter the <em>From</em> email address that customers will receive their quote emails from.<br/>Example: <b>customerservice@mycompany.com</b>',
                                                         'type'=>'input'),
                                                       'from_name'=>array(
                                                         'id'=>'from_name',
                                                         'label'=>'Contact Name for Customer Quote Emails',
                                                         'type'=>'input',
-                                                        'help'=>'Please enter the <em>contact or business name</em> that customers will recieve their quote emails from.<br/>Example: <b>TransitQuote Customer Service</b>',
+                                                        'help'=>'Please enter the <em>contact or business name</em> that customers will receive their quote emails from.<br/>Example: <b>TransitQuote Customer Service</b>',
                                                         'default'=>'Your Business Name'),
                                                       'customer_subject'=>array(
                                                         'id'=>'customer_subject',
@@ -811,7 +811,19 @@ class Admin_Config {
                                                         'label'=>'Customer Quote Email Message',
                                                         'type'=>'textarea',
                                                         'help'=>'Please enter the message to your customer that will appear above the journey details and quote.',
-                                                        'default'=>'Thank you for your order. Your Transportation details and quote are below.')
+                                                        'default'=>'Thank you for your order. Your Transportation details and quote are below.'),
+                                                      'customer_update_subject'=>array(
+                                                        'id'=>'customer_update_subject',
+                                                        'label'=>'Job Update Email Subject',
+                                                        'type'=>'input',
+                                                        'help'=>'Please enter the email subject for job update emails.<br/>Example: <b>Your Transportation Job Has Been Updated.</b>',
+                                                        'default'=>'Your Transportation Job Has Been Updated'),
+                                                      'customer_update_message'=>array(
+                                                        'id'=>'customer_update_message',
+                                                        'label'=>'Job Update Email Message',
+                                                        'type'=>'textarea',
+                                                        'help'=>'Please enter the message to your customer that will appear at the top of the email notifications that customers receive when the job status is updated.',
+                                                        'default'=>'Your transporation job status has been updated. Please see below for details.')
                                                     )
                                               ))
                               ),

@@ -213,7 +213,8 @@ table.route-details-table th{
     float: left;
     clear: left;    
 }
-.transit_body .sub_title i {
+.transit_body .sub_title i,
+ .transit_body .date-wrap i{
     margin-right: 12px;
     display: inline-block;
     vertical-align: middle;
@@ -477,6 +478,10 @@ select {
 .select-wrap {
     margin-top: 0.5em;
 }
+.date-wrap label {
+    display: inline-block;
+    margin: 0.25em 0em 0.5em;
+}
 .coll_date_wrap {width: 49%; }
 .coll_date_wrap .left {width: 100%;}
 .coll_time_wrap {float: right; width: 49%;}
@@ -488,7 +493,7 @@ select {
     position: absolute;
     background-repeat: no-repeat;
     right: 20px;
-    top: 18px;
+    top: 3em;
     font-family: "untitled-font-2" !important;
     font-style: normal !important;
     font-size: 21px;
@@ -500,7 +505,9 @@ select {
 .transit_inner.cost .transit_body ul li.hidden{
     display: none;
 }
-
+.payment-result {
+    text-align: center;
+}
 /* woocommerce overrides */
 #add_payment_method #payment ul.payment_methods li img, .woocommerce-cart #payment ul.payment_methods li img, .woocommerce-checkout #payment ul.payment_methods li img{    width: 4em;
 }

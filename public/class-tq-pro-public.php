@@ -841,7 +841,7 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_msg_auth_success() {
-        return 'Thank you! Your Payment has been authorized successfully.<br/>You will recieve a confirmation email as soon as the payment has been processed.';
+        return 'Thank you! Your Payment has been authorized successfully.<br/>You will receive a confirmation email as soon as the payment has been processed.';
     }
 
     public function get_msg_auth_fail() {
@@ -2872,6 +2872,13 @@ class TransitQuote_Pro_Public {
         return $success;
     }
 
+    public function email_customer_update(){
+        
+        $email_config = $this->build_email_config_customer_update('email_customer');
+        $success = $this->send_email($email_config);
+        return $success;
+    }
+
     public function build_email_config($email_view_name){
         //send email to customer
 
@@ -2892,12 +2899,13 @@ class TransitQuote_Pro_Public {
         $quote_data = $this->format_quote_for_email();
 
     
-        $this->customer_email = $this->render_email(array('customer_data'=>$customer_data,
-                                                'job_data'=>$job_data,
-                                                'journey_data'=>$journey_data,
-                                                'formatted_waypoints'=>$formatted_waypoints,
-                                                'quote_data'=>$quote_data,
-                                                'email_view_name'=>$email_view_name));
+        $this->customer_email = $this->render_email(array('message'=> $message,
+                                                            'customer_data'=>$customer_data,
+                                                            'job_data'=>$job_data,
+                                                            'journey_data'=>$journey_data,
+                                                            'formatted_waypoints'=>$formatted_waypoints,
+                                                            'quote_data'=>$quote_data,
+                                                            'email_view_name'=>$email_view_name));
 
         $email_config = array(  'to'=>$to,
                                 'from'=>$from,
@@ -2910,6 +2918,45 @@ class TransitQuote_Pro_Public {
 
     }
 
+    public function build_email_config_customer_update($email_view_name){
+        //send email to customer
+
+        $to = self::get_customer_email();
+        $from = self::get_from_address();
+        $from_name = self::get_from_name();
+        $subject = self::get_customer_update_subject();
+        $message = self::get_customer_update_message();
+
+        $headers = "";
+
+
+
+        $customer_data = $this->format_customer_for_email();
+        $job_data =  $this->format_job_for_email();
+        $journey_data = $this->format_journey_for_email();
+        $formatted_waypoints = $this->format_waypoints_for_email();
+        $quote_data = $this->format_quote_for_email();
+
+    
+        $this->customer_email = $this->render_email(array('message'=> $message,
+                                                            'customer_data'=>$customer_data,
+                                                            'job_data'=>$job_data,
+                                                            'journey_data'=>$journey_data,
+                                                            'formatted_waypoints'=>$formatted_waypoints,
+                                                            'quote_data'=>$quote_data,
+                                                            'email_view_name'=>$email_view_name));
+
+        $email_config = array(  'to'=>$to,
+                                'from'=>$from,
+                                'from_name'=>$from_name,
+                                'subject'=>$subject,
+                                'html_email'=>$this->customer_email,
+                                'headers'=>$headers);
+
+        return $email_config;
+
+    }    
+
     public function render_email($data){
 
         $customer_data = $data['customer_data'];
@@ -2917,6 +2964,7 @@ class TransitQuote_Pro_Public {
         $journey_data = $data['journey_data'];
         $formatted_waypoints = $data['formatted_waypoints'];
         $quote_data = $data['quote_data'];
+        $message = $data['message'];
         $this->labels = $this->label_fetcher->fetch_labels_for_view($email_view_name);
 
         // instanciate renderers
@@ -3154,6 +3202,11 @@ class TransitQuote_Pro_Public {
     public function get_customer_subject() {
         return self::get_setting($this->tab_5_settings_key, 'customer_subject', 'Your Quote Is Enclosed.');
     }
+
+    public function get_customer_update_subject() {
+        return self::get_setting($this->tab_5_settings_key, 'customer_update_subject', 'Your Job Has Been Updated.');
+    }
+    
     public function get_geolocate() {
         return self::get_setting($this->tab_2_settings_key, 'geolocate');
     }
@@ -3232,6 +3285,11 @@ class TransitQuote_Pro_Public {
     public function get_customer_message() {
         return self::get_setting($this->tab_5_settings_key, 'customer_message', 'Thank you for your request.');
     }
+
+    public function get_customer_update_message() {
+        return self::get_setting($this->tab_5_settings_key, 'customer_update_message', 'The status of your job has been updated.');
+    }
+
 
     public function get_currency() {
         $currency = self::get_setting($this->tab_2_settings_key, 'currency');
@@ -3721,7 +3779,7 @@ class TransitQuote_Pro_Public {
             $notify = true;
         };
         self::email_dispatch($subject, $notify);
-        self::email_customer();
+        self::email_customer_update();
 
         return true;
     }
