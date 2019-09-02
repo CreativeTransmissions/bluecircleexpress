@@ -2965,8 +2965,8 @@ class TransitQuote_Pro_Public {
         $formatted_waypoints = $data['formatted_waypoints'];
         $quote_data = $data['quote_data'];
         $message = $data['message'];
+        $email_view_name = $data['email_view_name'];
         $this->labels = $this->label_fetcher->fetch_labels_for_view($email_view_name);
-
         // instanciate renderers
         $this->email_renderer =  new TransitQuote_Pro4\TQ_EmailRenderer();
         $this->route_email_renderer = new TransitQuote_Pro4\TQ_RouteEmailRenderer();
@@ -3756,6 +3756,7 @@ class TransitQuote_Pro_Public {
         if (empty($job_id)) {
             return false;
         };
+        $this->job_id = $job_id;
 
         if (empty($status_type_id)) {
             return false;
