@@ -508,6 +508,10 @@ select {
 .payment-result {
     text-align: center;
 }
+.on-delivery{
+    font-size: 2em;
+    line-height: 2em;
+}
 /* woocommerce overrides */
 #add_payment_method #payment ul.payment_methods li img, .woocommerce-cart #payment ul.payment_methods li img, .woocommerce-checkout #payment ul.payment_methods li img{    width: 4em;
 }
