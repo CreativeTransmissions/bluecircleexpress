@@ -1013,7 +1013,7 @@ class TransitQuote_Pro_Admin {
 		if(!isset($this->cdb)){
 			$this->cdb = TransitQuote_Pro4::get_custom_db();
 		};
-		$this->job_filters = array('status_type_id'=>'null');
+		$this->job_filters = array('status_type_id'=>array('status_type_id'=>1));
 		//return filter status for jobs table and wp user id
 		//use field name for the table being filtered
 		$job_filters = self::get_filter('status_type_id');
