@@ -3115,7 +3115,7 @@ class TransitQuote_Pro_Public {
 
     }
 
-    private function email_dispatch($subject) {
+    public function email_dispatch($subject) {
         
         $email_config = $this->build_email_config_dispatch('email_job_details', $subject);
         $success = $this->send_email($email_config);

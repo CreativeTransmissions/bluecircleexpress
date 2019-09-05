@@ -73,15 +73,21 @@
     content: "\6b";
 }
 /*my booking styles */
-div.contact_details table td:nth-child(1) {
+
+.tq-form div.contact_details table td:nth-child(1) {
    width: 10em !important;
 }
 
-div.my-booking table tr td:nth-child(1) {
+.tq-form div.my-booking table tr td:nth-child(1) {
    width: 30em !important;
 }
+form.tq-form table tr td,
+form.tq-form table tr th {
+    padding: 0.5em;
+    text-align: left !important;
+}
 
-table.route-details-table th{
+.tq-form table.route-details-table th{
     padding-bottom: 1em;
 }
 .my-booking table {
