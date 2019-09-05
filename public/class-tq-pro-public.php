@@ -1532,6 +1532,8 @@ class TransitQuote_Pro_Public {
             'tax_name' => 'VAT',
             'rounding_type' => $this->rounding_type);
 
+        $this->calc_config = $calc_config;
+
         if($include_return_journey){
             $this->calculation = new TransitQuote_Pro4\TQ_CalculationReturnTrip($calc_config);
         } else{
@@ -1778,7 +1780,8 @@ class TransitQuote_Pro_Public {
             $response = array('success' => 'true',
                 'data' => array('quote' => $this->quote,
                     'rates' => $this->rates,
-                    'rate_options' => $this->rate_options));
+                    'rate_options' => $this->rate_options,
+                    'calc_config'=> $this->calc_config));
 
         } else {
             $response = array('success' => 'false',
