@@ -1545,8 +1545,8 @@ class TransitQuote_Pro_Public {
 
     private function get_rate_affecting_options() {
 
-        $service = self::get_default_service();
-        $vehicle = self::get_default_vehicle();
+     //   $service = self::get_default_service();
+    //    $vehicle = self::get_default_vehicle();
 
         $vehicle_id = $this->ajax->param(array('name' => 'vehicle_id', 'optional' => true));
         if (empty($vehicle_id)) {
