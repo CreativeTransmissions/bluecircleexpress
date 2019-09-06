@@ -26,7 +26,8 @@ final class TransitQuote_Pro_AdminTest extends TestCase
 
         $this->plugin_admin->filter_status_types();
 
-        $this->assertTrue(is_array($this->plugin_admin->load_table_params['data']));
+        $this->assertEquals(0, $this->plugin_admin->no_table_rows);
+        $this->assertTrue(is_array($this->plugin_admin->load_table_params));
      //   $this->assertTrue(count($this->plugin_admin->load_table_params['data'])>0);
         $this->assertTrue(is_string($this->plugin_admin->jobs_table_html));
      //   $this->assertTrue(count($this->plugin_admin->load_table_params['data'])===1);

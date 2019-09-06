@@ -1794,8 +1794,7 @@ class TransitQuote_Pro_Public {
             $response = array('success' => 'true',
                 'data' => array('quote' => $this->quote,
                     'rates' => $this->rates,
-                    'rate_options' => $this->rate_options,
-                    'calc_config'=> $this->calc_config));
+                    'rate_options' => $this->rate_options));
 
         } else {
             $response = array('success' => 'false',

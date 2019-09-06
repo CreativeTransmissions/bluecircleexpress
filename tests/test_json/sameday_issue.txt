@@ -1,0 +1,13 @@
+Live
+
+{"rates":
+[{"id":"7","service_id":"1","vehicle_id":"1","distance":"0.00","amount":"0.00","unit":"1.05","hour":"0.00"},
+{"id":"6","service_id":"1","vehicle_id":"1","distance":"55.00","amount":"58.00","unit":"0.00","hour":"0.00"}]}
+
+
+Test
+{"rates":
+[{"id":"6","service_id":"1","vehicle_id":"1","distance":"55.00","amount":"58.00","unit":"0.00","hour":"0.00"},{"id":"7","service_id":"1","vehicle_id":"1","distance":"0.00","amount":"0.00","unit":"1.05","hour":"0.00"}]}
+
+Sameday live
+{"calc_config":{"debugging":false,"rates":[{"id":"7","service_id":"1","vehicle_id":"1","distance":"0.00","amount":"0.00","unit":"1.05","hour":"0.00"},{"id":"6","service_id":"1","vehicle_id":"1","distance":"55.00","amount":"58.00","unit":"0.00","hour":"0.00"}],"distance":"69.82","return_percentage":"100","hours":0,"return_distance":0,"return_time":0,"tax_rate":"0","tax_name":"VAT","rounding_type":"Round to 2 decimal points"}}
