@@ -806,7 +806,7 @@ class TransitQuote_Pro_Admin {
 		};
 
 		//check if table has data
-		$no_rows = $this->cdb->get_count($table);
+		$this->no_table_rows = $no_rows = $this->cdb->get_count($table);
 		if($no_rows==0){
 			// if not data return empty message
 			return self::render_empty_table($table);

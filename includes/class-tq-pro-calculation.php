@@ -270,8 +270,7 @@ class TQ_Calculation {
 		//echo '** add_max_distance_set_amount_to_distance_cost: rate: '.$rate['amount'];
 		$this->set_amount = $rate['amount'];
 		$this->distance_cost = $this->distance_cost + $rate['amount'];
-		$this->units_charged_for = self::get_highest_distance_boundary();
-				
+		//$this->units_charged_for = self::get_highest_distance_boundary();
 		$this->breakdown[] = array(	'distance'=>$this->units_charged_for,
 									'distance_cost'=>$this->distance_cost,
 									'type'=>'set amount',

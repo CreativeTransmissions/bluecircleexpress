@@ -549,6 +549,14 @@ class TransitQuote_Pro_Public {
         $plugin = new TransitQuote_Pro4();
         $this->cdb = $plugin->get_custom_db();
         $all_rates = $this->cdb->get_rows('rates', array(), array(), null, 'distance');
+        if(is_array($all_rates)){
+            return self::order_rates($all_rates); 
+        } else {
+            return false;
+        }
+    }
+
+    public function order_rates($all_rates){
         $rates = array();
         foreach ($all_rates as $key => $rate) {
             if ($rate['distance'] === 0) {
@@ -561,7 +569,6 @@ class TransitQuote_Pro_Public {
         if (isset($max_distance_rate)) {
             $rates[] = $max_distance_rate;
         };
-
         return $rates;
     }
 
@@ -1551,14 +1558,14 @@ class TransitQuote_Pro_Public {
     //    $vehicle = self::get_default_vehicle();
 
         $vehicle_id = $this->ajax->param(array('name' => 'vehicle_id', 'optional' => true));
-        if (empty($vehicle_id)) {
+        /*if (empty($vehicle_id)) {
             $vehicle_id = $vehicle['id'];
-        };
+        };*/
 
         $service_id = $this->ajax->param(array('name' => 'service_id', 'optional' => true));
-        if (empty($service_id)) {
+        /*if (empty($service_id)) {
             $service_id = $service['id'];
-        };
+        };*/
 
         $distance = $this->ajax->param(array('name' => 'distance', 'optional' => true));
         if (empty($distance)) {
@@ -1618,7 +1625,7 @@ class TransitQuote_Pro_Public {
         if ($query === false) {
             //echo 'could not get query';
             return false;
-        }
+        };
         if(!empty($this->rate_options['delivery_date']) && !empty($this->rate_options['delivery_time'])){
             $this->job_rate = self::check_rates_by_job_date();
 
@@ -1642,10 +1649,17 @@ class TransitQuote_Pro_Public {
                     $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
                     break;
             }
-            return $this->cdb->get_rows( 'rates', $query, $fields );
+            $all_rates = $this->cdb->get_rows( 'rates', $query, $fields , 'distance');
         } else {
-            return $this->cdb->get_rows( 'rates', $query );
+            $all_rates = $this->cdb->get_rows( 'rates', $query, $fields , 'distance');
+        };
+
+        if(is_array($all_rates)){
+            return self::order_rates($all_rates); 
+        } else {
+            return false;
         }
+
     }
 
     function check_rates_by_job_date() {        
