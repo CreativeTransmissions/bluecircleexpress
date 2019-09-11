@@ -144,7 +144,42 @@ class TransitQuote_Pro_Public {
         wp_enqueue_script($this->plugin_slug . '-picker-time', plugins_url('js/picker.time.js', __FILE__), array('jquery', $this->plugin_slug . '-picker-date'), '', True);
         wp_enqueue_script($this->plugin_slug . '-picker-legacy', plugins_url('js/legacy.js', __FILE__), array('jquery', $this->plugin_slug . '-picker-time'), '', True);
 
-        wp_enqueue_script($this->plugin_slug . '-map-quote-calculator', plugins_url('js/js-transitquote/js/map-quote-calculator.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+        wp_enqueue_script($this->plugin_slug . '-FormReader', plugins_url('js/js-transitquote/classes/class.tq.FormReader.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
+        wp_enqueue_script($this->plugin_slug . '-RouteAddressPickers', plugins_url('js/js-transitquote/classes/class.tq.RouteAddressPickers.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
+        wp_enqueue_script($this->plugin_slug . '-AddressPicker', plugins_url('js/js-transitquote/classes/class.tq.AddressPicker.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
+        wp_enqueue_script($this->plugin_slug . '-ReturnJourneyFixedStartMixedModeRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.ReturnJourneyFixedStartMixedModeRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
+        wp_enqueue_script($this->plugin_slug . '-ReturnJourneyFixedStartRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.ReturnJourneyFixedStartRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
+        wp_enqueue_script($this->plugin_slug . '-ReturnJourneyMixedModeRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.ReturnJourneyMixedModeRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
+        wp_enqueue_script($this->plugin_slug . '-ReturnJourneyRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.ReturnJourneyRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
+        wp_enqueue_script($this->plugin_slug . '-RouteRequest', plugins_url('js/js-transitquote/classes/class.tq.RouteRequest.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);  
+
+        wp_enqueue_script($this->plugin_slug . '-StandardFixedStartMixedModeRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.StandardFixedStartMixedModeRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
+        wp_enqueue_script($this->plugin_slug . '-StandardMixedModeRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.StandardMixedModeRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);        
+
+        wp_enqueue_script($this->plugin_slug . '-StandardRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.StandardRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);     
+
+        $dependencies = array(  'jquery',
+                    $this->plugin_slug . '-FormReader',
+                    $this->plugin_slug . '-RouteAddressPickers',
+                    $this->plugin_slug . '-AddressPicker',
+                    $this->plugin_slug . '-ReturnJourneyFixedStartMixedModeRouteOptionsBuilder',
+                    $this->plugin_slug . '-ReturnJourneyFixedStartRouteOptionsBuilder',
+                    $this->plugin_slug . '-ReturnJourneyMixedModeRouteOptionsBuilder',
+                    $this->plugin_slug . '-ReturnJourneyRouteOptionsBuilder',
+                    $this->plugin_slug . '-RouteRequest',
+                    $this->plugin_slug . '-StandardFixedStartMixedModeRouteOptionsBuilder',
+                    $this->plugin_slug . '-StandardMixedModeRouteOptionsBuilder',
+                    $this->plugin_slug . '-StandardRouteOptionsBuilder'
+            );
+         wp_enqueue_script($this->plugin_slug . '-map-quote-calculator', plugins_url('js/js-transitquote/js/map-quote-calculator.js', __FILE__), $dependencies, '', True);        
 
         wp_enqueue_script($this->plugin_slug . '-tq-pro', plugins_url('js/tq-pro-public.js', __FILE__), array($this->plugin_slug . '-map-quote-calculator'), $this->version, true);
         wp_localize_script($this->plugin_slug . '-tq-pro', 'TransitQuoteProSettings', $tq_settings);
