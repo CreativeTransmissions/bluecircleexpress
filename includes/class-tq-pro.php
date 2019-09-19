@@ -318,6 +318,11 @@ class TransitQuote_Pro4 {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/renderers/class.tq-route-renderer.php';
 
+		/**
+		 * The class responsible for parsing get quote requests
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/parsers/class-tq-request-parser-get-quote.php';
+
 		$this->loader = new TransitQuote_Pro_Loader();
 	}
 	/**

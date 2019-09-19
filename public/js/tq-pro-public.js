@@ -834,11 +834,15 @@
 				$('.buttons').hide();
 				$('.paypal-msg-failure').hide();
 
+				var routeData = this.calculator.getMapData();
+				var route = $.extend({},routeData.response.routes[0]);
+				var legs = route.legs;
+				
 				//serialize form
 				var data = $(this.element).serialize();
 					//add button value to determine if request is for a quote or payment
 					data += '&submit_type='+submitType;
-
+					data += '&direction='+JSON.stringify(legs)
 				$.post(this.settings.ajaxUrl, data, function(response) {
 					if(response.success==='true'){
 						that.submissionSuccess(response, submitType);
