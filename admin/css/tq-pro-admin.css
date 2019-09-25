@@ -302,6 +302,10 @@ td.email input{
 .row-rates legend {
 	margin-top: 2em;
 }
+.tq-admin-form .row-rates .inline-field label{
+	width: 16em;
+	display: inline-block;
+}
 .job-details .row {
 	width: 100%;
 	clear: left;

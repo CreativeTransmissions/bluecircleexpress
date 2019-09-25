@@ -1883,6 +1883,87 @@ private function config_rates(){
       'default' => '',
       'format' => '%f',
     ),
+     'amount_dispatch' => 
+    array (
+      'name' => 'amount_dispatch',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'unit_dispatch' => 
+    array (
+      'name' => 'unit_dispatch',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'hour_dispatch' => 
+    array (
+      'name' => 'hour_dispatch',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'amount_return_to_pickup' => 
+    array (
+      'name' => 'amount_return_to_pickup',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'unit_return_to_pickup' => 
+    array (
+      'name' => 'unit_return_to_pickup',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'hour_return_to_pickup' => 
+    array (
+      'name' => 'hour_return_to_pickup',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'amount_return_to_base' => 
+    array (
+      'name' => 'amount_return_to_base',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'unit_return_to_base' => 
+    array (
+      'name' => 'unit_return_to_base',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'hour_return_to_base' => 
+    array (
+      'name' => 'hour_return_to_base',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),        
     'created' => 
     array (
       'name' => 'created',

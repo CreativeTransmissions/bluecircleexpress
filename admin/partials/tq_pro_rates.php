@@ -105,8 +105,57 @@
 			</div>	
 		</fieldset>
 	</div>
-		
-
+	<div class="row row-rates">		
+		<fieldset>
+			<legend>Dispatch Rates</legend>
+			<div class="inline-field">
+				<label for="hour">Set Price Dispatch</label>
+				<input class="input-long number" type="text" name="amount_dispatch" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?> Dispatch</label>
+				<input class="input-long number" type="text" name="unit_dispatch" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per Hour Dispatch</label>
+				<input class="input-long number" type="text" name="hour_dispatch" />
+			</div>	
+		</fieldset>
+	</div>
+	<div class="row row-rates">		
+		<fieldset>
+			<legend>Return To Pickup Rates</legend>
+			<div class="inline-field">
+				<label for="hour">Set Price Return To Pickup</label>
+				<input class="input-long number" type="text" name="amount_return_to_pickup" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?> Return To Pickup</label>
+				<input class="input-long number" type="text" name="unit_return_to_pickup" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per Hour Return To Pickup</label>
+				<input class="input-long number" type="text" name="hour_return_to_pickup" />
+			</div>	
+		</fieldset>
+	</div>
+	<div class="row row-rates">		
+		<fieldset>
+			<legend>Return To Base Rates</legend>
+			<div class="inline-field">
+				<label for="hour">Set Price Return To Base</label>
+				<input class="input-long number" type="text" name="amount_return_to_base" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?>  Return To Base</label>
+				<input class="input-long number" type="text" name="unit_return_to_base" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per Hour Return To Base</label>
+				<input class="input-long number" type="text" name="hour_return_to_base" />
+			</div>	
+		</fieldset>
+	</div>	
 	<input type="hidden" name="id" value=""/>
 	<input type="hidden" name="action" value="tq_pro4_save_record"/>
 	<input type="hidden" name="update" value="rates"/>
@@ -145,22 +194,35 @@
  	</fieldset>
 	<table id="rates_table" class="settings-table">
 		<thead>
-			<tr><th>Boundary Distance</th><th>Set Price</th>
+			<tr><th>Boundary Distance</th>
+			
+			<th>Set Price</th>
 			<th>Price Per <?php echo $this->admin->distance_unit; ?></th>
 			<th>Price Per Hour</th>
 			
-			
 			<th>Holiday Set Price</th>
-			<th>Weekend Set Price</th>
-			<th>Out of Hours Set Price</th>
 			<th>Holiday Price Per <?php echo $this->admin->distance_unit; ?></th>
-			<th>Weekend Price Per <?php echo $this->admin->distance_unit; ?></th>
-			<th>Out of Hours Price Per <?php echo $this->admin->distance_unit; ?></th>
 			<th>Holiday Price Per Hour</th>
+
+			<th>Weekend Set Price</th>
+			<th>Weekend Price Per <?php echo $this->admin->distance_unit; ?></th>
 			<th>Weekend Price Per Hour</th>
+
+			<th>Out of Hours Set Price</th>
+			<th>Out of Hours Price Per <?php echo $this->admin->distance_unit; ?></th>
 			<th>Out of Hours Price Per Hour</th>
 
+			<th>Dispatch Set Price</th>
+			<th>Dispatch Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th>Dispatch Price Per Hour</th>
 
+			<th>Return To Pick Up Set Price</th>
+			<th>Return To Pick Up Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th>Return To Pick Up Per Hour</th>
+
+			<th>Return To Base Set Price</th>
+			<th>Return To Base Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th>Return To Base Price Per Hour</th>
 			<th class="actions"><div class="spinner"></div></tr>
 		</thead>
 		<tbody>

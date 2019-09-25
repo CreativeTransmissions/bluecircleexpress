@@ -818,7 +818,7 @@ class TransitQuote_Pro_Admin {
 				// by default use standard options for table_rows to allow for only returning a single row to ui after an update
 				$defaults = array(
 							'table'=>'rates',
-							'fields'=>array('id', 'vehicle_id', 'service_id', 'distance','amount','unit','hour','amount_holiday', 'unit_holiday', 'hour_holiday','amount_weekend', 'unit_weekend', 'hour_weekend', 'amount_out_of_hours', 'unit_out_of_hours', 'hour_out_of_hours'),
+							'fields'=>array('id', 'vehicle_id', 'service_id', 'distance','amount','unit','hour','amount_holiday', 'unit_holiday', 'hour_holiday','amount_weekend', 'unit_weekend', 'hour_weekend', 'amount_out_of_hours', 'unit_out_of_hours', 'hour_out_of_hours', 'amount_dispatch', 'unit_dispatch', 'hour_dispatch', 'amount_return_to_pickup', 'unit_return_to_pickup', 'hour_return_to_pickup','amount_return_to_base', 'unit_return_to_base', 'hour_return_to_base'),
 							'classes'=>array( 'vehicle_id'=>'hidden', 'service_id'=>'hidden'),
 							'inputs'=>false,
 							'actions'=>array('Edit', 'Delete')
