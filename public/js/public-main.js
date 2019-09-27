@@ -1,3 +1,8 @@
+window.addEventListener("error", function (e) {
+   console.log("Error occurred: " + e.error.message);
+   return false;
+}, true);
+
 (function ( $ ) {
 	"use strict";
 
