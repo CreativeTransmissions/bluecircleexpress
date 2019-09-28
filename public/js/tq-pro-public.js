@@ -249,6 +249,7 @@
 					afterQuote: function(){
 						if(that.validateGetQuote()){
 							that.updateFormAction('tq_pro4_get_quote');
+							console.log('submitForm afterQuote');
 							that.submitForm('get_quote');
 						};						
 
@@ -269,6 +270,7 @@
 				} else {
 					if(this.validateGetQuote()){
 						this.updateFormAction('tq_pro4_get_quote');
+						console.log('submitForm callbackChangeServiceId');
 						this.submitForm('get_quote');
 					};	
 				}
@@ -287,6 +289,7 @@
 				} else {
 					if(this.validateGetQuote()){
 						this.updateFormAction('tq_pro4_get_quote');
+						console.log('submitForm callbackChangeVehicleId');
 						this.submitForm('get_quote');
 					};	
 				}
@@ -399,6 +402,7 @@
 
 					if(this.validateGetQuote()){
 						this.updateFormAction('tq_pro4_get_quote');
+						console.log('submitForm onSetDatepickerDate');
 						this.submitForm('get_quote');
 					}; 
             	}
@@ -525,6 +529,7 @@
 				if(context.select){
 					if(this.validateGetQuote()){
 						this.updateFormAction('tq_pro4_get_quote');
+						console.log('submitForm onSetTimePicker');
 						this.submitForm('get_quote');
 					};
 				}
@@ -837,12 +842,15 @@
 				var routeData = this.calculator.getMapData();
 				var route = $.extend({},routeData.response.routes[0]);
 				var legs = route.legs;
-				
+				$.each(legs, function(idx, leg){
+					delete leg.steps;
+				});
 				//serialize form
 				var data = $(this.element).serialize();
 					//add button value to determine if request is for a quote or payment
 					data += '&submit_type='+submitType;
-					data += '&direction='+JSON.stringify(legs)
+					data += '&directions='+JSON.stringify(legs);
+					console.log('posting..');
 				$.post(this.settings.ajaxUrl, data, function(response) {
 					if(response.success==='true'){
 						that.submissionSuccess(response, submitType);
@@ -893,6 +901,8 @@
 			},
 
 			processSubmissionSuccessResponseGetQuote: function(response){
+				console.log('processSubmissionSuccessResponseGetQuote');
+				console.log(response.data.quote);
 				if(response.data.quote){
 					this.populateQuoteFields(response.data.quote);
 					this.showQuoteFields();
@@ -970,6 +980,8 @@
 			},
 
 			populateQuoteFields: function(quote){
+				console.log('populateQuoteFields');
+				console.log(quote);
 				$('.totalCost').html(quote.total);
 				$('.basicCost').html(quote.basic_cost);
 				$('.rateTax').html(quote.rate_tax);

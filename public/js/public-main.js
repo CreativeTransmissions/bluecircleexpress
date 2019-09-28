@@ -1,5 +1,6 @@
-window.addEventListener("error", function (e) {
-   console.log("Error occurred: " + e.error.message);
+window.addEventListener('error', function (e) {
+   console.log("Error occurred: ");
+   console.log(e);
    return false;
 }, true);
 

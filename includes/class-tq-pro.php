@@ -323,6 +323,16 @@ class TransitQuote_Pro4 {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/parsers/class-tq-request-parser-get-quote.php';
 
+		/**
+		 * The class responsible for generating custom reference number 
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-date-checker.php';
+
+		/**
+		 * The class responsible for generating custom reference number 
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-rate-selector.php';
+		
 		$this->loader = new TransitQuote_Pro_Loader();
 	}
 	/**

@@ -1,5 +1,5 @@
 <?php
- error_reporting(E_ERROR | E_PARSE );
+ error_reporting(E_ALL );
  ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
@@ -2106,7 +2106,7 @@ class TransitQuote_Pro_Public {
         $this->rate_options = $this->request_parser_get_quote->get_rate_affecting_options();
    
 
-        if(!empty($this->rate_options['delivery_date']) && !empty($this->rate_options['delivery_time']) && $this->cdb->col_exists('quotes','rates')) {
+        if($this->cdb->col_exists('quotes','rates')) {
             $job_rate = self::check_rates_by_job_date($this->rate_options['delivery_date'], $this->rate_options['delivery_time']);   
             $this->quote = self::save('quotes', null, array('rates' => $job_rate));         
         } else {

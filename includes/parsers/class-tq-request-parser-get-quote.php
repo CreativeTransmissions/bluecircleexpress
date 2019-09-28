@@ -29,14 +29,177 @@ class TQ_RequestParserGetQuote {
     public function __construct($config = null) {
         //merge config with defaults so all properties are present
 		$this->config = array_merge($this->default_config, $config);
+        $this->post_data = $this->config['post_data'];
 	}
 
-	public function parse_directions(){
-
-		$this->directions = $this->get_param(array('name' => 'directions', 'type'=>'json', 'optional' => false));
-        print_r($this->this->directions);
-
+	public function parse_legs(){
+        $this->legs = json_decode($this->post_data['directions'], true);
 	}
+
+    public function leg_count(){
+        if(!isset($this->legs)){
+            $this->parse_legs();
+        };
+
+        return count($this->legs);
+    }
+
+    public function get_leg($legIdx = null){
+        if(!is_numeric($legIdx)){
+            echo 'non-numeric leg';
+            return false;
+        };
+
+        if(!isset($this->legs)){
+            $this->parse_legs();
+        };
+
+        if(isset($this->legs[$legIdx])){
+            return $this->legs[$legIdx];
+        } else {
+           // trigger_error('get_leg: leg '.$legIdx.'not set', E_USER_WARNING);            
+
+    //print_r($this->legs);
+        };
+        return false;
+    }
+
+    public function get_leg_distance($legIdx = null, $distance_unit = 'Kilometer'){
+        if(!is_numeric($legIdx)){
+            echo 'get_leg_distance: non-numeric leg';            
+            return false;
+        };
+
+        if(!isset($this->legs)){
+            $this->parse_legs();
+        };
+
+        if($distance_unit==='Kilometer'){
+            return $this->get_leg_distance_kilometers($legIdx);
+        } elseif ($distance_unit==='Mile') {
+            return $this->get_leg_distance_miles($legIdx);
+        };
+
+        return false;
+    }
+
+    public function get_leg_distance_kilometers($legIdx = null){
+        if(!is_numeric($legIdx)){
+            echo 'get_leg_distance: non-numeric leg';                        
+            return false;
+        };
+        $leg_meters = $this->get_leg_distance_meters($legIdx);
+        if(!is_numeric($leg_meters)){
+            trigger_error('get_leg_distance_kilometers: non-numeric leg_meters', E_USER_WARNING);            
+            return false;
+        };
+        
+        $leg_km = $leg_meters / 1000;
+        return  $leg_km;
+        
+    }
+
+    public function get_leg_distance_meters($legIdx = null){
+        if(!is_numeric($legIdx)){
+            echo 'get_leg_distance_meters: non-numeric leg';                        
+            return false;
+        };
+
+        $leg = $this->get_leg($legIdx);
+        if(!is_array($leg)){
+            trigger_error('get_leg_distance_meters: non-numeric leg', E_USER_WARNING);            
+            return false;
+        };
+
+        if(!is_array($leg['distance'])){
+            trigger_error('get_leg_distance_meters: leg '.$legIdx.' distance is not array', E_USER_WARNING);            
+
+            return false;
+        };
+        return $leg['distance']['value'];
+
+
+    }
+
+    public function get_leg_distance_miles($legIdx = null){
+        if(!is_numeric($legIdx)){
+            return false;
+        };
+        $leg_km = $this->get_leg_distance_kilometers($legIdx);
+        if(!is_numeric($leg_km)){
+            return false;
+        };
+        return $leg_km / 1.609;
+    }
+
+    public function get_leg_distance_text($legIdx = null){
+        if(!is_numeric($legIdx)){
+            echo 'get_leg_distance_text: non-numeric leg';                        
+            return false;
+        };
+
+        $leg = $this->get_leg($legIdx);
+        if(!is_array($leg)){
+            trigger_error('get_leg_distance_text: non-numeric leg', E_USER_WARNING);            
+            return false;
+        };
+
+        if(!is_array($leg['distance'])){
+            trigger_error('get_leg_distance_text: leg '.$legIdx.' distance is not array', E_USER_WARNING);            
+
+            return false;
+        };
+        return $leg['distance']['text'];
+    }
+
+    public function get_leg_eta(){
+
+    }
+
+    public function get_leg_eta_hours(){
+
+    }    
+
+    public function get_journey_distance_miles(){
+        if(!isset($this->legs)){
+            $this->parse_legs();
+        };
+
+        if(!is_array($this->legs))        {
+            return false;
+        };
+        $total_miles = 0;
+        foreach ($this->legs as $key => $leg) {
+            $total_miles = $total_miles + $this->get_leg_distance_miles($key);
+        };
+
+        return $total_miles;
+    }
+
+    public function get_journey_distance_kilometers(){
+        if(!isset($this->legs)){
+            $this->parse_legs();
+        };
+
+        if(!is_array($this->legs))        {
+            return false;
+        };
+
+        $total_km = 0;
+        foreach ($this->legs as $key => $leg) {
+            $total_km = $total_km + $this->get_leg_distance_kilometers($key);
+        };
+        
+        return $total_km;
+    }    
+
+    public function get_journey_eta(){
+
+    }
+
+    public function get_journey_eta_hours(){
+
+    }
 
     public function get_rate_affecting_options() {
 
@@ -98,11 +261,12 @@ class TQ_RequestParserGetQuote {
             'return_distance' => $return_distance,
             'no_destinations' => $no_destinations,
             'hours' => $hours,
-            'use_holiday_rates'=>$this->use_holiday_rates,
-            'use_weekend_rates'=>$this->use_weekend_rates,
-            'use_out_of_hours_rates'=>$this->use_out_of_hours_rates
+            'use_holiday_rates'=>$this->config['use_holiday_rates'],
+            'use_weekend_rates'=>$this->config['use_weekend_rates'],
+            'use_out_of_hours_rates'=>$this->config['use_out_of_hours_rates']
         );
     }	
+
 
 	public function get_param($options){
 
@@ -112,8 +276,8 @@ class TQ_RequestParserGetQuote {
 
         //Get parameter from ajax data
 
-        if(isset($_REQUEST[$name])){
-            $val = $_REQUEST[$name];
+        if(isset($this->post_data[$name])){
+            $val = $this->post_data[$name];
         };
         
 
@@ -185,5 +349,9 @@ class TQ_RequestParserGetQuote {
             return (isset($val)?$val:'');
         }
     }    
+
+    public function respond($data){
+        print_r($data);
+    }
 }
 ?>
