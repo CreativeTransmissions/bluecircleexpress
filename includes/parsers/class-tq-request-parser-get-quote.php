@@ -252,6 +252,7 @@ class TQ_RequestParserGetQuote {
         if($this->using_location_dates()){
             $date_list = $this->get_location_dates();
         } else {
+            $delivery_date = date("Y-m-d", strtotime($delivery_date));
             $date_list = array($delivery_date);
         };
 
@@ -262,6 +263,8 @@ class TQ_RequestParserGetQuote {
         };        
 
         return array(
+            'date_list'=>$date_list,
+            'time_list'=>$time_list,
             'delivery_date'=> $delivery_date,
             'delivery_time'=>$delivery_time,
             'vehicle_id' => $vehicle_id,

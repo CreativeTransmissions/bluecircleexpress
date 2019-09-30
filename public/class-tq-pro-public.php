@@ -1510,7 +1510,6 @@ class TransitQuote_Pro_Public {
         $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
         $this->use_weekend_rates = self::get_use_weekend_rates();
         $this->use_holiday_rates = self::get_use_holiday_rates();        
-echo json_encode($_POST);
         $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array('debugging'=>$this->debug,
                                                                                                 'post_data'=>$_POST));
         $this->rate_options_defaults = $this->get_default_rate_affecting_options();
@@ -1535,11 +1534,20 @@ echo json_encode($_POST);
 
         $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
         $this->use_weekend_rates = self::get_use_weekend_rates();
-        $this->use_holiday_rates = self::get_use_holiday_rates();   
+        $this->use_holiday_rates = self::get_use_holiday_rates();
 
-        return array('use_out_of_hours_rates'=>$this->use_out_of_hours_rates,
-                                            'use_weekend_rates'=>$this->use_weekend_rates,
-                                            'use_holiday_rates'=>$this->use_holiday_rates);
+        $today = date('Y-m-d');
+        $holiday_dates = $this->cdb->get_rows('holiday_dates', array("CAST(end_date as DATE) >" => $today), array(), null, false);        
+
+        $this->booking_start_time = date('H:i:s',strtotime(self::get_setting('tq_pro_form_options', 'booking_start_time', '07:00 AM')));
+        $this->booking_end_time = date('H:i:s',strtotime(self::get_setting('tq_pro_form_options', 'booking_end_time', '09:00 PM'))); 
+
+        return array('holiday_dates'=>$holiday_dates,
+                    'use_out_of_hours_rates'=>$this->use_out_of_hours_rates,
+                    'use_weekend_rates'=>$this->use_weekend_rates,
+                    'use_holiday_rates'=>$this->use_holiday_rates,
+                    'booking_start_time'=>$this->booking_start_time,
+                    'booking_end_time'=>$this->booking_end_time);
     }
 
     public function get_tax_rate() {
@@ -1571,6 +1579,10 @@ echo json_encode($_POST);
     }
 
     public function calc_quote() {
+ echo json_encode(array('rate_options'=>$this->rate_options));
+        $this->rate_selector = new TQ_RateSelector(array('rate_options'=>$this->rate_options));
+
+
         $this->rates = self::get_rates_for_journey_options();
         if ($this->rates === false) {
             return false;

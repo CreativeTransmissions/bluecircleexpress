@@ -11,10 +11,12 @@
  */
 
 /**
- * Define the internationalization functionality.
- *
- * Loads and defines the internationalization files for this plugin
- * so that it is ready for translation.
+ * select rates for one leg based on:
+ * - distance
+ * - eta
+ * - service 
+ * - vehicle
+ * - booking date(s)
  *
  * @since      3.0.0
  * @package    TQ_Calculation
@@ -25,15 +27,83 @@ namespace TransitQuote_Pro4;
 class TQ_RateSelector {
 
  	private $default_config = array('cdb'=>null,
- 									'prefix'=>'BCE',
- 									'length'=>9); 
+                                    'rate_options'=>array()); 
 
     public function __construct($config = null) {
         //merge config with defaults so all properties are present
 		$this->config = array_merge($this->default_config, $config);
+        $this->rate_options = $this->config['rate_options'];
+        $this->cdb = $this->config['cdb'];
 	}
 
+    public function rate_options_are_valid(){
+        if(empty($this->rate_options)){
+            print_r('rate_options_are_valid: no params passed', E_USER_WARNING);
+
+            return false;
+        };
+
+        if(!isset($this->rate_options['service_id'])){
+            print_r('rate_options_are_valid: invalid param: service_id', E_USER_WARNING);
+
+            return false;
+        };
+
+        if(!isset($this->rate_options['vehicle_id'])){
+            print_r('rate_options_are_valid: invalid param: vehicle_id', E_USER_WARNING);
+
+            return false;
+        };
+
+        if(!isset($this->rate_options['distance'])){
+            print_r('rate_options_are_valid: invalid param: distance', E_USER_WARNING);
+
+            return false;
+        };
+
+        if(!isset($this->rate_options['date_list'])){
+            print_r('rate_options_are_valid: invalid param: date_list', E_USER_WARNING);
+
+            return false;
+        };
+
+        if(!isset($this->rate_options['time_list'])){
+            print_r('rate_options_are_valid: invalid param: time_list', E_USER_WARNING);
+
+            return false;
+        };
+
+        if(!isset($this->rate_options['use_holiday_rates'])){
+            print_r('rate_options_are_valid: invalid param: use_holiday_rates', E_USER_WARNING);
+
+            return false;
+        };
+
+        if(!isset($this->rate_options['use_weekend_rates'])){
+            print_r('rate_options_are_valid: invalid param: use_weekend_rates', E_USER_WARNING);            
+            return false;
+        };
+
+        if(!isset($this->rate_options['use_out_of_hours_rates'])){
+            print_r('rate_options_are_valid: invalid param: use_out_of_hours_rates', E_USER_WARNING);
+            return false;
+        }        
+
+        if(!isset($this->rate_options['holiday_dates'])){
+            print_r('rate_options_are_valid: invalid param: holiday_dates', E_USER_WARNING);
+            return false;
+        } else {
+            if(!is_array($this->rate_options['holiday_dates'])){
+                 print_r('rate_options_are_valid: invalid param: holiday_dates - not an array', E_USER_WARNING);
+                return false;
+            }
+        };   
+               
+        return true;
+    }
    public function get_rates_for_journey_options() {
+
+        $fields = $this->get_rates_fields_for_journey_options();
 
         $rates = false;
         $this->rates_query = $query = self::get_rates_query_for_journey_options();
@@ -42,56 +112,51 @@ class TQ_RateSelector {
             return false;
         };
 
-        $date_list = $this->request_parser->get_location_dates();
-        $time_list = $this->request_parser->get_location_times();
 
-        $this->booking_start_time = date('H:i:s',strtotime(self::get_setting('tq_pro_form_options', 'booking_start_time', '07:00 AM')));
-        $this->booking_end_time = date('H:i:s',strtotime(self::get_setting('tq_pro_form_options', 'booking_end_time', '09:00 PM'))); 
+    //    echo 'getting rates with period based fields fields';
+        $rates = $this->cdb->get_rows( 'rates', $query, $fields );
+    //    echo $this->cdb->last_query;
+        return $rates;
 
-        $date_checker_config = array('date_list'=>$date_list,
-                                    'time_list'=>$time_list,
-                                    'use_out_of_hours_rates'=>$this->use_out_of_hours_rates,
-                                    'use_holiday_rates'=>$this->use_holiday_rates,
-                                    'use_weekend_rates'=>$this->use_weekend_rates,
-                                    'booking_start_time'=>$this->booking_start_time,
-                                    'booking_end_time'=>$this->booking_end_time);
+    }
 
-        //echo json_encode($date_checker_config);
+    public function get_rates_fields_for_journey_options(){
 
 
+        $date_checker_config = array('date_list'=>$this->rate_options['date_list'],
+                                    'time_list'=>$this->rate_options['time_list'],
+                                    'holiday_dates'=>$this->rate_options['holiday_dates'],
+                                    'use_out_of_hours_rates'=>$this->rate_options['use_out_of_hours_rates'],
+                                    'use_holiday_rates'=>$this->rate_options['use_holiday_rates'],
+                                    'use_weekend_rates'=>$this->rate_options['use_weekend_rates'],
+                                    'booking_start_time'=>$this->rate_options['booking_start_time'],
+                                    'booking_end_time'=>$this->rate_options['booking_end_time']);
 
-        $this->date_checker = new TransitQuote_Pro4\TQ_DateChecker($date_checker_config);
+        $this->date_checker = new TQ_DateChecker($date_checker_config);
+        $this->job_rate = $this->date_checker->get_rates_period(); 
 
-        if(!empty($this->rate_options['delivery_date']) && !empty($this->rate_options['delivery_time'])){
-            $this->job_rate = $this->date_checker->get_rates_period(); 
+        // default fields use standard rates in case of disabled job rates for holidays, weekends or out of hours
+        $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
 
-            // default fields use standard rates in case of disabled job rates for holidays, weekends or out of hours
-            $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
+        switch ($this->job_rate) {
+            case 'holiday':
+                 $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_holiday as amount', 'unit_holiday as unit', 'hour_holiday as hour');
+                                    break;
+            case 'weekend':
+                $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_weekend as amount', 'unit_weekend as unit', 'hour_weekend as hour');
+                                    break;
+            case 'out of hours':
+                $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_out_of_hours as amount', 'unit_out_of_hours as unit', 'hour_out_of_hours as hour');                      
+                                    break;
+            case 'standard':
+                $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
+                break;
+            default:
+                $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
+                break;
+        };
 
-            switch ($this->job_rate) {
-                case 'holiday':
-                     $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_holiday as amount', 'unit_holiday as unit', 'hour_holiday as hour');
-                                        break;
-                case 'weekend':
-                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_weekend as amount', 'unit_weekend as unit', 'hour_weekend as hour');
-                                        break;
-                case 'out of hours':
-                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_out_of_hours as amount', 'unit_out_of_hours as unit', 'hour_out_of_hours as hour');                      
-                                        break;
-                case 'standard':
-                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
-                    break;
-                default:
-                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
-                    break;
-            };
-        //    echo 'getting rates with period based fields fields';
-            $rates = $this->cdb->get_rows( 'rates', $query, $fields );
-        //    echo $this->cdb->last_query;
-            return $rates;
-        } else {
-            return $this->cdb->get_rows( 'rates', $query );
-        }
+        return $fields;    
     }
 
     public function get_rates_query_for_journey_options() {

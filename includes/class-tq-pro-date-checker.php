@@ -35,15 +35,12 @@ class TQ_DateChecker {
         $this->use_holiday_rates = (bool)$this->config['use_holiday_rates'];
         $this->use_weekend_rates = (bool)$this->config['use_weekend_rates'];
         $this->use_out_of_hours_rates = (bool)$this->config['use_out_of_hours_rates'];
-        if($this->use_holiday_rates){
-            $this->holiday_dates_array = self::get_holiday_dates();
-        };
-      
+     
 	}
 
     public function get_rates_period(){
-        if(!isset($this->holiday_dates_array)){
-            $this->holiday_dates_array = self::get_holiday_dates();            
+        if(empty($this->holiday_dates_array)){
+            $this->holiday_dates_array = self::get_holiday_dates();  
         };
         //return standard, out_of_hours, weekend, holiday
         if(self::any_location_date_is_holiday() && ($this->use_holiday_rates) ){
@@ -60,7 +57,8 @@ class TQ_DateChecker {
 
     function any_location_date_is_weekend() {
         foreach ($this->date_list as $location_date) {
-            if(self::is_weekend($location_date)){
+            $formatted_date = date("Y-m-d", strtotime($location_date));
+            if(self::is_weekend($formatted_date)){
              //   echo 'out of hours: ';
               //  print_r($location_data);
                 return true;
@@ -114,21 +112,32 @@ class TQ_DateChecker {
 
     function any_location_date_is_holiday(){
         foreach ($this->date_list as $location_date) {
-            if(self::is_holiday($location_date)){
-             //   echo 'out of hours: ';
-              //  print_r($location_data);
+            $formatted_date = date("Y-m-d", strtotime($location_date));
+            if(self::is_holiday($formatted_date)){
+               // echo 'HOLIDAY DETECTED: ';
+               // print_r($formatted_date);
                 return true;
-            } else {
-           //     echo 'not out of hours for this location';
-         //       print_r($location_data);
-            }
+            };
         };
         return false;
     }
 
     function is_holiday($delivery_date) {
         $job_date = date("Y-m-d", strtotime($delivery_date));        
-        return in_array($job_date, $this->holiday_dates_array);
+     
+        $is_holiday = in_array($job_date, $this->holiday_dates_array);
+        if($is_holiday===false){
+          //  echo $job_date.' is NOT in :';
+          //  print_r($this->holiday_dates_array);
+
+        } else {
+         //   echo $job_date.' IS in :';
+        //    print_r($this->holiday_dates_array);
+
+            return true;
+        }
+
+        return false;
     }
     
     // holiday dates range
