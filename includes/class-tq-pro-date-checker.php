@@ -38,13 +38,13 @@ class TQ_DateChecker {
         if($this->use_holiday_rates){
             $this->holiday_dates_array = self::get_holiday_dates();
         };
-        if($this->use_out_of_hours_rates){
-            $this->booking_start_time = $this->config['booking_start_time'];
-            $this->booking_end_time = $this->config['booking_end_time'];
-        }      
+      
 	}
 
     public function get_rates_period(){
+        if(!isset($this->holiday_dates_array)){
+            $this->holiday_dates_array = self::get_holiday_dates();            
+        };
         //return standard, out_of_hours, weekend, holiday
         if(self::any_location_date_is_holiday() && ($this->use_holiday_rates) ){
             return 'holiday';
@@ -98,12 +98,12 @@ class TQ_DateChecker {
     function collection_time_is_out_of_hours($location_time){
 
         //echo 'index: '.$location_data['address_index'].' collection_time: '.$collection_time;
-        $earlier_than_start = ($location_time < $this->booking_start_time);
+        $earlier_than_start = ($location_time < $this->config['booking_start_time']);
        // echo 'earlier_than_start = '.$earlier_than_start;
         
-        $later_than_finish = ($location_time > $this->booking_end_time);
+        $later_than_finish = ($location_time > $this->config['booking_end_time']);
       //  echo 'later_than_finish = '.$later_than_finish;
-      //  echo 'finish time: '.$this->booking_end_time;
+      //  echo 'finish time: '.$this->config['booking_end_time'];
 
         if( $earlier_than_start||$later_than_finish ){
             return true;
@@ -133,11 +133,9 @@ class TQ_DateChecker {
     
     // holiday dates range
     function get_holiday_dates() {
-        $plugin = new \TransitQuote_Pro4();
-        $this->cdb = $plugin->get_custom_db();
-        $today = date('Y-m-d');
+
         // get future dates only
-        $all_holiday_dates = $this->cdb->get_rows('holiday_dates', array("CAST(end_date as DATE) >" => $today), array(), null, false);
+        $all_holiday_dates = $this->config['holiday_dates'];
         $holiday_dates_array = array();
 
         foreach ($all_holiday_dates as $key => $holiday_dates) {
