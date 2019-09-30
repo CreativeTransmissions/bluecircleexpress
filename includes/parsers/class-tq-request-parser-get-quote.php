@@ -260,10 +260,7 @@ class TQ_RequestParserGetQuote {
             'deliver_and_return' => $deliver_and_return,
             'return_distance' => $return_distance,
             'no_destinations' => $no_destinations,
-            'hours' => $hours,
-            'use_holiday_rates'=>$this->config['use_holiday_rates'],
-            'use_weekend_rates'=>$this->config['use_weekend_rates'],
-            'use_out_of_hours_rates'=>$this->config['use_out_of_hours_rates']
+            'hours' => $hours
         );
     }	
 

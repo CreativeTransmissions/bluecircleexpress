@@ -1510,11 +1510,12 @@ class TransitQuote_Pro_Public {
         $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
         $this->use_weekend_rates = self::get_use_weekend_rates();
         $this->use_holiday_rates = self::get_use_holiday_rates();        
-
-        $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array('debugging'=>$this->config['debug'],
-                                                                              'post_data'=>$_POST));
-
+echo json_encode($_POST);
+        $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array('debugging'=>$this->debug,
+                                                                                                'post_data'=>$_POST));
+        $this->rate_options_defaults = $this->get_default_rate_affecting_options();
         $this->rate_options = $this->request_parser_get_quote->get_rate_affecting_options();
+        $this->rate_options = array_merge($this->rate_options_defaults, $this->rate_options);
 
         $this->tax_rate = self::get_tax_rate();
         $this->rounding_type = self::get_rounding_type();
@@ -1528,6 +1529,17 @@ class TransitQuote_Pro_Public {
         $response = self::build_get_quote_response();
         return $response;
 
+    }
+
+    public function get_default_rate_affecting_options(){
+
+        $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
+        $this->use_weekend_rates = self::get_use_weekend_rates();
+        $this->use_holiday_rates = self::get_use_holiday_rates();   
+
+        return array('use_out_of_hours_rates'=>$this->use_out_of_hours_rates,
+                                            'use_weekend_rates'=>$this->use_weekend_rates,
+                                            'use_holiday_rates'=>$this->use_holiday_rates);
     }
 
     public function get_tax_rate() {
@@ -2100,10 +2112,11 @@ class TransitQuote_Pro_Public {
         $this->use_holiday_rates = self::get_use_holiday_rates(); 
         
         // TODO Change to requets parser for save job
-        $this->request_parser_get_quote = new RransitQuote_Pro4\TQ_RequestParserGetQuoteTQ_RequestParserGetQuote(array('debugging'=>$this->config['debug'],
-                                                                              'post_data'=>$_POST));
-
+        $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array('debugging'=>$this->debug,
+                                                                                                'post_data'=>$_POST));
+        $this->rate_options_defaults = $this->get_default_rate_affecting_options();
         $this->rate_options = $this->request_parser_get_quote->get_rate_affecting_options();
+        $this->rate_options = array_merge($this->rate_options_defaults, $this->rate_options);
    
 
         if($this->cdb->col_exists('quotes','rates')) {
