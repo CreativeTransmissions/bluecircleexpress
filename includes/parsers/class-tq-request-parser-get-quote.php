@@ -246,6 +246,12 @@ class TQ_RequestParserGetQuote {
             $no_destinations = 1;
         };
 
+        $leg_type = $this->get_param(array('name' => 'leg_type', 'optional' => true));
+        if (empty($leg_type)) {
+            $leg_type = 'standard';
+        };
+
+
         $delivery_date = $this->get_param(array('name' => 'delivery_date', 'optional' => true));     
         $delivery_time = $this->get_param(array('name' => 'delivery_time', 'optional' => true));
 
@@ -262,7 +268,10 @@ class TQ_RequestParserGetQuote {
             $time_list = array($delivery_time);
         };        
 
+
+
         return array(
+            'leg_type'=>$leg_type,
             'date_list'=>$date_list,
             'time_list'=>$time_list,
             'delivery_date'=> $delivery_date,

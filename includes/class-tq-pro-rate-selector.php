@@ -134,14 +134,34 @@ class TQ_RateSelector {
 
         $this->date_checker = new TQ_DateChecker($date_checker_config);
         $this->job_rate = $this->date_checker->get_rates_period(); 
+        if($this->rate_options['leg_type']==='dispatch'){
+             $this->job_rate = 'dispatch';
+        };
+
+        if($this->rate_options['leg_type']==='return_to_pickup'){
+            $this->job_rate = 'return_to_pickup';
+        };
+
+        if($this->rate_options['leg_type']==='return_to_base'){
+            $this->job_rate = 'return_to_base';
+        };        
 
         // default fields use standard rates in case of disabled job rates for holidays, weekends or out of hours
         $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
 
         switch ($this->job_rate) {
+            case 'dispatch':
+                 $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_dispatch as amount', 'unit_dispatch as unit', 'hour_dispatch as hour');
+            break;
+            case 'return_to_pickup':
+                 $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_return_to_pickup as amount', 'unit_return_to_pickup as unit', 'hour_return_to_pickup as hour');
+            break;
+            case 'return_to_base':
+                 $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_return_to_base as amount', 'unit_return_to_base as unit', 'hour_return_to_base as hour');
+            break;
             case 'holiday':
                  $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_holiday as amount', 'unit_holiday as unit', 'hour_holiday as hour');
-                                    break;
+                 break;
             case 'weekend':
                 $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_weekend as amount', 'unit_weekend as unit', 'hour_weekend as hour');
                                     break;
