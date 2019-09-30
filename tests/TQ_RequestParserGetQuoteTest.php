@@ -159,4 +159,10 @@ final class TQ_RequestParserGetQuoteTest extends TestCase
 
     }
 
+    public function test_using_location_dates(){
+        $using_location_dates = $this->request_parser_get_quote->using_location_dates();
+        $this->assertFalse($using_location_dates);
+
+    }
+
 }

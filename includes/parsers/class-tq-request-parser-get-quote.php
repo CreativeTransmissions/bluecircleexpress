@@ -249,6 +249,17 @@ class TQ_RequestParserGetQuote {
         $delivery_date = $this->get_param(array('name' => 'delivery_date', 'optional' => true));     
         $delivery_time = $this->get_param(array('name' => 'delivery_time', 'optional' => true));
 
+        if($this->using_location_dates()){
+            $date_list = $this->get_location_dates();
+        } else {
+            $date_list = array($delivery_date);
+        };
+
+        if($this->using_location_times()){
+            $time_list = $this->get_location_times();
+        } else {
+            $time_list = array($delivery_time);
+        };        
 
         return array(
             'delivery_date'=> $delivery_date,
@@ -264,6 +275,159 @@ class TQ_RequestParserGetQuote {
         );
     }	
 
+    public function using_location_dates(){
+        if(!isset($this->all_locations_optional_data)){
+            $this->get_location_data_for_all_stops();
+        };
+        if(isset($this->all_locations_optional_data[0]['collection_date'])){
+            return true;
+        };
+
+        return false;
+    }
+
+    public function get_location_dates(){
+        if(!isset($this->all_locations_optional_data)){
+            $this->get_location_data_for_all_stops();
+        };
+        $this->location_dates = [];
+        foreach ($this->all_locations_optional_data as $key => $location_fields) {
+            $this->location_dates[] = $location_fields['collection_date'];
+        }
+        return $this->location_dates;
+    }
+
+    public function using_location_times(){
+        if(!isset($this->all_locations_optional_data)){
+            $this->get_location_data_for_all_stops();
+        };
+        if(isset($this->all_locations_optional_data[0]['collection_time'])){
+            return true;
+        };
+
+        return false;
+    }
+
+    public function get_location_times(){
+        if(!isset($this->all_locations_optional_data)){
+            $this->get_location_data_for_all_stops();
+        };        
+        $this->location_times = [];
+        foreach ($this->all_locations_optional_data as $key => $location_fields) {
+            $this->location_times[] = $location_fields['collection_time'];
+        }
+        return $this->location_times;
+    }
+
+     public function get_location_data_for_all_stops(){
+        $this->journey_order = $this->get_journey_order_from_request_data();
+        $this->get_journey_locations_from_request_data();
+    }
+
+    public function get_first_collection_date(){
+        if(!isset($this->all_locations_optional_data)){
+            $this->get_location_data_for_all_stops();
+        }; 
+        return $this->all_locations_optional_data[0]['collection_date'];
+    }
+ 
+    public function get_first_collection_time(){
+        if(!isset($this->all_locations_optional_data)){
+            $this->get_location_data_for_all_stops();
+        };
+        return $this->all_locations_optional_data[0]['collection_time'];
+    }
+
+    function get_journey_order_from_request_data() {
+        // build array of address post field indexes in order of journey_order
+        $journey_order = array();
+        foreach ($this->post_data as $key => $value) {
+            if (strpos($key, 'journey_order')) {
+                // key example: address_1_journey_order
+                $key_array = explode('_', $key);
+                $address_index = $key_array[1];
+                $journey_order[$value] = $address_index;
+            }
+        };
+        return $journey_order;
+    }
+
+
+    public function get_journey_locations_from_request_data(){
+        $this->all_locations_optional_data = array();
+        foreach ($this->journey_order as $key => $address_index) {
+            $location_data = $this->get_journey_order_optional_fields($address_index);
+            $location_data['address_index'] = $address_index;
+            array_push($this->all_locations_optional_data, $location_data);
+        }
+    }
+
+    private function get_journey_order_optional_fields($idx) {
+        $journey_order_optional_fields = array();
+
+        $contact_name_field_name = 'address_' . $idx . '_contact_name';
+        $contact_name = $this->get_param(array('name' => $contact_name_field_name, 'optional' => true));
+        if (!empty($contact_name)) {
+            $journey_order_optional_fields['contact_name'] = $contact_name;
+        };
+
+        $contact_phone_field_name = 'address_' . $idx . '_contact_phone';
+        $contact_phone = $this->get_param(array('name' => $contact_phone_field_name, 'optional' => true));
+        if (!empty($contact_name)) {
+            $journey_order_optional_fields['contact_phone'] = $contact_phone;
+        };
+
+        $visit_type_field_name = 'address_' . $idx . '_visit_type';
+        $visit_type = $this->get_param(array('name' => $visit_type_field_name, 'optional' => true));
+        if (!empty($visit_type)) {
+            $journey_order_optional_fields['visit_type'] = $visit_type;
+        };
+
+        $time_type_field_name = 'address_' . $idx . '_time_type';
+        $time_type = $this->get_param(array('name' => $time_type_field_name, 'optional' => true));
+        if (!empty($time_type)) {
+            $journey_order_optional_fields['time_type'] = $time_type;
+        };
+
+        $collection_date_field_name = 'address_' . $idx . '_collection_date';
+        if($idx==1){
+            $collection_date = $this->get_param(array('name' => 'delivery_date', 'optional' => true));
+            if (!empty($collection_date)) {
+                $journey_order_optional_fields['collection_date'] = $collection_date;
+                $collection_date_time_obj = new \DateTime($collection_date);
+            };
+            $collection_time = $this->get_param(array('name' => 'delivery_time_submit', 'optional' => true));
+            if (!empty($collection_time)) {
+                $timeparts = explode(':', $collection_time);
+                $collection_date_time_obj->setTime($timeparts[0],$timeparts[1]);
+                $journey_order_optional_fields['collection_date'] = $collection_date_time_obj->format('Y-m-d H:i:s');
+                $journey_order_optional_fields['collection_time'] = $collection_date_time_obj->format('H:i:s');
+
+            };
+
+
+        } else {
+            $collection_date = $this->get_param(array('name' => $collection_date_field_name, 'optional' => true));
+            if (!empty($collection_date)) {
+                $journey_order_optional_fields['collection_date'] = $collection_date;
+                $collection_date_time_obj = new \DateTime($collection_date);
+            };
+
+            $collection_time_field_name = 'address_' . $idx . '_collection_time_submit';
+            $collection_time = $this->get_param(array('name' => $collection_time_field_name, 'optional' => true));
+            if (!empty($collection_time)) {
+                $timeparts = explode(':', $collection_time);
+                $collection_date_time_obj->setTime($timeparts[0],$timeparts[1]);
+                $journey_order_optional_fields['collection_date'] = $collection_date_time_obj->format('Y-m-d H:i:s');
+                $journey_order_optional_fields['collection_time'] = $collection_date_time_obj->format('H:i:s');
+            };
+
+        };
+
+       
+
+        return $journey_order_optional_fields;
+    }
 
 	public function get_param($options){
 
