@@ -1,6 +1,6 @@
 <?php
- error_reporting(E_ALL );
- ini_set('display_errors', 1);
+/* error_reporting(E_ALL );
+ ini_set('display_errors', 1);*/
 /**
  * The public-facing functionality of the plugin.
  *
@@ -1510,8 +1510,13 @@ class TransitQuote_Pro_Public {
         $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
         $this->use_weekend_rates = self::get_use_weekend_rates();
         $this->use_holiday_rates = self::get_use_holiday_rates();        
+        $this->use_dispatch_rates = self::get_use_dispatch_rates();
+        $this->distance_unit = self::get_distance_unit();
         $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array('debugging'=>$this->debug,
-                                                                                                'post_data'=>$_POST));
+                                                                                                'post_data'=>$_POST,
+                                                                                                'distance_unit'=> $this->distance_unit,
+                                                                                                'use_dispatch_rates'=>$this->use_dispatch_rates
+                                                                                            ));
         $this->rate_options_defaults = $this->get_default_rate_affecting_options();
         $this->rate_options = $this->request_parser_get_quote->get_rate_affecting_options();
         $this->rate_options = array_merge($this->rate_options_defaults, $this->rate_options);
@@ -1520,7 +1525,12 @@ class TransitQuote_Pro_Public {
         $this->rounding_type = self::get_rounding_type();
         $this->return_percentage = self::get_return_percentage();
         if ($this->rate_options['distance'] > 0) {
-            $this->quote = self::calc_quote();
+            if($this->use_dispatch_rates){
+                $this->quote = self::calc_quote_multi_leg();
+            } else {
+                $this->quote = self::calc_quote();
+
+            }
         } else {
             $this->response_msg = 'Distance must be greater than 0';
         };
@@ -1578,9 +1588,14 @@ class TransitQuote_Pro_Public {
         return (bool) self::get_setting('', 'use_holiday_rates', 0);
     }
 
+    public function get_use_dispatch_rates() {
+        return  (bool) self::get_setting('', 'use_dispatch_rates', 0);
+    }
+
     public function calc_quote() {
- echo json_encode(array('rate_options'=>$this->rate_options));
-        $this->rate_selector = new TQ_RateSelector(array('rate_options'=>$this->rate_options));
+
+        $this->rate_selector = new TQ_RateSelector(array('cdb'=>$this->cdb,'
+                                                        rate_options'=>$this->rate_options));
 
 
         $this->rates = self::get_rates_for_journey_options();
@@ -1614,6 +1629,47 @@ class TransitQuote_Pro_Public {
         return $quote;
     }
 
+    public function calc_quote_multi_leg(){
+        $basic_cost_total = 0;
+
+        $this->stage_data = $this->request_parser_get_quote->get_stage_data();
+        foreach ($this->stage_data as $key => $stage_data) {
+            // override distance and hours with that for the stage
+            $rate_options_for_stage = array_merge($this->rate_options, $stage_data);
+            $rate_selector = new TransitQuote_Pro4\TQ_RateSelector(array('cdb'=>$this->cdb,'rate_options'=>$rate_options_for_stage));
+            $stage_rates = $rate_selector->get_rates_for_journey_options();
+            $rate_options_for_stage['rates'] = $stage_rates;
+            $stage_quote = $this->calc_quote_for_stage($rate_options_for_stage);
+            $this->stage_data[$key]['quote'] = $stage_quote;
+            $basic_cost_total = $basic_cost_total + $stage_quote['basic_cost'];
+        };
+
+        $this->tax_rate = self::get_tax_rate();        
+        $this->tax_cost = ($this->tax_rate/100)*$basic_cost_total; 
+        $this->quote_totals = array('basic_cost'=>$basic_cost_total,
+                                    'tax_cost'=>$this->tax_cost,
+                                    'total_cost'=>$basic_cost_total+$this->tax_cost);
+
+        $this->quote_totals['job_rate'] = $rate_selector->job_rate;
+        $this->quote_totals['rates'] = $this->stage_data;
+        return $this->quote_totals;
+
+    }
+
+    public function calc_quote_for_stage($rate_options_for_stage){
+
+        $calc_config = array('debugging' => $this->debug,
+            'rates' => $rate_options_for_stage['rates'],
+            'distance' => $rate_options_for_stage['distance'],
+            'hours' => $rate_options_for_stage['hours'],
+            'tax_rate' => $this->tax_rate,
+            'tax_name' => 'VAT',
+            'rounding_type' => $this->rounding_type);
+
+        $calculation = new TransitQuote_Pro4\TQ_Calculation($calc_config);
+        return $calculation->run();
+
+    }
     private function get_rate_affecting_options() {
 
      //   $service = self::get_default_service();
@@ -1855,7 +1911,7 @@ class TransitQuote_Pro_Public {
         if (is_array($this->quote)) {
             $response = array('success' => 'true',
                 'data' => array('quote' => $this->quote,
-                    'rates' => $this->rates,
+                    'rates' => $this->quote['rates'],
                     'rate_options' => $this->rate_options));
 
         } else {

@@ -24,7 +24,15 @@ final class TQ_RequestParserGetQuoteTest extends TestCase
                                                                                                 'post_data'=>$this->test_post_data_two_legs,
                                                                                                 'use_weekend_rates'=>false,
                                                                                                 'use_holiday_rates'=>false,
-                                                                                                'use_out_of_hours_rates'=>false));         
+                                                                                                'use_out_of_hours_rates'=>false));       
+
+        $this->request_parser_get_quote_dispatch = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array('debugging'=>true,
+                                                                                                        'post_data'=>$this->test_post_data_two_legs,
+                                                                                                        'use_weekend_rates'=>false,
+                                                                                                        'use_holiday_rates'=>false,
+                                                                                                        'use_out_of_hours_rates'=>false,
+                                                                                                        'use_dispatch_rates'=>true,
+                                                                                                        'distance_unit'=>'Mile'));   
     }
    
     protected function tearDown(){
@@ -117,6 +125,9 @@ final class TQ_RequestParserGetQuoteTest extends TestCase
         $this->assertTrue(is_numeric($leg_distance));
         $this->assertEquals(415.4984462399006, $leg_distance);
 
+        $leg_distance = $this->request_parser_get_quote_dispatch->get_leg_distance_miles(1);
+        $this->assertTrue(is_numeric($leg_distance));
+        $this->assertEquals(104.54878806712243, $leg_distance);
     }    
 
     public function test_get_leg_distance_text(){
@@ -164,5 +175,30 @@ final class TQ_RequestParserGetQuoteTest extends TestCase
         $this->assertFalse($using_location_dates);
 
     }
+
+    public function test_use_dispatch_rates(){
+        $using_dispatch_rates = $this->request_parser_get_quote_dispatch->using_dispatch_rates();
+        $this->assertTrue($using_dispatch_rates);
+    }
+
+    public function test_get_stage_data(){
+
+        $stage_data = $this->request_parser_get_quote_dispatch->get_stage_data();
+
+        $this->assertTrue(is_array($stage_data), ' stage_data is not array');
+        $this->assertCount(2, $stage_data, ' stage_data does not have 2 stages');
+        $this->assertEquals('dispatch', $stage_data[0]['leg_type'], ' stage_data 0 is not dispatch');
+        $this->assertEquals(104.38098197638, $stage_data[0]['distance']);
+        $this->assertEquals(2.527222222222222, $stage_data[0]['hours']);
+
+        $this->assertEquals('standard', $stage_data[1]['leg_type'], ' stage_data 1 is not standard');
+        $this->assertEquals(104.54878806712, $stage_data[1]['distance']);
+        $this->assertEquals(2.560277777777778, $stage_data[1]['hours']);
+
+        //total 208.9297700435
+
+    }
+
+
 
 }

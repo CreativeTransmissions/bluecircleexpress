@@ -24,7 +24,7 @@
  * @author     Andrew van Duivenbode <hq@transitquote.co.uk>
  */
 namespace TransitQuote_Pro4;
-class TQ_RateSelector {
+class TQ_RateSelectorMultiLeg {
 
  	private $default_config = array('cdb'=>null,
                                     'rate_options'=>array()); 
@@ -115,7 +115,7 @@ class TQ_RateSelector {
 
     //    echo 'getting rates with period based fields fields';
         $rates = $this->cdb->get_rows( 'rates', $this->rates_query, $fields );
-        //echo $this->cdb->last_query;
+        echo $this->cdb->last_query;
         return $rates;
 
     }

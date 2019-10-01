@@ -620,6 +620,13 @@ class Admin_Config {
                                                         'help'=>'Customers can request one or more destinations as part of the same job. If multiple destinations are allowed you can enter a number to limit the number of stops on one route.',
                                                         'default'=>3),
 
+                                                      'use_dispatch_rates'=>array(
+                                                        'id'=>'use_dispatch_rates',
+                                                        'label'=>'Enable Dispatch Rates',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will enable charging a different set of rates for the journey from base to pickup.',
+                                                        'default'=>0),
+
                                                       'use_out_of_hours_rates'=>array(
                                                         'id'=>'use_out_of_hours_rates',
                                                         'label'=>'Enable Out Of Hours Rates',

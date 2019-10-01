@@ -329,9 +329,14 @@ class TransitQuote_Pro4 {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-date-checker.php';
 
 		/**
-		 * The class responsible for generating custom reference number 
+		 * The class responsible for selecting rates to use for one leg of a journey
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-rate-selector.php';
+
+		/**
+		 * The class responsible for selecting rates to use for multiple journey legs
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-rate-selector-multi-leg.php';		
 		
 		$this->loader = new TransitQuote_Pro_Loader();
 	}
@@ -643,7 +648,7 @@ class TransitQuote_Pro4 {
 		if($cdb->get_count('rates')==0){
 			$created = date('Y-m-d G:i:s');
 			$modified = $created;
-			$cdb->update_row('rates', array('service_type_id'=>1, 'distance' => '0', 'unit'=> '2', 'journey_length_id'=>1, 'created'=>$created, 'modified'=>$modified ));
+			$cdb->update_row('rates', array('service_type_id'=>1, 'distance' => '0', 'unit'=> 2.35,'unit_dispatch'=>0.65, 'unit_holiday'=> 2.35, 'unit_weekend'=> 2.35, 'unit_out_of_hours'=> 2.35,'journey_length_id'=>1, 'created'=>$created, 'modified'=>$modified ));
 		};
 	}
 

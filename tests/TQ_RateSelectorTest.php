@@ -34,8 +34,9 @@ final class TQ_RateSelectorTest extends TestCase
     }
 
     public static function setUpBeforeClass(){
-        // ** import  bluecircle rates TestRatesWithJourneyLengthsAndHolidays.sql
-      //  $output = shell_exec($command . '/shellexec.sql');
+        // ** import rates for single service / vehicle with different dispatch rates
+        $command = 'mysql -uroot -proot tailwind < /srv/www/tailwind/public_html/wp-content/plugins/transitquote-pro/tests/test_json/tailwind_simple_rates.sql';
+        echo shell_exec($command);
     }
        
     protected function tearDown(){
@@ -100,6 +101,18 @@ final class TQ_RateSelectorTest extends TestCase
 
     public function test_get_rates_for_journey_options(){
 
+        $rates = $this->rate_selector->get_rates_for_journey_options();
+        $this->assertTrue(is_array($rates));
+        $this->assertCount(1, $rates);
+        $this->assertEquals(2.35, $rates[0]['unit']); //standard rate
+
+        $rate_selector_dispatch = new TransitQuote_Pro4\TQ_RateSelector(array('rate_options'=>$this->rate_options_dispatch,
+                                                                            'cdb'=>$this->cdb));      
+
+        $rates = $rate_selector_dispatch->get_rates_for_journey_options();
+        $this->assertEquals(0.65, $rates[0]['unit']); //standard rate
+
+
     }
 
     public function test_get_rates_query_for_journey_options(){
@@ -107,12 +120,7 @@ final class TQ_RateSelectorTest extends TestCase
         $this->assertTrue(is_array($rates_query));
         $this->assertEquals(1, $rates_query['service_id']);
         $this->assertEquals(1, $rates_query['vehicle_id']);
-        $this->assertEquals(16, $rates_query['journey_length_id']);
-
-
+        $this->assertEquals(1, $rates_query['journey_length_id']);
     }
 
-    public function test_get_journey_length_id_for_distance(){
-        
-    }
 }

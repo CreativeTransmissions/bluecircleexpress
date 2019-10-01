@@ -33,8 +33,64 @@ class TQ_RequestParserGetQuote {
 	}
 
 	public function parse_legs(){
-        $this->legs = json_decode($this->post_data['directions'], true);
+        $this->legs = json_decode(stripslashes($this->post_data['directions']), true);
 	}
+
+    public function get_stage_data($legIdx = null){
+        //return array of stages with data (delivery distance can be multiple legs)
+        /* 
+        - leg_type
+        - distance
+        - hours
+        */
+
+        $this->stage_data = array();
+
+        if(!isset($this->legs)){
+            $this->parse_legs();
+        };
+        // first stage     
+        foreach ($this->legs as $key => $leg) {
+            if($this->leg_starts_new_stage($key)){
+                if($key>0){
+                    //add current stage data to array of stages before moving to next one
+                    $this->stage_data[] = $stage_data;
+                };
+                $stage_data = array('distance'=>0,
+                                    'hours'=>0);
+                $stage_data['leg_type'] = $this->get_leg_type($key);
+            };
+            $stage_data['distance'] = $stage_data['distance'] + $this->get_leg_distance($key, $this->config['distance_unit']);
+            $stage_data['hours'] = $stage_data['hours'] + $this->get_leg_duration_hours($key);            
+        };
+        $this->stage_data[] = $stage_data; // add last stage
+        return $this->stage_data;
+    }
+
+    public function leg_starts_new_stage($legIdx){
+        if($this->using_dispatch_rates()){
+            if($legIdx < 2){ // start a new stage until leg index 2. 0 is for dispatch, 1 begins delivery stage
+                return true;
+            };
+        };
+        return false;
+    }
+
+    public function get_leg_type($legIdx){
+        if($this->using_dispatch_rates()){
+            if($legIdx === 0 ){
+                return 'dispatch';
+            };
+            if($legIdx === 1 ){
+                return 'standard';
+            };            
+        };
+        return 'standard';
+    }
+
+    public function using_dispatch_rates(){
+        return $this->config['use_dispatch_rates'];
+    }
 
     public function leg_count(){
         if(!isset($this->legs)){
@@ -65,8 +121,9 @@ class TQ_RequestParserGetQuote {
     }
 
     public function get_leg_distance($legIdx = null, $distance_unit = 'Kilometer'){
+        $leg_distance = false;
+
         if(!is_numeric($legIdx)){
-            echo 'get_leg_distance: non-numeric leg';            
             return false;
         };
 
@@ -74,13 +131,14 @@ class TQ_RequestParserGetQuote {
             $this->parse_legs();
         };
 
+        
         if($distance_unit==='Kilometer'){
-            return $this->get_leg_distance_kilometers($legIdx);
+            $leg_distance = $this->get_leg_distance_kilometers($legIdx);
         } elseif ($distance_unit==='Mile') {
-            return $this->get_leg_distance_miles($legIdx);
+            $leg_distance = $this->get_leg_distance_miles($legIdx);
         };
 
-        return false;
+        return $leg_distance;
     }
 
     public function get_leg_distance_kilometers($legIdx = null){
@@ -152,12 +210,33 @@ class TQ_RequestParserGetQuote {
         return $leg['distance']['text'];
     }
 
-    public function get_leg_eta(){
+    public function get_leg_duration($legIdx = null){ // seconds
+        if(!is_numeric($legIdx)){
+            echo 'get_leg_duration: non-numeric leg';                        
+            return false;
+        };
 
+        $leg = $this->get_leg($legIdx);
+        if(!is_array($leg)){
+            trigger_error('get_leg_duration: non-numeric leg', E_USER_WARNING);            
+            return false;
+        };
+
+        if(!is_array($leg['duration'])){
+            trigger_error('get_leg_duration: leg '.$legIdx.' duration is not array', E_USER_WARNING);            
+
+            return false;
+        };
+        return $leg['duration']['value'];
     }
 
-    public function get_leg_eta_hours(){
-
+    public function get_leg_duration_hours($legIdx = null){
+        $duration = $this->get_leg_duration($legIdx);
+        if(is_numeric($duration)){
+           return $duration / 3600;
+        } else {
+            return false;
+        }
     }    
 
     public function get_journey_distance_miles(){
@@ -193,11 +272,11 @@ class TQ_RequestParserGetQuote {
         return $total_km;
     }    
 
-    public function get_journey_eta(){
+    public function get_journey_duration(){
 
     }
 
-    public function get_journey_eta_hours(){
+    public function get_journey_duration_hours(){
 
     }
 
