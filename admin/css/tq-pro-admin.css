@@ -290,6 +290,12 @@ td.email input{
 	height: 14em;
 	width: 100%;
 }
+
+#area-selector {
+	height: 20em;
+	width: 100%;
+}
+
 .admin-form td.empty-table {
 	text-align: center;
 }

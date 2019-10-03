@@ -1468,6 +1468,84 @@ private function config_quote_surcharges(){
 
 }
 
+private function config_areas(){
+ return array (
+  'name' => 'areas',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'asc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d',
+    ),
+    'name' => 
+    array (
+      'name' => 'name',
+      'type' => 'varchar(45)',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'definition' => 
+    array (
+      'name' => 'definition',
+      'type' => 'text',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+   'surcharge_id' => 
+    array (
+      'name' => 'surcharge_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
+    ),    
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
+
 private function config_journeys(){
  return array (
   'name' => 'journeys',

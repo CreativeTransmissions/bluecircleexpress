@@ -1,6 +1,6 @@
 <?php
-/*error_reporting(E_ERROR | E_PARSE );
- ini_set('display_errors', 1);*/
+error_reporting(E_ERROR | E_PARSE );
+ ini_set('display_errors', 1);
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -152,6 +152,8 @@ class TransitQuote_Pro_Admin {
 	public function init_data(){
 		$this->currency = $this->plugin->get_currency_code();
    		$this->distance_unit = $this->plugin->get_distance_unit();
+		$this->currency_symbol = $this->plugin->get_currency_symbol();
+
 	}
 	
 	public function update_config_defaults(){
@@ -204,7 +206,7 @@ class TransitQuote_Pro_Admin {
 		 	$config['plugin_slug'] = $this->plugin_slug;
 		 	$config['partials_path'] =  'partials/';
 		 	$config['tab_key'] = $tab_key;
-
+		 	$config['currency_symbol'] = $this->plugin->get_currency_symbol();
 		 	// instanciate tab
 		 	switch ($tab_key) {
 		 		case 'tq_pro_job_requests':
@@ -316,12 +318,12 @@ class TransitQuote_Pro_Admin {
 			if(!empty($this->api_key)){
 				$tq_settings['apiKey'] = $this->api_key;
 			};
-			wp_enqueue_script( $this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places'.$this->api_string, '', 3.14, True );
+			wp_enqueue_script( $this->plugin_slug.'-gmapsapi', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places,drawing,geometry'.$this->api_string, '', 3.14, True );
 			wp_enqueue_script( $this->plugin_slug.'-jqui', '//code.jquery.com/ui/1.10.4/jquery-ui.min.js', '', 1.10, True );
 			wp_enqueue_script( $this->plugin_slug.'-jqui-maps', plugins_url( 'public/js/jquery.ui.map.js', dirname(__FILE__) ), array( 'jquery',$this->plugin_slug.'-jqui'), '', True );
-			wp_enqueue_script( $this->plugin_slug.'-place-selector',plugins_url( '/js/place-selector.js', __FILE__ ) , array( 'jquery' ), '', True );
-
-			wp_enqueue_script( $this->plugin_slug.'-admin-js', plugin_dir_url( __FILE__ ) . 'js/tq-pro-admin.js', array( 'jquery' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_slug.'-place-selector',plugins_url( '/js/place-selector.js', __FILE__ ) , array( $this->plugin_slug.'-jqui-maps' ), '', True );
+			wp_enqueue_script( $this->plugin_slug.'-area-selector',plugins_url( '/js/area-selector.js', __FILE__ ) , array( $this->plugin_slug.'-jqui-maps' ), '', True );
+			wp_enqueue_script( $this->plugin_slug.'-admin-js', plugin_dir_url( __FILE__ ) . 'js/tq-pro-admin.js', array( $this->plugin_slug.'-jqui-maps' ), $this->version, true );
 			wp_enqueue_script( $this->plugin_slug.'-admin-mainscript', plugin_dir_url( __FILE__ ). 'js/tq-pro-admin-main.js', array( $this->plugin_slug.'-admin-js' ), $this->version, True );
 
 
@@ -438,6 +440,24 @@ class TransitQuote_Pro_Admin {
 									on pst.id = jobs.status_type_id
 		".$filter_sql." 
 		order by ".$order_sql.";";
+
+		$data = $this->cdb->query($sql);
+		return $data;
+    }
+
+	public function get_areas(){
+
+		if(!isset($this->cdb)){
+			$this->cdb = TransitQuote_Pro4::get_custom_db();
+		};
+	    $areas_table_name = $this->cdb->get_table_full_name('areas');
+	    $surcharges_table_name = $this->cdb->get_table_full_name('surcharges');
+
+		$sql = "SELECT distinct	a.id, a.name, definition, s.name as surcharge_name, s.amount as amount, surcharge_id
+							FROM ".$areas_table_name." a
+								left join ".$surcharges_table_name." s 
+									on a.surcharge_id = s.id 
+								order by a.name;";
 
 		$data = $this->cdb->query($sql);
 		return $data;
@@ -814,12 +834,25 @@ class TransitQuote_Pro_Admin {
 
 		//get table data
 		switch ($table) {
+			case 'areas':
+
+				$area_data = self::get_areas();
+
+				$defaults = array(
+					'table'=>'areas',
+					'data'=>$area_data,
+					'fields'=>array('id','name', 'definition', 'surcharge_name', 'amount', 'surcharge_id'),
+					'inputs'=>false,
+					'actions'=>array('Edit','Delete'),
+					'classes'=>array( 'definition'=>'hidden', 'surcharge_id'=>'hidden')
+				);
+			break;			
 			case 'rates':
 				// by default use standard options for table_rows to allow for only returning a single row to ui after an update
 				$defaults = array(
 							'table'=>'rates',
 							'fields'=>array('id', 'vehicle_id', 'service_id', 'distance','amount','unit','hour','amount_holiday', 'unit_holiday', 'hour_holiday','amount_weekend', 'unit_weekend', 'hour_weekend', 'amount_out_of_hours', 'unit_out_of_hours', 'hour_out_of_hours', 'amount_dispatch', 'unit_dispatch', 'hour_dispatch', 'amount_return_to_pickup', 'unit_return_to_pickup', 'hour_return_to_pickup','amount_return_to_base', 'unit_return_to_base', 'hour_return_to_base'),
-							'classes'=>array( 'vehicle_id'=>'hidden', 'service_id'=>'hidden'),
+							'classes'=>array( 'vehicle_id'=>'hidden', 'service_id'=>'hidden',  'amount_return_to_pickup'=>'hidden', 'unit_return_to_pickup'=>'hidden', 'hour_return_to_pickup'=>'hidden', 'amount_return_to_base'=>'hidden', 'unit_return_to_base'=>'hidden', 'hour_return_to_base'=>'hidden'),
 							'inputs'=>false,
 							'actions'=>array('Edit', 'Delete')
 						);
@@ -923,15 +956,12 @@ class TransitQuote_Pro_Admin {
 					'actions'=>array('Edit','Delete')
 				);
 			break;
-			case 'transactions_paypal':
-				$filters = self::get_date_filters();
-				$transaction_data = $this->get_transactions($filters);
+			case 'surcharges':
 				$defaults = array(
-					'data'=>$transaction_data,
-					'table'=>'transactions_paypal',
-					'fields'=>array('id', 'jobid',  'customer_name', 'payment_date', 'email', 'amount', 'currency', 'paypal_status'),
+					'table'=>'surcharges',
+					'fields'=>array('id','name', 'amount'),
 					'inputs'=>false,
-					'tpl_row'=>'<tr class="expand"></tr>'
+					'actions'=>array('Edit','Delete')
 				);
 			break;
 			case 'vehicles':
@@ -986,7 +1016,7 @@ class TransitQuote_Pro_Admin {
 		} else {
 			$rows = $this->dbui->table_rows($params);
 		};
-
+		//echo $this->dbui->cdb->last_query;
 		if($rows===false){
 			return  array('success'=>'false',
 								'msg'=>'could not run query',
@@ -1072,6 +1102,7 @@ class TransitQuote_Pro_Admin {
 	}
 
 	private function render_empty_table($table){
+		$table_output_name = $table;
 		switch ($table) {
 			case 'jobs':
 				$empty_colspan = 9;
@@ -1081,13 +1112,14 @@ class TransitQuote_Pro_Admin {
 				$table_output_name = $table;
 					return '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no jobs with the selected status in the database.</td></tr>';				
 				break;
+			case 'areas':
+				$empty_colspan = 2;
+				break;				
 			case 'customers':
 				$empty_colspan = 4;
-				$table_output_name = $table;
 				break;
 			case 'rates':
 				$empty_colspan = 6;
-				$table_output_name = $table;
 				break;
 			case 'transactions_paypal':
 				$empty_colspan = 7;
@@ -1101,6 +1133,10 @@ class TransitQuote_Pro_Admin {
 				$empty_colspan = 2;
 				$table_output_name = 'blocked dates';
 				break;
+			case 'surcharges':
+				$empty_colspan = 2;
+				$table_output_name = 'surcharges';
+				break;				
 			default:
 				$empty_colspan = 999;
 				break;

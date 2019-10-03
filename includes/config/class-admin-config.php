@@ -61,6 +61,13 @@ class Admin_Config {
                               'data'=>array('distance_unit' => 'Kilometer')
                               ),
 
+              'tq_pro_surcharges'=>array(
+                              'key'=>'tq_pro_surcharges',
+                              'title'=>'Surcharges',
+                              'table'=>'Surcharges',
+                              'sections'=>array()
+                              ),
+
               'tq_pro_vehicles'=>array(
                               'key'=>'tq_pro_vehicles',
                               'title'=>'Vehicles',
@@ -79,6 +86,13 @@ class Admin_Config {
                               'key'=>'tq_pro_journey_lengths',
                               'title'=>'Journey Lengths',
                               'table'=>'journey_lengths',
+                              'sections'=>array()
+                              ),
+
+              'tq_pro_areas'=>array(
+                              'key'=>'tq_pro_areas',
+                              'title'=>'Areas',
+                              'table'=>'areas',
                               'sections'=>array()
                               ),
 
@@ -167,6 +181,13 @@ class Admin_Config {
                                                         'default'=>1,
                                                         'help'=>'Ask the customer for a unit/appartment number.'),
 
+                                                    /*  'ask_for_customer_ref'=>array(
+                                                        'id'=>'ask_for_customer_ref',
+                                                        'label'=>'Ask Customer Reference',
+                                                        'type'=>'checkbox',
+                                                        'default'=>0,
+                                                        'help'=>'Ask the customer for thier reference for the job.'),
+*/
                                                       'show_vehicle_description'=>array(
                                                         'id'=>'show_vehicle_description',
                                                         'label'=>'Show Vehicle Description',
@@ -612,6 +633,26 @@ class Admin_Config {
                                                         'default'=>'VAT',
                                                         'help'=>'Please enter name of the tax to display.'),
 
+                                                      'ask_for_weight'=>array(
+                                                        'id'=>'ask_for_weight',
+                                                        'label'=>'Ask For Weight',
+                                                        'type'=>'checkbox',
+                                                        'default'=>0,
+                                                        'help'=>'Ask the customer for the total weight to be transported.'),
+
+                                                      'weight_unit_name'=>array(
+                                                        'id'=>'weight_unit_name',
+                                                        'label'=>'Weight Unit Name',
+                                                        'type'=>'input',
+                                                        'default'=>'lbs',
+                                                        'help'=>'Please enter name of the unit of weight to display.'),
+
+                                                      'cost_per_weight_unit'=>array(
+                                                        'id'=>'cost_per_weight_unit',
+                                                        'label'=>'Cost Per Weight Unit',
+                                                        'type'=>'input',
+                                                        'default'=>'0',
+                                                        'help'=>'Please enter cost to add per unit of weight.'),
 
                                                       'max_address_pickers'=>array(
                                                         'id'=>'max_address_pickers',

@@ -295,6 +295,14 @@
 				}
 			},
 
+			callbackChangeWeight: function(){
+				if(this.validateGetQuote()){
+					this.updateFormAction('tq_pro4_get_quote');
+					console.log('submitForm callbackChangeWeight');
+					this.submitForm('get_quote');
+				};					
+			},
+
 			dateConverter:function(UNIX_timestamp){
 			  var a = new Date(UNIX_timestamp);
 			  var year = a.getFullYear();
@@ -719,6 +727,7 @@
 				this.addEventHandlerChangeVehicle();
 				this.addEventHandlerChangeService();
 				this.addEventHandlerDeliverReturn();
+				this.addEventHandlerChangeWeight();
 				return true;
 			},
 
@@ -758,6 +767,14 @@
 					that.calculator.changeDeliverReturn(this, recalculate);
 				});
 			},
+
+			addEventHandlerChangeWeight: function(){			
+				var that = this;
+				$('input[name="weight"]').on('change', function(e){
+					that.callbackChangeWeight();
+				});
+
+			},			
 
 			quoteAlreadyCalculated: function () {
 				//has quote been generated
@@ -986,19 +1003,23 @@
 				$('.basicCost').html(quote.basic_cost);
 				$('.rateTax').html(quote.rate_tax);
 				$('.taxCost').html(quote.tax_cost);
-				$('.hourCost').val(quote.time_cost);
+				$('.hourCost').html(quote.time_cost);
+				$('.weightCost').html(quote.weight_cost);
 
-				if(quote.job_rate ==='standard'){
+			/*	if(quote.job_rate ===('standard'||'dispatch rate')){
 					$('.job-rate').html('');
 				} else {
 					$('.job-rate').html(quote.job_rate + ' rate');
 				};
-				
+			*/	
 				$('input[name="distance_cost"]').val(quote.distance_cost);
 				$('input[name="total"]').val(quote.total);
 				$('input[name="rate_tax"]').val(quote.rate_tax);
 				$('input[name="tax_cost"]').val(quote.tax_cost);
 				$('input[name="basic_cost"]').val(quote.basic_cost);
+				$('input[name="time_cost"]').val(quote.time_cost);
+				$('input[name="weight_cost"]').val(quote.weight_cost);
+
 				$('#breakdown').val(JSON.stringify(quote.breakdown));
 			},
 

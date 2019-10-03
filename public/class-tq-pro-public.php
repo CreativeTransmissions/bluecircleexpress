@@ -1,6 +1,6 @@
 <?php
 /* error_reporting(E_ALL );
- ini_set('display_errors', 1);*/
+ ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
  *
@@ -134,7 +134,7 @@ class TransitQuote_Pro_Public {
 
         self::dequeue_maps(); // uncomment to debug multiple maps installs
 
-        wp_enqueue_script($this->plugin_slug . '-gmapsapi', '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places' . $this->api_string, '', 3.14, True);
+        wp_enqueue_script($this->plugin_slug . '-gmapsapi', '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places,geometry' . $this->api_string, '', 3.14, True);
         wp_enqueue_script($this->plugin_slug . '-jqui', '//code.jquery.com/ui/1.10.4/jquery-ui.js', array('jquery'), 1.10, True);
 
         wp_enqueue_script($this->plugin_slug . '-jqui-maps', plugins_url('js/jquery.ui.map.js', __FILE__), array($this->plugin_slug . '-jqui', $this->plugin_slug . '-gmapsapi'), '', True); //was commented
@@ -191,7 +191,9 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_plugin_settings() {
-
+        if (empty($this->settings)) {
+            self::load_settings();
+        };
         $this->start_lat = $this->get_setting('tq_pro_quote_options', 'start_lat', '55.870853');
         $this->start_lng = $this->get_setting('tq_pro_quote_options', 'start_lng', '-4.252036');
         $this->start_place_name = $this->get_setting('tq_pro_quote_options', 'start_location', 'Glasgow');
@@ -552,10 +554,10 @@ class TransitQuote_Pro_Public {
         foreach ($this->tabs_config as $tab_key => $tab) {
             $defaults = self::get_tab_defaults($tab);
             $saved_options = (array) get_option($tab_key, array());
-            //$this->ajax->pa($saved_options);
-
+            //print_r( $saved_options);
             $this->settings = array_merge($this->settings, $defaults, $saved_options);
         };
+        
     }
 
     public function save_setting($tab_key, $setting_name, $value) {
@@ -1018,10 +1020,11 @@ class TransitQuote_Pro_Public {
         $this->tax_rate = $this->get_setting('', 'tax_rate', 0);
         $this->ask_for_date = (bool) $this->get_setting('', 'ask_for_date', true);
         $this->ask_for_time = (bool) $this->get_setting('', 'ask_for_time', true);
-
+        $this->ask_for_customer_ref = (bool) $this->get_setting('', 'ask_for_customer_ref', false);
         $this->autofill_customer_details = (bool) $this->get_setting('', 'autofill_customer_details', false);
         $this->autofill_collection_address = (bool) $this->get_setting('', 'autofill_collection_address', false);
 
+        $this->get_default_rate_affecting_options();
         if ($this->show_driving_time) {
             $drive_time_hidden_class = '';
         } else {
@@ -1228,6 +1231,8 @@ class TransitQuote_Pro_Public {
                     'hidden' => ''),
                 array('template' => 'service_vehicle',
                     'hidden' => ''),
+                array('template' => 'surcharge_fields',
+                    'hidden' => ''),                
                 array('template' => 'map',
                     'hidden' => ''),
                 array('template' => 'quote_fields',
@@ -1247,6 +1252,8 @@ class TransitQuote_Pro_Public {
                     'hidden' => ''),
                 array('template' => $search_fields_include,
                     'hidden' => ''),
+                array('template' => 'surcharge_fields',
+                    'hidden' => ''),                  
                 array('template' => 'map',
                     'hidden' => ''),
                 array('template' => 'quote_fields',
@@ -1454,6 +1461,14 @@ class TransitQuote_Pro_Public {
         return $this->vehicles[$vehicle_id]['name'];
     }
 
+
+    public function get_surcharges(){
+         //return services which have rates set
+        $surcharges = $this->cdb->get_rows('surcharges');
+
+        return $surcharges;       
+    }
+
     public function get_vehicles() {
         //return services which have rates set
         $vehicles = $this->cdb->get_rows('vehicles');
@@ -1504,6 +1519,7 @@ class TransitQuote_Pro_Public {
 
     /*** Front end ajax methods ***/
     public function get_quote() {
+        $this->get_plugin_settings();
         $this->quote = false;
         $this->job_rate = 'standard';
         $this->response_msg = 'There was an error calculating the quote'; //default error
@@ -1522,21 +1538,26 @@ class TransitQuote_Pro_Public {
         $this->rate_options = array_merge($this->rate_options_defaults, $this->rate_options);
 
         $this->tax_rate = self::get_tax_rate();
+        $this->tax_name = self::get_tax_name();
+
         $this->rounding_type = self::get_rounding_type();
         $this->return_percentage = self::get_return_percentage();
-        if ($this->rate_options['distance'] > 0) {
-            if($this->use_dispatch_rates){
-                $this->quote = self::calc_quote_multi_leg();
-            } else {
-                $this->quote = self::calc_quote();
-
-            }
-        } else {
+      /*  var_dump($this->rate_options);
+        if ($this->rate_options['distance'] <= 0) {
             $this->response_msg = 'Distance must be greater than 0';
+            return self::build_get_quote_response();
+        };*/
+         
+        if($this->use_dispatch_rates){
+            $this->quote = self::calc_quote_multi_leg();
+        } else {
+            $this->quote = self::calc_quote();
         };
+    
+        self::add_surcharges_to_quote();
+        self::add_tax_to_quote();
 
-        $response = self::build_get_quote_response();
-        return $response;
+        return self::build_get_quote_response();
 
     }
 
@@ -1545,6 +1566,11 @@ class TransitQuote_Pro_Public {
         $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
         $this->use_weekend_rates = self::get_use_weekend_rates();
         $this->use_holiday_rates = self::get_use_holiday_rates();
+        $this->weight_unit_name = self::get_weight_unit_name();
+        $this->cost_per_weight_unit = self::get_cost_per_weight_unit();
+        $this->ask_for_weight = (bool) $this->get_setting('', 'ask_for_weight', true);
+        $this->tax_name = $this->get_tax_name();
+        $this->tax_rate = $this->get_tax_rate();
 
         $today = date('Y-m-d');
         $holiday_dates = $this->cdb->get_rows('holiday_dates', array("CAST(end_date as DATE) >" => $today), array(), null, false);        
@@ -1557,13 +1583,31 @@ class TransitQuote_Pro_Public {
                     'use_weekend_rates'=>$this->use_weekend_rates,
                     'use_holiday_rates'=>$this->use_holiday_rates,
                     'booking_start_time'=>$this->booking_start_time,
-                    'booking_end_time'=>$this->booking_end_time);
+                    'booking_end_time'=>$this->booking_end_time,
+                    'weight_unit_name'=>$this->weight_unit_name,
+                    'cost_per_weight_unit'=>$this->cost_per_weight_unit,
+                    'ask_for_weight'=>$this->ask_for_weight,
+                    'tax_name'=>$this->tax_name,
+                    'tax_rate'=>$this->tax_rate                    
+                );
+    }
+
+    public function get_weight_unit_name(){
+        return self::get_setting('', 'weight_unit_name', 'lbs');
+    }
+
+    public function get_cost_per_weight_unit(){
+        return self::get_setting('', 'cost_per_weight_unit', 0.10);
     }
 
     public function get_tax_rate() {
         return self::get_setting('', 'tax_rate', 0);
 
     }
+
+    public function get_tax_name() {
+        return self::get_setting('', 'get_tax_name', '');
+    }    
 
     public function get_rounding_type() {
         return self::get_setting('', 'round_of_currency', 'Round to 2 decimal points');
@@ -1575,30 +1619,30 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_use_out_of_hours_rates() {
-        return  (bool) self::get_setting('', 'use_out_of_hours_rates', 0);
+        return  (bool)self::get_setting('', 'use_out_of_hours_rates', 0);
 
     }
 
     public function get_use_weekend_rates() {
-        return  (bool) self::get_setting('', 'use_weekend_rates', 0);
+        return  (bool)self::get_setting('', 'use_weekend_rates', 0);
 
     }
 
     public function get_use_holiday_rates() {
-        return (bool) self::get_setting('', 'use_holiday_rates', 0);
+        return (bool)self::get_setting('', 'use_holiday_rates', 0);
     }
 
     public function get_use_dispatch_rates() {
-        return  (bool) self::get_setting('', 'use_dispatch_rates', 0);
+        return  (bool)self::get_setting('', 'use_dispatch_rates', 0);
     }
 
     public function calc_quote() {
 
-        $this->rate_selector = new TQ_RateSelector(array('cdb'=>$this->cdb,'
+        $this->rate_selector = new TransitQuote_Pro4\TQ_RateSelector(array('cdb'=>$this->cdb,'
                                                         rate_options'=>$this->rate_options));
 
 
-        $this->rates = self::get_rates_for_journey_options();
+        $this->rates = $this->rate_selector->get_rates_for_journey_options();
         if ($this->rates === false) {
             return false;
         };
@@ -1670,241 +1714,22 @@ class TransitQuote_Pro_Public {
         return $calculation->run();
 
     }
-    private function get_rate_affecting_options() {
 
-     //   $service = self::get_default_service();
-    //    $vehicle = self::get_default_vehicle();
-
-        $vehicle_id = $this->ajax->param(array('name' => 'vehicle_id', 'optional' => true));
-        /*if (empty($vehicle_id)) {
-            $vehicle_id = $vehicle['id'];
-        };*/
-
-        $service_id = $this->ajax->param(array('name' => 'service_id', 'optional' => true));
-        /*if (empty($service_id)) {
-            $service_id = $service['id'];
-        };*/
-
-        $distance = $this->ajax->param(array('name' => 'distance', 'optional' => true));
-        if (empty($distance)) {
-            $distance = 0;
-        };
-
-        $hours = $this->ajax->param(array('name' => 'hours', 'optional' => true));
-        if (empty($hours)) {
-            $hours = 0;
-        };
-
-        $return_time = $this->ajax->param(array('name' => 'return_time', 'optional' => true));
-        if (empty($return_time)) {
-            $return_time = 0;
-        };
-
-        $return_distance = $this->ajax->param(array('name' => 'return_distance', 'optional' => true));
-        if (empty($return_distance)) {
-            $return_distance = 0;
-        };
-
-        $deliver_and_return = $this->ajax->param(array('name' => 'deliver_and_return', 'optional' => true));
-        if (empty($deliver_and_return)) {
-            $deliver_and_return = 0;
-        };
-
-        $no_destinations = $this->ajax->param(array('name' => 'no_destinations', 'optional' => true));
-        if (empty($no_destinations)) {
-            $no_destinations = 1;
-        };
-
-        $delivery_date = $this->ajax->param(array('name' => 'delivery_date', 'optional' => true));     
-        $delivery_time = $this->ajax->param(array('name' => 'delivery_time', 'optional' => true));
-
-
-        return array(
-            'delivery_date'=> $delivery_date,
-            'delivery_time'=>$delivery_time,
-            'vehicle_id' => $vehicle_id,
-            'service_id' => $service_id,
-            'distance' => $distance,
-            'return_time' => $return_time,
-            'deliver_and_return' => $deliver_and_return,
-            'return_distance' => $return_distance,
-            'no_destinations' => $no_destinations,
-            'hours' => $hours,
-            'use_holiday_rates'=>$this->use_holiday_rates,
-            'use_weekend_rates'=>$this->use_weekend_rates,
-            'use_out_of_hours_rates'=>$this->use_out_of_hours_rates
-        );
+    private function add_surcharges_to_quote(){
+        $calculator = new TransitQuote_Pro4\TQ_CalculationSurcharges(array( 'weight'=>$this->rate_options['weight'],
+                                                                            'cost_per_weight_unit'=>$this->rate_options['cost_per_weight_unit'],
+                                                                            'weight_unit_name'=>$this->rate_options['weight_unit_name']));
+        $surcharges = $calculator->run();
+        $this->quote = array_merge($this->quote, $surcharges);
+        $this->quote['basic_cost'] = $this->quote['basic_cost']+$surcharges['weight_cost'];
     }
 
-    public function get_rates_for_journey_options() {
-
-        $rates = false;
-        $query = self::get_rates_query_for_journey_options();
-        if ($query === false) {
-            //echo 'could not get query';
-            return false;
-        };
-        if(!empty($this->rate_options['delivery_date']) && !empty($this->rate_options['delivery_time'])){
-            $this->job_rate = self::check_rates_by_job_date();
-
-            // default fields use standard rates in case of disabled job rates for holidays, weekends or out of hours
-            $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
-
-            switch ($this->job_rate) {
-                case 'holiday':
-                     $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_holiday as amount', 'unit_holiday as unit', 'hour_holiday as hour');
-                                        break;
-                case 'weekend':
-                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit_weekend as unit', 'hour_weekend as hour');
-                                        break;
-                case 'out of hours':
-                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount_out_of_hours as amount', 'unit_out_of_hours as unit', 'hour_out_of_hours as hour');                      
-                                        break;
-                case 'standard':
-                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
-                    break;
-                default:
-                    $fields = array('id', 'service_id', 'vehicle_id', 'distance', 'amount', 'unit', 'hour');
-                    break;
-            }
-            $all_rates = $this->cdb->get_rows( 'rates', $query, $fields , 'distance');
-        } else {
-            $all_rates = $this->cdb->get_rows( 'rates', $query, $fields , 'distance');
-        };
-
-        if(is_array($all_rates)){
-            return self::order_rates($all_rates); 
-        } else {
-            return false;
-        }
-
-    }
-
-    function check_rates_by_job_date() {        
-        if(self::is_holiday($this->rate_options['delivery_date']) && ($this->use_holiday_rates) ){
-            return 'holiday';
-        } else if (self::is_weekend($this->rate_options['delivery_date'])  && ($this->use_weekend_rates) ) {
-            return 'weekend';
-        } else if(self::is_out_of_booking_time($this->rate_options['delivery_time']) && ($this->use_out_of_hours_rates) ) {
-            return 'out of hours';
-        } else {
-            return 'standard';
-        }
-    }
-    // weekends
-    function is_weekend($job_date) {        
-        $weekDay = date('w', strtotime($job_date));
-        return ($weekDay == 0 || $weekDay == 6);
-    }
-    // out of hours
-    function is_out_of_booking_time($delivery_time) {
-        $booking_start_time = strtotime(self::get_setting('tq_pro_form_options', 'booking_start_time', '07:00 AM'));
-        $booking_end_time = strtotime(self::get_setting('tq_pro_form_options', 'booking_end_time', '09:00 PM'));
-        $time = strtotime($delivery_time);
-        return (($time > $booking_end_time) && ($time < $booking_start_time));
-    }
-
-    function is_holiday($delivery_date) {
-        $holiday_dates_array = self::get_holiday_dates();
-        $job_date = date("Y-m-d", strtotime($delivery_date));        
-        return in_array($job_date, $holiday_dates_array);
-    }
-    
-    // holiday dates range
-    function get_holiday_dates() {
-        $plugin = new TransitQuote_Pro4();
-        $this->cdb = $plugin->get_custom_db();
-        $today = date('Y-m-d');
-        // get future dates only
-        $all_holiday_dates = $this->cdb->get_rows('holiday_dates', array("CAST(end_date as DATE) >" => $today), array(), null, false);
-        $holiday_dates_array = array();
-
-        foreach ($all_holiday_dates as $key => $holiday_dates) {
-            $start_date = $holiday_dates['start_date'];
-            $sdate = $holiday_dates['start_date'];
-            $end_date = $holiday_dates['end_date'];
-            if ($end_date == $start_date) {
-                $holiday_dates_array[] = date("Y-m-d", strtotime($start_date));
-            } else {
-                while (strtotime($sdate) <= strtotime($end_date)) {
-                    $holiday_dates_array[] = date("Y-m-d", strtotime($sdate));
-                    $sdate = date("Y-m-d", strtotime("+1 day", strtotime($sdate)));
-                }
-            }
-        };
-        return $holiday_dates_array;
-    }
-
-    private function get_rates_query_for_journey_options() {
-        $journey_length_id = self::get_journey_length_id_for_distance();
-        if ($journey_length_id === false) {
-            //echo 'no journey_length_id.';
-            return false;
-        } else {
-            $rates_query = array('service_id' => $this->rate_options['service_id'],
-                'vehicle_id' => $this->rate_options['vehicle_id'],
-                'journey_length_id' => $journey_length_id);
-        };
-        return $rates_query;
-
-    }
-
-    private function get_journey_length_id_for_distance() {
-        $this->journey_lengths = self::get_journey_lengths_except_max();
-        $journey_length_id = self::get_range_for_number($this->rate_options['distance'], $this->journey_lengths);
-        if ($journey_length_id === false) {
-            $journey_length_id = self::get_max_journey_length_id();
-            //    echo ' OVER MAX JL so jlid is: '.$journey_length_id;
-        }
-        return $journey_length_id;
-    }
-
-    private function get_max_journey_length_id() {
-        $query = array('distance' => 0);
-        $journey_lengths = $this->cdb->get_rows('journey_lengths', $query);
-        if (is_array($journey_lengths)) {
-            return $journey_lengths[0]['id'];
-        } else {
-            $this->response_msg = 'No range set for longest journeys';
-            return false;
-        }
-
-    }
-
-    public function get_journey_lengths_except_max() {
-        $journey_lengths_table_name = $this->cdb->get_table_full_name('journey_lengths');
-        // get ordered list of rates with distance 0 as the final record
-        $sql = "select distinct *
-					from " . $journey_lengths_table_name . "
-					where distance > 0
-					order by distance asc;";
-        //echo $sql;
-        $data = $this->cdb->query($sql);
-        return $data;
-    }
-
-    public function get_range_for_number($number, $ranges) {
-        $range_lower_limit = 0;
-        foreach ($ranges as $key => $range_limit) {
-            $range_upper_limit = $range_limit['distance'];
-
-            if (self::number_in_range($number, $range_lower_limit, $range_upper_limit)) {
-                //echo $number.' is betweeten '.$range_lower_limit.' and '.$range_upper_limit;
-                return $range_limit['id'];
-            } else {
-                //echo $number.' is NOT betweeten '.$range_lower_limit.' and '.$range_upper_limit;
-                $range_lower_limit = $range_upper_limit;
-            }
-        };
-        return false; //not between any range
-    }
-
-    private function number_in_range($number, $range_lower_limit, $range_upper_limit) {
-        if ($number > $range_lower_limit && $number <= $range_upper_limit) {
-            return true;
-        };
-        return false;
-
+    private function add_tax_to_quote(){
+        $calculator = new TransitQuote_Pro4\TQ_CalculationTax(array('tax_name'=>$this->rate_options['tax_name'],
+                                                                    'tax_rate'=>$this->rate_options['tax_rate'],
+                                                                    'subtotal'=>$this->quote['basic_cost']));
+        $taxes = $calculator->run();
+        $this->quote = array_merge($this->quote, $taxes);       
     }
 
     private function build_get_quote_response() {
@@ -1917,7 +1742,7 @@ class TransitQuote_Pro_Public {
         } else {
             $response = array('success' => 'false',
                 'msg' => $this->response_msg,
-                'data' => array('rates' => $this->rates,
+                'data' => array('rates' =>  $this->quote['rates'],
                     'rate_options' => $this->rate_options));
 
         }
@@ -3811,6 +3636,12 @@ class TransitQuote_Pro_Public {
         // get list of vehicles from db
         $vehicles = $this->get_vehicles_with_rates();
         return $this->render_select_options($vehicles, $selected_id);
+    }
+
+    public function render_surcharge_options($selected_id = 1) {
+        // get list of vehicles from db
+        $surcharges = $this->get_surcharges();
+        return $this->render_select_options($surcharges, $selected_id);
     }
 
     public function render_select_options($options = null, $selected_id = null) {

@@ -29,6 +29,11 @@
 
 				initTab: function(){
 					switch(this.tab){
+						case 'tq_pro_areas':
+							this.initAreaTabEvents();
+							this.initAreaTabUI();							
+							this.initEditTableEvents('areas');
+						break;	
 						case 'tq_pro_map_options':
 							this.initMapTabEvents();
 						break;	
@@ -56,9 +61,11 @@
 							this.initJourneyLengthTabEvents();
 							this.initEditTableEvents('journey_lengths');
 						break;
-						case 'tq_pro_paypal_transactions':
-							this.initPayPayTransactionsTabUI();
-							this.initPayPayTransactionsTabEvents();
+						case 'tq_pro_surcharges':
+							this.initSurchargeTabUI();
+							this.initSurchargeTabEvents();
+							this.initEditTableEvents('surcharges');
+
 						break;
 						case 'tq_pro_quote_options':
 							this.initQuoteOptionsTabUI();
@@ -354,6 +361,31 @@
 					});
 				},
 
+				initAreaTabEvents: function(){
+					var that = this;
+					//set form to read/populate
+					this.editForm = $('#edit_customer_form')[0];
+					this.editTable = $('#customers_table')[0];
+
+					this.editRecordMessage = 'Editing Customer Details';
+					this.newRecordMessage = 'Enter New Customer Details'
+
+					//Clear / New Plaza
+					$('#clear_customer').on('click', function(e){
+						e.preventDefault();
+						that.clearForm(this);
+						that.updateLegend(that.editForm, that.newRecordMessage);
+					});
+
+					//Save Plaza
+					$(this.editForm).on('submit',function(e) {
+					    e.preventDefault();
+					    that.spinner(true);
+					    that.saveRecord(this);
+					});
+					
+				},
+
 				initCustomersTabEvents: function(){
 					var that = this;
 					//set form to read/populate
@@ -398,6 +430,68 @@
 					});
 							
 				},
+
+				initAreaTabUI: function(){
+					var that = this;
+
+					this.loadTable({
+						table: 'areas'
+					});
+							
+				},
+
+				initAreaTabEvents: function(){
+					var that = this;
+
+					$(document).on('keyup keypress', 'form input[type="text"]', function(e) {
+					  if(e.keyCode == 13) {
+					    e.preventDefault();
+					    return false;
+					  }
+					});
+
+					var settings = {
+						geolocate: false,
+						map: {
+							// Google Map Options
+							mapTypeId : google.maps.MapTypeId.ROADMAP, 
+							scrollwheel : false,
+							zoom: 2,
+							startLat: 38.8763,
+							startLng: 12.1852
+						}
+					};
+
+					if((this.settings.data.startLat)&&(this.settings.data.startLng)){
+						settings.map.startLat = this.settings.data.startLat;
+						settings.map.startLng = this.settings.data.startLng;
+						settings.map.zoom = 10;
+					};
+				
+					this.areaSelector = $('#area-selector').areaSelector(settings);
+					this.map = this.areaSelector.getMap();
+
+					//set form to read/populate
+					this.editForm = $('#edit_area_form')[0];
+					this.editTable = $('#area_table')[0];
+
+					this.editRecordMessage = 'Editing Area';
+					this.newRecordMessage = 'Draw New Area'
+
+					//Clear / New Area
+					$('#clear_area').on('click', function(e){
+						e.preventDefault();
+						that.clearForm(this);
+						that.updateLegend(that.editForm, that.newRecordMessage);
+					});
+
+					//Save Plaza
+					$(this.editForm).on('submit',function(e) {
+					    e.preventDefault();
+					    that.spinner(true);
+					    that.saveRecord(this);
+					});					
+				},				
 
 				initMapTabEvents: function(){
 					var that = this;
@@ -544,7 +638,17 @@
 						table: 'rates'
 					});
 				},
-				
+
+				initSurchargeTabUI: function(){
+
+					var that = this;
+
+					this.loadTable({
+						table: 'surcharges'
+					});
+							
+				},
+
 				initServiceTabUI: function(){
 
 					var that = this;
@@ -688,20 +792,20 @@
 					var that = this;
 
 					//set form to read/populate
-					this.editForm = $('#edit_service_types_surcharges_form')[0];
-					this.editTable = $('#service_types_surcharges_table')[0];
+					this.editForm = $('#edit_surcharge_form')[0];
+					this.editTable = $('#surcharges_table')[0];
 
 					this.editRecordMessage = 'Editing Surcharge';
 					this.newRecordMessage = 'Enter New Surcharge'
 
-					//Clear / New Plaza
+					//Clear / New Surcharge
 					$('#clear_surcharge').on('click', function(e){
 						e.preventDefault();
 						that.clearForm(this);
 						that.updateLegend(that.editForm, that.newRecordMessage);
 					});
 
-					//Save Plaza
+					//Save Surcharge
 					$(this.editForm).on('submit',function(e) {
 					    e.preventDefault();
 					    that.spinner(true);
@@ -817,6 +921,7 @@
 					$('.admin-form table').on('click', 'button.edit-btn',function(e) {
 						e.preventDefault();
 						e.stopPropagation();
+						console.log('initEditTableEvents - cliecke edit');
 						that.editRecord(this);
 					});
 
@@ -1095,6 +1200,31 @@
 		 			$(legend).html(this.editRecordMessage);
 
 					this.populateForm(recId, this.editForm, btn);
+
+					if(this.tab==='tq_pro_areas'){
+						this.editAreaCallback(recId);
+					};
+				},
+
+				editAreaCallback: function(recId){
+					var definition = this.tableData[recId]['definition'];
+					var defCoords = google.maps.geometry.encoding.decodePath(definition['value']);
+					this.drawPolygon(defCoords);
+				},
+
+				 drawPolygon: function(defCoords){
+
+		            var polygon = new google.maps.Polygon({
+		                paths: defCoords,
+		                editable: false,
+		                strokeColor: '#955',
+		                strokeOpacity: 0.8,
+		                strokeWeight: 2,
+		                fillColor: '#F55',
+		                fillOpacity: 0.35
+		            });
+
+				    polygon.setMap(this.map);
 				},
 
 				feedbackMessage: function(feedback){

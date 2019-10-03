@@ -122,7 +122,7 @@
 			</div>	
 		</fieldset>
 	</div>
-	<div class="row row-rates">		
+	<!--<div class="row row-rates">		
 		<fieldset>
 			<legend>Return To Pickup Rates</legend>
 			<div class="inline-field">
@@ -155,7 +155,7 @@
 				<input class="input-long number" type="text" name="hour_return_to_base" />
 			</div>	
 		</fieldset>
-	</div>	
+	</div>	-->
 	<input type="hidden" name="id" value=""/>
 	<input type="hidden" name="action" value="tq_pro4_save_record"/>
 	<input type="hidden" name="update" value="rates"/>
@@ -216,13 +216,13 @@
 			<th>Dispatch Price Per <?php echo $this->admin->distance_unit; ?></th>
 			<th>Dispatch Price Per Hour</th>
 
-			<th>Return To Pick Up Set Price</th>
+		<!--	<th>Return To Pick Up Set Price</th>
 			<th>Return To Pick Up Price Per <?php echo $this->admin->distance_unit; ?></th>
 			<th>Return To Pick Up Per Hour</th>
 
 			<th>Return To Base Set Price</th>
 			<th>Return To Base Price Per <?php echo $this->admin->distance_unit; ?></th>
-			<th>Return To Base Price Per Hour</th>
+			<th>Return To Base Price Per Hour</th>-->
 			<th class="actions"><div class="spinner"></div></tr>
 		</thead>
 		<tbody>

@@ -244,6 +244,18 @@ class TransitQuote_Pro4 {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-calculation-return-trip.php';
 
 		/**
+		 * Accepts form parameters related to tax and the calculated quote including all surcharges
+		 * Calculates or recalculates taxes and returns them in an array for merging with quote
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-calculation-tax.php';		
+
+		/**
+ 		* Accepts form parameters related to surcharges and surcharge costs
+ 		* Calculates Surcharges and returns them in an array for merging with quote
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-calculation-surcharges.php';
+
+		/**
 		 * The class responsible for rates list methods
 		 * for the plugin.
 		 */
@@ -514,6 +526,7 @@ class TransitQuote_Pro4 {
 		$cdb->define_table($db_config->get_config('table_filters'));
 		$cdb->define_table($db_config->get_config('jobs'));
 		$cdb->define_table($db_config->get_config('locations'));
+		$cdb->define_table($db_config->get_config('areas'));		
 		$cdb->define_table($db_config->get_config('surcharges'));
 		$cdb->define_table($db_config->get_config('quote_surcharges'));
 		$cdb->define_table($db_config->get_config('journeys'));

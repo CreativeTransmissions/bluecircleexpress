@@ -330,6 +330,10 @@ class TQ_RequestParserGetQuote {
             $leg_type = 'standard';
         };
 
+        $weight = $this->get_param(array('name' => 'weight', 'optional' => true));
+        if (empty($weight)) {
+            $weight = 0;
+        };
 
         $delivery_date = $this->get_param(array('name' => 'delivery_date', 'optional' => true));     
         $delivery_time = $this->get_param(array('name' => 'delivery_time', 'optional' => true));
@@ -362,7 +366,8 @@ class TQ_RequestParserGetQuote {
             'deliver_and_return' => $deliver_and_return,
             'return_distance' => $return_distance,
             'no_destinations' => $no_destinations,
-            'hours' => $hours
+            'hours' => $hours,
+            'weight'=>$weight
         );
     }	
 
