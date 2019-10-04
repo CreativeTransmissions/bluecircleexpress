@@ -1749,6 +1749,40 @@ class TransitQuote_Pro_Public {
         return $response;
     }
 
+    public function load_polygons_callback(){
+        $this->plugin = new TransitQuote_Pro4();
+        $this->cdb = $this->plugin->get_custom_db();
+        $this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb' => $this->cdb, 'debugging' => $this->debug));
+        self::get_plugin_settings();
+        $polygons = $this->get_areas();
+        if(is_array($polygons)){
+             $response = array('success'=>'true',
+                             'data'=>$polygons);           
+         } else {
+            $response = array('success'=>'false',
+                             'data'=>$polygons);  
+         };
+         $this->ajax->respond($response);
+    }
+
+    public function get_areas(){
+
+        if(!isset($this->cdb)){
+            $this->cdb = TransitQuote_Pro4::get_custom_db();
+        };
+        $areas_table_name = $this->cdb->get_table_full_name('areas');
+        $surcharges_table_name = $this->cdb->get_table_full_name('surcharges');
+
+        $sql = "SELECT distinct a.id, a.name, definition, s.name as surcharge_name, s.amount as amount, surcharge_id
+                            FROM ".$areas_table_name." a
+                                left join ".$surcharges_table_name." s 
+                                    on a.surcharge_id = s.id 
+                                order by a.name;";
+
+        $data = $this->cdb->query($sql);
+        return $data;
+    }
+
     public function tq_pro_get_quote_callback() {
         $this->plugin = new TransitQuote_Pro4();
         $this->cdb = $this->plugin->get_custom_db();

@@ -395,8 +395,6 @@ class TransitQuote_Pro4 {
 		$this->loader->add_action( 'wp_ajax_update_payment_type', $plugin_admin, 'update_payment_type_callback');
 		$this->loader->add_action( 'wp_ajax_update_payment_status', $plugin_admin, 'update_payment_status_callback');
 		$this->loader->add_action( 'wp_ajax_filter_status_types', $plugin_admin, 'filter_status_types_callback');
-		$this->loader->add_action( 'wp_ajax_test_customer_email', $plugin_admin, 'test_customer_email_callback');
-		$this->loader->add_action( 'wp_ajax_test_dispatch_email', $plugin_admin, 'test_dispatch_email_callback');
 		$this->loader->add_action( 'woocommerce_order_status_completed', $plugin_admin, 'woocommerce_order_marked_completed');
 		$this->loader->add_action( 'plugins_loaded', $plugin_admin, 'is_transitteam_active' );
 	}
@@ -422,6 +420,9 @@ class TransitQuote_Pro4 {
 		$this->loader->add_action( 'init', $this->plugin_public, 'init_plugin');
 		$this->loader->add_action( 'wp_footer', $this->plugin_public, 'enqueue_styles');
 		$this->loader->add_action( 'wp_footer', $this->plugin_public, 'enqueue_scripts');	
+
+		$this->loader->add_action( 'wp_ajax_tq_pro4_load_polygons', $this->plugin_public, 'load_polygons_callback' );		
+		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro4_load_polygons', $this->plugin_public, 'load_polygons_callback' );		
 
 		$this->loader->add_action( 'wp_ajax_tq_pro4_save_job', $this->plugin_public, 'tq_pro_save_job_callback');	
 		$this->loader->add_action( 'wp_ajax_nopriv_tq_pro4_save_job', $this->plugin_public, 'tq_pro_save_job_callback');

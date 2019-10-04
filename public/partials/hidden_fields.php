@@ -12,6 +12,8 @@
 <input type="hidden" id="rate_tax" name="rate_tax" value=""/>
 <input type="hidden" id="tax_cost" name="tax_cost" value=""/>
 <input type="hidden" id="breakdown" name="breakdown" value=""/>
+<input type="hidden" id="surcharge_areas" name="surcharge_areas" value=""/>
+
 <?php
     $has_services = $this->has_services(); 
     $has_vehicles = $this->has_vehicles();

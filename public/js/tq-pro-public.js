@@ -121,6 +121,7 @@
 				this.initTimePicker();
 				this.initDatePicker();				
 				this.initParsleyValidation();
+				this.initPolygons();
 				$('.notice-field').hide();
 				return true;				
 			},
@@ -247,9 +248,9 @@
 					},
 
 					afterQuote: function(){
+						that.checkPolygonsForPlace();						
 						if(that.validateGetQuote()){
 							that.updateFormAction('tq_pro4_get_quote');
-							console.log('submitForm afterQuote');
 							that.submitForm('get_quote');
 						};						
 
@@ -581,6 +582,96 @@
 				var selector = 'input[name="'+validationTargetInputName+'"]';
 				$(selector).closest('.bt-flabels__wrapper').addClass('bt-flabels__error');
 				this.scrollToEl(selector);
+			},
+
+			initPolygons: function(){
+				var that = this;
+
+				this.loadPolygons(function(polygons){
+					console.log('polygons:');
+					console.log(polygons);
+					that.displayPolygons(polygons);
+				});
+			},
+
+			loadPolygons: function(cb){
+					//add button value to determine if request is for a quote or payment
+				var data = 'action=tq_pro4_load_polygons';
+				$.post(this.settings.ajaxUrl, data, function(response) {
+					console.log(response);
+					if(response.success==='true'){
+						cb(response.data);
+					} else {
+						$('.failure, .progress, .spinner-div').hide();
+						$('.failure .msg').html(response.msg);
+						$('.failure, .buttons').show();
+					};
+					$('.spinner-div').hide();
+				}, 'json')
+			},
+
+			displayPolygons: function(polygons){
+				var that = this;
+				this.polygons = [];
+				$.each(polygons, function(idx, polygon){
+					that.displayPolygon(polygon);
+				});
+			},
+
+			displayPolygon: function(polygon){
+				var defCoords = google.maps.geometry.encoding.decodePath(polygon.definition);
+
+	            var polygon = new google.maps.Polygon({
+	                paths: defCoords,
+	                editable: false,
+	                strokeColor: '#955',
+	                strokeOpacity: 0.8,
+	                strokeWeight: 2,
+	                fillColor: '#F55',
+	                fillOpacity: 0.35,
+	                surchargeId: polygon.surcharge_id,
+	                surchargeName: polygon.surcharge_name
+	            });
+
+	         //   var map = this.calculator.getMap();
+			  //  polygon.setMap(map);
+
+			    this.polygons.push(polygon);
+			},
+
+			checkPolygonsForPlace: function(addressPicker){
+				var that = this;
+
+				//clear surcharge areas
+				$('input[name="surcharge_areas"]').val('');								
+
+				//loop through all addresspickers
+				$.each(this.calculator.addressPickers, function(idx, addressPicker){
+					var placeLatLng  = addressPicker.getPos();
+					if(placeLatLng){
+						$.each(that.polygons, function(idx, polygon){
+							if(google.maps.geometry.poly.containsLocation(placeLatLng, polygon)){
+								that.populateFormWithAreaSurchargeId(polygon);
+							}
+						});						
+					};
+				});
+
+			},
+
+			populateFormWithAreaSurchargeId: function(polygon){
+
+				var surchargeAreasArray = [];
+				var surchargeAreas = $('input[name="surcharge_areas"]').val();
+				if(surchargeAreas!==''){
+					var surchargeAreasArray = surchargeAreas.split(',');
+				};
+
+				if(surchargeAreasArray.indexOf(polygon.surchargeId)===-1){
+					surchargeAreasArray.push(polygon.surchargeId);
+					var surchargeStr = surchargeAreasArray.join(',');
+				   	$('input[name="surcharge_areas"]').val(surchargeStr);
+				};
 			},
 
 			initPayPal: function(){
