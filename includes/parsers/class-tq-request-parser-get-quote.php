@@ -280,6 +280,11 @@ class TQ_RequestParserGetQuote {
 
     }
 
+    public function get_surcharge_ids(){
+        $surcharge_id_string = $this->get_param(array('name' => 'surcharge_areas', 'optional' => true));
+        $surcharge_ids = explode(',', $surcharge_id_string);
+        return $surcharge_ids;
+    }
     public function get_rate_affecting_options() {
 
      //   $service = self::get_default_service();
@@ -335,6 +340,8 @@ class TQ_RequestParserGetQuote {
             $weight = 0;
         };
 
+        $surcharge_ids = $this->get_surcharge_ids();
+
         $delivery_date = $this->get_param(array('name' => 'delivery_date', 'optional' => true));     
         $delivery_time = $this->get_param(array('name' => 'delivery_time', 'optional' => true));
 
@@ -367,7 +374,8 @@ class TQ_RequestParserGetQuote {
             'return_distance' => $return_distance,
             'no_destinations' => $no_destinations,
             'hours' => $hours,
-            'weight'=>$weight
+            'weight'=>$weight,
+            'surcharge_ids'=>$surcharge_ids
         );
     }	
 

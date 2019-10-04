@@ -966,6 +966,7 @@
 					};
 
 					this.clearPolygon();
+					
 					//clear all fields
 					$(form).find(':input').each(function() {
 					    var type = this.type;

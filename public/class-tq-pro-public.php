@@ -1716,11 +1716,26 @@ class TransitQuote_Pro_Public {
     }
 
     private function add_surcharges_to_quote(){
-        $calculator = new TransitQuote_Pro4\TQ_CalculationSurcharges(array( 'weight'=>$this->rate_options['weight'],
-                                                                            'cost_per_weight_unit'=>$this->rate_options['cost_per_weight_unit'],
-                                                                            'weight_unit_name'=>$this->rate_options['weight_unit_name']));
-        $surcharges = $calculator->run();
-        $this->quote = array_merge($this->quote, $surcharges);
+
+        if($this->rate_options['weight']!==''){
+            $calculator = new TransitQuote_Pro4\TQ_CalculationSurcharges(array( 'weight'=>$this->rate_options['weight'],
+                                                                                'cost_per_weight_unit'=>$this->rate_options['cost_per_weight_unit'],
+                                                                                'weight_unit_name'=>$this->rate_options['weight_unit_name']));
+            $surcharges = $calculator->run();
+            $this->quote = array_merge($this->quote, $surcharges);
+        };
+
+        if($this->rate_options['surcharge_ids']!==''){
+            $area_surcharges = $this->get_areas();
+            if(is_array($area_surcharges)){
+                $area_surcharges = $this->index_array_by_db_id_numeric($area_surcharges, 'surcharge_id');
+            };
+            $area_surcharge_calculator = new TransitQuote_Pro4\TQ_CalculationAreaSurcharges(array( 'surcharge_ids'=>$this->rate_options['surcharge_ids'],
+                                                                                                    'area_surcharges'=>$area_surcharges));
+            $area_surcharges = $area_surcharge_calculator->run();
+            $this->quote = array_merge($this->quote, $area_surcharges);
+        };
+       
         $this->quote['basic_cost'] = $this->quote['basic_cost']+$surcharges['weight_cost'];
     }
 
@@ -3376,6 +3391,14 @@ class TransitQuote_Pro_Public {
         $indexed_array = array();
         foreach ($array as $key => $record) {
             $indexed_array[$record['id']] = $record;
+        }
+        return $indexed_array;
+    }
+
+    public function index_array_by_db_id_numeric($array, $key_field) {
+        $indexed_array = array();
+        foreach ($array as $key => $record) {
+            $indexed_array[(int)$record[$key_field]] = $record;
         }
         return $indexed_array;
     }

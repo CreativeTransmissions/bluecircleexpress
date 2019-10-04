@@ -256,6 +256,12 @@ class TransitQuote_Pro4 {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-calculation-surcharges.php';
 
 		/**
+ 		* Accepts form parameters related to area surcharges and surcharge costs
+ 		* Calculates area surcharges and returns them in an array for merging with quote
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-calculation-area-surcharges.php';
+
+		/**
 		 * The class responsible for rates list methods
 		 * for the plugin.
 		 */
