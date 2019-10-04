@@ -30,7 +30,7 @@ final class CalculationAreaSurchargesTest extends TestCase
         $this->assertArrayHasKey('parking', $surcharges);
         $this->assertEquals(20, $surcharges['parking']);
         $this->assertEquals(12, $surcharges['congestion_charge']);
-        $this->assertEquals(32, $surcharges['area_surcharges_total']);
+        $this->assertEquals(32, $surcharges['area_surcharges_cost']);
 
     }
 
@@ -50,7 +50,7 @@ final class CalculationAreaSurchargesTest extends TestCase
         $this->assertTrue(is_array($surcharges));
 
         $this->assertCount(1, $surcharges);
-        $this->assertEquals(0, $surcharges['area_surcharges_total']);
+        $this->assertEquals(0, $surcharges['area_surcharges_cost']);
      
     }    
 
@@ -68,7 +68,7 @@ final class CalculationAreaSurchargesTest extends TestCase
         $surcharges = $calculator->run();
 
         $this->assertCount(1, $surcharges);
-        $this->assertEquals(0, $surcharges['area_surcharges_total']);
+        $this->assertEquals(0, $surcharges['area_surcharges_cost']);
      
     }    
 }

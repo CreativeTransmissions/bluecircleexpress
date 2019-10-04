@@ -1675,7 +1675,7 @@ class TransitQuote_Pro_Public {
 
     public function calc_quote_multi_leg(){
         $basic_cost_total = 0;
-
+        $distance_cost_total = 0;
         $this->stage_data = $this->request_parser_get_quote->get_stage_data();
         foreach ($this->stage_data as $key => $stage_data) {
             // override distance and hours with that for the stage
@@ -1686,13 +1686,16 @@ class TransitQuote_Pro_Public {
             $stage_quote = $this->calc_quote_for_stage($rate_options_for_stage);
             $this->stage_data[$key]['quote'] = $stage_quote;
             $basic_cost_total = $basic_cost_total + $stage_quote['basic_cost'];
+            $distance_cost_total = $distance_cost_total + $stage_quote['distance_cost'];            
         };
 
         $this->tax_rate = self::get_tax_rate();        
         $this->tax_cost = ($this->tax_rate/100)*$basic_cost_total; 
         $this->quote_totals = array('basic_cost'=>$basic_cost_total,
                                     'tax_cost'=>$this->tax_cost,
-                                    'total_cost'=>$basic_cost_total+$this->tax_cost);
+                                    'total_cost'=>$basic_cost_total+$this->tax_cost,
+                                    'distance_cost_total'=>$distance_cost_total
+                                );
 
         $this->quote_totals['job_rate'] = $rate_selector->job_rate;
         $this->quote_totals['rates'] = $this->stage_data;
@@ -1723,6 +1726,7 @@ class TransitQuote_Pro_Public {
                                                                                 'weight_unit_name'=>$this->rate_options['weight_unit_name']));
             $surcharges = $calculator->run();
             $this->quote = array_merge($this->quote, $surcharges);
+            $this->quote['basic_cost'] = $this->quote['basic_cost']+$surcharges['weight_cost'];
         };
 
         if($this->rate_options['surcharge_ids']!==''){
@@ -1733,10 +1737,17 @@ class TransitQuote_Pro_Public {
             $area_surcharge_calculator = new TransitQuote_Pro4\TQ_CalculationAreaSurcharges(array( 'surcharge_ids'=>$this->rate_options['surcharge_ids'],
                                                                                                     'area_surcharges'=>$area_surcharges));
             $area_surcharges = $area_surcharge_calculator->run();
-            $this->quote = array_merge($this->quote, $area_surcharges);
-        };
+            if(is_array($area_surcharges)){
+                $this->quote = array_merge($this->quote, $area_surcharges);
+               // echo 'adding basic_cost to area_surcharges_cost';
+                $this->quote['basic_cost'] = $this->quote['basic_cost']+$area_surcharges['area_surcharges_cost'];
+            } else {
+                echo 'area_surcharges is not an arrya';
+            }
+        } else {
+            echo 'no surcharge_ids in rate options';
+        }
        
-        $this->quote['basic_cost'] = $this->quote['basic_cost']+$surcharges['weight_cost'];
     }
 
     private function add_tax_to_quote(){

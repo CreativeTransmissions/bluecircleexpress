@@ -64,7 +64,7 @@ class TQ_CalculationAreaSurcharges {
 				$this->surcharges[$surcharge_name_formatted] = $surcharge_cost;
 			};
 		};
-		$this->surcharges['area_surcharges_total'] = $this->surcharge_total;
+		$this->surcharges['area_surcharges_cost'] = $this->surcharge_total;
 	}
 
 
