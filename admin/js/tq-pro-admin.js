@@ -965,6 +965,7 @@
 						var form = $(el).closest('form');					
 					};
 
+					this.clearPolygon();
 					//clear all fields
 					$(form).find(':input').each(function() {
 					    var type = this.type;
@@ -1202,6 +1203,7 @@
 					this.populateForm(recId, this.editForm, btn);
 
 					if(this.tab==='tq_pro_areas'){
+						this.clearPolygon();
 						this.editAreaCallback(recId);
 					};
 				},
@@ -1214,7 +1216,7 @@
 
 				 drawPolygon: function(defCoords){
 
-		            var polygon = new google.maps.Polygon({
+		            this.polygon = new google.maps.Polygon({
 		                paths: defCoords,
 		                editable: false,
 		                strokeColor: '#955',
@@ -1224,7 +1226,14 @@
 		                fillOpacity: 0.35
 		            });
 
-				    polygon.setMap(this.map);
+				    this.polygon.setMap(this.map);
+				    return this.polygon;
+				},
+
+				clearPolygon: function(){
+					if(this.polygon){
+						this.polygon.setMap(null);
+					};
 				},
 
 				feedbackMessage: function(feedback){
