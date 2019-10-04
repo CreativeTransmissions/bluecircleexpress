@@ -78,6 +78,8 @@
 				},
 
 				initMapElements: function(){
+					var that = this;
+					this.overlays = [];
 
 			        var drawingManager = new google.maps.drawing.DrawingManager({
 			          drawingControl: true,
@@ -93,34 +95,18 @@
 
         				var encodeString = google.maps.geometry.encoding.encodePath(path);
 					 	$('input[name="definition"]').val(encodeString);
+
+					 	that.overlays.push(polygon);
 					});
 
 
 				},
 
-				loadPolygon: function(){
-				// ** WIP example code
-
-			    var triangleCoords = [ // load from databaes
-			        new google.maps.LatLng(33.5362475, -111.9267386),
-			        new google.maps.LatLng(33.5104882, -111.9627875),
-			        new google.maps.LatLng(33.5004686, -111.9027061)
-
-			    ];
-
-			    // Construct the polygon
-			    bermudaTriangle = new google.maps.Polygon({
-			        paths: triangleCoords,
-			        draggable: true,
-			        editable: true,
-			        strokeColor: '#FF0000',
-			        strokeOpacity: 0.8,
-			        strokeWeight: 2,
-			        fillColor: '#FF0000',
-			        fillOpacity: 0.35
-			    });
-
-			    bermudaTriangle.setMap(map);
+				clearOverlays: function(){
+					$.each(this.overlays, function(idx, polygon){
+						polygon.setMap(null);
+					});
+					this.overlays = [];
 				},
 
 				renderCircle: function(){

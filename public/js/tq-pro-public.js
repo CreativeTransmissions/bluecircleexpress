@@ -1088,14 +1088,18 @@
 			},
 
 			populateQuoteFields: function(quote){
-				console.log('populateQuoteFields');
-				console.log(quote);
+
 				$('.totalCost').html(quote.total);
 				$('.basicCost').html(quote.basic_cost);
 				$('.rateTax').html(quote.rate_tax);
 				$('.taxCost').html(quote.tax_cost);
 				$('.hourCost').html(quote.time_cost);
 				$('.weightCost').html(quote.weight_cost);
+				if(quote.area_surcharges_cost){
+					$('.areaCost').html(quote.area_surcharges_cost);
+					$('.areaCost').show();
+				};
+				
 
 			/*	if(quote.job_rate ===('standard'||'dispatch rate')){
 					$('.job-rate').html('');

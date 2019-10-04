@@ -483,6 +483,7 @@
 						e.preventDefault();
 						that.clearForm(this);
 						that.updateLegend(that.editForm, that.newRecordMessage);
+						that.areaSelector.clearOverlays();
 					});
 
 					//Save Plaza
@@ -490,6 +491,7 @@
 					    e.preventDefault();
 					    that.spinner(true);
 					    that.saveRecord(this);
+					    that.areaSelector.clearOverlays();
 					});					
 				},				
 

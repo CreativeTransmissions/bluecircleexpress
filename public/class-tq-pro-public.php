@@ -1693,7 +1693,7 @@ class TransitQuote_Pro_Public {
         $this->tax_cost = ($this->tax_rate/100)*$basic_cost_total; 
         $this->quote_totals = array('basic_cost'=>$basic_cost_total,
                                     'tax_cost'=>$this->tax_cost,
-                                    'total_cost'=>$basic_cost_total+$this->tax_cost,
+                                    'total'=>$basic_cost_total+$this->tax_cost,
                                     'distance_cost_total'=>$distance_cost_total
                                 );
 
@@ -1719,7 +1719,6 @@ class TransitQuote_Pro_Public {
     }
 
     private function add_surcharges_to_quote(){
-
         if($this->rate_options['weight']!==''){
             $calculator = new TransitQuote_Pro4\TQ_CalculationSurcharges(array( 'weight'=>$this->rate_options['weight'],
                                                                                 'cost_per_weight_unit'=>$this->rate_options['cost_per_weight_unit'],
@@ -1739,15 +1738,10 @@ class TransitQuote_Pro_Public {
             $area_surcharges = $area_surcharge_calculator->run();
             if(is_array($area_surcharges)){
                 $this->quote = array_merge($this->quote, $area_surcharges);
-               // echo 'adding basic_cost to area_surcharges_cost';
+               // echo 'adding basic_cost to area_surcharges_cost:'.$area_surcharges['area_surcharges_cost'];
                 $this->quote['basic_cost'] = $this->quote['basic_cost']+$area_surcharges['area_surcharges_cost'];
-            } else {
-                echo 'area_surcharges is not an arrya';
-            }
-        } else {
-            echo 'no surcharge_ids in rate options';
-        }
-       
+            };
+        };
     }
 
     private function add_tax_to_quote(){

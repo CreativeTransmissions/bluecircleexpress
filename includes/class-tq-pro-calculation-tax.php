@@ -63,6 +63,7 @@ class TQ_CalculationTax {
 		$this->taxes['tax_cost'] = number_format((float)$this->tax_cost, 2, '.', '');
 		$this->config['subtotal'] = number_format((float)$this->config['subtotal'], 2, '.', '');
 		$this->taxes['total_cost'] = $this->config['subtotal'] + $this->taxes['tax_cost'];
+		$this->taxes['total'] = number_format((float)$this->taxes['total_cost'], 2, '.', '');
 
 	}
 

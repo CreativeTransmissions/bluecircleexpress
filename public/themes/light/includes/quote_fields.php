@@ -12,7 +12,7 @@
             <li class="<?php echo $drive_time_hidden_class; ?>"><?php echo $this->view_labels['time']; ?>: <span id="hours"></span></li>
             <li class="hidden"><?php echo $this->view_labels['short_notice_cost_label']; ?>: <?php echo $this->currency_symbol; ?><span class="noticeCost"></span></li>
             <li>Weight Surcharge: <?php echo $this->currency_symbol; ?><span class="weightCost"></span></li>
-            <li id="areaSurcharge-0" style="display: none;"><span class="surchargeName"></span>: <?php echo $this->currency_symbol; ?><span class="surchargeCost"></span></li>             
+            <li id="areaSurcharge-0" style="display: none;"><span class="area_surcharges_cost"></span>: <?php echo $this->currency_symbol; ?><span class="areaCost"></span></li>             
             <li class="field"><?php echo $this->view_labels['sub_total_label']; ?>: <?php echo $this->currency_symbol; ?><span class="basicCost"></span></li>
             <li class="<?php echo $tax_hidden_class; ?>"><?php echo $this->view_labels['tax_name']; ?>: <?php echo $this->currency_symbol; ?><span class="taxCost"></span></li>
             <li><span class="job-rate capitalize quote" id="jobRate"></span></li>
