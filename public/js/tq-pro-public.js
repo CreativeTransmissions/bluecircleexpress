@@ -14,7 +14,7 @@
 		defaults = {
 			ajaxUrl: '',
 			customer: false,
-			debug: false,
+			debug: true,
 			quoteResult: 'quote',
 			timepickerSelector: 'input[name="delivery_time"]',
 			datepickerSelector: 'input[name="date"]'
@@ -598,7 +598,6 @@
 					//add button value to determine if request is for a quote or payment
 				var data = 'action=tq_pro4_load_polygons';
 				$.post(this.settings.ajaxUrl, data, function(response) {
-					console.log(response);
 					if(response.success==='true'){
 						cb(response.data);
 					} else {
@@ -950,14 +949,18 @@
 				var routeData = this.calculator.getMapData();
 				var route = $.extend({},routeData.response.routes[0]);
 				var legs = route.legs;
+				var trimmedLegs = [];
+				console.log('saving '+legs.length+' legs');
 				$.each(legs, function(idx, leg){
-					delete leg.steps;
+					var trimmed = $.extend({},leg);
+					delete trimmed.steps
+					trimmedLegs.push(trimmed);
 				});
 				//serialize form
 				var data = $(this.element).serialize();
 					//add button value to determine if request is for a quote or payment
 					data += '&submit_type='+submitType;
-					data += '&directions='+JSON.stringify(legs);
+					data += '&directions='+JSON.stringify(trimmedLegs);
 					console.log('posting..');
 				$.post(this.settings.ajaxUrl, data, function(response) {
 					if(response.success==='true'){

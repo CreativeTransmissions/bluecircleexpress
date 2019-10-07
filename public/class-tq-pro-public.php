@@ -164,6 +164,8 @@ class TransitQuote_Pro_Public {
 
         wp_enqueue_script($this->plugin_slug . '-StandardMixedModeRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.StandardMixedModeRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);        
 
+        wp_enqueue_script($this->plugin_slug . '-StandardFixedStartRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.StandardFixedStartRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);    
+        
         wp_enqueue_script($this->plugin_slug . '-StandardRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.StandardRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);     
 
         $dependencies = array(  'jquery',

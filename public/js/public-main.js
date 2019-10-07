@@ -1,9 +1,15 @@
-window.addEventListener('error', function (e) {
+/*window.addEventListener('error', function (e) {
    console.log("Error occurred: ");
    console.log(e);
+
+   console.log(e.message);   
+   console.log(e.error);   
+   console.log(e.lineno);   
+   console.log(e.filename);   
+
    return false;
 }, true);
-
+*/
 (function ( $ ) {
 	"use strict";
 
