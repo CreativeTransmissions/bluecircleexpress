@@ -1206,7 +1206,7 @@ class TransitQuote_Pro_Public {
             }
 
         } else {
-            $search_fields_include = 'search_fields_fixed_start';
+            $search_fields_include = 'search_fields_fixed_start_dispatch';
         };
 
         // check for repeated customer and load view on that basis
