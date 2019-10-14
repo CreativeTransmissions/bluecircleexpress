@@ -543,8 +543,6 @@ class TransitQuote_Pro4 {
 		$cdb->define_table($db_config->get_config('leg_types'));		
 		$cdb->define_table($db_config->get_config('stages'));
 		$cdb->define_table($db_config->get_config('quotes_stages'));
-		
-		$cdb->define_table($db_config->get_config('legs'));		
 		$cdb->define_table($db_config->get_config('transactions_paypal'));
 		$cdb->define_table($db_config->get_config('transaction_logs_paypal'));
 		$cdb->define_table($db_config->get_config('rates'));

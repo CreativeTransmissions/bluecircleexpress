@@ -1667,7 +1667,7 @@ private function config_legs(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%f',
+      'format' => '%f'
     ),
     'time' => 
     array (
@@ -1676,7 +1676,7 @@ private function config_legs(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%f',
+      'format' => '%f'
     ),
     'stage_id' => 
     array (
@@ -1698,7 +1698,7 @@ private function config_legs(){
     ),    
     'leg_type_id' => 
     array (
-      'name' => 'id',
+      'name' => 'leg_type_id',
       'type' => 'int',
       'null' => 'not null',
       'auto' => '',
@@ -1712,7 +1712,7 @@ private function config_legs(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%s',
+      'format' => '%s'
     ),
     'modified' => 
     array (
@@ -1721,10 +1721,10 @@ private function config_legs(){
       'null' => 'null',
       'auto' => '',
       'default' => '',
-      'format' => '%s',
+      'format' => '%s'
     )
   ),
-  'pk' => 'id',
+  'pk' => 'id'
 );
 
 }
