@@ -864,6 +864,10 @@
 					that.callbackChangeWeight();
 				});
 
+				$('input[name="weight"]').keyup(this.keyupDelay(function (e) {
+					that.callbackChangeWeight();
+				}, 500));
+
 			},			
 
 			quoteAlreadyCalculated: function () {
@@ -1016,6 +1020,7 @@
 				console.log(response.data.quote);
 				if(response.data.quote){
 					this.populateQuoteFields(response.data.quote);
+					this.populateBreakdown(response.data.html);
 					this.showQuoteFields();
 				} else {
 					$('.failure .msg').html('Unable to calculate quote.');
@@ -1023,6 +1028,12 @@
 				}
 			},
 
+			populateBreakdown: function(html){
+				if(!html){
+					var html = '';
+				};
+				$('.quote-breakdown').html(html);
+			},
 
 			processSubmissionSuccessResponseOnDelivery: function(response){
 				if(response.data.job_id){
@@ -1090,26 +1101,32 @@
 				$('#woocommerce_paynow').submit();						
 			},
 
+			keyupDelay: function(callback, ms) {
+			  var timer = 0;
+			  return function() {
+			    var context = this, args = arguments;
+			    clearTimeout(timer);
+			    timer = setTimeout(function () {
+			      callback.apply(context, args);
+			    }, ms || 0);
+			  };
+			},
+
 			populateQuoteFields: function(quote){
 
 				$('.totalCost').html(quote.total);
-				$('.basicCost').html(quote.basic_cost);
+				$('.basicCost').html(quote.subtotal);
 				$('.rateTax').html(quote.rate_tax);
 				$('.taxCost').html(quote.tax_cost);
 				$('.hourCost').html(quote.time_cost);
 				$('.weightCost').html(quote.weight_cost);
+
 				if(quote.area_surcharges_cost){
 					$('.areaCost').html(quote.area_surcharges_cost);
 					$('.areaCost').show();
 				};
-				
+				$('.job-rate').html(quote.job_rate + ' rate');
 
-			/*	if(quote.job_rate ===('standard'||'dispatch rate')){
-					$('.job-rate').html('');
-				} else {
-					$('.job-rate').html(quote.job_rate + ' rate');
-				};
-			*/	
 				$('input[name="distance_cost"]').val(quote.distance_cost);
 				$('input[name="total"]').val(quote.total);
 				$('input[name="rate_tax"]').val(quote.rate_tax);
@@ -1117,7 +1134,7 @@
 				$('input[name="basic_cost"]').val(quote.basic_cost);
 				$('input[name="time_cost"]').val(quote.time_cost);
 				$('input[name="weight_cost"]').val(quote.weight_cost);
-
+				$('input[name="job_rate"]').val(quote.job_rate + ' rate');
 				$('#breakdown').val(JSON.stringify(quote.breakdown));
 			},
 

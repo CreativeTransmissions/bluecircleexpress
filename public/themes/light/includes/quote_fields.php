@@ -17,7 +17,7 @@
             <li class="<?php echo $tax_hidden_class; ?>"><?php echo $this->view_labels['tax_name']; ?>: <?php echo $this->currency_symbol; ?><span class="taxCost"></span></li>
             <li><span class="job-rate capitalize quote" id="jobRate"></span></li>
         </ul>
-
+        <div class="quote-breakdown"></div>
     </div>
     <div class="transit_body quote-fail tq-warning tq-form-bg-color">
         <h3><span class="warning-phone">Sorry</span></h3>

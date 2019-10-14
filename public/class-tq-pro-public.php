@@ -1,5 +1,5 @@
 <?php
-/* error_reporting(E_ALL );
+ error_reporting(E_ALL );
  ini_set('display_errors', 1);
 /**
  * The public-facing functionality of the plugin.
@@ -1558,6 +1558,7 @@ class TransitQuote_Pro_Public {
     
         self::add_surcharges_to_quote();
         self::add_tax_to_quote();
+        $this->stages_html .= '</table>';
 
         return self::build_get_quote_response();
 
@@ -1679,6 +1680,7 @@ class TransitQuote_Pro_Public {
         $basic_cost_total = 0;
         $distance_cost_total = 0;
         $this->stage_data = $this->request_parser_get_quote->get_stage_data();
+        $this->stages_html = '<table><tr><th>Item</th><th>Price</th><tr>';
         foreach ($this->stage_data as $key => $stage_data) {
             // override distance and hours with that for the stage
             $rate_options_for_stage = array_merge($this->rate_options, $stage_data);
@@ -1687,20 +1689,34 @@ class TransitQuote_Pro_Public {
             $rate_options_for_stage['rates'] = $stage_rates;
             $stage_quote = $this->calc_quote_for_stage($rate_options_for_stage);
             $this->stage_data[$key]['quote'] = $stage_quote;
+
+            if($key===0){
+                $this->stages_html .= '<tr><td>Dispatch Distance</td><td>'.$rate_options_for_stage['distance'].'</td><tr>';
+                $this->stages_html .= '<tr><td>Dispatch Cost</td><td>'.$stage_quote['total'].'</td><tr>';
+            } else {
+                $this->stages_html .= '<tr><td>Delivery Distance</td><td>'.$rate_options_for_stage['distance'].'</td><tr>';
+                $this->stages_html .= '<tr><td>Delivery Cost</td><td>'.$stage_quote['total'].'</td><tr>';
+            };
+
+
             $basic_cost_total = $basic_cost_total + $stage_quote['basic_cost'];
             $distance_cost_total = $distance_cost_total + $stage_quote['distance_cost'];            
         };
+
 
         $this->tax_rate = self::get_tax_rate();        
         $this->tax_cost = ($this->tax_rate/100)*$basic_cost_total; 
         $this->quote_totals = array('basic_cost'=>$basic_cost_total,
                                     'tax_cost'=>$this->tax_cost,
                                     'total'=>$basic_cost_total+$this->tax_cost,
-                                    'distance_cost_total'=>$distance_cost_total
+                                    'distance_cost_total'=>$distance_cost_total,
+                                    'stage_data'=>$this->stage_data
                                 );
 
         $this->quote_totals['job_rate'] = $rate_selector->job_rate;
         $this->quote_totals['rates'] = $this->stage_data;
+
+
         return $this->quote_totals;
 
     }
@@ -1711,8 +1727,7 @@ class TransitQuote_Pro_Public {
             'rates' => $rate_options_for_stage['rates'],
             'distance' => $rate_options_for_stage['distance'],
             'hours' => $rate_options_for_stage['hours'],
-            'tax_rate' => $this->tax_rate,
-            'tax_name' => 'VAT',
+            'tax_rate' => 0,
             'rounding_type' => $this->rounding_type);
 
         $calculation = new TransitQuote_Pro4\TQ_Calculation($calc_config);
@@ -1728,6 +1743,7 @@ class TransitQuote_Pro_Public {
             $surcharges = $calculator->run();
             $this->quote = array_merge($this->quote, $surcharges);
             $this->quote['basic_cost'] = $this->quote['basic_cost']+$surcharges['weight_cost'];
+            $this->stages_html .= '<tr><td>Weight Cost</td><td>'.$surcharges['weight_cost'].'</td><tr>';
         };
 
         if($this->rate_options['surcharge_ids']!==''){
@@ -1741,6 +1757,8 @@ class TransitQuote_Pro_Public {
             if(is_array($area_surcharges)){
                 $this->quote = array_merge($this->quote, $area_surcharges);
                // echo 'adding basic_cost to area_surcharges_cost:'.$area_surcharges['area_surcharges_cost'];
+                $this->stages_html .= '<tr><td>Area Surcharge</td><td>'.$area_surcharges['area_surcharges_cost'].'</td><tr>';
+
                 $this->quote['basic_cost'] = $this->quote['basic_cost']+$area_surcharges['area_surcharges_cost'];
             };
         };
@@ -1752,6 +1770,12 @@ class TransitQuote_Pro_Public {
                                                                     'subtotal'=>$this->quote['basic_cost']));
         $taxes = $calculator->run();
         $this->quote = array_merge($this->quote, $taxes);       
+
+        $this->stages_html .= '<tr><td>Subtotal</td><td>'.$this->quote['basic_cost'].'</td><tr>';
+        $this->stages_html .= '<tr><td>Tax Rate</td><td>'.$this->rate_options['tax_rate'].'</td><tr>';
+        $this->stages_html .= '<tr><td>Tax Cost</td><td>'.$this->quote['tax_cost'].'</td><tr>';
+        $this->stages_html .= '<tr><td>Total</td><td>'.$this->quote['total'].'</td><tr>';
+
     }
 
     private function build_get_quote_response() {
@@ -1759,7 +1783,8 @@ class TransitQuote_Pro_Public {
             $response = array('success' => 'true',
                 'data' => array('quote' => $this->quote,
                     'rates' => $this->quote['rates'],
-                    'rate_options' => $this->rate_options));
+                    'rate_options' => $this->rate_options,
+                    'html'=>$this->stages_html));
 
         } else {
             $response = array('success' => 'false',
@@ -2069,7 +2094,7 @@ class TransitQuote_Pro_Public {
    
 
         if($this->cdb->col_exists('quotes','rates')) {
-            $job_rate = self::check_rates_by_job_date($this->rate_options['delivery_date'], $this->rate_options['delivery_time']);   
+            $job_rate = $this->request_parser_get_quote->get_param(array('name' => 'job_rate', 'optional' => true));
             $this->quote = self::save('quotes', null, array('rates' => $job_rate));         
         } else {
             $this->quote = self::save('quotes');
