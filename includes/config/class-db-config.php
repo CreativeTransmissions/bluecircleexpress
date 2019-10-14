@@ -1825,6 +1825,15 @@ private function config_quotes_stages(){
       'default' => '',
       'format' => '%d'
     ),
+    'journey_id' => 
+    array (
+      'name' => 'journey_id',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
+    ),    
     'quote_id' => 
     array (
       'name' => 'quote_id',

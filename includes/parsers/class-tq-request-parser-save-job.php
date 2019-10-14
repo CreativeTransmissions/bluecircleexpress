@@ -1,6 +1,5 @@
 <?php
- error_reporting(E_ALL );
- ini_set('display_errors', 1);
+
 /**
  * Define Request Parser For Get Quote Requests
  *
@@ -23,7 +22,7 @@
  * @author     Andrew van Duivenbode <hq@transitquote.co.uk>
  */
 namespace TransitQuote_Pro4;
-class TQ_RequestParserGetQuote {
+class TQ_RequestParserSaveJob {
 
  	private $default_config = array();  // final or all
 
@@ -36,100 +35,6 @@ class TQ_RequestParserGetQuote {
 	public function parse_legs(){
         $this->legs = json_decode(stripslashes($this->post_data['directions']), true);
 	}
-
-    public function get_journey_data(){
-
-        $this->parse_legs();
-        $legs = $this->get_leg_data();
-
-        $this->journey_data = [];
-
-        $journey = [];
-        $journey['distance'] = $this->get_journey_distance($distance_unit);
-        $journey['duration'] = $this->get_journey_duration_hours();
-        $journey['deliver_and_return'] = $this->get_deliver_and_return();
-        $journey['optimize_route'] = $this->get_optimize_route();
-
-        $this->journey_data['journey'] = $journey;
-        $this->journey_data['legs'] = $legs;
-
-        return $this->journey_data;
-    }
-
-
-    public function get_leg_distance($legIdx = null, $distance_unit = 'Kilometer'){
-        $leg_distance = false;
-
-        if(!is_numeric($legIdx)){
-            return false;
-        };
-
-        if(!isset($this->legs)){
-            $this->parse_legs();
-        };
-
-        
-        if($distance_unit==='Kilometer'){
-            $leg_distance = $this->get_leg_distance_kilometers($legIdx);
-        } elseif ($distance_unit==='Mile') {
-            $leg_distance = $this->get_leg_distance_miles($legIdx);
-        };
-
-        return $leg_distance;
-    }
-    public function format_legs_for_save(){
-        $legs = [];
-        foreach ($this->legs as $key => $leg) {
-            $leg = array('directions_response' => json_encode($leg));
-           
-        }
-    }
-
-    public function get_leg_data($legIdx = null){
-        //return array of stages with data (delivery distance can be multiple legs)
-        /* 
-        - leg_type
-        - distance
-        - hours
-        */
-
-        $this->leg_data = array();
-        $this->stage_data = array();
-        $this->journey_distance = 0;
-        $this->journey_duration = 0;
-
-        if(!isset($this->legs)){
-            $this->parse_legs();
-        };
-        // first stage     
-        foreach ($this->legs as $key => $leg) {
-
-            $leg_data = array();
-            $leg_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
-            $leg_data['time'] =  $this->get_leg_duration_hours($key);
-            $leg_data['leg_order'] =  $key;
-            $leg_data['leg_type_id'] = $this->get_leg_type($key);
-            $leg_data['directions_response'] = json_encode($leg);
-
-            $this->journey_distance = $this->journey_distance + $leg_data['distance'];
-            $this->journey_duration = $this->journey_duration + $leg_data['time'];
-
-            if($this->leg_starts_new_stage($key)){
-                if($key>0){
-                    //add current stage data to array of stages before moving to next one
-                    $this->stage_data[] = $stage_data;
-                };
-                $stage_data = array('distance'=>0,
-                                    'hours'=>0);
-                $stage_data['leg_type'] = $this->get_leg_type($key);
-            };
-            $stage_data['distance'] = $stage_data['distance'] + $this->get_leg_distance($key, $this->config['distance_unit']);
-            $stage_data['hours'] = $stage_data['hours'] + $this->get_leg_duration_hours($key);            
-        };
-        $this->stage_data[] = $stage_data; // add last stage
-        $this->leg_data[] = $leg_data;
-        return $this->leg_data;
-    }
 
     public function get_stage_data($legIdx = null){
         //return array of stages with data (delivery distance can be multiple legs)
@@ -334,15 +239,6 @@ class TQ_RequestParserGetQuote {
         }
     }    
 
-    public function get_journey_distance($distance_unit){
-        if($distance_unit==='Kilometer'){
-            $journey_distance = $this->get_journey_distance_kilometers();
-        } elseif ($distance_unit==='Mile') {
-            $journey_distance = $this->get_journey_distance_miles();
-        };
-        return $journey_distance;
-    }
-
     public function get_journey_distance_miles(){
         if(!isset($this->legs)){
             $this->parse_legs();
@@ -377,19 +273,11 @@ class TQ_RequestParserGetQuote {
     }    
 
     public function get_journey_duration(){
-        if(!isset($this->journey_duration)){
-            $this->get_leg_data();
-        };
-        return $this->journey_duration;
+
     }
 
     public function get_journey_duration_hours(){
-        $duration = $this->get_journey_duration();
-        if(is_numeric($duration)){
-           return $duration / 3600;
-        } else {
-            return false;
-        }
+
     }
 
     public function get_surcharge_ids(){
@@ -490,22 +378,6 @@ class TQ_RequestParserGetQuote {
             'surcharge_ids'=>$surcharge_ids
         );
     }	
-
-    public function get_deliver_and_return(){
-        $deliver_and_return = $this->get_param(array('name' => 'deliver_and_return', 'optional' => true));
-        if (empty($deliver_and_return)) {
-            $deliver_and_return = 0;
-        };
-        return $deliver_and_return;
-    }
-
-    public function get_optimize_route(){
-        $optimize_route = $this->get_param(array('name' => 'optimize_route', 'optional' => true));
-        if (empty($optimize_route)) {
-            $optimize_route = 0;
-        };
-        return $optimize_route;
-    }
 
     public function using_location_dates(){
         if(!isset($this->all_locations_optional_data)){

@@ -1560,6 +1560,8 @@ class TransitQuote_Pro_Public {
         self::add_tax_to_quote();
         $this->stages_html .= '</table>';
 
+        self::save_journey();
+        self::save_quote();
         return self::build_get_quote_response();
 
     }
@@ -2194,8 +2196,23 @@ class TransitQuote_Pro_Public {
     }
 
     public function save_journey() {
-        //a job could potentially have multiple journeys so save job id against table
-        $this->journey = self::save('journeys', null, array('job_id' => $this->job['id']));
+        $repo_config = array();
+
+        $journey_data = $this->request_parser_get_quote->get_journey_data();
+
+        $this->journey_repo = TransitQuote_Pro4\TQ_JourneyRepository($repo_config);        
+        $this->journey_repo->save_journey($journey_data);
+        $this->journey_repo->save_journey_stages();
+        $this->journey_repo->save_journey_legs();          
+    }
+
+    public function save_quote() {
+        
+        $repo_config = array();
+        $this->quote_repo = TransitQuote_Pro4\TQ_QuoteRepository($repo_config);
+
+        $quote_data = $this->request_parser_get_quote->get_quote_data();
+        $this->quote_repo->save_journey($quote_data);
     }
 
     function get_journey_order_from_request_data() {
