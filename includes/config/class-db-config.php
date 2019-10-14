@@ -1624,6 +1624,344 @@ private function config_journeys(){
 
 }
 
+private function config_legs(){
+ return array (
+  'name' => 'legs',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'asc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d'
+    ),
+  'directions_response' => 
+    array (
+      'name' => 'directions_response',
+      'type' => 'text',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),    
+    'distance' => 
+    array (
+      'name' => 'distance',
+      'type' => 'decimal(10,4)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'time' => 
+    array (
+      'name' => 'time',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f',
+    ),
+    'stage_id' => 
+    array (
+      'name' => 'stage_id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
+    ),
+    'leg_order' => 
+    array (
+      'name' => 'leg_order',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
+    ),    
+    'leg_type_id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
+    ),
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
+
+private function config_stages(){
+ return array (
+  'name' => 'stages',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'asc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d'
+    ),
+    'journey_id' => 
+    array (
+      'name' => 'journey_id',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
+    ),
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
+
+private function config_quotes_stages(){
+ return array (
+  'name' => 'quotes_stages',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'asc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d'
+    ),
+    'stage_id' => 
+    array (
+      'name' => 'stage_id',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
+    ),
+    'quote_id' => 
+    array (
+      'name' => 'quote_id',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
+    ),
+    'unit_cost' => 
+    array (
+      'name' => 'unit_cost',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f'
+    ),
+    'time_cost' => 
+    array (
+      'name' => 'time_cost',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f'
+    ),
+    'set_cost' => 
+    array (
+      'name' => 'set_cost',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f'
+    ),
+  'leg_total' => 
+    array (
+      'name' => 'leg_total',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f'
+    ),   
+  'rates' => 
+    array (
+      'name' => 'rates',
+      'type' => 'varchar(20)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ), 
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
+
+private function config_leg_types(){
+ return array (
+  'name' => 'leg_types',
+  'defaults' => 
+  array (
+    'fields' => 
+    array (
+    ),
+    'orderby' => 'id',
+    'order' => 'asc',
+    'user_id' => false,
+    'since' => false,
+    'until' => false,
+    'number' => -1,
+    'offset' => 0,
+  ),
+  'cols' => 
+  array (
+    'id' => 
+    array (
+      'name' => 'id',
+      'type' => 'int',
+      'null' => 'not null',
+      'auto' => 'auto_increment',
+      'default' => '',
+      'format' => '%d'
+    ),
+    'name' => 
+    array (
+      'name' => 'name',
+      'type' => 'varchar(45)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'created' => 
+    array (
+      'name' => 'created',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    ),
+    'modified' => 
+    array (
+      'name' => 'modified',
+      'type' => 'timestamp',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s',
+    )
+  ),
+  'pk' => 'id',
+);
+
+}
 
 private function config_journey_lengths(){
  return array (
