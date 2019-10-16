@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
- error_reporting(E_ALL );
- ini_set('display_errors', 1);
 
 final class TQ_RequestParserGetQuoteJourneyTest extends TestCase
 {
@@ -18,14 +16,30 @@ final class TQ_RequestParserGetQuoteJourneyTest extends TestCase
                                                                                                 'post_data'=>$this->test_post_data,
                                                                                                 'use_weekend_rates'=>false,
                                                                                                 'use_holiday_rates'=>false,
-                                                                                                'use_out_of_hours_rates'=>false));        
+                                                                                                'use_out_of_hours_rates'=>false,
+                                                                                                'distance_unit'=>'Kilometer',
+
+                                                                                                'location_fields'=>json_decode('["id","address","appartment_no","street_number","postal_town","route","administrative_area_level_2","administrative_area_level_1","country","postal_code","lat","lng","place_id","created","modified"]',true),
+
+                                                                                                'journey_fields'=>json_decode('["id","job_id","distance","time","created","modified"]',true),
+
+                                                                                                'journeys_locations_fields'=>json_decode('["id","journey_id","location_id","journey_order","note","created","modified","contact_name","contact_phone"]',true)
+                                                                                            ));        
 
 
         $this->request_parser_get_quote_return_to_pickup = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array('debugging'=>true,
                                                                                                 'post_data'=>$this->test_post_data_two_legs,
                                                                                                 'use_weekend_rates'=>false,
                                                                                                 'use_holiday_rates'=>false,
-                                                                                                'use_out_of_hours_rates'=>false));       
+                                                                                                'use_out_of_hours_rates'=>false,
+                                                                                                'distance_unit'=>'Kilometer',
+
+                                                                                                'location_fields'=>json_decode('["id","address","appartment_no","street_number","postal_town","route","administrative_area_level_2","administrative_area_level_1","country","postal_code","lat","lng","place_id","created","modified"]["id","job_id","distance","time","created","modified"]',true),
+
+                                                                                                'journey_fields'=>json_decode('["id","job_id","distance","time","created","modified"]',true),
+
+                                                                                                'journeys_locations_fields'=>json_decode('["id","journey_id","location_id","journey_order","note","created","modified","contact_name","contact_phone"]',true)
+                                                                                            ));       
 
         $this->request_parser_get_quote_dispatch = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array('debugging'=>true,
                                                                                                         'post_data'=>$this->test_post_data_two_legs,
@@ -33,34 +47,203 @@ final class TQ_RequestParserGetQuoteJourneyTest extends TestCase
                                                                                                         'use_holiday_rates'=>false,
                                                                                                         'use_out_of_hours_rates'=>false,
                                                                                                         'use_dispatch_rates'=>true,
-                                                                                                        'distance_unit'=>'Mile'));   
+                                                                                                        'distance_unit'=>'Mile',
+
+                                                                                                'location_fields'=>json_decode('["id","address","appartment_no","street_number","postal_town","route","administrative_area_level_2","administrative_area_level_1","country","postal_code","lat","lng","place_id","created","modified"]["id","job_id","distance","time","created","modified"]',true),
+
+                                                                                                'journey_fields'=>json_decode('["id","job_id","distance","time","created","modified"]',true),
+
+                                                                                                'journeys_locations_fields'=>json_decode('["id","journey_id","location_id","journey_order","note","created","modified","contact_name","contact_phone"]',true)
+                                                                                            ));   
     }
    
     protected function tearDown(){
         $this->request_parser_get_quote = null;
     }
 
-    public function test_get_journey_data() {
+    public function test_get_journey_distance() {  
+        $journey_distance = $this->request_parser_get_quote->get_journey_distance();
+
+        var_dump($journey_distance);
+        $this->assertTrue(is_numeric($journey_distance));
+        $this->assertEquals(668.537, $journey_distance);
+    }
+
+    
+    public function test_get_journey_data_one_leg() {
 
         $journey_data = $this->request_parser_get_quote->get_journey_data();
         $this->assertTrue(is_array($journey_data));
 
         $this->assertArrayHasKey('journey', $journey_data);
-        $this->assertArrayHasKey('stages', $journey_data);        
+       // $this->assertArrayHasKey('stages', $journey_data);        
         $this->assertArrayHasKey('legs', $journey_data);
 
         $this->assertTrue(is_array($journey_data['journey']), ' journey is not array');
         $this->assertTrue(is_array($journey_data['legs']), ' legs is not array');
-        $this->assertTrue((count($journey_data['legs'])>0), ' journey has no legs');
+
+        $this->assertCount(1, $journey_data['legs'], ' journey has wrong number of legs');
+
+        $this->assertArrayHasKey('directions_response', $journey_data['legs'][0]);
+        $this->assertArrayHasKey('distance', $journey_data['legs'][0]);
+        $this->assertTrue(is_numeric($journey_data['legs'][0]['distance']),  'not numeric distance: '.$journey_data['legs'][0]['distance']);
+
+        $this->assertArrayHasKey('time', $journey_data['legs'][0]);
+        $this->assertTrue(is_numeric($journey_data['legs'][0]['time']),  'not numeric time: '.$journey_data['legs'][0]['time']);
+
+        $this->assertArrayHasKey('leg_order', $journey_data['legs'][0]);
+        $this->assertTrue(is_numeric($journey_data['legs'][0]['leg_order']),  'not numeric leg_order: '.$journey_data['legs'][0]['leg_order']);
+
+        $this->assertArrayHasKey('leg_type_id', $journey_data['legs'][0]);
+        $this->assertTrue(is_numeric($journey_data['legs'][0]['leg_type_id']),  'not numeric leg_type_id: '.$journey_data['legs'][0]['leg_type_id']);
+
+    }
 
 
-        $this->assertArrayHasKey('directions_response', $this->legs[0]);
-        $this->assertArrayHasKey('distance', $this->legs[0]);
-        $this->assertArrayHasKey('time', $this->legs[0]);
-        $this->assertArrayHasKey('leg_order', $this->legs[0]);
-        $this->assertArrayHasKey('leg_type_id', $this->legs[0]);
+    public function test_get_leg_distance(){
+        $this->request_parser_get_quote->parse_legs();        
+        $leg_0_distance = $this->request_parser_get_quote->get_leg_distance(0, 'Kilometer');
+        $this->assertTrue(is_numeric($leg_0_distance));
+
+        $this->request_parser_get_quote_return_to_pickup->parse_legs();        
+        $leg_0_distance = $this->request_parser_get_quote_return_to_pickup->get_leg_distance(0, 'Kilometer'); 
+        $this->assertTrue(is_numeric($leg_0_distance));
+
+    }
+    public function test_get_leg_data(){
+        $this->request_parser_get_quote->parse_legs();
+        $no_legs = count($this->request_parser_get_quote->legs);
+
+        $leg_data = $this->request_parser_get_quote->get_leg_data();
+        $this->assertTrue(is_array($leg_data));
+        $this->assertCount($no_legs, $leg_data);        
+
+        $this->assertArrayHasKey('directions_response', $leg_data[0]);
+        $this->assertArrayHasKey('distance', $leg_data[0]);
+        $this->assertTrue(is_numeric($leg_data[0]['distance']),  'not numeric distance: '.$leg_data[0]['distance']);
+
+        $this->assertArrayHasKey('time', $leg_data[0]);
+        $this->assertTrue(is_numeric($leg_data[0]['time']),  'not numeric time: '.$leg_data[0]['time']);
+
+        $this->assertArrayHasKey('leg_order', $leg_data[0]);
+        $this->assertTrue(is_numeric($leg_data[0]['leg_order']),  'not numeric leg_order: '.$leg_data[0]['leg_order']);
+
+        $this->assertArrayHasKey('leg_type_id', $leg_data[0]);
+        $this->assertTrue(is_numeric($leg_data[0]['leg_type_id']),  'not numeric leg_type_id: '.$leg_data[0]['leg_type_id']);
 
 
     }
 
+    public function test_get_leg_data_two_leg(){
+        $this->request_parser_get_quote_return_to_pickup->parse_legs();
+
+        $leg_data = $this->request_parser_get_quote_return_to_pickup->get_leg_data();
+        $this->assertTrue(is_array($leg_data));
+        $this->assertCount(2, $leg_data);        
+
+        $this->assertArrayHasKey('directions_response', $leg_data[0]);
+        $this->assertArrayHasKey('distance', $leg_data[0]);
+        $this->assertTrue(is_numeric($leg_data[0]['distance']),  'not numeric distance: '.$leg_data[0]['distance']);
+
+        $this->assertArrayHasKey('time', $leg_data[0]);
+        $this->assertTrue(is_numeric($leg_data[0]['time']),  'not numeric time: '.$leg_data[0]['time']);
+
+        $this->assertArrayHasKey('leg_order', $leg_data[0]);
+        $this->assertTrue(is_numeric($leg_data[0]['leg_order']),  'not numeric leg_order: '.$leg_data[0]['leg_order']);
+
+        $this->assertArrayHasKey('leg_type_id', $leg_data[0]);
+        $this->assertTrue(is_numeric($leg_data[0]['leg_type_id']),  'not numeric leg_type_id: '.$leg_data[0]['leg_type_id']);
+
+
+    }
+
+
+    public function test_get_journey_data_two_leg() {
+
+        $journey_data = $this->request_parser_get_quote_return_to_pickup->get_journey_data();
+        $this->assertTrue(is_array($journey_data));
+
+        $this->assertArrayHasKey('journey', $journey_data);
+       // $this->assertArrayHasKey('stages', $journey_data);        
+        $this->assertArrayHasKey('legs', $journey_data);
+
+        $this->assertTrue(is_array($journey_data['journey']), ' journey is not array');
+        $this->assertTrue(is_array($journey_data['legs']), ' legs is not array');
+        $this->assertcount(2,$journey_data['legs'], ' journey has wrong number of legs');
+
+
+        $this->assertArrayHasKey('directions_response', $journey_data['legs'][0]);
+        $this->assertArrayHasKey('distance', $journey_data['legs'][0]);
+        $this->assertTrue(is_numeric($journey_data['legs'][0]['distance']),  'not numeric distance: '.$journey_data['legs'][0]['distance']);
+
+        $this->assertArrayHasKey('time', $journey_data['legs'][0]);
+        $this->assertTrue(is_numeric($journey_data['legs'][0]['time']),  'not numeric time: '.$journey_data['legs'][0]['time']);
+
+        $this->assertArrayHasKey('leg_order', $journey_data['legs'][0]);
+        $this->assertTrue(is_numeric($journey_data['legs'][0]['leg_order']),  'not numeric leg_order: '.$journey_data['legs'][0]['leg_order']);
+
+        $this->assertArrayHasKey('leg_type_id', $journey_data['legs'][0]);
+        $this->assertTrue(is_numeric($journey_data['legs'][0]['leg_type_id']),  'not numeric leg_type_id: '.$journey_data['legs'][0]['leg_type_id']);
+
+        $this->assertArrayHasKey('directions_response', $journey_data['legs'][1]);
+        $this->assertArrayHasKey('distance', $journey_data['legs'][1]);
+        $this->assertTrue(is_numeric($journey_data['legs'][1]['distance']),  'not numeric distance: '.$journey_data['legs'][1]['distance']);
+
+        $this->assertArrayHasKey('time', $journey_data['legs'][1]);
+        $this->assertTrue(is_numeric($journey_data['legs'][1]['time']),  'not numeric time: '.$journey_data['legs'][1]['time']);
+
+        $this->assertArrayHasKey('leg_order', $journey_data['legs'][1]);
+        $this->assertTrue(is_numeric($journey_data['legs'][1]['leg_order']),  'not numeric leg_order: '.$journey_data['legs'][1]['leg_order']);
+
+        $this->assertArrayHasKey('leg_type_id', $journey_data['legs'][1]);
+        $this->assertTrue(is_numeric($journey_data['legs'][1]['leg_type_id']),  'not numeric leg_type_id: '.$journey_data['legs'][1]['leg_type_id']);
+    }    
+
+    public function test_get_record_data_locations(){
+        $locations = $this->request_parser_get_quote->get_record_data_locations();
+        echo ' locations for testing:';
+        echo json_encode($locations);
+        $this->assertTrue(is_array($this->request_parser_get_quote->config['location_fields']));
+        $this->assertTrue(is_array($locations));
+        $this->assertCount(2, $locations);
+
+        $this->assertArrayHasKey('address', $locations[0]);
+        $this->assertArrayHasKey('appartment_no', $locations[0]);
+        $this->assertArrayHasKey('street_number', $locations[0]);
+        $this->assertArrayHasKey('postal_town', $locations[0]);
+        $this->assertArrayHasKey('route', $locations[0]);
+        $this->assertArrayHasKey('administrative_area_level_2', $locations[0]);
+        $this->assertArrayHasKey('administrative_area_level_1', $locations[0]);
+        $this->assertArrayHasKey('country', $locations[0]);
+        $this->assertArrayHasKey('postal_code', $locations[0]);
+        $this->assertArrayHasKey('lat', $locations[0]);
+        $this->assertArrayHasKey('lng', $locations[0]);
+        $this->assertArrayHasKey('place_id', $locations[0]);
+
+
+        $this->assertArrayHasKey('address', $locations[1]);
+        $this->assertArrayHasKey('appartment_no', $locations[1]);
+        $this->assertArrayHasKey('street_number', $locations[1]);
+        $this->assertArrayHasKey('postal_town', $locations[1]);
+        $this->assertArrayHasKey('route', $locations[1]);
+        $this->assertArrayHasKey('administrative_area_level_2', $locations[1]);
+        $this->assertArrayHasKey('administrative_area_level_1', $locations[1]);
+        $this->assertArrayHasKey('country', $locations[1]);
+        $this->assertArrayHasKey('postal_code', $locations[1]);
+        $this->assertArrayHasKey('lat', $locations[1]);
+        $this->assertArrayHasKey('lng', $locations[1]);
+        $this->assertArrayHasKey('place_id', $locations[1]);
+    }
+
+    public function test_get_record_data_journey(){
+        $journey = $this->request_parser_get_quote->get_record_data_journey();
+        $this->assertTrue(is_array($this->request_parser_get_quote->config['journey_fields']));
+        $this->assertTrue(is_array($journey));
+    
+
+        $this->assertArrayHasKey('distance', $journey);
+        $this->assertArrayHasKey('time', $journey);
+        
+    }
+  
 }

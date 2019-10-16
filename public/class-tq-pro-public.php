@@ -1530,7 +1530,21 @@ class TransitQuote_Pro_Public {
         $this->use_holiday_rates = self::get_use_holiday_rates();        
         $this->use_dispatch_rates = self::get_use_dispatch_rates();
         $this->distance_unit = self::get_distance_unit();
-        $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array('debugging'=>$this->debug,
+
+        //fields to get from request for loacation record
+        $location_fields = $this->cdb->get_table_col_names('locations');
+        $journey_fields = $this->cdb->get_table_col_names('journeys');
+        $journeys_locations_fields = $this->cdb->get_table_col_names('journeys_locations');
+
+        echo json_encode($location_fields);
+        echo json_encode($journey_fields);
+        echo json_encode($journeys_locations_fields);
+
+
+        $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array( 'debugging'=>$this->debug,
+                                                                                                'location_fields'=>$location_fields,
+                                                                                                'journey_fields'=>$journey_fields,
+                                                                                                'journeys_locations_fields'=>$journeys_locations_fields,
                                                                                                 'post_data'=>$_POST,
                                                                                                 'distance_unit'=> $this->distance_unit,
                                                                                                 'use_dispatch_rates'=>$this->use_dispatch_rates
@@ -2088,19 +2102,29 @@ class TransitQuote_Pro_Public {
         $this->use_holiday_rates = self::get_use_holiday_rates(); 
         
         // TODO Change to requets parser for save job
-        $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array('debugging'=>$this->debug,
+        $this->request_parser_save_job = new TransitQuote_Pro4\TQ_RequestParserSaveJob(array('debugging'=>$this->debug,
                                                                                                 'post_data'=>$_POST));
         $this->rate_options_defaults = $this->get_default_rate_affecting_options();
-        $this->rate_options = $this->request_parser_get_quote->get_rate_affecting_options();
-        $this->rate_options = array_merge($this->rate_options_defaults, $this->rate_options);
-   
 
-        if($this->cdb->col_exists('quotes','rates')) {
-            $job_rate = $this->request_parser_get_quote->get_param(array('name' => 'job_rate', 'optional' => true));
-            $this->quote = self::save('quotes', null, array('rates' => $job_rate));         
-        } else {
-            $this->quote = self::save('quotes');
-        }
+        $customer_data = $this->request_parser_save_job->get_customer_data();
+        $this->customer_repository = new TransitQuote_Pro4\TQ_CustomerRepository(array('debugging'=>$this->debug));
+        if(!$this->customer_repository->save($customer_data)){
+            return false;
+        };
+        
+        $quote_id = $this->request_parser_save_job->get_quote_id();
+        if(!$quote_id){
+            return false;
+        };
+
+        $job_data = $this->request_parser_save_job->got_job_data();
+
+        $this->job_repository = new TransitQuote_Pro4\TQ_JobRepository(array('debugging'=>$this->debug));
+        if(!$this->job_repository->save($job_data)){
+            return false;
+        };
+
+
         //$this->quote_surcharge_ids = self::save_surcharges($this->quote['id']);
 
         //To do: create a many to many address relationship with job with an order index
@@ -2112,21 +2136,6 @@ class TransitQuote_Pro_Public {
             return false;
         };    
 
-        $this->job_id = $this->job['id'];
-        $this->save_journey();
-        $this->journey_order = $this->get_journey_order_from_request_data();
-        if (!$this->save_locations()) {
-            $success = 'false';
-            $message = 'Unable to save locations';
-        };
-        if(count($this->locations_in_journey_order)<2){
-            $success = 'false';
-            $message = ' less than 2 locations_in_journey_order';
-        }
-        if (!$this->save_journeys_locations()) {
-            $success = 'false';
-            $message = 'Unable to save route information';
-        };
 
         if($success !== 'true'){
             return false;
@@ -2145,56 +2154,7 @@ class TransitQuote_Pro_Public {
       
     }
 
-    public function save_customer(){
-        //get email for notification
-        $email = $this->ajax->param(array('name' => 'email','optional'=>false));
-        if(empty($email)){
-            return false;
-        };
-
-        $wp_user_id = $this->tq_woocommerce_customer->is_logged_in();
-
-
-        $existing_customer = self::get_customer_by_email($email);
-        if ($existing_customer === false) {
-            $customer = self::save_new_customer($wp_user_id);
-        } else {
-            $customer = self::update_customer($existing_customer, $wp_user_id);
-        };
-
-        return $customer;
-    }   
-
-    public function save_new_customer($wp_user_id = null){
-        //save new customer as we have a new email address
-        if ($wp_user_id) {
-            $customer = self::save('customers', null, array('wp_user_id' => $wp_user_id));
-        } else {
-            $customer = self::save('customers');
-        };
-      
-        return $customer;
-    }
-
-    public function update_customer($existing_customer, $wp_user_id = null){
-        if($existing_customer['email']===''){
-            return false;
-        };
-        $customer_post_data = self::get_record_data('customers');
-        //save against an existing customer email
-        //we can pass id and it will not be overwritten as it is not in the post data
-        if ($wp_user_id) {
-            $customer_post_data['wp_user_id'] = $wp_user_id;
-            $customer_post_data['id'] = $existing_customer['id'];
-            $customer = self::save('customers', $existing_customer['id'], $customer_post_data);
-        } else {
-            $customer_post_data['id'] = $existing_customer['id'];            
-            $customer = self::save('customers', $existing_customer['id'], $customer_post_data);
-        };
-             
-        return $customer;
-    }
-
+    
     public function save_journey() {
         $repo_config = array();
 

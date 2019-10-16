@@ -21,6 +21,34 @@ class TQ_JourneyRepository
         return $error;
     }
 
+     public function create_journeys_locations() {
+        // save all locations in journey
+        $this->saved_locations = array();
+        foreach ($this->journey_order as $key => $address_index) {
+            $location = $this->locations[$this->journey_order[$address_index]];
+            if (empty($location)) {
+                self::debug('No data for location at index: ' . $address_index);
+                return false;
+            };
+            
+
+            $journey_order_rec = array('journey_id' => $this->journey['id'],
+                'location_id' => $location['id'],
+                'journey_order' => $key,
+                'created' => date('Y-m-d G:i:s'),
+                'modified' => date('Y-m-d G:i:s'));
+
+            $journey_order_optional_fields = self::get_journey_order_optional_fields($key);
+            $journey_order_rec = array_merge($journey_order_rec, $journey_order_optional_fields);
+
+            // store ids in array ready for save
+            $this->saved_locations[$key] = $journey_order_rec;
+        };
+
+        return true;
+
+    }    
+
     public function save_journey(){
      
     }
