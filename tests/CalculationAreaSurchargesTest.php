@@ -2,8 +2,6 @@
 declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-
-
 final class CalculationAreaSurchargesTest extends TestCase
 {
     protected function setUp()
@@ -31,6 +29,22 @@ final class CalculationAreaSurchargesTest extends TestCase
         $this->assertEquals(20, $surcharges['parking']);
         $this->assertEquals(12, $surcharges['congestion_charge']);
         $this->assertEquals(32, $surcharges['area_surcharges_cost']);
+
+        $area_surcharges_data = $calculator->get_quote_surcharges_record_data();
+
+        $this->assertTrue(is_array($area_surcharges_data[0]));
+        $this->assertArrayHasKey('surcharge_id', $area_surcharges_data[0]);
+        $this->assertArrayHasKey('amount', $area_surcharges_data[0]);
+        $this->assertEquals(2, $area_surcharges_data[0]['surcharge_id']);
+        $this->assertEquals(20, $area_surcharges_data[0]['amount']);
+
+
+        $this->assertTrue(is_array($area_surcharges_data[1]));
+        $this->assertArrayHasKey('surcharge_id', $area_surcharges_data[1]);
+        $this->assertArrayHasKey('amount', $area_surcharges_data[1]);
+        $this->assertEquals(1, $area_surcharges_data[1]['surcharge_id']);
+        $this->assertEquals(12, $area_surcharges_data[1]['amount']);
+
 
     }
 
@@ -71,4 +85,5 @@ final class CalculationAreaSurchargesTest extends TestCase
         $this->assertEquals(0, $surcharges['area_surcharges_cost']);
      
     }    
+
 }

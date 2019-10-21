@@ -13,7 +13,6 @@ class TQ_JourneyRepository
 
         $this->config = array_merge($defaults,$config);
         $this->cdb = $this->config['cdb']; 
-        $this->ajax = new WP_Sell_Software\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
     }
 
@@ -49,8 +48,17 @@ class TQ_JourneyRepository
 
     }    
 
-    public function save_journey(){
-     
+    public function save($record_data){
+        if(empty($record_data)){
+            echo ' journey record is empty';
+        };
+        $row_id = $this->cdb->update_row('journeys', $record_data);
+        if($row_id===false){
+            return false;
+        };
+
+        $record_data['id'] = $row_id;
+        return $record_data;              
     }
 
     public function load_journey($journey_id){

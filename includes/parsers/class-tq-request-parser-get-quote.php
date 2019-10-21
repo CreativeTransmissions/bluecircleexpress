@@ -31,7 +31,7 @@ class TQ_RequestParserGetQuote {
         $this->post_data = $this->config['post_data'];
 	}
 
-    public function get_record_data_locations(){
+    public function get_all_locations_record_data(){
         if(!isset($this->journey_order)){
             $this->journey_order = $this->get_journey_order_from_request_data();
         };

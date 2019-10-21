@@ -1575,7 +1575,7 @@ class TransitQuote_Pro_Public {
         $this->stages_html .= '</table>';
 
         self::save_journey();
-        self::save_quote();
+        $this->quote_record = self::save_quote();
         return self::build_get_quote_response();
 
     }
@@ -1767,9 +1767,9 @@ class TransitQuote_Pro_Public {
             if(is_array($area_surcharges)){
                 $area_surcharges = $this->index_array_by_db_id_numeric($area_surcharges, 'surcharge_id');
             };
-            $area_surcharge_calculator = new TransitQuote_Pro4\TQ_CalculationAreaSurcharges(array( 'surcharge_ids'=>$this->rate_options['surcharge_ids'],
+            $this->area_surcharge_calculator = new TransitQuote_Pro4\TQ_CalculationAreaSurcharges(array( 'surcharge_ids'=>$this->rate_options['surcharge_ids'],
                                                                                                     'area_surcharges'=>$area_surcharges));
-            $area_surcharges = $area_surcharge_calculator->run();
+            $area_surcharges = $this->area_surcharge_calculator->run();
             if(is_array($area_surcharges)){
                 $this->quote = array_merge($this->quote, $area_surcharges);
                // echo 'adding basic_cost to area_surcharges_cost:'.$area_surcharges['area_surcharges_cost'];
@@ -2090,25 +2090,20 @@ class TransitQuote_Pro_Public {
         $success = 'true';
 
         //default message
-        $message = 'Request booked successfully';
-        
-        $this->customer = self::save_customer();
-        if(!$this->customer){
-            return false;
-        };
+        $message = 'Sorry, something went wrong.';
         
         $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
         $this->use_weekend_rates = self::get_use_weekend_rates();
         $this->use_holiday_rates = self::get_use_holiday_rates(); 
-        
-        // TODO Change to requets parser for save job
+        $this->rate_options_defaults = $this->get_default_rate_affecting_options();
+
         $this->request_parser_save_job = new TransitQuote_Pro4\TQ_RequestParserSaveJob(array('debugging'=>$this->debug,
                                                                                                 'post_data'=>$_POST));
-        $this->rate_options_defaults = $this->get_default_rate_affecting_options();
 
         $customer_data = $this->request_parser_save_job->get_customer_data();
         $this->customer_repository = new TransitQuote_Pro4\TQ_CustomerRepository(array('debugging'=>$this->debug));
-        if(!$this->customer_repository->save($customer_data)){
+        $customer = $this->customer_repository->save($customer_data);
+        if(!is_array($customer)){
             return false;
         };
         
@@ -2118,9 +2113,11 @@ class TransitQuote_Pro_Public {
         };
 
         $job_data = $this->request_parser_save_job->got_job_data();
-
+        $job_data['accepted_quote_id'] = $quote_id;
+        $job_data['customer_id'] = $quote_id;
         $this->job_repository = new TransitQuote_Pro4\TQ_JobRepository(array('debugging'=>$this->debug));
-        if(!$this->job_repository->save($job_data)){
+        $this->job = $this->job_repository->save($job_data);
+        if(!is_array($this->job)){
             return false;
         };
 
@@ -2129,14 +2126,14 @@ class TransitQuote_Pro_Public {
 
         //To do: create a many to many address relationship with job with an order index
         //save job, passing id values not included in post data
-
+/*
         $this->job = self::save('jobs', null, array('customer_id' => $this->customer['id'],
             'accepted_quote_id' => $this->quote['id']));
         if(empty($this->job)){
             return false;
         };    
 
-
+*/
         if($success !== 'true'){
             return false;
         };
@@ -2156,23 +2153,45 @@ class TransitQuote_Pro_Public {
 
     
     public function save_journey() {
-        $repo_config = array();
+        $repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
 
+
+        $location_record_data = $this->request_parser_get_quote->get_all_locations_record_data();
+
+        $this->location_repo = TransitQuote_Pro4\TQ_LocationRepository($repo_config);   
+        $saved_locations = $this->location_repo->save($location_record_data);
+
+        
         $journey_data = $this->request_parser_get_quote->get_journey_data();
 
         $this->journey_repo = TransitQuote_Pro4\TQ_JourneyRepository($repo_config);        
-        $this->journey_repo->save_journey($journey_data);
-        $this->journey_repo->save_journey_stages();
-        $this->journey_repo->save_journey_legs();          
+        $this->journey_repo->save_journey($journey_data['journey']);
+        $this->journey_repo->save_journey_stages($journey_data);
+        $this->journey_repo->save_journey_legs($journey_data);          
     }
 
     public function save_quote() {
         
-        $repo_config = array();
-        $this->quote_repo = TransitQuote_Pro4\TQ_QuoteRepository($repo_config);
+        
 
         $quote_data = $this->request_parser_get_quote->get_quote_data();
-        $this->quote_repo->save_journey($quote_data);
+        $repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
+        $this->quote_repo = TransitQuote_Pro4\TQ_QuoteRepository($repo_config);        
+
+        $quote = $this->quote_repository->save($quote_data);
+        if(!is_array($quote)){
+            return false;
+        };
+
+        $area_surcharges_data = $this->area_surcharge_calculator->get_quote_surcharges_record_data();
+        $area_surcharges_data = $this->update_quote_surcharges_records_with_quote_id($quote['id']);
+        $saved_quote_surcharge_ids = $this->quote_repository->save_qupte_surcharges($area_surcharges_data);     
+
+        if(!is_array($saved_quote_surcharge_ids)){
+            return false;
+        };
+
+        return $quote;
     }
 
     function get_journey_order_from_request_data() {

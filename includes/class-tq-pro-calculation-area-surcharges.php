@@ -33,6 +33,8 @@ class TQ_CalculationAreaSurcharges {
 	private function init_calculation(){
 		$this->surcharges = array();
 		$this->surcharge_total = 0;
+		$this->quote_surcharge_record_data = array();
+
 	}
 
 	private function params_are_valid(){
@@ -62,6 +64,8 @@ class TQ_CalculationAreaSurcharges {
 			if(is_numeric($surcharge_cost)){
 				$this->surcharge_total = $this->surcharge_total+$surcharge_cost;
 				$this->surcharges[$surcharge_name_formatted] = $surcharge_cost;
+				$this->surcharges[$surcharge_name_formatted] = $surcharge_cost;
+				$this->quote_surcharge_record_data[] = array('surcharge_id'=>$surcharge_id, 'amount'=>$surcharge_cost);
 			};
 		};
 		$this->surcharges['area_surcharges_cost'] = $this->surcharge_total;
@@ -83,5 +87,10 @@ class TQ_CalculationAreaSurcharges {
 	public function get_surcharges(){
 		return $this->surcharges;
 	}
+
+	public function get_quote_surcharges_record_data(){
+		return $this->quote_surcharge_record_data;
+	}
+
 }
 

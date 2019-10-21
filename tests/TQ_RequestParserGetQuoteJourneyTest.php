@@ -18,6 +18,7 @@ final class TQ_RequestParserGetQuoteJourneyTest extends TestCase
                                                                                                 'use_holiday_rates'=>false,
                                                                                                 'use_out_of_hours_rates'=>false,
                                                                                                 'distance_unit'=>'Kilometer',
+                                                                                                'use_dispatch_rates'=>true,
 
                                                                                                 'location_fields'=>json_decode('["id","address","appartment_no","street_number","postal_town","route","administrative_area_level_2","administrative_area_level_1","country","postal_code","lat","lng","place_id","created","modified"]',true),
 
@@ -32,6 +33,7 @@ final class TQ_RequestParserGetQuoteJourneyTest extends TestCase
                                                                                                 'use_weekend_rates'=>false,
                                                                                                 'use_holiday_rates'=>false,
                                                                                                 'use_out_of_hours_rates'=>false,
+                                                                                                'use_dispatch_rates'=>true,
                                                                                                 'distance_unit'=>'Kilometer',
 
                                                                                                 'location_fields'=>json_decode('["id","address","appartment_no","street_number","postal_town","route","administrative_area_level_2","administrative_area_level_1","country","postal_code","lat","lng","place_id","created","modified"]["id","job_id","distance","time","created","modified"]',true),
@@ -63,8 +65,6 @@ final class TQ_RequestParserGetQuoteJourneyTest extends TestCase
 
     public function test_get_journey_distance() {  
         $journey_distance = $this->request_parser_get_quote->get_journey_distance();
-
-        var_dump($journey_distance);
         $this->assertTrue(is_numeric($journey_distance));
         $this->assertEquals(668.537, $journey_distance);
     }
@@ -96,6 +96,9 @@ final class TQ_RequestParserGetQuoteJourneyTest extends TestCase
 
         $this->assertArrayHasKey('leg_type_id', $journey_data['legs'][0]);
         $this->assertTrue(is_numeric($journey_data['legs'][0]['leg_type_id']),  'not numeric leg_type_id: '.$journey_data['legs'][0]['leg_type_id']);
+
+        echo 'journey data 1 leg ->';
+        echo json_encode($journey_data);
 
     }
 
@@ -197,12 +200,14 @@ final class TQ_RequestParserGetQuoteJourneyTest extends TestCase
 
         $this->assertArrayHasKey('leg_type_id', $journey_data['legs'][1]);
         $this->assertTrue(is_numeric($journey_data['legs'][1]['leg_type_id']),  'not numeric leg_type_id: '.$journey_data['legs'][1]['leg_type_id']);
+
+        echo 'journey data 2 leg ->';
+        echo json_encode($journey_data);        
     }    
 
-    public function test_get_record_data_locations(){
-        $locations = $this->request_parser_get_quote->get_record_data_locations();
-        echo ' locations for testing:';
-        echo json_encode($locations);
+    public function test_get_all_locations_record_data(){
+        $locations = $this->request_parser_get_quote->get_all_locations_record_data();
+
         $this->assertTrue(is_array($this->request_parser_get_quote->config['location_fields']));
         $this->assertTrue(is_array($locations));
         $this->assertCount(2, $locations);
@@ -233,6 +238,7 @@ final class TQ_RequestParserGetQuoteJourneyTest extends TestCase
         $this->assertArrayHasKey('lat', $locations[1]);
         $this->assertArrayHasKey('lng', $locations[1]);
         $this->assertArrayHasKey('place_id', $locations[1]);
+
     }
 
     public function test_get_record_data_journey(){

@@ -16,17 +16,18 @@ class TQ_LocationRepository
 
     }
 
-    public function save($locations, $journey_order){
+    public function save($locations){
         $this->locations = $locations;
-        $this->journey_order = $journey_order;        
+        $this->location_record_ids = array();
         if(!$this->has_required_params()){
             echo 'cannot save without required params';
             return false;
         };
-        return $this->save_locations;
+        $this->save_locations();
+        return $this->saved_locations_in_order;
     }
 
-    public function get_save_locations(){
+    public function get_saved_locations(){
         return $this->saved_locations_in_order;
     }
 
@@ -36,11 +37,11 @@ class TQ_LocationRepository
             return false;
         };
       
-        if (empty($this->config['journey_order'])) {
+     /*   if (empty($this->config['journey_order'])) {
             echo 'TQ_LocationRepository: no journey_order array';            
             return false;
         };
-        $this->journey_order = $this->config['journey_order'];
+        $this->journey_order = $this->config['journey_order'];*/
         return true; 
     }
 
@@ -51,13 +52,9 @@ class TQ_LocationRepository
      public function save_locations() {
         // save all locations in journey
         $this->saved_locations_in_order = array();
-        foreach ($this->journey_order as $key => $address_index) {
-            $location_data = $this->locations[$this->journey_order[$address_index]];
-            if (empty($location)) {
-                self::debug('No data for location at index: ' . $address_index);
-                return false;
-            };
-            $location = $this->save_location($location);
+        foreach ($this->locations as $key => $location_data) {
+           
+            $location = $this->save_location($location_data);
             if(!is_array($location)){
                 echo 'could not save location record:';
                 var_dump($location);
@@ -70,18 +67,18 @@ class TQ_LocationRepository
     }
 
     private function save_location($record_data) {
+        // saves or updates is the same address / lat /lng exists
         if (empty($record_data['lat']) || empty($record_data['lng']) || empty($record_data['address'])) {
             return false;
         };
         $location_id = self::get_location_by_address($record_data);
         if (empty($location_id)) {
             //no match, create new location in database
-            $location_id = self::save_location_record($record_data);
-            if (empty($location_id)) {
+            $location = self::save_location_record($record_data);
+            if (!is_array($location)) {
                 return false;
             };
-            // add new id to array of location details
-            $location['id'] = $location_id;
+
         } else {
 
             //existing location
@@ -95,7 +92,32 @@ class TQ_LocationRepository
         return $location;
     }
 
-    public function save_location_record($idx = null, $record_data = null){
+    private function get_location_by_address($record_data) {
+        //check for an existing location by its address and lat lng coordinates
+        if (empty($record_data['lat'])) {
+            return false;
+        };
+        if (empty($record_data['lng'])) {
+            return false;
+        };
+
+        $lat = round($record_data['lat'] / 10, 7) * 10;
+        $lng = round($record_data['lng'] / 10, 7) * 10;
+        $query = array('address' => $record_data['address'],
+            'lat' => $lat,
+            'lng' => $lng);
+        $location = $this->cdb->get_rows('locations', $query,
+            array('id'));
+
+        if (empty($location)) {
+            return false;
+        };
+
+        return $location[0]['id'];
+
+    }
+
+    public function save_location_record($record_data = null){
         if(empty($record_data)){
             echo ' location record is empty';
         };

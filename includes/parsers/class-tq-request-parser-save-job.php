@@ -32,33 +32,9 @@ class TQ_RequestParserSaveJob {
         $this->post_data = $this->config['post_data'];
 	}
 
-	
     public function get_record_data_customer(){
         $quote_id = $this->get_param(array('name' => 'quote_id', 'optional' => true));
-    };
-
-
-
-
-
-        return array(
-            'quote_id'=>$quote_id,
-            'date_list'=>$date_list,
-            'time_list'=>$time_list,
-            'delivery_date'=> $delivery_date,
-            'delivery_time'=>$delivery_time,
-            'vehicle_id' => $vehicle_id,
-            'service_id' => $service_id,
-            'distance' => $distance,
-            'return_time' => $return_time,
-            'deliver_and_return' => $deliver_and_return,
-            'return_distance' => $return_distance,
-            'no_destinations' => $no_destinations,
-            'hours' => $hours,
-            'weight'=>$weight,
-            'surcharge_ids'=>$surcharge_ids
-        );
-    }	
+    }
 
     public function using_location_dates(){
         if(!isset($this->all_locations_optional_data)){

@@ -343,6 +343,10 @@ class TransitQuote_Pro4 {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/parsers/class-tq-request-parser-get-quote.php';
 
 		/**
+		 * The class responsible for parsing save job requests
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/parsers/class-tq-request-parser-save-job.php';
+		/**
 		 * The class responsible for generating custom reference number 
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-date-checker.php';
@@ -357,6 +361,22 @@ class TransitQuote_Pro4 {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-rate-selector-multi-leg.php';		
 		
+
+		/**
+		 * The class responsible for loading and saving locations
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/repositories/class-location-repository.php';		
+
+		/**
+		 * The class responsible for loading and saving journeys
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/repositories/class-journey-repository.php';		
+
+		/**
+		 * The class responsible for loading and saving quotes
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/repositories/class-quote-repository.php';	
+
 		$this->loader = new TransitQuote_Pro_Loader();
 	}
 	/**
