@@ -32,7 +32,8 @@ class TQ_RateSelector {
     public function __construct($config = null) {
         //merge config with defaults so all properties are present
 		$this->config = array_merge($this->default_config, $config);
-        $this->rate_options = $this->config['rate_options'];
+        $this->rate_options = $config['rate_options'];
+
         $this->cdb = $this->config['cdb'];
 	}
 
@@ -121,7 +122,6 @@ class TQ_RateSelector {
     }
 
     public function get_rates_fields_for_journey_options(){
-
 
         $date_checker_config = array('date_list'=>$this->rate_options['date_list'],
                                     'time_list'=>$this->rate_options['time_list'],

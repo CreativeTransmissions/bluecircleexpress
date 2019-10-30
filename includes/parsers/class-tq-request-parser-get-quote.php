@@ -565,23 +565,39 @@ class TQ_RequestParserGetQuote {
 
         $surcharge_ids = $this->get_surcharge_ids();
 
-        $delivery_date = $this->get_param(array('name' => 'delivery_date', 'optional' => true));     
-        $delivery_time = $this->get_param(array('name' => 'delivery_time', 'optional' => true));
-
+        $delivery_date = false;
+        $date_list = array();
         if($this->using_location_dates()){
+            echo  ' IS  USING LOCATION DATES';
             $date_list = $this->get_location_dates();
         } else {
-            $delivery_date = date("Y-m-d", strtotime($delivery_date));
+
+            echo  ' *NOT USING LOCATION DATES';
+
+            // whole job delivery date /time
+            $delivery_date = $this->get_param(array('name' => 'delivery_date', 'optional' => true));
+            if (!empty($delivery_date)) {
+                $delivery_date_time_obj = new \DateTime($delivery_date);
+            };
             $date_list = array($delivery_date);
         };
 
+        $delivery_time = false;
+        $time_list = array();
         if($this->using_location_times()){
+            echo  ' IS  USING LOCATION TMES';
+
             $time_list = $this->get_location_times();
         } else {
-            $time_list = array($delivery_time);
+            echo  ' NOT USING LOCATION TMES';
+
+            $delivery_time = $this->get_param(array('name' => 'delivery_time_submit', 'optional' => true));
+            if (!empty($delivery_time)) {
+                echo ' ** EMPY delivery_time';
+                $time_list = array($delivery_time);
+            };            
+            
         };        
-
-
 
         return array(
             'leg_type'=>$leg_type,
@@ -733,42 +749,21 @@ class TQ_RequestParserGetQuote {
         };
 
         $collection_date_field_name = 'address_' . $idx . '_collection_date';
-        if($idx==1){
-            $collection_date = $this->get_param(array('name' => 'delivery_date', 'optional' => true));
-            if (!empty($collection_date)) {
-                $journey_order_optional_fields['collection_date'] = $collection_date;
-                $collection_date_time_obj = new \DateTime($collection_date);
-            };
-            $collection_time = $this->get_param(array('name' => 'delivery_time_submit', 'optional' => true));
-            if (!empty($collection_time)) {
-                $timeparts = explode(':', $collection_time);
-                $collection_date_time_obj->setTime($timeparts[0],$timeparts[1]);
-                $journey_order_optional_fields['collection_date'] = $collection_date_time_obj->format('Y-m-d H:i:s');
-                $journey_order_optional_fields['collection_time'] = $collection_date_time_obj->format('H:i:s');
-
-            };
-
-
-        } else {
-            $collection_date = $this->get_param(array('name' => $collection_date_field_name, 'optional' => true));
-            if (!empty($collection_date)) {
-                $journey_order_optional_fields['collection_date'] = $collection_date;
-                $collection_date_time_obj = new \DateTime($collection_date);
-            };
-
-            $collection_time_field_name = 'address_' . $idx . '_collection_time_submit';
-            $collection_time = $this->get_param(array('name' => $collection_time_field_name, 'optional' => true));
-            if (!empty($collection_time)) {
-                $timeparts = explode(':', $collection_time);
-                $collection_date_time_obj->setTime($timeparts[0],$timeparts[1]);
-                $journey_order_optional_fields['collection_date'] = $collection_date_time_obj->format('Y-m-d H:i:s');
-                $journey_order_optional_fields['collection_time'] = $collection_date_time_obj->format('H:i:s');
-            };
-
+        $collection_date = $this->get_param(array('name' => $collection_date_field_name, 'optional' => true));
+        if (!empty($collection_date)) {
+            $journey_order_optional_fields['collection_date'] = $collection_date;
+            $collection_date_time_obj = new \DateTime($collection_date);
         };
 
+        $collection_time_field_name = 'address_' . $idx . '_collection_time_submit';
+        $collection_time = $this->get_param(array('name' => $collection_time_field_name, 'optional' => true));
+        if (!empty($collection_time)) {
+            $timeparts = explode(':', $collection_time);
+            $collection_date_time_obj->setTime($timeparts[0],$timeparts[1]);
+            $journey_order_optional_fields['collection_date'] = $collection_date_time_obj->format('Y-m-d H:i:s');
+            $journey_order_optional_fields['collection_time'] = $collection_date_time_obj->format('H:i:s');
+        };
        
-
         return $journey_order_optional_fields;
     }
 

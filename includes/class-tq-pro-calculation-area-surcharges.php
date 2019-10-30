@@ -58,6 +58,9 @@ class TQ_CalculationAreaSurcharges {
 
 	private function calc_area_surcharges(){
 		foreach ($this->config['surcharge_ids'] as $surcharge_id) {
+			if(!is_numeric($surcharge_id)){
+				continue;
+			};
 			$surcharge = $this->get_surcharge_for_id($surcharge_id);
 			$surcharge_cost = $this->get_surcharge_cost_for_id($surcharge_id);
 			$surcharge_name_formatted = strtolower(str_replace(' ', '_', $surcharge['surcharge_name']));

@@ -1540,15 +1540,16 @@ class TransitQuote_Pro_Public {
         echo json_encode($journey_fields);
         echo json_encode($journeys_locations_fields);
 
+        $request_parser_config = array( 'debugging'=>$this->debug,
+                                        'location_fields'=>$location_fields,
+                                        'journey_fields'=>$journey_fields,
+                                        'journeys_locations_fields'=>$journeys_locations_fields,
+                                        'post_data'=>$_POST,
+                                        'distance_unit'=> $this->distance_unit,
+                                        'use_dispatch_rates'=>$this->use_dispatch_rates
+                                    );
 
-        $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote(array( 'debugging'=>$this->debug,
-                                                                                                'location_fields'=>$location_fields,
-                                                                                                'journey_fields'=>$journey_fields,
-                                                                                                'journeys_locations_fields'=>$journeys_locations_fields,
-                                                                                                'post_data'=>$_POST,
-                                                                                                'distance_unit'=> $this->distance_unit,
-                                                                                                'use_dispatch_rates'=>$this->use_dispatch_rates
-                                                                                            ));
+        $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
         $this->rate_options_defaults = $this->get_default_rate_affecting_options();
         $this->rate_options = $this->request_parser_get_quote->get_rate_affecting_options();
         $this->rate_options = array_merge($this->rate_options_defaults, $this->rate_options);
@@ -1656,9 +1657,9 @@ class TransitQuote_Pro_Public {
     }
 
     public function calc_quote() {
+        $this->stages_html = '<table><tr><th>Item</th><th>Price</th><tr>';
 
-        $this->rate_selector = new TransitQuote_Pro4\TQ_RateSelector(array('cdb'=>$this->cdb,'
-                                                        rate_options'=>$this->rate_options));
+        $this->rate_selector = new TransitQuote_Pro4\TQ_RateSelector(array('cdb'=>$this->cdb,'rate_options'=>$this->rate_options));
 
 
         $this->rates = $this->rate_selector->get_rates_for_journey_options();
@@ -1856,9 +1857,7 @@ class TransitQuote_Pro_Public {
             $this->ajax->log_requests();
         };
 
-        // get the submit type for the submitted qutoe form
-        $submit_type = $this->ajax->param(array('name' => 'submit_type', 'optional' => true));
-        $response = self::get_quote($submit_type);
+        $response = self::get_quote();
 
         if ($response === false) {
             $response = array('success' => false,
@@ -2158,13 +2157,13 @@ class TransitQuote_Pro_Public {
 
         $location_record_data = $this->request_parser_get_quote->get_all_locations_record_data();
 
-        $this->location_repo = TransitQuote_Pro4\TQ_LocationRepository($repo_config);   
-        $saved_locations = $this->location_repo->save($location_record_data);
+        $this->location_repo = new TQ_LocationRepository($repo_config);   
+        $this->saved_locations = $this->location_repo->save($location_record_data);
 
         
         $journey_data = $this->request_parser_get_quote->get_journey_data();
 
-        $this->journey_repo = TransitQuote_Pro4\TQ_JourneyRepository($repo_config);        
+        $this->journey_repo = new \TQ_JourneyRepository($repo_config);        
         $this->journey_repo->save_journey($journey_data['journey']);
         $this->journey_repo->save_journey_stages($journey_data);
         $this->journey_repo->save_journey_legs($journey_data);          
@@ -2185,7 +2184,7 @@ class TransitQuote_Pro_Public {
 
         $area_surcharges_data = $this->area_surcharge_calculator->get_quote_surcharges_record_data();
         $area_surcharges_data = $this->update_quote_surcharges_records_with_quote_id($quote['id']);
-        $saved_quote_surcharge_ids = $this->quote_repository->save_qupte_surcharges($area_surcharges_data);     
+        $saved_quote_surcharge_ids = $this->quote_repository->save_quote_surcharges($area_surcharges_data);     
 
         if(!is_array($saved_quote_surcharge_ids)){
             return false;
