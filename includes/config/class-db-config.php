@@ -1765,6 +1765,15 @@ private function config_stages(){
       'default' => '',
       'format' => '%d'
     ),
+    'stage_order'=>
+    array (
+      'name' => 'stage_order',
+      'type' => 'int',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%d'
+    ),
     'created' => 
     array (
       'name' => 'created',

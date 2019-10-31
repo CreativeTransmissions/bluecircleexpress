@@ -2164,9 +2164,8 @@ class TransitQuote_Pro_Public {
         $journey_data = $this->request_parser_get_quote->get_journey_data();
 
         $this->journey_repo = new \TQ_JourneyRepository($repo_config);        
-        $this->journey_repo->save_journey($journey_data['journey']);
-        $this->journey_repo->save_journey_stages($journey_data);
-        $this->journey_repo->save_journey_legs($journey_data);          
+        $this->journey_repo->save($journey_data['journey']);
+        $this->journey_repo->save_journey_legs($journey_data['legs']);          
     }
 
     public function save_quote() {

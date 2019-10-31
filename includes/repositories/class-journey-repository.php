@@ -20,7 +20,7 @@ class TQ_JourneyRepository
         return $error;
     }
 
-     public function create_journeys_locations() {
+    public function create_journeys_locations() {
         // save all locations in journey
         $this->saved_locations = array();
         foreach ($this->journey_order as $key => $address_index) {
@@ -57,7 +57,7 @@ class TQ_JourneyRepository
             return false;
         };
 
-        $record_data['id'] = $row_id;
+        $this->journey_id = $record_data['id'] = $row_id;
         return $record_data;              
     }
 
@@ -65,10 +65,73 @@ class TQ_JourneyRepository
      
     }   
 
+    public function save_journey_stages(){
 
-    public function save_journey_legs($id){
-      
     }
+
+    public function save_journey_stage($id){
+      
+    }  
+
+    public function save_journey_legs($legs = null){
+
+        if(empty($legs)){
+            return false;
+        };
+
+        $this->legs = $legs;
+        
+        $stageIdx = 0;
+        $this->current_leg_type = $this->get_first_leg_type();
+
+        $stage_data = $this->create_stage_record($stageIdx);
+        $this->current_stage = $this->save_journey_stage($stage_data);
+
+        foreach ($this->legs as $key => $leg) {
+            $leg_data = $this->create_leg_record($leg); 
+            $leg_data = $this->save_journey_leg($leg);
+            if($leg_data['leg_type'] != $this->current_leg_type){
+                ++$stageIdx;
+                $stage_data = $this->create_stage_record($stageIdx);
+                $this->current_stage = $this->save_journey_stage($stage_data);
+            }
+        }
+    }
+
+    public function get_first_leg_type(){
+        return $this->legs[0]['leg_type'];
+    }
+
+    public function create_stage_record($stageIdx){
+        $stage_data = array('journey_id'=>$this->journey_id,'stage_order'=>$stageIdx);
+        return $stage_data;
+    }
+
+    public function save_journey_stage($stage_data = null){
+        if(empty($stage_data)){
+            echo ' stage_data record is empty';
+        };
+        $row_id = $this->cdb->update_row('stages', $stage_data);
+        if($row_id===false){
+            return false;
+        };
+
+        $this->stage_id = $record_data['id'] = $row_id;
+        return $record_data;
+    }
+
+    public function save_journey_leg($leg_data = null){
+        if(empty($leg_data)){
+            echo ' leg_data record is empty';
+        };
+        $row_id = $this->cdb->update_row('legs', $leg_data);
+        if($row_id===false){
+            return false;
+        };
+
+        $this->leg_id = $record_data['id'] = $row_id;
+        return $record_data;               
+    }        
 
     public function log($error){
         if($this->debug==true){
