@@ -25,10 +25,14 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
         $this->assertArrayHasKey('data', $response, ' no data json in get quote response');
 
         $data = $response['data'];
+        
         $this->assertArrayHasKey('quote', $data, ' no quote in response data');
-
         $quote = $data['quote'];        
         $this->assertArrayHasKey('id', $quote, ' quote has no id');
+
+        $this->assertArrayHasKey('journey', $data, ' no journey in response data');
+        $journey = $data['journey'];        
+        $this->assertArrayHasKey('id', $journey, ' journey has no id');
 
         $public = null;
 

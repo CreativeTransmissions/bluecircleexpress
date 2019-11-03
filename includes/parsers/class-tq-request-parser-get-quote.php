@@ -95,10 +95,6 @@ class TQ_RequestParserGetQuote {
         return $record_data;
     }
 
-    public function get_record_data_journey_locations(){
-
-    }     
-
     public function get_record_data($fields){
 
         //init the record array
@@ -769,7 +765,7 @@ class TQ_RequestParserGetQuote {
        
         return $journey_order_optional_fields;
     }
-
+    
 	public function get_param($options){
 
         //retrieve a passed parameter from a get or post request and perform basic validation

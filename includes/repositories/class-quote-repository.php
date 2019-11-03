@@ -13,7 +13,6 @@ class TQ_QuoteRepository
 
         $this->config = array_merge($defaults,$config);
         $this->cdb = $this->config['cdb']; 
-        $this->ajax = new WP_Sell_Software\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
     }
 
@@ -22,9 +21,25 @@ class TQ_QuoteRepository
         return $error;
     }
 
+    public function create_quote_rec($quote){
+        $quote_rec = array('total'=>$quote['total'],
+                            'basic_cost'=>$quote['basic_cost'],
+                            'distance_cost'=>$quote['distance_cost'],
+                            'time_cost'=>$quote['time_cost'],
+                            'notice_cost'=>$quote['notice_cost'],
+                            'tax_cost'=>$quote['tax_cost'],
+                            'breakdown'=>$quote['breakdown'],
+                            'rates'=>$quote['rates']);
+        return $quote_rec;
+    }
     public function save($record_data = null){
         if(empty($record_data)){
             echo ' qutoe record is empty';
+        };
+
+        $record_data = $this->create_quote_rec($record_data);
+        if(empty($record_data)){
+            trigger_error('save quote: record_data empty', E_USER_ERROR);            
         };
         $row_id = $this->cdb->update_row('quotes', $record_data);
         if($row_id===false){

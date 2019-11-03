@@ -2177,13 +2177,10 @@ class TransitQuote_Pro_Public {
 
     public function save_quote() {
         
-        
-
-        $quote_data = $this->request_parser_get_quote->get_quote_data();
         $repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
         $this->quote_repo = TransitQuote_Pro4\TQ_QuoteRepository($repo_config);        
 
-        $quote = $this->quote_repository->save($quote_data);
+        $quote = $this->quote_repository->save($this->quote);
         if(!is_array($quote)){
             return false;
         };
