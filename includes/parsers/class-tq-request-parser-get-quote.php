@@ -50,10 +50,12 @@ class TQ_RequestParserGetQuote {
         return $locations_in_journey_order;
     }    
 
-    public function get_record_data_journeys_locations(){
+    public function get_record_data_journeys_locations($saved_locations){
         if(!isset($this->journey_order)){
             $this->journey_order = $this->get_journey_order_from_request_data();
         };
+
+        $record_data_journeys_locations = array();
 
         foreach ($this->journey_order as $key => $address_index) {
             $location = $this->get_record_data_location($address_index);
@@ -62,8 +64,8 @@ class TQ_RequestParserGetQuote {
                 return false;
             };
            
-            $journey_order_rec = array('journey_id' => $this->journey['id'],
-                'location_id' => $location['id'],
+            $journey_order_rec = array(
+                'location_id'=>$saved_locations[$key]['id'],
                 'journey_order' => $key,
                 'created' => date('Y-m-d G:i:s'),
                 'modified' => date('Y-m-d G:i:s'));
@@ -72,8 +74,9 @@ class TQ_RequestParserGetQuote {
             $journey_order_rec = array_merge($journey_order_rec, $journey_order_optional_fields);
 
             // store ids in array ready for save
-            $this->locations_in_journey_order[$key] = $journey_order_rec;
+            $record_data_journeys_locations[] = $journey_order_rec;
         };
+        return $record_data_journeys_locations;
     }    
 
 

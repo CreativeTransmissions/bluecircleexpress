@@ -22,18 +22,22 @@ class TQ_QuoteRepository
         return $error;
     }
 
-    public function save_quote(){
-      
+    public function save($record_data = null){
+        if(empty($record_data)){
+            echo ' qutoe record is empty';
+        };
+        $row_id = $this->cdb->update_row('quotes', $record_data);
+        if($row_id===false){
+            return false;
+        };
+
+        $this->quote_id = $record_data['id'] = $row_id;
+        return $record_data;              
     }
 
-    public function quote_stages($email){
+    public function save_quote_stages($email){
     
-    }   
-
-    public function save_stages($email){
-    
-    }   
-
+    }  
 
     public function load_quote($quote_id){
        

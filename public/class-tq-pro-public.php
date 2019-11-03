@@ -1799,8 +1799,9 @@ class TransitQuote_Pro_Public {
         if (is_array($this->quote)) {
             $response = array('success' => 'true',
                 'data' => array('quote' => $this->quote,
-                    'rates' => $this->quote['rates'],
-                    'rate_options' => $this->rate_options,
+                                'journey'=>$this->journey,
+                                'rates' => $this->quote['rates'],
+                                'rate_options' => $this->rate_options,
                     'html'=>$this->stages_html));
 
         } else {
@@ -2164,8 +2165,14 @@ class TransitQuote_Pro_Public {
         $journey_data = $this->request_parser_get_quote->get_journey_data();
 
         $this->journey_repo = new \TQ_JourneyRepository($repo_config);        
-        $this->journey_repo->save($journey_data['journey']);
-        $this->journey_repo->save_journey_legs($journey_data['legs']);          
+        $this->journey = $this->journey_repo->save($journey_data['journey']);
+        $this->journey_repo->save_journey_legs($this->journey['id'], $journey_data['legs']);        
+
+        //data for journeys_locations records
+        $journeys_locations_data = $this->request_parser_get_quote->get_record_data_journeys_locations($this->saved_locations);  
+        $this->journey_repo->save_journeys_locations($this->journey['id'], $journeys_locations_data);        
+
+        
     }
 
     public function save_quote() {

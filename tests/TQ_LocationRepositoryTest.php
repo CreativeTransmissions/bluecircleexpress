@@ -25,6 +25,7 @@ final class TQ_LocationRepositoryTest extends TestCase
         $this->assertCount(2, $this->location_repository->saved_locations_in_order); 
         $this->assertTrue(is_numeric($saved_locations[0]['id']),' id is not numeric');
         $this->assertTrue(is_numeric($saved_locations[1]['id']),' id is not numeric');
+        echo json_encode($saved_locations);
 
     }
 

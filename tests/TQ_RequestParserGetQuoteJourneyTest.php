@@ -62,7 +62,7 @@ final class TQ_RequestParserGetQuoteJourneyTest extends TestCase
     protected function tearDown(){
         $this->request_parser_get_quote = null;
     }
-
+/*
     public function test_get_journey_distance() {  
         $journey_distance = $this->request_parser_get_quote->get_journey_distance();
         $this->assertTrue(is_numeric($journey_distance));
@@ -250,6 +250,36 @@ final class TQ_RequestParserGetQuoteJourneyTest extends TestCase
         $this->assertArrayHasKey('distance', $journey);
         $this->assertArrayHasKey('time', $journey);
         
+    }
+*/
+    public function test_get_record_data_journeys_locations(){
+        $saved_locations = json_decode('[{"id":"79","address":"125 London Wall, London, UK","appartment_no":"","street_number":"125","postal_town":"London","route":"London Wall","administrative_area_level_2":"Greater London","administrative_area_level_1":"England","country":"United Kingdom","postal_code":"EC2Y 5AJ","lat":"51.51757000000000000000","lng":"-0.09374800000000000000","place_id":"ChIJKSv0f6ocdkgR8kEi1NgkK2w","created":"2019-10-21 13:17:39","modified":"2019-10-21 13:17:39"},{"id":"80","address":"789 Dumbarton Road, Glasgow, UK","appartment_no":"","street_number":"789","postal_town":"Glasgow","route":"Dumbarton Road","administrative_area_level_2":"Glasgow City","administrative_area_level_1":"Scotland","country":"United Kingdom","postal_code":"G11 6NA","lat":"55.87193800000000000000","lng":"-4.32703000000000000000","place_id":"ChIJFQIi4-9FiEgR1CQQGZVRA50","created":"2019-10-21 13:17:39","modified":"2019-10-21 13:17:39"}]', true);
+
+        $journey_location_records = $this->request_parser_get_quote->get_record_data_journeys_locations($saved_locations);
+        $this->assertTrue(is_array($journey_location_records));
+        $this->assertCount(2, $journey_location_records);
+
+   //     $this->assertArrayHasKey('location_status_id', $journey_location_records[0]);
+        $this->assertArrayHasKey('location_id', $journey_location_records[0]);
+        $this->assertArrayHasKey('journey_order', $journey_location_records[0]);
+   //     $this->assertArrayHasKey('note', $journey_location_records[0]);
+    //    $this->assertArrayHasKey('contact_name', $journey_location_records[0]);
+      //  $this->assertArrayHasKey('contact_phone', $journey_location_records[0]);
+   //     $this->assertArrayHasKey('collection_date', $journey_location_records[0]);
+//$this->assertArrayHasKey('time_type', $journey_location_records[0]);
+    //    $this->assertArrayHasKey('visit_type', $journey_location_records[0]);
+
+  //      $this->assertArrayHasKey('location_status_id', $journey_location_records[1]);
+        $this->assertArrayHasKey('location_id', $journey_location_records[1]);
+        $this->assertArrayHasKey('journey_order', $journey_location_records[1]);
+    //    $this->assertArrayHasKey('note', $journey_location_records[1]);
+   /*     $this->assertArrayHasKey('contact_name', $journey_location_records[1]);
+        $this->assertArrayHasKey('contact_phone', $journey_location_records[1]);
+        $this->assertArrayHasKey('collection_date', $journey_location_records[1]);
+        $this->assertArrayHasKey('time_type', $journey_location_records[1]);
+        $this->assertArrayHasKey('visit_type', $locations[1]);
+    
+*/
     }
   
 }

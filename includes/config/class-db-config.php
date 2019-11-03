@@ -1879,9 +1879,9 @@ private function config_quotes_stages(){
       'default' => '',
       'format' => '%f'
     ),
-  'leg_total' => 
+  'stage_total' => 
     array (
-      'name' => 'leg_total',
+      'name' => 'stage_total',
       'type' => 'decimal(10,2)',
       'null' => 'null',
       'auto' => '',
