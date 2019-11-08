@@ -170,7 +170,6 @@ class TQ_RequestParserGetQuote {
         $this->journey_data = [];
 
         $journey = [];
-        echo 'distance_unit: '.$this->config['distance_unit'];
         $journey['distance'] = $this->get_journey_distance();
         $journey['duration'] = $this->get_journey_duration_hours();
         $journey['deliver_and_return'] = $this->get_deliver_and_return();
@@ -198,7 +197,7 @@ class TQ_RequestParserGetQuote {
         if(!isset($this->legs)){
             $this->parse_legs();
         };
-        echo 'looping through: '.count($this->legs).' legs.';
+       // echo 'looping through: '.count($this->legs).' legs.';
         // first stage     
         foreach ($this->legs as $key => $leg) {
 
@@ -222,7 +221,8 @@ class TQ_RequestParserGetQuote {
         */
 
         $this->stage_data = array();
-
+        $stage_data = array('distance'=>0, 'hours'=>0);
+        
         if(!isset($this->legs)){
             $this->parse_legs();
         };

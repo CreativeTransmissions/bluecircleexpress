@@ -238,6 +238,12 @@ class TransitQuote_Pro_Public {
 
         $this->ask_for_date = (bool) $this->get_setting('', 'ask_for_date', true);
         $this->ask_for_time = (bool) $this->get_setting('', 'ask_for_time', true);
+
+        $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
+        $this->use_weekend_rates = self::get_use_weekend_rates();
+        $this->use_holiday_rates = self::get_use_holiday_rates();        
+        $this->use_dispatch_rates = self::get_use_dispatch_rates();
+        $this->distance_unit = self::get_distance_unit();        
     }
 
     public function check_shortcode() {
@@ -1520,16 +1526,13 @@ class TransitQuote_Pro_Public {
     }
 
     /*** Front end ajax methods ***/
-    public function get_quote() {
-        $this->get_plugin_settings();
+
+    public function get_quote_init(){
+        self::get_plugin_settings();
         $this->quote = false;
         $this->job_rate = 'standard';
         $this->response_msg = 'There was an error calculating the quote'; //default error
-        $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
-        $this->use_weekend_rates = self::get_use_weekend_rates();
-        $this->use_holiday_rates = self::get_use_holiday_rates();        
-        $this->use_dispatch_rates = self::get_use_dispatch_rates();
-        $this->distance_unit = self::get_distance_unit();
+
 
         //fields to get from request for loacation record
         $location_fields = $this->cdb->get_table_col_names('locations');
@@ -1554,16 +1557,22 @@ class TransitQuote_Pro_Public {
         $this->tax_name = self::get_tax_name();
 
         $this->rounding_type = self::get_rounding_type();
-        $this->return_percentage = self::get_return_percentage();
+        $this->return_percentage = self::get_return_percentage();        
+    }
+    public function get_quote() {
+        
       /*  var_dump($this->rate_options);
         if ($this->rate_options['distance'] <= 0) {
             $this->response_msg = 'Distance must be greater than 0';
             return self::build_get_quote_response();
         };*/
          
-        if($this->use_dispatch_rates){
+        if($this->use_dispatch_rates === true){
+            echo ' ************ MuLTI STAGE *******';
             return self::get_quote_multi_stage();
         } else {
+            echo ' ************ SINGLE STAGE *******';
+
             return self::get_quote_single_stage();
         };
     }
@@ -1578,31 +1587,32 @@ class TransitQuote_Pro_Public {
         if(!is_array($journey)){
             $this->quote = false;
             $this->response_msg = 'Error Processing Journey';
-            return self::build_get_quote_response();
+            return self::build_get_quote_response_multi_stage();
         };
 
         $this->quote_record = self::save_quote();    
         if(!is_array($this->quote_record)){
             $this->quote = false;
             $this->response_msg = 'Error Processing Quote';
-            return self::build_get_quote_response();
+            return self::build_get_quote_response_multi_stage();
         };
+        $this->quote['id'] = $this->quote_record['id'];
 
         $quote_surcharge_ids = self::save_quote_surcharges();
         if(!is_array($quote_surcharge_ids)){
             $this->quote = false;
             $this->response_msg = 'Error Processing Surcharges';
-            return self::build_get_quote_response();
+            return self::build_get_quote_response_multi_stage();
         };
 
         $quote_stage_ids = self::save_quote_stages();
         if(!is_array($quote_stage_ids)){
             $this->quote = false;
             $this->response_msg = 'Error Processing Quote for Stages';
-            return self::build_get_quote_response();
+            return self::build_get_quote_response_multi_stage();
         };
 
-        return self::build_get_quote_response();        
+        return self::build_get_quote_response_multi_stage();        
     }
 
     public function get_quote_single_stage(){
@@ -1624,6 +1634,7 @@ class TransitQuote_Pro_Public {
             $this->response_msg = 'Error Processing Quote';
             return self::build_get_quote_response();
         };
+        $this->quote['id'] = $this->quote_record['id'];
 
         $quote_surcharge_ids = self::save_quote_surcharges();
         if(!is_array($quote_surcharge_ids)){
@@ -1731,7 +1742,7 @@ class TransitQuote_Pro_Public {
             'return_distance' => $this->rate_options['return_distance'],
             'return_time' => $this->rate_options['return_time'],
             'tax_rate' => $this->tax_rate,
-            'tax_name' => 'VAT',
+            'tax_name' =>$this->tax_name,
             'rounding_type' => $this->rounding_type);
 
         $this->calc_config = $calc_config;
@@ -1750,6 +1761,7 @@ class TransitQuote_Pro_Public {
     public function calc_quote_multi_leg(){
         $basic_cost_total = 0;
         $distance_cost_total = 0;
+        $time_cost_total = 0;
         $this->stage_data = $this->request_parser_get_quote->get_stage_data();
         $this->stages_html = '<table><tr><th>Item</th><th>Price</th><tr>';
         foreach ($this->stage_data as $key => $stage_data) {
@@ -1771,7 +1783,9 @@ class TransitQuote_Pro_Public {
 
 
             $basic_cost_total = $basic_cost_total + $stage_quote['basic_cost'];
-            $distance_cost_total = $distance_cost_total + $stage_quote['distance_cost'];            
+            $distance_cost_total = $distance_cost_total + $stage_quote['distance_cost'];
+            $time_cost_total = $time_cost_total + $stage_quote['time_cost'];            
+
         };
 
 
@@ -1780,7 +1794,8 @@ class TransitQuote_Pro_Public {
         $this->quote_totals = array('basic_cost'=>$basic_cost_total,
                                     'tax_cost'=>$this->tax_cost,
                                     'total'=>$basic_cost_total+$this->tax_cost,
-                                    'distance_cost_total'=>$distance_cost_total,
+                                    'distance_cost'=>$distance_cost_total,
+                                    'time_cost'=>$time_cost_total,
                                     'stage_data'=>$this->stage_data
                                 );
 
@@ -1799,6 +1814,7 @@ class TransitQuote_Pro_Public {
             'distance' => $rate_options_for_stage['distance'],
             'hours' => $rate_options_for_stage['hours'],
             'tax_rate' => 0,
+            'tax_name' =>'',            
             'rounding_type' => $this->rounding_type);
 
         $calculation = new TransitQuote_Pro4\TQ_Calculation($calc_config);
@@ -1850,11 +1866,31 @@ class TransitQuote_Pro_Public {
     }
 
     private function build_get_quote_response() {
+        echo $this->response_msg;
+        if (is_array($this->quote)) {
+            $response = array('success' => 'true',
+                              'data' => array('quote' => $this->quote,
+                                'journey'=>$this->journey,
+                                //'rates' => $this->quote['rates'],
+                                'rate_options' => $this->rate_options));
+
+        } else {
+            $response = array('success' => 'false',
+                'msg' => $this->response_msg,
+                'data' => array('rates' =>  $this->quote['rates'],
+                    'rate_options' => $this->rate_options));
+        echo $this->response_msg;
+
+        }
+        return $response;
+    }
+
+    private function build_get_quote_response_multi_stage() {
+        echo $this->response_msg;
         if (is_array($this->quote)) {
             $response = array('success' => 'true',
                 'data' => array('quote' => $this->quote,
                                 'journey'=>$this->journey,
-                                'rates' => $this->quote['rates'],
                                 'rate_options' => $this->rate_options,
                     'html'=>$this->stages_html));
 
@@ -1912,7 +1948,7 @@ class TransitQuote_Pro_Public {
         if ($this->log_requests == true) {
             $this->ajax->log_requests();
         };
-
+        self::get_quote_init();
         $response = self::get_quote();
 
         if ($response === false) {
@@ -2221,7 +2257,6 @@ class TransitQuote_Pro_Public {
         $this->journey_repo = new \TQ_JourneyRepository($repo_config);        
         $this->journey = $this->journey_repo->save($journey_data['journey']);
         $this->journey_repo->save_journey_legs($this->journey['id'], $journey_data['legs']);        
-
         //data for journeys_locations records
         $journeys_locations_data = $this->request_parser_get_quote->get_record_data_journeys_locations($this->saved_locations);  
         return $this->journey_repo->save_journeys_locations($this->journey['id'], $journeys_locations_data);
@@ -2230,7 +2265,7 @@ class TransitQuote_Pro_Public {
 
     public function save_quote() {
 
-        echo json_encode($this->quote);
+//        echo json_encode($this->quote);
         
         $repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
         $this->quote_repo = new \TQ_QuoteRepository($repo_config);        
@@ -2256,9 +2291,20 @@ class TransitQuote_Pro_Public {
     }
 
     public function save_quote_stages() {
+        $this->journey_stages = $this->journey_repo->get_journey_stages();
 
-        echo 'stage data: ';
-        echo json_encode($this->stage_data);
+        $no_journey_stages = count($this->journey_stages);
+        $stage_data_length = count($this->stage_data);
+
+        if($no_journey_stages != $stage_data_length){
+            trigger_error(' save_quote_stages: record_data length mismatch', E_USER_ERROR);            
+
+            return false;
+        };
+
+        foreach ($this->stage_data as $key => $stage_data) {
+            $this->stage_data[$key] = array_merge($this->journey_stages[$key], $stage_data);
+        };
 
         $quote_stage_ids = $this->quote_repo->save_quote_stages($this->stage_data);
 
@@ -3673,7 +3719,6 @@ class TransitQuote_Pro_Public {
     public function render_route_details($waypoints) {
         $route_row_data = array();
         foreach ($waypoints as $key => $waypoint) {
-            echo json_encode($waypoint);
             $route_row_data[] = array('value' => $this->format_waypoint($waypoint));
         };
         $this->table_renderer = new TransitQuote_Pro4\TQ_TableRenderer();        

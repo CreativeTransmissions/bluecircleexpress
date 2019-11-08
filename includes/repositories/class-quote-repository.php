@@ -22,15 +22,21 @@ class TQ_QuoteRepository
     }
 
     public function create_quote_rec($quote){
+     /*   echo ' **** create_quote_rec: ';
+        echo json_encode($quote);
+        {"basic_cost":1098.5,"tax_cost":"0.00","total":"1098.50","distance_cost_total":1098.5,"stage_data":[{"distance":467.448,"hours":5.216666666666667,"quote":{"total":"1098.50","total_before_rounding":1098.5028,"distance":467.448,"distance_cost_before_rounding":1098.5028,"distance_cost":"1098.50","outward_distance":467.448,"return_distance":0,"outward_cost":1098.5028,"return_cost":0,"basic_cost":"1098.50","stop_cost":0,"breakdown":[{"distance":0,"distance_cost":0,"type":"set amount","rate":"0.00","cost":"0.00"},{"distance":467.448,"distance_cost":1098.5028,"type":"per distance unit","rate":"2.35","cost":1098.5028},{"distance":0,"distance_cost":1098.5028,"type":"per distance unit","rate":"2.35","return_percentage":100,"cost":0}],"rate_hour":"0.00","time_cost":0,"rate_tax":0,"tax_cost":0}}],"job_rate":"standard","rates":[{"distance":467.448,"hours":5.216666666666667,"quote":{"total":"1098.50","total_before_rounding":1098.5028,"distance":467.448,"distance_cost_before_rounding":1098.5028,"distance_cost":"1098.50","outward_distance":467.448,"return_distance":0,"outward_cost":1098.5028,"return_cost":0,"basic_cost":"1098.50","stop_cost":0,"breakdown":[{"distance":0,"distance_cost":0,"type":"set amount","rate":"0.00","cost":"0.00"},{"distance":467.448,"distance_cost":1098.5028,"type":"per distance unit","rate":"2.35","cost":1098.5028},{"distance":0,"distance_cost":1098.5028,"type":"per distance unit","rate":"2.35","return_percentage":100,"cost":0}],"rate_hour":"0.00","time_cost":0,"rate_tax":0,"tax_cost":0}}],"weight_cost":0,"area_surcharges_cost":0,"tax_name":"","tax_rate":"0","subtotal":"1098.50","total_cost":1098.5}*/
         $quote_rec = array('total'=>$quote['total'],
                             'basic_cost'=>$quote['basic_cost'],
                             'distance_cost'=>$quote['distance_cost'],
                             'time_cost'=>$quote['time_cost'],
                             ///'notice_cost'=>$quote['notice_cost'],
-                            'tax_cost'=>$quote['tax_cost'],
-                            'breakdown'=>json_encode($quote['breakdown'])
+                            'tax_cost'=>$quote['tax_cost']
                            // 'rates'=>$quote['rates']
                         );
+
+        if(isset($quote['breakdown'])){
+            $quote_rec['breakdown'] =json_encode($quote['breakdown']);
+        };
         return $quote_rec;
     }
     public function save($record_data = null){
@@ -53,14 +59,69 @@ class TQ_QuoteRepository
 
 
     public function save_quote_stages($stage_data){
-    
+
+        echo ' UPDATED save_quote_stages: ';
+        echo json_encode($stage_data);
+
+        if(!is_numeric($this->quote_id)){
+            trigger_error('save_quote_stages: cannot save until quote has been saved', E_USER_ERROR);
+            return false;      
+        };
+
+        if(empty($this->quote_id)){
+            trigger_error('save_quote_stages empty: cannot save until quote has been saved', E_USER_ERROR);
+            return false;      
+        };        
+        $saved_stage_ids = [];
+        foreach ($stage_data as $key => $stage) {
+            $quotes_stages_rec = $this->create_quotes_stages_rec($stage);
+            $quote_stage_rec = $this->save_quote_stage($quotes_stages_rec);
+            $saved_stage_ids[] = $quote_stage_rec['id'];
+        };
+        return $saved_stage_ids;
     }  
+
+    public function create_quotes_stages_rec($stage_data){
+        echo ' ********************** STAGES REC>>>>>>>';
+        echo json_encode($stage_data);
+        /*
+{"journey_id":331,"stage_order":0,"id":189,"distance":467.448,"hours":5.216666666666667,"quote":{"total":"1098.50","total_before_rounding":1098.5028,"distance":467.448,"distance_cost_before_rounding":1098.5028,"distance_cost":"1098.50","outward_distance":467.448,"return_distance":0,"outward_cost":1098.5028,"return_cost":0,"basic_cost":"1098.50","stop_cost":0,"breakdown":[{"distance":0,"distance_cost":0,"type":"set amount","rate":"0.00","cost":"0.00"},{"distance":467.448,"distance_cost":1098.5028,"type":"per distance unit","rate":"2.35","cost":1098.5028},{"distance":0,"distance_cost":1098.5028,"type":"per distance unit","rate":"2.35","return_percentage":100,"cost":0}],"rate_hour":"0.00","time_cost":0,"rate_tax":0,"tax_cost":0}}
+        */
+        $quote_stage_rec = array('stage_id'=>$stage_data['id'],
+                                'journey_id'=>$stage_data['journey_id'],
+                                'quote_id'=>$this->quote_id,
+                                'unit_cost'=>$stage_data['quote']['distance_cost'],
+                                'time_cost'=>$stage_data['quote']['time_cost'],
+                                'stage_total'=>$stage_data['quote']['basic_cost']
+                            );
+        return $quote_stage_rec;
+    }
+
+    public function save_quote_stage($record_data){
+        if(empty($record_data)){
+            trigger_error('save_quote_stage: record_data empty', E_USER_ERROR); 
+            return false;      
+        };
+        $record_data['created'] = date('Y-m-d G:i:s');
+        $record_data['modified'] = $record_data['created'];
+        $row_id = $this->cdb->update_row('quotes_stages', $record_data);
+        if($row_id===false){
+            return false;
+        };
+
+        $record_data['id'] = $row_id;
+        return $record_data;              
+    }    
 
     public function save_quote_surcharges($surcharges){
         if(!is_numeric($this->quote_id)){
             trigger_error('save_quote_surcharges: cannot save until quote has been saved', E_USER_ERROR);
             return false;      
         };
+        if(empty($this->quote_id)){
+            trigger_error('save_quote_surcharges empty: cannot save until quote has been saved', E_USER_ERROR);
+            return false;      
+        };          
         $saved_surcharge_ids = [];
         foreach ($surcharges as $key => $surcharge) {
             $quotes_surcharges_rec = $this->create_quotes_surcharges_rec($surcharge);
@@ -87,7 +148,7 @@ class TQ_QuoteRepository
             return false;
         };
 
-        $this->quote_id = $record_data['id'] = $row_id;
+        $record_data['id'] = $row_id;
         return $record_data;              
     }
 

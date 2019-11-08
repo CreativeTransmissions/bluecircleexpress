@@ -45,7 +45,6 @@ final class TQ_RouteEmailRendererTest extends TestCase
         $this->assertEquals('Route', $this->route_renderer->header);
         $this->assertCount(2, $this->route_renderer->waypoint_text_lists);
         
-        echo json_encode($this->route_renderer->rows);
     }
 }
 ?>

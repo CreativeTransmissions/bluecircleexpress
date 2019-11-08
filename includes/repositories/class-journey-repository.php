@@ -48,9 +48,7 @@ class TQ_JourneyRepository
 
         foreach ($this->legs as $key => $leg) {
             $leg_data = $this->create_leg_record($key, $leg); 
-            echo ' SAVInG LEG: '.$key;
             $leg_data = $this->save_journey_leg($leg_data);
-            var_dump($leg_data);
             $this->leg_recs[] = $leg_data;
             if($leg_data['leg_type_id'] != $this->current_leg_type){
                 ++$stageIdx;
@@ -170,6 +168,10 @@ class TQ_JourneyRepository
 
         $journeys_locations_rec['id'] = $row_id;
         return $journeys_locations_rec;               
+    }
+
+    public function get_journey_stages(){
+        return $this->stage_recs;
     }
 
     public function log($error){

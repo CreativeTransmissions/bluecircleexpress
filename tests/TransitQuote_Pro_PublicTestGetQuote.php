@@ -17,19 +17,20 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
     }
    
 
-    public function test_get_quote() {
+    public function test_get_quote_multi_stage() {
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
 
         $_POST = $_REQUEST = $this->test_get_quote_job_post_data;
+        $public->get_quote_init();
         $public->get_plugin_settings();
-        $response = $public->get_quote();
+        $response = $public->get_quote_multi_stage();
         $this->assertTrue(is_array($response));
         $this->assertArrayHasKey('success', $response, ' no success status in get quote response');
         $this->assertArrayHasKey('data', $response, ' no data json in get quote response');
         $this->assertEquals('true', $response['success'], ' quote success is false');
         $data = $response['data'];
-        echo '*************************test_get_quote:';
-        var_dump($data);
+
+        $this->assertTrue(is_array($public->stage_data), 'stage data not array');
         
         $this->assertArrayHasKey('quote', $data, ' no quote in response data');
         $quote = $data['quote'];        
@@ -42,12 +43,40 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
         $public = null;
 
     }
+/*
+    public function test_get_quote_single_stage() {
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+
+        $_POST = $_REQUEST = $this->test_get_quote_job_post_data;
+        $public->get_quote_init();
+        $public->get_plugin_settings();
+        $public->use_dispatch_rates = false;
+        $response = $public->get_quote_single_stage();
+        $this->assertTrue(is_array($response));
+        $this->assertArrayHasKey('success', $response, ' no success status in get quote response');
+        $this->assertArrayHasKey('data', $response, ' no data json in get quote response');
+        $this->assertEquals('true', $response['success'], ' quote success is false');
+        $data = $response['data'];
+      //  echo '*************************test_get_quote:';
+        //echo json_encode($data);
+        
+        $this->assertArrayHasKey('quote', $data, ' no quote in response data');
+        $quote = $data['quote'];        
+        $this->assertArrayHasKey('id', $quote, ' quote has no id');
+
+        $this->assertArrayHasKey('journey', $data, ' no journey in response data');
+        $journey = $data['journey'];        
+        $this->assertArrayHasKey('id', $journey, ' journey has no id');
+
+        $public = null;
+
+    }*/
 
     public function test_get_quote_area_surchrages() {
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
 
         $_POST = $_REQUEST = $this->test_get_quote_job_post_data_area_surcharges;
-        $public->get_plugin_settings();
+        $public->get_quote_init();
         $response = $public->get_quote();
         $this->assertTrue(is_array($response));
         $this->assertArrayHasKey('success', $response, ' no success status in get quote response');
