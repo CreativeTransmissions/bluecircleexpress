@@ -1536,10 +1536,6 @@ class TransitQuote_Pro_Public {
         $journey_fields = $this->cdb->get_table_col_names('journeys');
         $journeys_locations_fields = $this->cdb->get_table_col_names('journeys_locations');
 
-        echo json_encode($location_fields);
-        echo json_encode($journey_fields);
-        echo json_encode($journeys_locations_fields);
-
         $request_parser_config = array( 'debugging'=>$this->debug,
                                         'location_fields'=>$location_fields,
                                         'journey_fields'=>$journey_fields,
@@ -2176,11 +2172,13 @@ class TransitQuote_Pro_Public {
     }
 
     public function save_quote() {
+
+        echo json_encode($this->quote);
         
         $repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
-        $this->quote_repo = TransitQuote_Pro4\TQ_QuoteRepository($repo_config);        
+        $this->quote_repo = new \TQ_QuoteRepository($repo_config);        
 
-        $quote = $this->quote_repository->save($this->quote);
+        $quote = $this->quote_repo->save($this->quote);
         if(!is_array($quote)){
             return false;
         };

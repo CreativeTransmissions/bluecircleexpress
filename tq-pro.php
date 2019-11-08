@@ -1,6 +1,26 @@
 <?php
  error_reporting(E_ALL );
  ini_set('display_errors', 1);
+
+ function tq_wp_error_handler($errno, $errstr, $errfile, $errline)
+{
+    if (!(error_reporting() & $errno)) {
+        // This error code is not included in error_reporting, so let it fall
+        // through to the standard PHP error handler
+        return false;
+    }
+
+    if(($errstr =='Parameter 1 to wp_default_scripts() expected to be a reference, value given')||
+    	($errstr =='Parameter 1 to wp_default_styles() expected to be a reference, value given')||
+    	($errstr =='Parameter 1 to wp_default_packages() expected to be a reference, value given')){
+		/* Don't execute PHP internal error handler */
+		return true;        	
+    } else {
+    	return false;
+    };
+}
+// set to the user defined error handler
+set_error_handler("tq_wp_error_handler");
 /**
  * The plugin bootstrap file
  *
