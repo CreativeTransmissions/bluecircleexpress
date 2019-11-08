@@ -139,7 +139,6 @@ class TQ_RequestParserGetQuote {
             break;
             default:
                 $param_name = 'address' . $idx_str . '_' . $field;
-                echo PHP_EOL.'getting: '.$param_name;
                 $val = $this->get_param(array('name' => $param_name, 'optional' => true));
                 if (empty($val)) {
                     $record_data[$field] = '';
@@ -567,12 +566,8 @@ class TQ_RequestParserGetQuote {
         $delivery_date = false;
         $date_list = array();
         if($this->using_location_dates()){
-            echo  ' IS  USING LOCATION DATES';
             $date_list = $this->get_location_dates();
         } else {
-
-            echo  ' *NOT USING LOCATION DATES';
-
             // whole job delivery date /time
             $delivery_date = $this->get_param(array('name' => 'delivery_date', 'optional' => true));
             if (!empty($delivery_date)) {
@@ -584,12 +579,8 @@ class TQ_RequestParserGetQuote {
         $delivery_time = false;
         $time_list = array();
         if($this->using_location_times()){
-            echo  ' IS  USING LOCATION TMES';
-
             $time_list = $this->get_location_times();
         } else {
-            echo  ' NOT USING LOCATION TMES';
-
             $delivery_time = $this->get_param(array('name' => 'delivery_time_submit', 'optional' => true));
             if (!empty($delivery_time)) {
                 echo ' ** EMPY delivery_time';

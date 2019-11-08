@@ -26,10 +26,11 @@ class TQ_QuoteRepository
                             'basic_cost'=>$quote['basic_cost'],
                             'distance_cost'=>$quote['distance_cost'],
                             'time_cost'=>$quote['time_cost'],
-                            'notice_cost'=>$quote['notice_cost'],
+                            ///'notice_cost'=>$quote['notice_cost'],
                             'tax_cost'=>$quote['tax_cost'],
-                            'breakdown'=>$quote['breakdown'],
-                            'rates'=>$quote['rates']);
+                            'breakdown'=>json_encode($quote['breakdown'])
+                           // 'rates'=>$quote['rates']
+                        );
         return $quote_rec;
     }
     public function save($record_data = null){
@@ -50,9 +51,45 @@ class TQ_QuoteRepository
         return $record_data;              
     }
 
-    public function save_quote_stages($email){
+
+    public function save_quote_stages($stage_data){
     
     }  
+
+    public function save_quote_surcharges($surcharges){
+        if(!is_numeric($this->quote_id)){
+            trigger_error('save_quote_surcharges: cannot save until quote has been saved', E_USER_ERROR);
+            return false;      
+        };
+        $saved_surcharge_ids = [];
+        foreach ($surcharges as $key => $surcharge) {
+            $quotes_surcharges_rec = $this->create_quotes_surcharges_rec($surcharge);
+            $quote_surcharge_rec = $this->save_quote_surcharge($surcharge);
+            $saved_surcharge_ids[] = $quote_surcharge_rec['id'];
+        };
+        return $saved_surcharge_ids;
+    }
+
+    public function create_quotes_surcharges_rec($surcharge){
+        return array('quote_id'=>$this->quote_id,
+                    'surcharge_id'=>$surcharge['surcharge_id'],
+                    'amount'=>$surcharge['surcharge_id']);
+    }
+
+    public function save_quote_surcharge($record_data){
+        if(empty($record_data)){
+            trigger_error('save_quote_surcharge: record_data empty', E_USER_ERROR);            
+        };
+        $record_data['created'] = date('Y-m-d G:i:s');
+        $record_data['modified'] = $record_data['created'];
+        $row_id = $this->cdb->update_row('quote_surcharges', $record_data);
+        if($row_id===false){
+            return false;
+        };
+
+        $this->quote_id = $record_data['id'] = $row_id;
+        return $record_data;              
+    }
 
     public function load_quote($quote_id){
        

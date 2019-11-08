@@ -1562,19 +1562,77 @@ class TransitQuote_Pro_Public {
         };*/
          
         if($this->use_dispatch_rates){
-            $this->quote = self::calc_quote_multi_leg();
+            return self::get_quote_multi_stage();
         } else {
-            $this->quote = self::calc_quote();
+            return self::get_quote_single_stage();
         };
-    
+    }
+
+    public function get_quote_multi_stage(){
+        $this->quote = self::calc_quote_multi_leg();
         self::add_surcharges_to_quote();
         self::add_tax_to_quote();
         $this->stages_html .= '</table>';
 
-        self::save_journey();
-        $this->quote_record = self::save_quote();
-        return self::build_get_quote_response();
+        $journey = self::save_journey();
+        if(!is_array($journey)){
+            $this->quote = false;
+            $this->response_msg = 'Error Processing Journey';
+            return self::build_get_quote_response();
+        };
 
+        $this->quote_record = self::save_quote();    
+        if(!is_array($this->quote_record)){
+            $this->quote = false;
+            $this->response_msg = 'Error Processing Quote';
+            return self::build_get_quote_response();
+        };
+
+        $quote_surcharge_ids = self::save_quote_surcharges();
+        if(!is_array($quote_surcharge_ids)){
+            $this->quote = false;
+            $this->response_msg = 'Error Processing Surcharges';
+            return self::build_get_quote_response();
+        };
+
+        $quote_stage_ids = self::save_quote_stages();
+        if(!is_array($quote_stage_ids)){
+            $this->quote = false;
+            $this->response_msg = 'Error Processing Quote for Stages';
+            return self::build_get_quote_response();
+        };
+
+        return self::build_get_quote_response();        
+    }
+
+    public function get_quote_single_stage(){
+
+        $this->quote = self::calc_quote();
+        self::add_surcharges_to_quote();
+        self::add_tax_to_quote();
+        
+        $journey = self::save_journey();
+        if(!is_array($journey)){
+            $this->quote = false;
+            $this->response_msg = 'Error Processing Journey';
+            return self::build_get_quote_response();
+        };
+
+        $this->quote_record = self::save_quote();    
+        if(!is_array($this->quote_record)){
+            $this->quote = false;
+            $this->response_msg = 'Error Processing Quote';
+            return self::build_get_quote_response();
+        };
+
+        $quote_surcharge_ids = self::save_quote_surcharges();
+        if(!is_array($quote_surcharge_ids)){
+            $this->quote = false;
+            $this->response_msg = 'Error Processing Surcharges';
+            return self::build_get_quote_response();
+        };
+
+        return self::build_get_quote_response();
     }
 
     public function get_default_rate_affecting_options(){
@@ -1805,6 +1863,7 @@ class TransitQuote_Pro_Public {
                 'msg' => $this->response_msg,
                 'data' => array('rates' =>  $this->quote['rates'],
                     'rate_options' => $this->rate_options));
+        echo $this->response_msg;
 
         }
         return $response;
@@ -2151,7 +2210,6 @@ class TransitQuote_Pro_Public {
     public function save_journey() {
         $repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
 
-
         $location_record_data = $this->request_parser_get_quote->get_all_locations_record_data();
 
         $this->location_repo = new TQ_LocationRepository($repo_config);   
@@ -2166,8 +2224,7 @@ class TransitQuote_Pro_Public {
 
         //data for journeys_locations records
         $journeys_locations_data = $this->request_parser_get_quote->get_record_data_journeys_locations($this->saved_locations);  
-        $this->journey_repo->save_journeys_locations($this->journey['id'], $journeys_locations_data);        
-
+        return $this->journey_repo->save_journeys_locations($this->journey['id'], $journeys_locations_data);
         
     }
 
@@ -2183,15 +2240,33 @@ class TransitQuote_Pro_Public {
             return false;
         };
 
+        return $quote;
+    }
+
+    public function save_quote_surcharges(){
+
         $area_surcharges_data = $this->area_surcharge_calculator->get_quote_surcharges_record_data();
-        $area_surcharges_data = $this->update_quote_surcharges_records_with_quote_id($quote['id']);
-        $saved_quote_surcharge_ids = $this->quote_repository->save_quote_surcharges($area_surcharges_data);     
+        $saved_quote_surcharge_ids = $this->quote_repo->save_quote_surcharges($area_surcharges_data);     
 
         if(!is_array($saved_quote_surcharge_ids)){
             return false;
         };
 
-        return $quote;
+        return $saved_quote_surcharge_ids;
+    }
+
+    public function save_quote_stages() {
+
+        echo 'stage data: ';
+        echo json_encode($this->stage_data);
+
+        $quote_stage_ids = $this->quote_repo->save_quote_stages($this->stage_data);
+
+        if(!is_array($quote_stage_ids)){
+            return false;
+        };
+
+        return $quote_stage_ids;
     }
 
     function get_journey_order_from_request_data() {

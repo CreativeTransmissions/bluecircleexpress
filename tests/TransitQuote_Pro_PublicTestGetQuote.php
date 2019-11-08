@@ -26,8 +26,10 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
         $this->assertTrue(is_array($response));
         $this->assertArrayHasKey('success', $response, ' no success status in get quote response');
         $this->assertArrayHasKey('data', $response, ' no data json in get quote response');
-
+        $this->assertEquals('true', $response['success'], ' quote success is false');
         $data = $response['data'];
+        echo '*************************test_get_quote:';
+        var_dump($data);
         
         $this->assertArrayHasKey('quote', $data, ' no quote in response data');
         $quote = $data['quote'];        
@@ -50,6 +52,7 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
         $this->assertTrue(is_array($response));
         $this->assertArrayHasKey('success', $response, ' no success status in get quote response');
         $this->assertArrayHasKey('data', $response, ' no data json in get quote response');
+        $this->assertEquals('true', $response['success'], ' quote success is false');
 
         $data = $response['data'];
         
