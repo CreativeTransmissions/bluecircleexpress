@@ -19,6 +19,15 @@ final class TQ_QuoteRepositoryTest extends TestCase
 
         $this->multi_stage_quote = json_decode('{"total":"682.72","total_before_rounding":682.722,"distance":"290.52","distance_cost_before_rounding":682.722,"distance_cost":"682.72","outward_distance":"290.52","return_distance":0,"outward_cost":682.722,"return_cost":0,"basic_cost":682.72,"stop_cost":0,"breakdown":[{"distance":0,"distance_cost":0,"type":"set amount","rate":"0.00","cost":"0.00"},{"distance":290.52,"distance_cost":682.722,"type":"per distance unit","rate":"2.35","cost":682.722},{"distance":0,"distance_cost":682.722,"type":"per distance unit","rate":"2.35","return_percentage":"100","cost":0}],"rate_hour":"0.00","time_cost":0,"rate_tax":"0","tax_cost":"0.00","job_rate":"standard","weight_cost":0,"area_surcharges_cost":0,"tax_name":"","tax_rate":"0","subtotal":"682.72","total_cost":682.72}',true);
 
+
+        $this->quote_data_2_dispatch_and_standard = json_decode('{"basic_cost":2835.7200000000003,"tax_cost":"567.14","total":"3402.86","distance_cost":2835.7200000000003,"time_cost":0,"weight_cost":0,"area_surcharges_cost":0,"tax_name":"","tax_rate":"20","subtotal":"2835.72","total_cost":3402.8599999999997,"id":4}', true);
+
+        $this->stage_data_2_dispatch_and_standard = json_decode('[{"journey_id":8,"stage_order":0,"id":1,"distance":927.9173399627098,"hours":13.856388888888889,"leg_type":"dispatch","quote":{"total":"603.15","total_before_rounding":603.1462709757614,"distance":927.9173399627098,"distance_cost_before_rounding":603.1462709757614,"distance_cost":"603.15","outward_distance":927.9173399627098,"return_distance":0,"outward_cost":603.1462709757614,"return_cost":0,"basic_cost":"603.15","stop_cost":0,"breakdown":[{"distance":0,"distance_cost":0,"type":"set amount","rate":"0.00","cost":"0.00"},{"distance":927.9173399627098,"distance_cost":603.1462709757614,"type":"per distance unit","rate":"0.65","cost":603.1462709757614},{"distance":0,"distance_cost":603.1462709757614,"type":"per distance unit","rate":"0.65","return_percentage":100,"cost":0}],"rate_hour":"0.00","time_cost":0,"rate_tax":0,"tax_cost":0}},{"journey_id":8,"stage_order":1,"id":2,"distance":950.0298321939092,"hours":14.360277777777778,"leg_type":"standard","quote":{"total":"2232.57","total_before_rounding":2232.570105655687,"distance":950.0298321939092,"distance_cost_before_rounding":2232.570105655687,"distance_cost":"2232.57","outward_distance":950.0298321939092,"return_distance":0,"outward_cost":2232.570105655687,"return_cost":0,"basic_cost":"2232.57","stop_cost":0,"breakdown":[{"distance":0,"distance_cost":0,"type":"set amount","rate":"0.00","cost":"0.00"},{"distance":950.0298321939092,"distance_cost":2232.570105655687,"type":"per distance unit","rate":"2.35","cost":2232.570105655687},{"distance":0,"distance_cost":2232.570105655687,"type":"per distance unit","rate":"2.35","return_percentage":100,"cost":0}],"rate_hour":"0.00","time_cost":0,"rate_tax":0,"tax_cost":0}}]', true);
+
+        $this->example_stage_data_rec_dispatch_stage = json_decode('{"journey_id":8,"stage_order":0,"id":1,"distance":927.9173399627098,"hours":13.856388888888889,"leg_type":"dispatch","quote":{"total":"603.15","total_before_rounding":603.1462709757614,"distance":927.9173399627098,"distance_cost_before_rounding":603.1462709757614,"distance_cost":"603.15","outward_distance":927.9173399627098,"return_distance":0,"outward_cost":603.1462709757614,"return_cost":0,"basic_cost":"603.15","stop_cost":0,"breakdown":[{"distance":0,"distance_cost":0,"type":"set amount","rate":"0.00","cost":"0.00"},{"distance":927.9173399627098,"distance_cost":603.1462709757614,"type":"per distance unit","rate":"0.65","cost":603.1462709757614},{"distance":0,"distance_cost":603.1462709757614,"type":"per distance unit","rate":"0.65","return_percentage":100,"cost":0}],"rate_hour":"0.00","time_cost":0,"rate_tax":0,"tax_cost":0}}, true');
+
+        $this->example_stage_data_rec_standared_stage = json_decode('{"journey_id":8,"stage_order":1,"id":2,"distance":950.0298321939092,"hours":14.360277777777778,"leg_type":"standard","quote":{"total":"2232.57","total_before_rounding":2232.570105655687,"distance":950.0298321939092,"distance_cost_before_rounding":2232.570105655687,"distance_cost":"2232.57","outward_distance":950.0298321939092,"return_distance":0,"outward_cost":2232.570105655687,"return_cost":0,"basic_cost":"2232.57","stop_cost":0,"breakdown":[{"distance":0,"distance_cost":0,"type":"set amount","rate":"0.00","cost":"0.00"},{"distance":950.0298321939092,"distance_cost":2232.570105655687,"type":"per distance unit","rate":"2.35","cost":2232.570105655687},{"distance":0,"distance_cost":2232.570105655687,"type":"per distance unit","rate":"2.35","return_percentage":100,"cost":0}],"rate_hour":"0.00","time_cost":0,"rate_tax":0,"tax_cost":0}}, true');
+
         $this->cdb = TransitQuote_Pro4::get_custom_db();
         $repo_config = array('cdb' => $this->cdb, 'debugging' =>true);
         $this->quote_repo = new TQ_QuoteRepository($repo_config);        
@@ -40,13 +49,27 @@ final class TQ_QuoteRepositoryTest extends TestCase
         $quote_surcharge_ids = $this->quote_repo->save_quote_surcharges($this->test_surcharge_area_data);
         $this->assertTrue(is_array($quote_surcharge_ids));
         $this->assertTrue(is_numeric($quote_surcharge_ids[0]));
+         
+    }
 
-        $quote_stage_ids = $this->quote_repo->save_quote_stages($this->multi_stage_quote);
+    public function test_save_quote_stage_data_2_dispatch_and_standard(){
+
+        $quote = $this->quote_repo->save($this->quote_data_2_dispatch_and_standard);
+        $this->assertTrue(is_array($quote));
+        $this->assertTrue(is_numeric($quote['id']));
+        $this->assertTrue(!empty($quote['id']), ' saved quote id empty');
+
+        $quote_surcharge_ids = $this->quote_repo->save_quote_surcharges($this->test_surcharge_area_data);
+        $this->assertTrue(is_array($quote_surcharge_ids));
+        $this->assertTrue(is_numeric($quote_surcharge_ids[0]));
+
+        $quote_stage_ids = $this->quote_repo->save_quote_stages($this->stage_data_2_dispatch_and_standard);
         $this->assertTrue(is_array($quote_stage_ids));
         $this->assertTrue(is_numeric($quote_stage_ids[0]));
         $this->assertTrue(is_numeric($quote_stage_ids[1]));
          
     }
+
 }    
 
 ?>

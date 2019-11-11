@@ -105,6 +105,24 @@
 			</div>	
 		</fieldset>
 	</div>
+
+<div class="row row-rates">		
+		<fieldset>
+			<legend>Dispatch Rates (for journey from base/depo to first pickup)</legend>
+			<div class="inline-field">
+				<label for="hour">Set Price Dispatch</label>
+				<input class="input-long" type="text" name="amount_dispatch" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?> Dispatch</label>
+				<input class="input-long" type="text" name="unit_dispatch" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per Hour Dispatch</label>
+				<input class="input-long" type="text" name="hour_dispatch" />
+			</div>	
+		</fieldset>
+	</div>	
 		
 
 	<input type="hidden" name="id" value=""/>
@@ -162,6 +180,10 @@
 			<th>Out of Hours Set Price</th>
 			<th>Out of Hours Price Per <?php echo $this->admin->distance_unit; ?></th>
 			<th>Out of Hours Price Per Hour</th>
+
+			<th>Dispatch Set Price</th>
+			<th>Dispatch Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th>Dispatch Price Per Hour</th>
 
 			<th class="actions"><div class="spinner"></div></tr>
 		</thead>

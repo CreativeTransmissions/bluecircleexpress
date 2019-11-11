@@ -44,8 +44,9 @@ class TQ_JourneyRepository
         $this->current_leg_type = $this->get_first_leg_type();
 
         $stage_data = $this->create_stage_record($stageIdx);
-        $this->stage_recs[] = $this->current_stage = $this->save_journey_stage($stage_data);
-
+        $this->current_stage = $this->save_journey_stage($stage_data);
+        $this->current_stage['leg_type_id'] = $this->current_leg_type; // add leg_type_id to be stored against stage
+        $this->stage_recs[] = $this->current_stage;
         foreach ($this->legs as $key => $leg) {
             $leg_data = $this->create_leg_record($key, $leg); 
             $leg_data = $this->save_journey_leg($leg_data);
@@ -53,7 +54,9 @@ class TQ_JourneyRepository
             if($leg_data['leg_type_id'] != $this->current_leg_type){
                 ++$stageIdx;
                 $stage_data = $this->create_stage_record($stageIdx);
-                $this->stage_recs[] = $this->current_stage = $this->save_journey_stage($stage_data);
+                $this->current_stage = $this->save_journey_stage($stage_data);
+                $this->current_stage['leg_type_id'] = $this->current_leg_type; // add leg_type_id to be stored against stage
+                $this->stage_recs[] = $this->current_stage;
             }
         }
     }

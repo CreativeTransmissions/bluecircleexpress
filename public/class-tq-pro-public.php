@@ -1583,8 +1583,14 @@ class TransitQuote_Pro_Public {
         self::add_tax_to_quote();
         $this->stages_html .= '</table>';
 
-        $journey = self::save_journey();
-        if(!is_array($journey)){
+        $saved_ok = self::save_journey();
+        if($saved_ok===false){
+            $this->quote = false;
+            $this->response_msg = 'Error Processing Journey';
+            return self::build_get_quote_response_multi_stage();
+        };
+
+        if(!is_array($this->journey)){
             $this->quote = false;
             $this->response_msg = 'Error Processing Journey';
             return self::build_get_quote_response_multi_stage();
@@ -1866,7 +1872,6 @@ class TransitQuote_Pro_Public {
     }
 
     private function build_get_quote_response() {
-        echo $this->response_msg;
         if (is_array($this->quote)) {
             $response = array('success' => 'true',
                               'data' => array('quote' => $this->quote,
@@ -1879,14 +1884,13 @@ class TransitQuote_Pro_Public {
                 'msg' => $this->response_msg,
                 'data' => array('rates' =>  $this->quote['rates'],
                     'rate_options' => $this->rate_options));
-        echo $this->response_msg;
+                echo 'QUOTE IS NOT ARRRAY:'.$this->response_msg;
 
         }
         return $response;
     }
 
     private function build_get_quote_response_multi_stage() {
-        echo $this->response_msg;
         if (is_array($this->quote)) {
             $response = array('success' => 'true',
                 'data' => array('quote' => $this->quote,
@@ -1899,7 +1903,7 @@ class TransitQuote_Pro_Public {
                 'msg' => $this->response_msg,
                 'data' => array('rates' =>  $this->quote['rates'],
                     'rate_options' => $this->rate_options));
-        echo $this->response_msg;
+                echo 'QUOTE IS NOT ARRRAY:'.$this->response_msg;
 
         }
         return $response;
@@ -2259,7 +2263,8 @@ class TransitQuote_Pro_Public {
         $this->journey_repo->save_journey_legs($this->journey['id'], $journey_data['legs']);        
         //data for journeys_locations records
         $journeys_locations_data = $this->request_parser_get_quote->get_record_data_journeys_locations($this->saved_locations);  
-        return $this->journey_repo->save_journeys_locations($this->journey['id'], $journeys_locations_data);
+        $save_success = $this->journey_repo->save_journeys_locations($this->journey['id'], $journeys_locations_data);
+        return  $save_success;
         
     }
 
@@ -2305,7 +2310,9 @@ class TransitQuote_Pro_Public {
         foreach ($this->stage_data as $key => $stage_data) {
             $this->stage_data[$key] = array_merge($this->journey_stages[$key], $stage_data);
         };
-
+echo '*************************************** stage_data>>>>>';
+echo json_encode($this->stage_data);
+echo '<<<<<<';
         $quote_stage_ids = $this->quote_repo->save_quote_stages($this->stage_data);
 
         if(!is_array($quote_stage_ids)){

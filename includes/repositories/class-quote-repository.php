@@ -60,9 +60,9 @@ class TQ_QuoteRepository
 
     public function save_quote_stages($stage_data){
 
-        echo ' UPDATED save_quote_stages: ';
+    /*    echo ' UPDATED save_quote_stages: ';
         echo json_encode($stage_data);
-
+*/
         if(!is_numeric($this->quote_id)){
             trigger_error('save_quote_stages: cannot save until quote has been saved', E_USER_ERROR);
             return false;      
@@ -82,17 +82,14 @@ class TQ_QuoteRepository
     }  
 
     public function create_quotes_stages_rec($stage_data){
-        echo ' ********************** STAGES REC>>>>>>>';
-        echo json_encode($stage_data);
-        /*
-{"journey_id":331,"stage_order":0,"id":189,"distance":467.448,"hours":5.216666666666667,"quote":{"total":"1098.50","total_before_rounding":1098.5028,"distance":467.448,"distance_cost_before_rounding":1098.5028,"distance_cost":"1098.50","outward_distance":467.448,"return_distance":0,"outward_cost":1098.5028,"return_cost":0,"basic_cost":"1098.50","stop_cost":0,"breakdown":[{"distance":0,"distance_cost":0,"type":"set amount","rate":"0.00","cost":"0.00"},{"distance":467.448,"distance_cost":1098.5028,"type":"per distance unit","rate":"2.35","cost":1098.5028},{"distance":0,"distance_cost":1098.5028,"type":"per distance unit","rate":"2.35","return_percentage":100,"cost":0}],"rate_hour":"0.00","time_cost":0,"rate_tax":0,"tax_cost":0}}
-        */
+        
         $quote_stage_rec = array('stage_id'=>$stage_data['id'],
                                 'journey_id'=>$stage_data['journey_id'],
                                 'quote_id'=>$this->quote_id,
                                 'unit_cost'=>$stage_data['quote']['distance_cost'],
                                 'time_cost'=>$stage_data['quote']['time_cost'],
-                                'stage_total'=>$stage_data['quote']['basic_cost']
+                                'stage_total'=>$stage_data['quote']['basic_cost'],
+                                'rates'=>$stage_data['leg_type_id']
                             );
         return $quote_stage_rec;
     }
