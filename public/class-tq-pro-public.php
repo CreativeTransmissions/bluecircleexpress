@@ -1528,7 +1528,6 @@ class TransitQuote_Pro_Public {
     /*** Front end ajax methods ***/
 
     public function get_quote_init(){
-        self::get_plugin_settings();
         $this->quote = false;
         $this->job_rate = 'standard';
         $this->response_msg = 'There was an error calculating the quote'; //default error
@@ -1566,7 +1565,6 @@ class TransitQuote_Pro_Public {
             $this->response_msg = 'Distance must be greater than 0';
             return self::build_get_quote_response();
         };*/
-         
         if($this->use_dispatch_rates === true){
             echo ' ************ MuLTI STAGE *******';
             return self::get_quote_multi_stage();
@@ -1768,7 +1766,7 @@ class TransitQuote_Pro_Public {
         $basic_cost_total = 0;
         $distance_cost_total = 0;
         $time_cost_total = 0;
-        $this->stage_data = $this->request_parser_get_quote->get_stage_data();
+        $this->initial_stage_data = $this->stage_data = $this->request_parser_get_quote->get_stage_data();
         $this->stages_html = '<table><tr><th>Item</th><th>Price</th><tr>';
         foreach ($this->stage_data as $key => $stage_data) {
             // override distance and hours with that for the stage
@@ -1952,6 +1950,7 @@ class TransitQuote_Pro_Public {
         if ($this->log_requests == true) {
             $this->ajax->log_requests();
         };
+        self::get_plugin_settings();        
         self::get_quote_init();
         $response = self::get_quote();
 
@@ -2310,9 +2309,9 @@ class TransitQuote_Pro_Public {
         foreach ($this->stage_data as $key => $stage_data) {
             $this->stage_data[$key] = array_merge($this->journey_stages[$key], $stage_data);
         };
-echo '*************************************** stage_data>>>>>';
+/*echo '*************************************** stage_data>>>>>';
 echo json_encode($this->stage_data);
-echo '<<<<<<';
+echo '<<<<<<';*/
         $quote_stage_ids = $this->quote_repo->save_quote_stages($this->stage_data);
 
         if(!is_array($quote_stage_ids)){

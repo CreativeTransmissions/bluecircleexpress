@@ -17,13 +17,13 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
         $this->post_data_2_dispatch_and_standard = json_decode('{"address_1_address":"12+Stephenson+Road,+Summertown,+TN,+USA","address_1_appartment_no":"","address_1_postal_code":"","address_1_street_number":"12","address_1_route":"Stephenson+Road","address_1_postal_town":"","address_1_administrative_area_level_2":"Lawrence+County","address_1_administrative_area_level_1":"Tennessee","address_1_country":"United+States","address_1_lat":"35.4179","address_1_lng":"-87.26147800000001","address_1_place_id":"ChIJWz_tMbM9Y4gR2eC8hHzlmww","address_1_journey_order":"1","address_2_address":"Brooklyn+Bridge,+Brooklyn+Bridge,+New+York,+NY,+USA","address_2_appartment_no":"","address_2_postal_code":"","address_2_street_number":"","address_2_route":"Brooklyn+Bridge","address_2_postal_town":"","address_2_administrative_area_level_2":"New+York+County","address_2_administrative_area_level_1":"New+York","address_2_country":"United+States","address_2_lat":"40.7060855","address_2_lng":"-73.99686429999997","address_2_place_id":"ChIJK3vOQyNawokRXEa9errdJiU","address_2_journey_order":"2","date":"11+November,+2019","delivery_date":"11-11-2019","delivery_time":"12:00+PM","delivery_time_submit":"12:00","weight":"","deliver_and_return":"0","first_name":"","last_name":"","phone":"","email":"","description":"","job_id":"","rate_hour":"","distance":"1877.95","time":"28.22","return_distance":"","return_time":"","time_cost":"","notice_cost":"","distance_cost":"","total":"","basic_cost":"","action":"tq_pro4_get_quote","rate_tax":"","tax_cost":"","breakdown":"","surcharge_areas":"","quote_id":"","vehicle_id":"1","service_id":"1","submit_type":"get_quote","directions":"[{\"distance\":{\"text\":\"1,493 km\",\"value\":1493019},\"duration\":{\"text\":\"13 hours 51 mins\",\"value\":49883},\"end_address\":\"12 Stephenson Rd, Summertown, TN 38483, USA\",\"end_location\":{\"lat\":35.4178219,\"lng\":-87.2622594},\"start_address\":\"1713 Hamilton Blvd, South Plainfield, NJ 07080, USA\",\"start_location\":{\"lat\":40.568286,\"lng\":-74.41747950000001},\"traffic_speed_entry\":[],\"via_waypoint\":[],\"via_waypoints\":[]},{\"distance\":{\"text\":\"1,529 km\",\"value\":1528598},\"duration\":{\"text\":\"14 hours 22 mins\",\"value\":51697},\"end_address\":\"Brooklyn Bridge Promenade, New York, NY 10038, USA\",\"end_location\":{\"lat\":40.7060696,\"lng\":-73.99688700000002},\"start_address\":\"12 Stephenson Rd, Summertown, TN 38483, USA\",\"start_location\":{\"lat\":35.4178219,\"lng\":-87.2622594},\"traffic_speed_entry\":[],\"via_waypoint\":[],\"via_waypoints\":[]}]"}',true);
     }
    
-
+/*
     public function test_get_quote_multi_stage() {
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
 
         $_POST = $_REQUEST = $this->test_get_quote_job_post_data;
+        $public->get_plugin_settings();        
         $public->get_quote_init();
-        $public->get_plugin_settings();
         $response = $public->get_quote_multi_stage();
         $this->assertTrue(is_array($response));
         $this->assertArrayHasKey('success', $response, ' no success status in get quote response');
@@ -43,15 +43,16 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
 
         $public = null;
 
-    }
+    }*/
 
     public function test_get_quote_multi_stage_2_dispatch_and_standard() {
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
 
         $_POST = $_REQUEST = $this->post_data_2_dispatch_and_standard;
-        $public->get_quote_init();
         $public->get_plugin_settings();
-        $response = $public->get_quote_multi_stage();
+        $public->use_dispatch_rates = true ;
+        $public->get_quote_init();
+        $response = $public->get_quote();
         $this->assertTrue(is_array($response));
         $this->assertArrayHasKey('success', $response, ' no success status in get quote response');
         $this->assertArrayHasKey('data', $response, ' no data json in get quote response');
@@ -59,7 +60,15 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
         $data = $response['data'];
 
         $this->assertTrue(is_array($public->stage_data), 'stage data not array');
+        $this->assertCount(2, $public->stage_data, 'test_get_quote_multi_stage_2_dispatch_and_standard:  no of stages <> 2');
+        $this->assertTrue($public->stage_data[0]['distance']>0, 'dispatch distance above 0');
+        $this->assertEquals(1493.019, $public->stage_data[0]['distance'], 'dispatch distance incorrect');
+        $this->assertEquals(13.856388888889, $public->stage_data[0]['hours'], 'delivery distance incorrect');
         
+        $this->assertTrue($public->stage_data[1]['distance']>0, 'delivery distance above 0');
+        $this->assertEquals(1528.598, $public->stage_data[1]['distance'], 'delivery distance incorrect');
+        $this->assertEquals(14.360277777778, $public->stage_data[1]['hours'], 'delivery distance incorrect');
+
         $this->assertArrayHasKey('quote', $data, ' no quote in response data');
         $quote = $data['quote'];        
         $this->assertArrayHasKey('id', $quote, ' quote has no id');
@@ -67,6 +76,8 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
         $this->assertArrayHasKey('journey', $data, ' no journey in response data');
         $journey = $data['journey'];        
         $this->assertArrayHasKey('id', $journey, ' journey has no id');
+        $this->assertEquals(3021.617, $journey['distance']);
+
 
         $public = null;
 
@@ -76,8 +87,9 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
 
         $_POST = $_REQUEST = $this->test_get_quote_job_post_data;
-        $public->get_quote_init();
         $public->get_plugin_settings();
+        $public->use_dispatch_rates = true ;
+        $public->get_quote_init();
         $public->use_dispatch_rates = false;
         $response = $public->get_quote_single_stage();
         $this->assertTrue(is_array($response));
@@ -99,11 +111,13 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
         $public = null;
 
     }*/
-
+/*
     public function test_get_quote_area_surchrages() {
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
 
         $_POST = $_REQUEST = $this->test_get_quote_job_post_data_area_surcharges;
+        $public->get_plugin_settings();
+        $public->use_dispatch_rates = true ;
         $public->get_quote_init();
         $response = $public->get_quote();
         $this->assertTrue(is_array($response));
@@ -123,5 +137,5 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
 
         $public = null;
 
-    }
+    }*/
 }

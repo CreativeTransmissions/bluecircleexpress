@@ -221,32 +221,40 @@ class TQ_RequestParserGetQuote {
         */
 
         $this->stage_data = array();
-        $stage_data = array('distance'=>0, 'hours'=>0);
-        
+        $stage_data = array(); // init stage totals
+        $stage_data['leg_type'] = $this->get_leg_type(0);
+        $stage_data['distance'] = 0;
+        $stage_data['hours'] = 0;
+
         if(!isset($this->legs)){
             $this->parse_legs();
         };
         // first stage     
         foreach ($this->legs as $key => $leg) {
+
             if($this->leg_starts_new_stage($key)){
-                if($key>0){
-                    //add current stage data to array of stages before moving to next one
-                    $this->stage_data[] = $stage_data;
-                };
-                $stage_data = array('distance'=>0,
-                                    'hours'=>0);
+                //add current stage data to array of stages before moving to next one
+                $this->stage_data[] = $stage_data;
+
+                //create new stage
+                $stage_data = array('distance'=>0,'hours'=>0);
                 $stage_data['leg_type'] = $this->get_leg_type($key);
-            };
-            $stage_data['distance'] = $stage_data['distance'] + $this->get_leg_distance($key, $this->config['distance_unit']);
-            $stage_data['hours'] = $stage_data['hours'] + $this->get_leg_duration_hours($key);            
+                $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
+                $stage_data['hours'] = $this->get_leg_duration_hours($key);       
+            } else {
+                // add leg data to stage totals
+                $stage_data['distance'] = $stage_data['distance'] + $this->get_leg_distance($key, $this->config['distance_unit']);
+                $stage_data['hours'] = $stage_data['hours'] + $this->get_leg_duration_hours($key);                  
+            }
         };
+
         $this->stage_data[] = $stage_data; // add last stage
         return $this->stage_data;
     }
 
     public function leg_starts_new_stage($legIdx){
         if($this->using_dispatch_rates()){
-            if($legIdx < 2){ // start a new stage until leg index 2. 0 is for dispatch, 1 begins delivery stage
+            if(($legIdx>0)&&($legIdx < 2)){ // start a new stage until leg index 2. 0 is for dispatch, 1 begins delivery stage
                 return true;
             };
         };
@@ -261,8 +269,9 @@ class TQ_RequestParserGetQuote {
             if($legIdx === 1 ){
                 return 'standard';
             };            
-        };
-        return 'standard';
+        } else {
+            return 'standard';
+        }
     }
 
     public function get_leg_type_id($legIdx){
@@ -386,7 +395,8 @@ class TQ_RequestParserGetQuote {
         if(!is_numeric($leg_km)){
             return false;
         };
-        return $leg_km / 1.609;
+        $leg_miles = $leg_km / 1.609;
+        return $leg_miles;
     }
 
     public function get_leg_distance_text($legIdx = null){
