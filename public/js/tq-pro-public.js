@@ -954,17 +954,18 @@
 				var route = $.extend({},routeData.response.routes[0]);
 				var legs = route.legs;
 				var trimmedLegs = [];
-				console.log('saving '+legs.length+' legs');
 				$.each(legs, function(idx, leg){
 					var trimmed = $.extend({},leg);
 					delete trimmed.steps
 					trimmedLegs.push(trimmed);
 				});
+								console.log('saving '+trimmedLegs.length+' legs');
+
 				//serialize form
 				var data = $(this.element).serialize();
 					//add button value to determine if request is for a quote or payment
 					data += '&submit_type='+submitType;
-					data += '&directions='+JSON.stringify(trimmedLegs);
+					data += '&directions='+encodeURIComponent(JSON.stringify(trimmedLegs));
 					console.log('posting..');
 				$.post(this.settings.ajaxUrl, data, function(response) {
 					if(response.success==='true'){

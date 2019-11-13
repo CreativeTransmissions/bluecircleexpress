@@ -154,11 +154,9 @@ class TQ_RequestParserGetQuote {
         return $record_data;
     }    
 
-
-   
-
 	public function parse_legs(){
-        $this->legs = json_decode(stripslashes($this->post_data['directions']), true);
+        $decoded_legs = stripslashes($this->post_data['directions']);
+        $this->legs = json_decode($decoded_legs, true);
 	}
 
     public function get_journey_data(){
@@ -483,7 +481,7 @@ class TQ_RequestParserGetQuote {
 
         if(!is_array($this->legs)){
             echo ' no legs';
-
+var_dump($this->legs);
             return false;
         };
 
@@ -593,7 +591,7 @@ class TQ_RequestParserGetQuote {
         } else {
             $delivery_time = $this->get_param(array('name' => 'delivery_time_submit', 'optional' => true));
             if (!empty($delivery_time)) {
-                echo ' ** EMPY delivery_time';
+              //  echo ' ** EMPY delivery_time';
                 $time_list = array($delivery_time);
             };            
             

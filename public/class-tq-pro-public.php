@@ -1566,10 +1566,10 @@ class TransitQuote_Pro_Public {
             return self::build_get_quote_response();
         };*/
         if($this->use_dispatch_rates === true){
-            echo ' ************ MuLTI STAGE *******';
+         //   echo ' ************ MuLTI STAGE *******';
             return self::get_quote_multi_stage();
         } else {
-            echo ' ************ SINGLE STAGE *******';
+           // echo ' ************ SINGLE STAGE *******';
 
             return self::get_quote_single_stage();
         };
