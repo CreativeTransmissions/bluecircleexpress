@@ -998,6 +998,7 @@
 					//add button value to determine if request is for a quote or payment
 					data += '&submit_type='+submitType;
 					data += '&quote_id='+String(this.quoteId);
+					data += '&journey_id='+String(this.journeyId);					
 					console.log('posting..');
 				$.post(this.settings.ajaxUrl, data, function(response) {
 					if(response.success==='true'){
@@ -1056,6 +1057,8 @@
 					this.populateBreakdown(response.data.html);
 					this.showQuoteFields();
 					this.quoteId = response.data.quote.id;
+					this.journeyId = response.data.journey.id;
+					console.log('this.journeyId: '+this.journeyId);
 					console.log('this.quoteId: '+this.quoteId);
 				} else {
 					$('.failure .msg').html('Unable to calculate quote.');

@@ -32,6 +32,11 @@ class TQ_RequestParserSaveJob {
         $this->post_data = $this->config['post_data'];
 	}
 
+    public function get_journey_id(){
+        $journey_id = $this->get_param(array('name' => 'journey_id', 'optional' => true));
+        return $journey_id;
+    }
+
     public function get_quote_id(){
         $quote_id = $this->get_param(array('name' => 'quote_id', 'optional' => true));
         return $quote_id;

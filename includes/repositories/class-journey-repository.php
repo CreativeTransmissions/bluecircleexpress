@@ -16,6 +16,16 @@ class TQ_JourneyRepository
 
     }
 
+    public function get_by_id($id = null){
+        if(empty($id)){
+            trigger_error('journey repo get_by_id: id is null ', E_USER_ERROR);                    
+        };
+        $journey = $this->cdb->get_row('journeys', $id);
+        if($journey===false){
+            return false;
+        };
+        return $journey;
+    }
     public function get_error_message($error){
         return $error;
     }

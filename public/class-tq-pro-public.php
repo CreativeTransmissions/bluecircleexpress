@@ -1876,7 +1876,6 @@ class TransitQuote_Pro_Public {
             $response = array('success' => 'true',
                               'data' => array('quote' => $this->quote,
                                 'journey'=>$this->journey,
-                                //'rates' => $this->quote['rates'],
                                 'rate_options' => $this->rate_options));
 
         } else {
@@ -2185,6 +2184,11 @@ class TransitQuote_Pro_Public {
             return false;
         };
 
+        $journey_id = $this->request_parser_save_job->get_journey_id();
+        if(!$journey_id){
+            return false;
+        };        
+
         $customer_data = $this->request_parser_save_job->get_record_data_customer();
         $wp_user_id = $this->tq_woocommerce_customer->is_logged_in();
         if(!empty($wp_user_id)){
@@ -2192,14 +2196,14 @@ class TransitQuote_Pro_Public {
         };
         $customer_repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
         $this->customer_repository = new TQ_CustomerRepository($customer_repo_config);
-        $customer = $this->customer_repository->save_customer($customer_data);
-        if(!is_array($customer)){
+        $this->customer = $this->customer_repository->save_customer($customer_data);
+        if(!is_array($this->customer)){
             return false;
         };
 
-        $job_data = $this->request_parser_save_job->got_job_data();
+        /*$job_data = $this->request_parser_save_job->got_job_data();
         $job_data['accepted_quote_id'] = $quote_id;
-        $job_data['customer_id'] = $quote_id;
+        $job_data['customer_id'] = $customer['id'];
 
         $job_repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
         $this->job_repository = new TransitQuote_Pro4\TQ_JobRepository($job_repo_config);
@@ -2208,23 +2212,31 @@ class TransitQuote_Pro_Public {
             return false;
         };
 
-
+*/
         //$this->quote_surcharge_ids = self::save_surcharges($this->quote['id']);
 
         //To do: create a many to many address relationship with job with an order index
         //save job, passing id values not included in post data
-/*
-        $this->job = self::save('jobs', null, array('customer_id' => $this->customer['id'],
-            'accepted_quote_id' => $this->quote['id']));
-        if(empty($this->job)){
-            return false;
-        };    
 
-*/
-        if($success !== 'true'){
+        $this->job = self::save('jobs', null, array('customer_id' => $this->customer['id'],
+            'accepted_quote_id' => $quote_id));
+        if(empty($this->job)){
             return false;
         };
 
+        $journey_repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
+        $this->journey_repo = new \TQ_JourneyRepository($journey_repo_config);
+        $this->journey = $this->journey_repo->get_by_id($journey_id);
+        $this->journey['job_id'] = $this->job['id'];
+        $journey = $this->journey_repo->save($this->journey);
+        if(!is_array($journey)){
+            return false;
+        };
+        if($journey['id']!==$journey_id){
+             trigger_error(' job_id saved against wrong journey_id');
+            return false;
+        }
+        /* TODO send job notification
         if (self::job_is_available($this->job)) {
             $this->job = self::get_job_details($this->job);
          
@@ -2233,8 +2245,9 @@ class TransitQuote_Pro_Public {
 
             $this->customer_email_success = self::email_customer();
             return $this->job['id'];            
-        };
-        return false;
+        };*/
+
+        return $this->job['id'];
       
     }
 
