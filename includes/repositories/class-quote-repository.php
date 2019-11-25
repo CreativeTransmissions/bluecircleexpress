@@ -118,11 +118,15 @@ class TQ_QuoteRepository
         if(empty($this->quote_id)){
             trigger_error('save_quote_surcharges empty: cannot save until quote has been saved', E_USER_ERROR);
             return false;      
-        };          
+        };
+        if($this->quote_id == 0){
+            trigger_error('quote id is 0: cannot save until quote has been saved', E_USER_ERROR);
+            return false;      
+        };     
         $saved_surcharge_ids = [];
         foreach ($surcharges as $key => $surcharge) {
             $quotes_surcharges_rec = $this->create_quotes_surcharges_rec($surcharge);
-            $quote_surcharge_rec = $this->save_quote_surcharge($surcharge);
+            $quote_surcharge_rec = $this->save_quote_surcharge($quotes_surcharges_rec);
             $saved_surcharge_ids[] = $quote_surcharge_rec['id'];
         };
         return $saved_surcharge_ids;
@@ -131,13 +135,16 @@ class TQ_QuoteRepository
     public function create_quotes_surcharges_rec($surcharge){
         return array('quote_id'=>$this->quote_id,
                     'surcharge_id'=>$surcharge['surcharge_id'],
-                    'amount'=>$surcharge['surcharge_id']);
+                    'amount'=>$surcharge['amount']);
     }
 
     public function save_quote_surcharge($record_data){
         if(empty($record_data)){
             trigger_error('save_quote_surcharge: record_data empty', E_USER_ERROR);            
         };
+        if(empty($record_data['quote_id'])){
+            trigger_error('save_quote_surcharge: quote_id empty', E_USER_ERROR);            
+        };        
         $record_data['created'] = date('Y-m-d G:i:s');
         $record_data['modified'] = $record_data['created'];
         $row_id = $this->cdb->update_row('quote_surcharges', $record_data);

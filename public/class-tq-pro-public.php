@@ -1828,10 +1828,12 @@ class TransitQuote_Pro_Public {
 
     private function add_surcharges_to_quote(){
         if($this->rate_options['weight']!==''){
-            $calculator = new TransitQuote_Pro4\TQ_CalculationSurcharges(array( 'weight'=>$this->rate_options['weight'],
+            $weight_surcharge_id = $this->cdb->get_field_by_string('surcharges', 'id', 'Weight', 'name');
+            $this->surcharge_calculator = new TransitQuote_Pro4\TQ_CalculationSurcharges(array( 'weight'=>$this->rate_options['weight'],
                                                                                 'cost_per_weight_unit'=>$this->rate_options['cost_per_weight_unit'],
-                                                                                'weight_unit_name'=>$this->rate_options['weight_unit_name']));
-            $surcharges = $calculator->run();
+                                                                                'weight_unit_name'=>$this->rate_options['weight_unit_name'],
+                                                                                'weight_surcharge_id'=>$weight_surcharge_id));
+            $surcharges = $this->surcharge_calculator->run();
             $this->quote = array_merge($this->quote, $surcharges);
             $this->quote['basic_cost'] = $this->quote['basic_cost']+$surcharges['weight_cost'];
             $this->stages_html .= '<tr><td>Weight Cost</td><td>'.$surcharges['weight_cost'].'</td><tr>';
@@ -1936,6 +1938,22 @@ class TransitQuote_Pro_Public {
                                 left join ".$surcharges_table_name." s 
                                     on a.surcharge_id = s.id 
                                 order by a.name;";
+
+        $data = $this->cdb->query($sql);
+        return $data;
+    }
+
+    public function get_surcharges_except_weight(){
+
+        if(!isset($this->cdb)){
+            $this->cdb = TransitQuote_Pro4::get_custom_db();
+        };
+        $surcharges_table_name = $this->cdb->get_table_full_name('surcharges');
+
+        $sql = "SELECT distinct id, name, amount
+                            FROM ".$surcharges_table_name." s 
+                                where name not like 'Weight'
+                                order by name;";
 
         $data = $this->cdb->query($sql);
         return $data;
@@ -2069,37 +2087,10 @@ class TransitQuote_Pro_Public {
 
     public function job_data_is_valid() {
         $this->invalid_fields = array();
-        $required_customer_fields = array('first_name', 'last_name', 'email');
-        foreach ($required_customer_fields as $key => $field_name) {
+        $required_fields = array('first_name', 'last_name', 'email', 'quote_id');
+        foreach ($required_fields as $key => $field_name) {
             if (!$this->ajax->param_check(array('name' => $field_name, 'optional' => false))) {
                 array_push($this->invalid_fields, array('name' => str_replace('_', ' ', $field_name),
-                    'error' => 'empty'));
-            };
-        };
-
-        $journey_order = self::get_journey_order_from_request_data();
-        if (count($journey_order) < 2) {
-            array_push($this->invalid_fields, array('name' => $field_name,
-                'error' => 'Less than 2 addresses'));
-
-        };
-
-        foreach ($journey_order as $key => $address_index) {
-            $record_data = self::get_location_record_data('locations', $address_index);
-            $location_name = 'location ' . $address_index;
-            if (empty($record_data['lat'])) {
-                $field_name = $location_name . '.lat';
-                array_push($this->invalid_fields, array('name' => $field_name,
-                    'error' => 'empty'));
-            };
-            if (empty($record_data['lng'])) {
-                $field_name = $location_name . '.lng';
-                array_push($this->invalid_fields, array('name' => $field_name,
-                    'error' => 'empty'));
-            };
-            if (empty($record_data['address'])) {
-                $field_name = $location_name . '.address';
-                array_push($this->invalid_fields, array('name' => $field_name,
                     'error' => 'empty'));
             };
         };
@@ -2132,9 +2123,9 @@ class TransitQuote_Pro_Public {
         return array('success' => 'true',
             'success_message' => 'Your job was received successfully<br/>The delivery reference number is: ' . $job_id . '</p>',
             'data' => array('customer_id' => $this->customer['id'],
-                'job_id' => $job_id,
-                'quote_id' => $this->quote['id'],
-                'email' => $this->customer['email']));
+                          'job_id' => $job_id,
+                           'quote_id' => $this->quote['id'],
+                          'email' => $this->customer['email']));
 
     }
 
@@ -2186,30 +2177,32 @@ class TransitQuote_Pro_Public {
         //default message
         $message = 'Sorry, something went wrong.';
         
-        $this->use_out_of_hours_rates = self::get_use_out_of_hours_rates();
-        $this->use_weekend_rates = self::get_use_weekend_rates();
-        $this->use_holiday_rates = self::get_use_holiday_rates(); 
-        $this->rate_options_defaults = $this->get_default_rate_affecting_options();
-
         $this->request_parser_save_job = new TransitQuote_Pro4\TQ_RequestParserSaveJob(array('debugging'=>$this->debug,
                                                                                                 'post_data'=>$_POST));
 
-        $customer_data = $this->request_parser_save_job->get_customer_data();
-        $this->customer_repository = new TransitQuote_Pro4\TQ_CustomerRepository(array('debugging'=>$this->debug));
-        $customer = $this->customer_repository->save($customer_data);
-        if(!is_array($customer)){
-            return false;
-        };
-        
         $quote_id = $this->request_parser_save_job->get_quote_id();
         if(!$quote_id){
+            return false;
+        };
+
+        $customer_data = $this->request_parser_save_job->get_record_data_customer();
+        $wp_user_id = $this->tq_woocommerce_customer->is_logged_in();
+        if(!empty($wp_user_id)){
+            $customer_data['wp_user_id'] = $wp_user_id;
+        };
+        $customer_repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
+        $this->customer_repository = new TQ_CustomerRepository($customer_repo_config);
+        $customer = $this->customer_repository->save_customer($customer_data);
+        if(!is_array($customer)){
             return false;
         };
 
         $job_data = $this->request_parser_save_job->got_job_data();
         $job_data['accepted_quote_id'] = $quote_id;
         $job_data['customer_id'] = $quote_id;
-        $this->job_repository = new TransitQuote_Pro4\TQ_JobRepository(array('debugging'=>$this->debug));
+
+        $job_repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
+        $this->job_repository = new TransitQuote_Pro4\TQ_JobRepository($job_repo_config);
         $this->job = $this->job_repository->save($job_data);
         if(!is_array($this->job)){
             return false;
@@ -2288,8 +2281,15 @@ class TransitQuote_Pro_Public {
         $saved_quote_surcharge_ids = $this->quote_repo->save_quote_surcharges($area_surcharges_data);     
 
         if(!is_array($saved_quote_surcharge_ids)){
+            trigger_error(' save_quote_surcharges: save_quote_surcharges failed', E_USER_ERROR);            
+
             return false;
         };
+
+        if(isset($this->surcharge_calculator)){
+            $surcharges_data = $this->surcharge_calculator->get_quote_surcharges_record_data();
+            $saved_quote_surcharge_ids = $this->quote_repo->save_quote_surcharges($surcharges_data);
+        }
 
         return $saved_quote_surcharge_ids;
     }
@@ -2309,9 +2309,7 @@ class TransitQuote_Pro_Public {
         foreach ($this->stage_data as $key => $stage_data) {
             $this->stage_data[$key] = array_merge($this->journey_stages[$key], $stage_data);
         };
-/*echo '*************************************** stage_data>>>>>';
-echo json_encode($this->stage_data);
-echo '<<<<<<';*/
+
         $quote_stage_ids = $this->quote_repo->save_quote_stages($this->stage_data);
 
         if(!is_array($quote_stage_ids)){

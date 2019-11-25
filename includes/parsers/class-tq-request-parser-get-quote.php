@@ -261,10 +261,10 @@ class TQ_RequestParserGetQuote {
 
     public function get_leg_type($legIdx){
         if($this->using_dispatch_rates()){
-            if($legIdx === 0 ){
+            if($legIdx == 0 ){
                 return 'dispatch';
             };
-            if($legIdx === 1 ){
+            if($legIdx > 0){
                 return 'standard';
             };            
         } else {
@@ -278,7 +278,7 @@ class TQ_RequestParserGetQuote {
             if($legIdx === 0 ){
                 return 2;
             };
-            if($legIdx === 1 ){
+            if($legIdx > 0){
                 return 1;
             };            
         } else {

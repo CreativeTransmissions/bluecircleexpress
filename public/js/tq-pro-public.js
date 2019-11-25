@@ -251,7 +251,7 @@
 						that.checkPolygonsForPlace();						
 						if(that.validateGetQuote()){
 							that.updateFormAction('tq_pro4_get_quote');
-							that.submitForm('get_quote');
+							that.submitFormGetQuote('get_quote');
 						};						
 
 					}
@@ -272,7 +272,7 @@
 					if(this.validateGetQuote()){
 						this.updateFormAction('tq_pro4_get_quote');
 						console.log('submitForm callbackChangeServiceId');
-						this.submitForm('get_quote');
+						this.submitFormGetQuote('get_quote');
 					};	
 				}
 			},
@@ -291,7 +291,7 @@
 					if(this.validateGetQuote()){
 						this.updateFormAction('tq_pro4_get_quote');
 						console.log('submitForm callbackChangeVehicleId');
-						this.submitForm('get_quote');
+						this.submitFormGetQuote('get_quote');
 					};	
 				}
 			},
@@ -300,7 +300,7 @@
 				if(this.validateGetQuote()){
 					this.updateFormAction('tq_pro4_get_quote');
 					console.log('submitForm callbackChangeWeight');
-					this.submitForm('get_quote');
+					this.submitFormGetQuote('get_quote');
 				};					
 			},
 
@@ -412,7 +412,7 @@
 					if(this.validateGetQuote()){
 						this.updateFormAction('tq_pro4_get_quote');
 						console.log('submitForm onSetDatepickerDate');
-						this.submitForm('get_quote');
+						this.submitFormGetQuote('get_quote');
 					}; 
             	}
 			},
@@ -539,7 +539,7 @@
 					if(this.validateGetQuote()){
 						this.updateFormAction('tq_pro4_get_quote');
 						console.log('submitForm onSetTimePicker');
-						this.submitForm('get_quote');
+						this.submitFormGetQuote('get_quote');
 					};
 				}
 			},
@@ -892,7 +892,7 @@
 					case 'get_quote':
 						if(this.validateGetQuote()){
 							this.updateFormAction('tq_pro4_get_quote');
-							this.submitForm(submitType);
+							this.submitFormGetQuote(submitType);
 						};
 						break;
 					case 'pay_method_1':
@@ -942,7 +942,8 @@
 				return true;
 			},
 
-			submitForm: function(submitType){
+			submitFormGetQuote: function(submitType){
+				console.log('submitForm: '+submitType);
 				var that = this;
 				$('.failure').hide();
 				var progressMessage = this.getProgressMsgForSubmitType(submitType);
@@ -966,6 +967,37 @@
 					//add button value to determine if request is for a quote or payment
 					data += '&submit_type='+submitType;
 					data += '&directions='+encodeURIComponent(JSON.stringify(trimmedLegs));
+					console.log('posting..');
+				$.post(this.settings.ajaxUrl, data, function(response) {
+					if(response.success==='true'){
+						that.submissionSuccess(response, submitType);
+					} else {
+						$('.failure, .progress, .spinner-div').hide();
+						$('.failure .msg').html(response.msg);
+						$('.failure, .buttons').show();
+					};
+					$('.spinner-div').hide();
+				}, 'json');
+			},
+
+			submitForm: function(submitType){
+				console.log('submitForm: '+submitType);
+				var that = this;
+				$('.failure').hide();
+				var progressMessage = this.getProgressMsgForSubmitType(submitType);
+				this.updateProgressMessage(progressMessage);
+				$('.buttons').hide();
+				$('.paypal-msg-failure').hide();
+
+				if(!this.quoteId){
+					console.log('no quote id set');
+					return false
+				};
+				//serialize form
+				var data = $(this.element).serialize();
+					//add button value to determine if request is for a quote or payment
+					data += '&submit_type='+submitType;
+					data += '&quote_id='+String(this.quoteId);
 					console.log('posting..');
 				$.post(this.settings.ajaxUrl, data, function(response) {
 					if(response.success==='true'){
@@ -1023,6 +1055,8 @@
 					this.populateQuoteFields(response.data.quote);
 					this.populateBreakdown(response.data.html);
 					this.showQuoteFields();
+					this.quoteId = response.data.quote.id;
+					console.log('this.quoteId: '+this.quoteId);
 				} else {
 					$('.failure .msg').html('Unable to calculate quote.');
 					$('.failure').show();

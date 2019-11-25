@@ -63,5 +63,13 @@ class TQ_CalculationSurcharges {
 	public function get_surcharges(){
 		return $this->surcharges;
 	}
+
+	public function get_quote_surcharges_record_data(){
+		$this->surcharges_record_data = array();
+		if(isset($this->surcharges['weight_cost'])&&(isset($this->config['weight_surcharge_id']))){
+			$this->surcharges_record_data[] = array('surcharge_id'=>$this->config['weight_surcharge_id'], 'amount'=>$this->surcharges['weight_cost']);
+		};
+		return $this->surcharges_record_data;
+	}
 }
 

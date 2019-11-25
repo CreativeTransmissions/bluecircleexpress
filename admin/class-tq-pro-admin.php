@@ -941,8 +941,12 @@ class TransitQuote_Pro_Admin {
 				);
 			break;
 			case 'surcharges':
+
+				$surcharges_data = $this->plugin->get_surcharges_except_weight();
+
 				$defaults = array(
 					'table'=>'surcharges',
+					'data'=>$surcharges_data,
 					'fields'=>array('id','name', 'amount'),
 					'inputs'=>false,
 					'actions'=>array('Edit','Delete')

@@ -361,6 +361,10 @@ class TransitQuote_Pro4 {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-rate-selector-multi-leg.php';		
 		
+		/**
+		 * The class responsible for loading and saving customers
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/repositories/class-customer-repository.php';	
 
 		/**
 		 * The class responsible for loading and saving locations
@@ -759,6 +763,7 @@ class TransitQuote_Pro4 {
 
 	public function update_default_data($cdb){
 		self::update_default_payment_types($cdb);
+		self::update_default_surcharges($cdb);
 		self::add_custom_currency_option($cdb);
 		self::update_appartment_no_column_size($cdb);
 	}
@@ -779,6 +784,13 @@ class TransitQuote_Pro4 {
 				$cdb->update_row('payment_types', array('name'=>'WooCommerce', 'available'=>1, 'created'=>$created, 'modified'=>$modified ));
 			};
 		}
+	}
+
+	public function update_default_surcharges($cdb){
+		// add weight surcharge if not there
+		if(empty($cdb->get_row('surcharges', 'Weight', 'name'))){
+			$cdb->update_row('surcharges', array('name'=>'Weight', 'created'=>$created, 'modified'=>$modified ));
+		};
 	}
 
 	public function update_table_structure($cdb){

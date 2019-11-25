@@ -1,7 +1,7 @@
 <?php 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-class CT_CustomerRepository  
+class TQ_CustomerRepository  
 {  
 
 	public function __construct($config = array()) { 
@@ -13,57 +13,35 @@ class CT_CustomerRepository
 
         $this->config = array_merge($defaults,$config);
         $this->cdb = $this->config['cdb']; 
-        $this->ajax = new WP_Sell_Software\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
+        $this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
 
     }
 
-    public function save_customer(){
-        //get email for notification
-        $email = $this->ajax->param(array('name' => 'email','optional'=>false));
-        if(empty($email)){
+    public function save_customer($customer_data = null){
+        if(empty($customer_data)){
+            trigger_error('save_customer: no customer data', E_USER_ERROR);            
             return false;
         };
+     
 
-        $wp_user_id = $this->tq_woocommerce_customer->is_logged_in();
-
-
-        $existing_customer = self::get_customer_by_email($email);
+        $existing_customer = self::get_customer_by_email($customer_data['email']);
         if ($existing_customer === false) {
-            $customer = self::save_new_customer($wp_user_id);
+            $customer = self::save_customer_record($customer_data);
         } else {
-            $customer = self::update_customer($existing_customer, $wp_user_id);
+            $customer = self::update_customer($existing_customer, $customer_data);
         };
 
         return $customer;
     }   
 
-    public function save_new_customer($wp_user_id = null){
-        //save new customer as we have a new email address
-        if ($wp_user_id) {
-            $customer = self::save('customers', null, array('wp_user_id' => $wp_user_id));
-        } else {
-            $customer = self::save('customers');
-        };
-      
-        return $customer;
-    }
+    public function update_customer($existing_customer, $customer_data = null){
 
-    public function update_customer($existing_customer, $wp_user_id = null){
-        if($existing_customer['email']===''){
-            return false;
-        };
-        $customer_post_data = self::get_record_data('customers');
-        //save against an existing customer email
+        //save against an existing customer id
         //we can pass id and it will not be overwritten as it is not in the post data
-        if ($wp_user_id) {
-            $customer_post_data['wp_user_id'] = $wp_user_id;
-            $customer_post_data['id'] = $existing_customer['id'];
-            $customer = self::save('customers', $existing_customer['id'], $customer_post_data);
-        } else {
-            $customer_post_data['id'] = $existing_customer['id'];            
-            $customer = self::save('customers', $existing_customer['id'], $customer_post_data);
+        if ($existing_customer['id']) {
+            $customer_data['id'] = $existing_customer['id'];
         };
-             
+        $customer = self::save_customer_record($customer_data);
         return $customer;
     }
 
@@ -114,43 +92,19 @@ class CT_CustomerRepository
         return $error;
     }
 
-    public function save_or_update_customer(){
-        $customer_email = $this->ajax->param(array('name'=>'email'));
-        if(empty($customer_email)){
+     public function save_customer_record($record_data = null){
+        if(empty($record_data)){
+            echo ' customer record is empty';
+        };
+        $row_id = $this->cdb->update_row('customers', $record_data);
+        if($row_id===false){
             return false;
         };
 
-        $this->customer = self::get_customer_by_email($customer_email);
-        if($this->customer===false){
-            //save new customer as we have a new email address
-            $this->customer = self::save('ct_customers');
-        } else{
-            //save against an existing customer email
-            //we can pass id and it will not be overwritten as it is not in the post data
-            $this->customer = self::save('ct_customers',null, $this->customer);
-        };
+        $record_data['id'] = $row_id;
+        return $record_data;
+    }       
 
-        if($this->customer===false){
-            return false;
-        };           
-
-        if(empty($this->customer['wp_user_id'])){
-            $wp_user_id = $this->register_customer_as_wp_user($this->customer);
-            // check for errors
-            if (!is_numeric($wp_user_id)) { // this will be error object or id
-                return false;
-            };
-            $this->customer = self::save('ct_customers',null, array('id'=>$this->customer['id'],
-                                                                    'wp_user_id'=>$wp_user_id));                        
-
-            if($this->customer===false){
-                return false;
-            };             
-
-        };
-
-        return true;
-    }
 
     public function get_customer_by_email($email){
         //check for the email address to see if this is a previous customer

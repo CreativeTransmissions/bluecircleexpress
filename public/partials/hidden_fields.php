@@ -13,7 +13,6 @@
 <input type="hidden" id="tax_cost" name="tax_cost" value=""/>
 <input type="hidden" id="breakdown" name="breakdown" value=""/>
 <input type="hidden" id="surcharge_areas" name="surcharge_areas" value=""/>
-<input type="hidden" id="quote_id" name="quote_id" value=""/>
 
 
 <?php

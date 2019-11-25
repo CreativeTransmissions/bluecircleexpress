@@ -55,8 +55,9 @@ class TQ_JourneyRepository
                 ++$stageIdx;
                 $stage_data = $this->create_stage_record($stageIdx);
                 $this->current_stage = $this->save_journey_stage($stage_data);
-                $this->current_stage['leg_type_id'] = $this->current_leg_type; // add leg_type_id to be stored against stage
+                $this->current_stage['leg_type_id'] = $leg_data['leg_type_id']; // add leg_type_id to be stored against stage
                 $this->stage_recs[] = $this->current_stage;
+                $this->current_leg_type = $leg_data['leg_type_id'];
             }
         }
     }
