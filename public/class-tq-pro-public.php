@@ -1991,7 +1991,7 @@ class TransitQuote_Pro_Public {
 
         if (self::job_data_is_valid()) {
 
-            $job_id = self::save_new_job();
+            $this->job_id = $job_id = self::save_new_job();
             if (empty($job_id)) {
                 $response = array('success' => 'false',
                     'msg' => 'Unable to save new job');
@@ -2069,7 +2069,7 @@ class TransitQuote_Pro_Public {
 		};
 		
 		// callback hooks for other plugins to use start
-		$job_update_id = $this->ajax->param(array('name' => 'job_id', 'optional' => true));
+		$this->job_id = $job_update_id = $this->ajax->param(array('name' => 'job_id', 'optional' => true));
 
 		if(self::get_job_details_from_id($job_id)){
 			$data = array('data'=>$this->job);
@@ -2224,6 +2224,8 @@ class TransitQuote_Pro_Public {
             return false;
         };
 
+        $this->job_id = $this->job['id'];
+        
         $journey_repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
         $this->journey_repo = new \TQ_JourneyRepository($journey_repo_config);
         $this->journey = $this->journey_repo->get_by_id($journey_id);
@@ -2235,8 +2237,8 @@ class TransitQuote_Pro_Public {
         if($journey['id']!==$journey_id){
              trigger_error(' job_id saved against wrong journey_id');
             return false;
-        }
-        /* TODO send job notification
+        };
+
         if (self::job_is_available($this->job)) {
             $this->job = self::get_job_details($this->job);
          
@@ -2245,7 +2247,7 @@ class TransitQuote_Pro_Public {
 
             $this->customer_email_success = self::email_customer();
             return $this->job['id'];            
-        };*/
+        };
 
         return $this->job['id'];
       

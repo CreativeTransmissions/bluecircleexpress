@@ -25,7 +25,7 @@ class TQ_CustomerRepository
      
 
         $existing_customer = self::get_customer_by_email($customer_data['email']);
-        if ($existing_customer === false) {
+        if (empty($existing_customer)) {
             $customer = self::save_customer_record($customer_data);
         } else {
             $customer = self::update_customer($existing_customer, $customer_data);
@@ -94,7 +94,7 @@ class TQ_CustomerRepository
 
      public function save_customer_record($record_data = null){
         if(empty($record_data)){
-            echo ' customer record is empty';
+            trigger_error('save_customer_record: empty customer data', E_USER_ERROR); 
         };
         $row_id = $this->cdb->update_row('customers', $record_data);
         if($row_id===false){
@@ -109,10 +109,11 @@ class TQ_CustomerRepository
     public function get_customer_by_email($email){
         //check for the email address to see if this is a previous customer
         if(empty($email)){
+            trigger_error('get_customer_by_email: empty email', E_USER_ERROR); 
             return false;
         };
         //load customer by email
-        $customer = $this->cdb->get_row('ct_customers', $email, 'email');
+        $customer = $this->cdb->get_row('customers', $email, 'email');
         return $customer;
     }   
 
@@ -123,7 +124,7 @@ class TQ_CustomerRepository
             return false;
         };
         //load customer by email
-        $customer = $this->cdb->get_row('ct_customers', $id, 'id');
+        $customer = $this->cdb->get_row('customers', $id, 'id');
         return $customer;
     }    
 
@@ -134,14 +135,14 @@ class TQ_CustomerRepository
         };
         //get param data
         $request_parser = new CT_HTTP_Request_Parser(array('cdb'=>$this->cdb, 'debugging'=>$this->debug));
-        $customer_fields = $this->cdb->get_table_col_names('ct_customers');        
+        $customer_fields = $this->cdb->get_table_col_names('customers');        
         $record_data = $request_parser->get_record_from_post_data($customer_fields);
         
         if(!empty($defaults)){
             //merge with passed data
             $record_data = array_merge($defaults, $record_data);
         };
-        $row_id = $this->cdb->update_row('ct_customers', $record_data);
+        $row_id = $this->cdb->update_row('customers', $record_data);
         if($row_id===false){
             return false;
         };
