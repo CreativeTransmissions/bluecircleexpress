@@ -156,9 +156,60 @@ class TQ_QuoteRepository
         return $record_data;              
     }
 
-    public function load_quote($quote_id){
-       
+    public function load($quote_id = null){
+        if(empty($quote_id)){
+            return false;          
+        }; 
+        $quote = $this->cdb->get_row('quotes', $quote_id);
+        if ($quote === false) {
+            echo 'Could not load quote'.$quote_id;
+            return false;
+        };
+        $quote['stages'] = $this->load_quote_stages($quote_id);
+        $quote['surcharges'] = $this->load_quote_surcharges($quote_id);
+
+        return $quote; 
     }    
+
+    public function load_quote_stages($quote_id = null){
+        if(empty($quote_id)){
+            return false;          
+        }; 
+
+        $sql = 'SELECT quote_id, qs.journey_id, stage_order, stage_id, unit_cost, time_cost, set_cost, stage_total, rates
+                    FROM wordpress_test.wptests_tq_pro4_quotes_stages qs
+                        inner join wordpress_test.wptests_tq_pro4_stages s
+                            on qs.stage_id = s.id
+                    where quote_id = '.$quote_id.' 
+                order by stage_order';
+
+        $quotes_stages = $this->cdb->query($sql);
+        if (!is_array($quotes_stages)) {
+            return false;
+            //echo 'Could not load quotes_stages: '.$quote_id;
+        };
+        if (empty($quotes_stages)) {
+            return false;            
+           // echo 'Quote has no stages: '.$quote_id;
+        };        
+        return $quotes_stages; 
+    }
+
+    public function load_quote_surcharges($quote_id = null){
+        if(empty($quote_id)){
+            return false;          
+        }; 
+        $quotes_surcharges = $this->cdb->get_rows('quote_surcharges', array('quote_id'=> $quote_id));
+        if (!is_array($quotes_surcharges)) {
+            //echo 'Could not load quotes_surcharges: '.$quote_id;
+            return false;            
+        };
+        if (empty($quotes_surcharges)) {
+            //echo 'Quote has no surcharges: '.$quote_id;
+            return false;
+        };        
+        return $quotes_surcharges; 
+    }
 
     public function log($error){
         if($this->debug==true){

@@ -111,7 +111,7 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
         $public = null;
 
     }*/
-/*
+
     public function test_get_quote_area_surchrages() {
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
 
@@ -137,5 +137,5 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
 
         $public = null;
 
-    }*/
+    }
 }

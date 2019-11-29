@@ -44,7 +44,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
 
     }
 */
-    public function test_save_job_multiple_addresses() {
+ /*   public function test_save_job_multiple_addresses() {
         $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
 
         $_REQUEST = $this->test_job_multi_addresses;
@@ -61,7 +61,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
         $this->assertEquals(2, $public->job['stops'][2]['journey_order']);
         $this->assertEquals(3, $public->job['stops'][3]['journey_order']);
 */
-        $this->assertEquals('385 Dumbarton Road, Glasgow, UK', $public->job['stops'][0]['address']);
+ /*       $this->assertEquals('385 Dumbarton Road, Glasgow, UK', $public->job['stops'][0]['address']);
         $this->assertEquals('G11 6BE', $public->job['stops'][0]['postal_code']);
         $this->assertEquals('385', $public->job['stops'][0]['street_number']);
         $this->assertEquals('Dumbarton Road', $public->job['stops'][0]['route']);
@@ -84,7 +84,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
         $public = null;
 
     }  
-
+*/ 
 /*
     public function test_all_email_fields() {
         $this->public = $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
@@ -219,4 +219,50 @@ final class TransitQuote_Pro_PublicTest extends TestCase
        //   $this->assertTrue(count($rates)>0);
     }
 */
+
+    public function test_get_job_details_from_id(){
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public->cdb = TransitQuote_Pro4::get_custom_db();
+
+        $success = $public->get_job_details_from_id(16);
+        $this->assertTrue($success);
+
+        $this->assertTrue(is_array($public->job));
+        $this->assertEquals(16, $public->job['id']);
+
+        $this->assertArrayHasKey('journey' ,$public->job);
+        $journey = $public->job['journey'];
+        $this->assertTrue(!empty($journey));        
+        $this->assertArrayHasKey('stops' ,$public->job);
+
+        $stops = $public->job['stops'];
+        $this->assertTrue(!empty($stops));        
+
+        $this->assertArrayHasKey('customer' ,$public->job);
+        $customer = $public->job['customer'];
+        $this->assertTrue(!empty($customer));         
+
+        $this->assertArrayHasKey('payment' ,$public->job);
+        $payment = $public->job['payment'];
+        $this->assertTrue(!empty($payment));        
+
+        $this->assertArrayHasKey('job_date' ,$public->job);
+
+
+        $this->assertArrayHasKey('quote' ,$public->job);
+        $quote = $public->job['quote'];
+        $this->assertTrue(!empty($quote));
+
+        var_dump($quote);
+        
+        $this->assertArrayHasKey('stages' ,$quote);
+        $stages = $quote['stages'];
+        $this->assertTrue(is_array($stages), ' stages is not an array');        
+        $this->assertTrue(!empty($stages));
+
+        $this->assertArrayHasKey('surcharges' ,$quote);
+        $surcharges = $quote['surcharges'];
+        $this->assertTrue(!empty($surcharges));
+
+    }
 }

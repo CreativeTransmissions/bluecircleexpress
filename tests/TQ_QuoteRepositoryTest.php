@@ -70,6 +70,12 @@ final class TQ_QuoteRepositoryTest extends TestCase
          
     }
 
+    public function test_load_quote(){
+        $quote = $this->quote_repo->load(42);
+
+        
+    }
+
 }    
 
 ?>

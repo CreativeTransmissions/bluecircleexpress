@@ -126,7 +126,8 @@ class TQ_QuoteFormatter {
                 $field['value'] = ucfirst($value);
                 $field['type'] = 'text';
                 break;
-
+            case 'stages':
+            case 'surcharges':            
             default:
                 $field['value'] = $value;
                 $field['type'] = 'number';

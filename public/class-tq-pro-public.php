@@ -75,7 +75,9 @@ class TransitQuote_Pro_Public {
                                                     'rate_tax',
                                                     'tax_cost',
                                                     'total',
-                                                    'rates');        
+                                                    'rates',
+                                                    'surcharges',
+                                                    'stages');        
         if (self::woocommerce_is_activated()) {
             self::get_woocommerce_config();
         }
@@ -1995,36 +1997,36 @@ class TransitQuote_Pro_Public {
             if (empty($job_id)) {
                 $response = array('success' => 'false',
                     'msg' => 'Unable to save new job');
-                $this->ajax->respond($response);
+                $this->ajax->respond($this->response);
                 return false;
             };
             self::get_job_details_from_id($job_id);
             self::get_woocommerce_config();
             if (!self::update_payment_type_id($job_id, 3)) {
-                $response = array('success' => 'false',
+                $this->response = array('success' => 'false',
                     'msg' => 'Unable to update job ' . $job_id . ' to payment by woocommerce');
-                $this->ajax->respond($response);
+                $this->ajax->respond($this->response);
             };
 
             //set payment status to 1 = Awaiting Payment
             if (!self::update_payment_status_id($job_id, 1)) {
-                $response = array('success' => 'false',
+                $this->response = array('success' => 'false',
                     'msg' => 'Unable to update job ' . $job_id . ' to payment by woocommerce');
-                $this->ajax->respond($response);
+                $this->ajax->respond($this->response);
             };
 
-            $response = self::build_response_save_job_for_woocommerce($job_id);
+            $this->response = self::build_response_save_job_for_woocommerce($job_id);
 
         } else {
-            $response = self::build_invalid_job_response();
+            $this->response = self::build_invalid_job_response();
         }
 
-        if ($response === false) {
-            $response = array('success' => false,
+        if ($this->response === false) {
+            $this->response = array('success' => false,
                 'msg' => 'Sorry, an error occured and we are unable to process this request.');
         };
 
-        $this->ajax->respond($response);
+        $this->ajax->respond($this->response);
     }
 
     public function tq_pro_save_job_callback() {
@@ -2040,17 +2042,17 @@ class TransitQuote_Pro_Public {
         if (self::job_data_is_valid()) {
             $this->job_id = $job_id = self::save_new_job();
             if (empty($job_id)) {
-                $response = array('success' => 'false',
+                $this->response = array('success' => 'false',
                     'msg' => 'Unable to save new job');
-                $this->ajax->respond($response);
+                $this->ajax->respond($this->response);
                 return false;
             };
             self::get_job_details_from_id($job_id);
 
             if (!self::update_payment_type_id($job_id, 1)) {
-                $response = array('success' => 'false',
+                $this->response = array('success' => 'false',
                     'msg' => 'Unable to update job ' . $job_id . ' to payment on delivery');
-                $this->ajax->respond($response);
+                $this->ajax->respond($this->response);
                 return false;
             };
 
@@ -2058,14 +2060,14 @@ class TransitQuote_Pro_Public {
             if (!self::update_payment_status_id($job_id, 1)) {
                 return array('success' => 'false',
                     'msg' => 'Unable to update job ' . $job_id . ' to awaiting payment');
-                $this->ajax->respond($response);
+                $this->ajax->respond($this->response);
                 return false;
             };
 
-            $response = self::build_response_save_job($job_id);
+            $this->response = self::build_response_save_job($job_id);
 
         } else {
-            $response = self::build_invalid_job_response();
+            $this->response = self::build_invalid_job_response();
 		};
 		
 		// callback hooks for other plugins to use start
@@ -2081,7 +2083,7 @@ class TransitQuote_Pro_Public {
 		}
 		
 		
-        $this->ajax->respond($response);
+        $this->ajax->respond($this->response);
     }
 
     public function job_data_is_valid() {
@@ -2239,15 +2241,12 @@ class TransitQuote_Pro_Public {
             return false;
         };
 
-        if (self::job_is_available($this->job)) {
-            $this->job = self::get_job_details($this->job);
+            $this->job = self::get_job_details_from_id($this->job_id);
          
-            //echo 'success: '.$success.' '.$message;
-            $this->dispatch_email_success = self::email_dispatch('New Job Booking - ref: ' . $this->job['id'] . " " . $this->customer['first_name'] . " " . $this->customer['last_name']);
+        //echo 'success: '.$success.' '.$message;
+        $this->dispatch_email_success = self::email_dispatch('New Job Booking - ref: ' . $this->job['id'] . " " . $this->customer['first_name'] . " " . $this->customer['last_name']);
 
-            $this->customer_email_success = self::email_customer();
-            return $this->job['id'];            
-        };
+        $this->customer_email_success = self::email_customer();        
 
         return $this->job['id'];
       
@@ -2756,8 +2755,9 @@ class TransitQuote_Pro_Public {
     public function get_job_details($job = null) {
         $plugin = new TransitQuote_Pro4();
         $this->cdb = $plugin->get_custom_db();
-        //add the details to a job record
+        $repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
 
+        //add the details to a job record
         $job['customer'] = $this->customer = self::get_customer($job['customer_id']);
         if(empty($this->customer)){
             return false;
@@ -2769,12 +2769,9 @@ class TransitQuote_Pro_Public {
 
         if (!isset($this->quote)) {
             if (!empty($job['accepted_quote_id'])) {
-                $this->quote = $this->cdb->get_row('quotes', $job['accepted_quote_id']);
-                if ($this->quote === false) {
-                    self::debug(array('name' => 'Could not load quote',
-                        'value' => 'job_id: ' . $job['id']));
-                };
-            }
+                $this->quote_repo = new \TQ_QuoteRepository($repo_config);  
+                $this->quote = $this->quote_repo->load($job['accepted_quote_id']);
+            };
         };
         $job['quote'] = $this->quote;
         $job['job_date'] = self::get_job_date($job);
@@ -3078,7 +3075,6 @@ class TransitQuote_Pro_Public {
         $journey_data = $this->format_journey_for_email();
         $formatted_waypoints = $this->format_waypoints_for_email();
         $quote_data = $this->format_quote_for_email();
-
     
         $this->customer_email = $this->render_email(array('message'=> $message,
                                                             'customer_data'=>$customer_data,
@@ -3274,7 +3270,7 @@ class TransitQuote_Pro_Public {
                                     'labels'=>$this->labels,
                                     'currency'=>$this->currency,
                                     'output_def'=>$this->quote_fields_for_output);
-
+        echo json_encode($formatter_config);
         $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
         return $this->quote_formatter->format_non_zero_only();
     }
