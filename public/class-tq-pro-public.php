@@ -2771,6 +2771,7 @@ class TransitQuote_Pro_Public {
             if (!empty($job['accepted_quote_id'])) {
                 $this->quote_repo = new \TQ_QuoteRepository($repo_config);  
                 $this->quote = $this->quote_repo->load($job['accepted_quote_id']);
+                echo json_encode($this->quote);
             };
         };
         $job['quote'] = $this->quote;

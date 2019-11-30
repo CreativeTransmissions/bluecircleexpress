@@ -69,7 +69,13 @@ class TQ_QuoteFormatter {
             if (!isset($this->quote[$key])) {
                 continue;
             };
-            $output[] = $this->format_field($key);
+            if(is_array($this->quote[$key])){
+                $formatted_array_fields = $this->format_field_from_array($key, $this->quote[$key]);
+                $output = array_push($output, $formatted_array_fields);
+            } else {
+                $output[] = $this->format_field($key);
+
+            }
         };
 
         return $output;
@@ -92,7 +98,12 @@ class TQ_QuoteFormatter {
                     continue;
                 };
             };            
-            $output[] = $this->format_field($key);
+            if(is_array($this->quote[$key])){
+                $formatted_array_fields = $this->format_field_from_array($key, $this->quote[$key]);
+                $output = array_push($output, $formatted_array_fields);                
+            } else {
+                $output[] = $this->format_field($key);
+            }
         };
 
         return $output;
@@ -102,19 +113,49 @@ class TQ_QuoteFormatter {
 		
         $name = $key;        
 		$valueType = $this->format_value($key);
-        $label = $this->labels[$key];
-
+        if(isset($this->labels[$key])){
+            $label = $this->labels[$key];
+        } else {
+            $label = ucfirst($key);
+        };
 		$field = array('label'=>$label,
                         'name'=>$name,
-						'value'=>$valueType['value'],
-                        'type'=>$valueType['type']
+                        'value'=>$valueType['value'],
+                        'type'=>$valueType['type']                        
                     );
 
 		return $field;
 	}
 
-	public function format_value($key){
-		$value = $this->quote[$key];
+    public function format_field_from_array($name, $values = array()){
+        $base_name = rtrim($name,'s'); //'surcharge', 'stage'
+        $output = array();
+        foreach ($values as $key => $value) {
+            $name = $base_name.'_'.$key;
+            if(isset($this->labels[$key])){
+                $label = $this->labels[$base_name].' ('.$key.')';
+            } else {
+                $label = ucfirst($base_name).' ('.$key.')';
+            };
+            $valueType = $this->format_value($key, $value);
+
+            if(empty($valueType)){
+                continue;
+            };
+            $field = array( 'label'=>$label,
+                            'name'=>$name,
+                            'value'=>$valueType['value'],
+                            'type'=>$valueType['type']                        
+            );
+
+            $output[] = $field;         
+        }
+    }
+
+	public function format_value($key, $value = null){
+        if($value === null){
+            $value = $this->quote[$key];
+        }
         $field = array();
  		switch ($key) {
             case 'notice_cost':
@@ -123,11 +164,13 @@ class TQ_QuoteFormatter {
             case 'rate_tax':
             case 'tax_cost':
             case 'rates':
-                $field['value'] = ucfirst($value);
-                $field['type'] = 'text';
+                if(is_string($value)){
+                    $field['value'] = ucfirst($value);
+                    $field['type'] = 'text';
+                } else {
+                    return [];
+                };
                 break;
-            case 'stages':
-            case 'surcharges':            
             default:
                 $field['value'] = $value;
                 $field['type'] = 'number';
@@ -137,6 +180,8 @@ class TQ_QuoteFormatter {
           return $field;
 
 	}
+
+
 
 }
 ?>
