@@ -71,7 +71,7 @@ class TQ_QuoteFormatter {
             };
             if(is_array($this->quote[$key])){
                 $formatted_array_fields = $this->format_field_from_array($key, $this->quote[$key]);
-                $output = array_push($output, $formatted_array_fields);
+                $output = array_merge($output, $formatted_array_fields);
             } else {
                 $output[] = $this->format_field($key);
 
@@ -100,7 +100,7 @@ class TQ_QuoteFormatter {
             };            
             if(is_array($this->quote[$key])){
                 $formatted_array_fields = $this->format_field_from_array($key, $this->quote[$key]);
-                $output = array_push($output, $formatted_array_fields);                
+                $output = array_merge($output, $formatted_array_fields);                
             } else {
                 $output[] = $this->format_field($key);
             }
@@ -129,27 +129,41 @@ class TQ_QuoteFormatter {
 
     public function format_field_from_array($name, $values = array()){
         $base_name = rtrim($name,'s'); //'surcharge', 'stage'
-        $output = array();
-        foreach ($values as $key => $value) {
+        $output_rows = array();
+        foreach ($values as $key => $row) {
             $name = $base_name.'_'.$key;
             if(isset($this->labels[$key])){
                 $label = $this->labels[$base_name].' ('.$key.')';
             } else {
                 $label = ucfirst($base_name).' ('.$key.')';
             };
-            $valueType = $this->format_value($key, $value);
 
-            if(empty($valueType)){
-                continue;
+            switch ($base_name) {
+                case 'surcharge':
+                    $value = $this->format_surcharge_for_output($row);
+                    $label = $row['name'];
+                    break;
+                case 'stage':
+                    $value = $this->format_stage_for_output($row);
+                    $rate_type = $this->get_rate_type_for_id($row['rates']);
+                    if(isset($this->labels[$key])){
+                        $label = $this->labels[$base_name].' '.$key.' ('.$rate_type.' Rate)';
+                    } else {
+                        $label = ucfirst($base_name).' '.$key.' ('.$rate_type.' Rate)';
+                    };                    
+                default:
+                    break;
             };
+
             $field = array( 'label'=>$label,
                             'name'=>$name,
-                            'value'=>$valueType['value'],
-                            'type'=>$valueType['type']                        
+                            'value'=>$value,
+                            'type'=>$base_name                        
             );
 
-            $output[] = $field;         
-        }
+            $output_rows[] = $field;         
+        };
+        return $output_rows;
     }
 
 	public function format_value($key, $value = null){
@@ -181,6 +195,23 @@ class TQ_QuoteFormatter {
 
 	}
 
+    public function format_stage_for_output($stage_row){
+        $value_html =  $stage_row['stage_total'];
+        return $value_html;
+    }
+
+    public function get_rate_type_for_id($rate_type_id){
+        if($rate_type_id===1){
+            $rate_type = $this->labels['dispatch_stage_label'];
+        } else {
+            $rate_type = $this->labels['standard_stage_label'];
+        };
+        return $rate_type;
+    }
+    public function format_surcharge_for_output($surcharge_row){
+        $value_html =  $surcharge_row['amount'];
+        return $value_html;
+    }
 
 
 }

@@ -68,16 +68,15 @@ class TransitQuote_Pro_Public {
         $this->max_address_pickers = $this->get_setting('tq_pro_quote_options', 'max_address_pickers', '1');
 
 
-        $this->quote_fields_for_output = array('distance_cost',
-                                                    'rate_hour',
-                                                    'time_cost',
-                                                    'basic_cost',
-                                                    'rate_tax',
-                                                    'tax_cost',
-                                                    'total',
-                                                    'rates',
-                                                    'surcharges',
-                                                    'stages');        
+        $this->quote_fields_for_output = array('stages',
+                                                'distance_cost',
+                                                'rate_hour',
+                                                'time_cost',
+                                                'surcharges',
+                                                'basic_cost',
+                                                'rate_tax',
+                                                'tax_cost',
+                                                'total');        
         if (self::woocommerce_is_activated()) {
             self::get_woocommerce_config();
         }

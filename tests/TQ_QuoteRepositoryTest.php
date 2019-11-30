@@ -71,7 +71,15 @@ final class TQ_QuoteRepositoryTest extends TestCase
     }
 
     public function test_load_quote(){
-        $quote = $this->quote_repo->load(42);
+        $quote = $this->quote_repo->load(66);
+
+        $this->assertTrue(is_array($quote), ' could not load quote 66');
+        $this->assertTrue(is_numeric($quote['id']));
+        $this->assertTrue(!empty($quote['id']), ' saved quote id empty');
+        $this->assertTrue(is_array($quote['surcharges']), ' could not load quote 66 surcharges');
+        $this->assertCount(2,$quote['surcharges'], ' not 2 surcharges');
+        $this->assertTrue(is_array($quote['stages']), ' could not load quote 66 stages');
+        $this->assertCount(2,$quote['stages'], ' not 2 stages');
 
         
     }

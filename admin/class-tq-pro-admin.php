@@ -694,8 +694,15 @@ class TransitQuote_Pro_Admin {
 								    'currency'=>$this->currency,
 								    'output_def'=>$this->plugin->quote_fields_for_output);
 
+		$use_dispatch_rates = (bool)$this->plugin->get_setting('', 'use_dispatch_rates', '');
+        if($use_dispatch_rates){
+            $this->labels['dispatch_stage_label'] = 'Dispatch';
+        } else {
+            $this->labels['dispatch_stage_label'] = 'Standard';
+        };
+
         $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
-		$quote_data = $this->quote_formatter->format();
+		$quote_data = $this->quote_formatter->format_non_zero_only();
 
 		$waypoint_formatter_config = array(	'waypoints'=>$this->job['stops'],
     										'labels'=>$this->labels,
