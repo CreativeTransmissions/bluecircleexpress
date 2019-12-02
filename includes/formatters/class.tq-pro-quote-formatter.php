@@ -201,7 +201,7 @@ class TQ_QuoteFormatter {
     }
 
     public function get_rate_type_for_id($rate_type_id){
-        if($rate_type_id===1){
+        if((int)$rate_type_id==0){
             $rate_type = $this->labels['dispatch_stage_label'];
         } else {
             $rate_type = $this->labels['standard_stage_label'];

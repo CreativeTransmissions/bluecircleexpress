@@ -60,9 +60,9 @@ class TQ_QuoteRepository
 
     public function save_quote_stages($stage_data){
 
-    /*    echo ' UPDATED save_quote_stages: ';
-        echo json_encode($stage_data);
-*/
+     //   echo ' UPDATED save_quote_stages: ';
+       //s echo json_encode($stage_data);
+
         if(!is_numeric($this->quote_id)){
             trigger_error('save_quote_stages: cannot save until quote has been saved', E_USER_ERROR);
             return false;      

@@ -182,7 +182,9 @@ class TQ_LabelFetcher {
                         'rate_tax'=>$this->tax_name.' Rate (%)',
                         'tax_cost'=>$this->tax_name.' (' . $this->currency . ')',
                         'total'=>'Total (' . $this->currency . ')',
-                        'rates'=>'Rates');
+                        'rates'=>'Rates',
+                    	'dispatch_stage_label'=>'Dispatch',
+                    	'standard_stage_label'=>'Standard');
 	}
 
 	private function fetch_customer_email_labels(){
@@ -238,8 +240,9 @@ class TQ_LabelFetcher {
                         'rate_tax'=>$this->tax_name.' Rate (%)',
                         'tax_cost'=>$this->tax_name.' (' . $this->currency . ')',
                         'total'=>'Total (' . $this->currency . ')',
-                        'rates'=>'Rates'					
-        			);
+                        'rates'=>'Rates',
+                    	'dispatch_stage_label'=>'Dispatch',
+                    	'standard_stage_label'=>'Standard');
 	}	
 }
 

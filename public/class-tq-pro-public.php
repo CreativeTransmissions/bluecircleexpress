@@ -2312,9 +2312,9 @@ class TransitQuote_Pro_Public {
 
         $no_journey_stages = count($this->journey_stages);
         $stage_data_length = count($this->stage_data);
-
+//echo json_encode($this->stage_data);
         if($no_journey_stages != $stage_data_length){
-            trigger_error(' save_quote_stages: record_data length mismatch', E_USER_ERROR);            
+            trigger_error(' save_quote_stage mismatch: stage_data length:'. $stage_data_length.', no_journey_stages:'.$no_journey_stages, E_USER_ERROR);            
 
             return false;
         };
@@ -2770,7 +2770,7 @@ class TransitQuote_Pro_Public {
             if (!empty($job['accepted_quote_id'])) {
                 $this->quote_repo = new \TQ_QuoteRepository($repo_config);  
                 $this->quote = $this->quote_repo->load($job['accepted_quote_id']);
-                echo json_encode($this->quote);
+//                echo json_encode($this->quote);
             };
         };
         $job['quote'] = $this->quote;
@@ -3270,7 +3270,7 @@ class TransitQuote_Pro_Public {
                                     'labels'=>$this->labels,
                                     'currency'=>$this->currency,
                                     'output_def'=>$this->quote_fields_for_output);
-        echo json_encode($formatter_config);
+//        echo json_encode($formatter_config);
         $this->quote_formatter = new TransitQuote_Pro4\TQ_QuoteFormatter($formatter_config);
         return $this->quote_formatter->format_non_zero_only();
     }

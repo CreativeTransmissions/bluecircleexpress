@@ -229,30 +229,60 @@ class TQ_RequestParserGetQuote {
         };
         // first stage     
         foreach ($this->legs as $key => $leg) {
-
-            if($this->leg_starts_new_stage($key)){
-                //add current stage data to array of stages before moving to next one
-                $this->stage_data[] = $stage_data;
-
-                //create new stage
-                $stage_data = array('distance'=>0,'hours'=>0);
+            if($this->is_dispatch_leg($key)){
+                // store dispatch stage
                 $stage_data['leg_type'] = $this->get_leg_type($key);
                 $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
-                $stage_data['hours'] = $this->get_leg_duration_hours($key);       
-            } else {
-                // add leg data to stage totals
-                $stage_data['distance'] = $stage_data['distance'] + $this->get_leg_distance($key, $this->config['distance_unit']);
-                $stage_data['hours'] = $stage_data['hours'] + $this->get_leg_duration_hours($key);                  
-            }
+                $stage_data['hours'] = $this->get_leg_duration_hours($key); 
+                $this->stage_data[] = $stage_data;      
+
+                //reset values
+                $stage_data = array('distance'=>0,'hours'=>0);
+            };
+
+            if($this->is_return_leg($key)){
+                // store dispatch stage
+                $stage_data['leg_type'] = $this->get_leg_type($key);
+                $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
+                $stage_data['hours'] = $this->get_leg_duration_hours($key); 
+                $this->stage_data[] = $stage_data;      
+
+                //reset values
+                $stage_data = array('distance'=>0,'hours'=>0);
+            };
+
+            // add leg data to stage totals
+            $stage_data['distance'] = $stage_data['distance'] + $this->get_leg_distance($key, $this->config['distance_unit']);
+            $stage_data['hours'] = $stage_data['hours'] + $this->get_leg_duration_hours($key);                  
+            $stage_data['leg_type'] = $this->get_leg_type($key);
+
         };
 
         $this->stage_data[] = $stage_data; // add last stage
         return $this->stage_data;
     }
 
+    public function is_dispatch_leg($legIdx){
+        if($this->using_dispatch_rates()){
+            if((int)$legIdx===0){ // start a new stage until leg index 2. 0 is for dispatch, 1 begins delivery stage
+                return true;
+            };
+        };
+        return false;
+    }
+
+    public function is_return_leg($legIdx){
+       /* if($this->using_dispatch_rates()){
+            if((int)$legIdx===0){ // start a new stage until leg index 2. 0 is for dispatch, 1 begins delivery stage
+                return true;
+            };
+        }*/;
+        return false;
+    }
+
     public function leg_starts_new_stage($legIdx){
         if($this->using_dispatch_rates()){
-            if(($legIdx>0)&&($legIdx < 2)){ // start a new stage until leg index 2. 0 is for dispatch, 1 begins delivery stage
+            if((int)$legIdx===1){ // start a new stage until leg index 2. 0 is for dispatch, 1 begins delivery stage
                 return true;
             };
         };
@@ -261,10 +291,10 @@ class TQ_RequestParserGetQuote {
 
     public function get_leg_type($legIdx){
         if($this->using_dispatch_rates()){
-            if($legIdx == 0 ){
+            if((int)$legIdx === 0 ){
                 return 'dispatch';
             };
-            if($legIdx > 0){
+            if((int)$legIdx > 0){
                 return 'standard';
             };            
         } else {
@@ -276,10 +306,10 @@ class TQ_RequestParserGetQuote {
         // 1 = standard, 2 = dispatch, 3 = return to collection, 4 = return to base
         if($this->using_dispatch_rates()){
             if($legIdx === 0 ){
-                return 2;
+                return 1;
             };
             if($legIdx > 0){
-                return 1;
+                return 2;
             };            
         } else {
             return 1;

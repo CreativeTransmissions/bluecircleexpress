@@ -50,26 +50,54 @@ class TQ_JourneyRepository
         
         $this->leg_recs = array();
         $this->stage_recs = array();        
-        $stageIdx = 0;
-        $this->current_leg_type = $this->get_first_leg_type();
 
-        $stage_data = $this->create_stage_record($stageIdx);
-        $this->current_stage = $this->save_journey_stage($stage_data);
-        $this->current_stage['leg_type_id'] = $this->current_leg_type; // add leg_type_id to be stored against stage
-        $this->stage_recs[] = $this->current_stage;
+        
         foreach ($this->legs as $key => $leg) {
-            $leg_data = $this->create_leg_record($key, $leg); 
-            $leg_data = $this->save_journey_leg($leg_data);
-            $this->leg_recs[] = $leg_data;
-            if($leg_data['leg_type_id'] != $this->current_leg_type){
-                ++$stageIdx;
-                $stage_data = $this->create_stage_record($stageIdx);
+
+
+            if($this->is_dispatch_leg($key)){
+                $stage_data = $this->create_stage_record(count($this->stage_recs));
+                $this->current_stage = $this->save_journey_stage($stage_data);
+                $this->current_stage['leg_type_id'] = $this->get_first_leg_type(); // add leg_type_id to be stored against stage
+                $this->stage_recs[] = $this->current_stage;      
+
+                $leg_data = $this->create_leg_record($key, $leg); 
+                $leg_data = $this->save_journey_leg($leg_data);
+
+            } else {
+
+                $leg_data = $this->create_leg_record($key, $leg); 
+                $leg_data = $this->save_journey_leg($leg_data);                
+            };
+
+            // last leg?
+            if((count($this->leg_recs))===(count($this->legs)-1)){
+                //final leg
+                $stage_data = $this->create_stage_record(count($this->stage_recs));
                 $this->current_stage = $this->save_journey_stage($stage_data);
                 $this->current_stage['leg_type_id'] = $leg_data['leg_type_id']; // add leg_type_id to be stored against stage
                 $this->stage_recs[] = $this->current_stage;
-                $this->current_leg_type = $leg_data['leg_type_id'];
-            }
+            };
+            
+            $this->leg_recs[] = $leg_data;
         }
+
+    }
+
+    public function is_dispatch_leg($legIdx){
+        if((int)$legIdx===0){ // start a new stage until leg index 2. 0 is for dispatch, 1 begins delivery stage
+            return true;
+        };
+         return false;
+    }
+
+    public function is_return_leg($legIdx){
+       /* if($this->using_dispatch_rates()){
+            if((int)$legIdx===0){ // start a new stage until leg index 2. 0 is for dispatch, 1 begins delivery stage
+                return true;
+            };
+        }*/;
+        return false;
     }
 
     public function save_journey_legs_get_params($journey_id = null, $legs = null){
