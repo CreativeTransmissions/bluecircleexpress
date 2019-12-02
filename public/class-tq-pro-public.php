@@ -159,6 +159,8 @@ class TransitQuote_Pro_Public {
 
         wp_enqueue_script($this->plugin_slug . '-ReturnJourneyRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.ReturnJourneyRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
 
+        wp_enqueue_script($this->plugin_slug . '-ReturnToBaseFixedStartRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.ReturnToBaseFixedStartRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
         wp_enqueue_script($this->plugin_slug . '-RouteRequest', plugins_url('js/js-transitquote/classes/class.tq.RouteRequest.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);  
 
         wp_enqueue_script($this->plugin_slug . '-StandardFixedStartMixedModeRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.StandardFixedStartMixedModeRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
@@ -244,6 +246,7 @@ class TransitQuote_Pro_Public {
         $this->use_weekend_rates = self::get_use_weekend_rates();
         $this->use_holiday_rates = self::get_use_holiday_rates();        
         $this->use_dispatch_rates = self::get_use_dispatch_rates();
+        $this->use_return_to_base_rates = self::get_use_return_to_base_rates();        
         $this->distance_unit = self::get_distance_unit();        
     }
 
@@ -389,6 +392,7 @@ class TransitQuote_Pro_Public {
             'date_format' => $get_date_format,
             'time_format' => $get_time_format,
             'use_out_of_hours_rates'=>self::bool_to_text($this->use_out_of_hours_rates),
+            'use_return_to_base_rates'=>self::bool_to_text($this->use_return_to_base_rates)
         );
 
         if (!empty($this->api_key)) {
@@ -1545,7 +1549,8 @@ class TransitQuote_Pro_Public {
                                         'journeys_locations_fields'=>$journeys_locations_fields,
                                         'post_data'=>$_POST,
                                         'distance_unit'=> $this->distance_unit,
-                                        'use_dispatch_rates'=>$this->use_dispatch_rates
+                                        'use_dispatch_rates'=>$this->use_dispatch_rates,
+                                        'use_return_to_base_rates'=>$this->use_return_to_base_rates
                                     );
 
         $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
@@ -1566,7 +1571,7 @@ class TransitQuote_Pro_Public {
             $this->response_msg = 'Distance must be greater than 0';
             return self::build_get_quote_response();
         };*/
-        if($this->use_dispatch_rates === true){
+        if(($this->use_dispatch_rates === true)||($this->use_return_to_base_rates)){
          //   echo ' ************ MuLTI STAGE *******';
             return self::get_quote_multi_stage();
         } else {
@@ -1724,6 +1729,10 @@ class TransitQuote_Pro_Public {
 
     public function get_use_dispatch_rates() {
         return  (bool)self::get_setting('', 'use_dispatch_rates', 0);
+    }
+
+    public function get_use_return_to_base_rates() {
+        return  (bool)self::get_setting('', 'use_return_to_base_rates', 0);
     }
 
     public function calc_quote() {

@@ -133,7 +133,12 @@ class TQ_RateSelector {
                                     'booking_end_time'=>$this->rate_options['booking_end_time']);
 
         $this->date_checker = new TQ_DateChecker($date_checker_config);
+
+        //initial job rate based on time
         $this->job_rate = $this->date_checker->get_rates_period(); 
+
+
+        // time based rates are overridden for dispatch or return to base
         if($this->rate_options['leg_type']==='dispatch'){
              $this->job_rate = 'dispatch';
         };

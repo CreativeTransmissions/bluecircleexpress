@@ -228,6 +228,7 @@ class TQ_RequestParserGetQuote {
             $this->parse_legs();
         };
         // first stage     
+        echo 'no of legs: '.count($this->legs);
         foreach ($this->legs as $key => $leg) {
             if($this->is_dispatch_leg($key)){
                 // store dispatch stage
@@ -241,7 +242,8 @@ class TQ_RequestParserGetQuote {
             };
 
             if($this->is_return_leg($key)){
-                // store dispatch stage
+                echo 'return leg detected: '.$key;
+                // store return stage
                 $stage_data['leg_type'] = $this->get_leg_type($key);
                 $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
                 $stage_data['hours'] = $this->get_leg_duration_hours($key); 
@@ -272,11 +274,11 @@ class TQ_RequestParserGetQuote {
     }
 
     public function is_return_leg($legIdx){
-       /* if($this->using_dispatch_rates()){
-            if((int)$legIdx===0){ // start a new stage until leg index 2. 0 is for dispatch, 1 begins delivery stage
+        if($this->using_return_to_base_rates()){
+            if((int)$legIdx===(count($this->legs)-1)){ // start a new stage until leg index 2. 0 is for dispatch, 1 begins delivery stage
                 return true;
             };
-        }*/;
+        };
         return false;
     }
 
@@ -320,6 +322,10 @@ class TQ_RequestParserGetQuote {
     public function using_dispatch_rates(){
         return $this->config['use_dispatch_rates'];
     }
+
+    public function using_return_to_base_rates(){
+        return $this->config['use_return_to_base_rates'];
+    }    
 
     public function leg_count(){
         if(!isset($this->legs)){

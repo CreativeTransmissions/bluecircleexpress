@@ -160,6 +160,8 @@
 					minDistanceMsg: this.settings.data.min_distance_msg,
 
 					pickStartAddress: this.settings.data.pick_start_address,
+					returnToBase: this.settings.data.use_return_to_base_rates,
+
 					startPlaceName: this.settings.data.startPlaceName,
 					maxDistance: this.settings.data.max_distance,
 					maxDistanceMsg: this.settings.data.max_distance_msg,
@@ -960,7 +962,7 @@
 					delete trimmed.steps
 					trimmedLegs.push(trimmed);
 				});
-								console.log('saving '+trimmedLegs.length+' legs');
+				console.log('saving '+trimmedLegs.length+' legs');
 
 				//serialize form
 				var data = $(this.element).serialize();

@@ -106,7 +106,7 @@
 		</fieldset>
 	</div>
 
-<div class="row row-rates">		
+	<div class="row row-rates">		
 		<fieldset>
 			<legend>Dispatch Rates (for journey from base/depo to first pickup)</legend>
 			<div class="inline-field">
@@ -124,6 +124,23 @@
 		</fieldset>
 	</div>	
 		
+	<div class="row row-rates">		
+		<fieldset>
+			<legend>Return To Base Rates (for journey from final destination back to base/depo)</legend>
+			<div class="inline-field">
+				<label for="hour">Set Price Return To Base</label>
+				<input class="input-long" type="text" name="amount_return_to_base" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?> Return To Base</label>
+				<input class="input-long" type="text" name="unit_return_to_base" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per Hour Return To Base</label>
+				<input class="input-long" type="text" name="hour_return_to_base" />
+			</div>	
+		</fieldset>
+	</div>		
 
 	<input type="hidden" name="id" value=""/>
 	<input type="hidden" name="action" value="tq_pro4_save_record"/>
@@ -184,6 +201,10 @@
 			<th>Dispatch Set Price</th>
 			<th>Dispatch Price Per <?php echo $this->admin->distance_unit; ?></th>
 			<th>Dispatch Price Per Hour</th>
+
+			<th>Return Set Price</th>
+			<th>Return Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th>Return Price Per Hour</th>
 
 			<th class="actions"><div class="spinner"></div></tr>
 		</thead>
