@@ -310,6 +310,9 @@ class TQ_RequestParserGetQuote {
             if($legIdx === 0 ){
                 return 1;
             };
+            if($legIdx === (count($this->legs)-1) ){
+                return 3;
+            };            
             if($legIdx > 0){
                 return 2;
             };            
