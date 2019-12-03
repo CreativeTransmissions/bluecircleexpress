@@ -413,11 +413,11 @@ class TransitQuote_Pro_Admin {
 
 								left join ".$journeys_locations_table_name." jl 
 									on j.id = jl.journey_id and
-										jl.journey_order = 0
+										jl.journey_order = 1
 
 								left join ".$locations_table_name." l 
 									on jl.location_id = l.id and 
-										jl.journey_order = 0
+										jl.journey_order = 1
 
 								left join ".$locations_table_name." ld 
 									on ld.id = last_stop.last_loc_id
