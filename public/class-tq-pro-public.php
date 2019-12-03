@@ -2274,6 +2274,7 @@ class TransitQuote_Pro_Public {
 
         $this->journey_repo = new \TQ_JourneyRepository($repo_config);        
         $this->journey = $this->journey_repo->save($journey_data['journey']);
+
         $this->journey_repo->save_journey_legs($this->journey['id'], $journey_data['legs']);        
         //data for journeys_locations records
         $journeys_locations_data = $this->request_parser_get_quote->get_record_data_journeys_locations($this->saved_locations);  
@@ -2321,7 +2322,7 @@ class TransitQuote_Pro_Public {
 
         $no_journey_stages = count($this->journey_stages);
         $stage_data_length = count($this->stage_data);
-//echo json_encode($this->stage_data);
+echo 'save_quote_stages>>>>>>'.json_encode($this->stage_data).'<<<<<';
         if($no_journey_stages != $stage_data_length){
             trigger_error(' save_quote_stage mismatch: stage_data length:'. $stage_data_length.', no_journey_stages:'.$no_journey_stages, E_USER_ERROR);            
 

@@ -54,34 +54,56 @@ class TQ_JourneyRepository
         
         foreach ($this->legs as $key => $leg) {
 
+            //echo ' swithc leg type id: '.$leg['leg_type_id'];
+            switch ($leg['leg_type_id']) {
+                case 1: // dispatcj
+                    // start dispatch stage
+                    $stage_data = $this->create_stage_record(count($this->stage_recs));
+                    $this->current_stage = $this->save_journey_stage($stage_data);
 
-            if($this->is_dispatch_leg($key)){
-                $stage_data = $this->create_stage_record(count($this->stage_recs));
-                $this->current_stage = $this->save_journey_stage($stage_data);
-                $this->current_stage['leg_type_id'] = $this->get_first_leg_type(); // add leg_type_id to be stored against stage
-                $this->stage_recs[] = $this->current_stage;      
+                    $leg_data = $this->create_leg_record($key, $leg); 
+                    $leg_data = $this->save_journey_leg($leg_data);                    
 
-                $leg_data = $this->create_leg_record($key, $leg); 
-                $leg_data = $this->save_journey_leg($leg_data);
+                    $last_leg_type_id = $this->current_stage['leg_type_id'] = $this->get_first_leg_type(); // add leg_type_id to be stored against stage
+                    $this->stage_recs[] = $this->current_stage;      
+                    break;
+                case 2: // standard
 
-            } else {
+                    if($this->current_stage['leg_type_id']===1){ // last stage was dispatch
+                        $stage_data = $this->create_stage_record(count($this->stage_recs));
+                        $this->current_stage = $this->save_journey_stage($stage_data);
+                        $leg_data = $this->create_leg_record($key, $leg); 
+                        $leg_data = $this->save_journey_leg($leg_data);                        
+                        $last_leg_type_id = $this->current_stage['leg_type_id'] = $leg_data['leg_type_id']; // add leg_type_id to be stored against stage
+                       // echo 'first standard staged detected. updated last_leg_type_id: '.$last_leg_type_id;
+                        $this->stage_recs[] = $this->current_stage;   
 
-                $leg_data = $this->create_leg_record($key, $leg); 
-                $leg_data = $this->save_journey_leg($leg_data);                
+                    } else{
+                        $leg_data = $this->create_leg_record($key, $leg); 
+                        $leg_data = $this->save_journey_leg($leg_data);                        
+                    }
+
+                    break;
+                case 3: // return
+                    //final leg
+                    $stage_data = $this->create_stage_record(count($this->stage_recs));
+                    $this->current_stage = $this->save_journey_stage($stage_data);
+
+                    $leg_data = $this->create_leg_record($key, $leg); 
+                    $leg_data = $this->save_journey_leg($leg_data);                         
+                    $this->current_stage['leg_type_id'] = $leg_data['leg_type_id']; // add leg_type_id to be stored against stage
+                    $this->stage_recs[] = $this->current_stage;
+
+                    break;
             };
-
-            // last leg?
-            if((count($this->leg_recs))===(count($this->legs)-1)){
-                //final leg
-                $stage_data = $this->create_stage_record(count($this->stage_recs));
-                $this->current_stage = $this->save_journey_stage($stage_data);
-                $this->current_stage['leg_type_id'] = $leg_data['leg_type_id']; // add leg_type_id to be stored against stage
-                $this->stage_recs[] = $this->current_stage;
-            };
-            
             $this->leg_recs[] = $leg_data;
-        }
 
+        };
+
+     /*   echo '>>stage recs created: ';
+        echo  json_encode($this->stage_recs);
+                echo '<<<<<<< ';
+*/
     }
 
     public function is_dispatch_leg($legIdx){

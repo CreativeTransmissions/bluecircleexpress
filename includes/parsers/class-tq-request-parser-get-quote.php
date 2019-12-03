@@ -227,8 +227,7 @@ class TQ_RequestParserGetQuote {
         if(!isset($this->legs)){
             $this->parse_legs();
         };
-        // first stage     
-        echo 'no of legs: '.count($this->legs);
+
         foreach ($this->legs as $key => $leg) {
             if($this->is_dispatch_leg($key)){
                 // store dispatch stage
@@ -242,7 +241,6 @@ class TQ_RequestParserGetQuote {
             };
 
             if($this->is_return_leg($key)){
-                echo 'return leg detected: '.$key;
                 // store return stage
                 $stage_data['leg_type'] = $this->get_leg_type($key);
                 $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
