@@ -804,6 +804,8 @@ class TransitQuote_Pro4 {
 	public function update_default_surcharges($cdb){
 		// add weight surcharge if not there
 		if(empty($cdb->get_row('surcharges', 'Weight', 'name'))){
+			$created = date('Y-m-d G:i:s');
+			$modified = $created;			
 			$cdb->update_row('surcharges', array('name'=>'Weight', 'created'=>$created, 'modified'=>$modified ));
 		};
 	}
