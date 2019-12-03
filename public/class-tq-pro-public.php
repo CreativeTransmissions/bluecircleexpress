@@ -1543,17 +1543,9 @@ class TransitQuote_Pro_Public {
         $journey_fields = $this->cdb->get_table_col_names('journeys');
         $journeys_locations_fields = $this->cdb->get_table_col_names('journeys_locations');
 
-        $request_parser_config = array( 'debugging'=>$this->debug,
-                                        'location_fields'=>$location_fields,
-                                        'journey_fields'=>$journey_fields,
-                                        'journeys_locations_fields'=>$journeys_locations_fields,
-                                        'post_data'=>$_POST,
-                                        'distance_unit'=> $this->distance_unit,
-                                        'use_dispatch_rates'=>$this->use_dispatch_rates,
-                                        'use_return_to_base_rates'=>$this->use_return_to_base_rates
-                                    );
+        $journey_type = $this->ajax->param(array('name' => 'journey_type', 'optional' => true));
 
-        $this->request_parser_get_quote = new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
+        $this->request_parser_get_quote = self::get_parser_for_journey_type($journey_type);
         $this->rate_options_defaults = $this->get_default_rate_affecting_options();
         $this->rate_options = $this->request_parser_get_quote->get_rate_affecting_options();
         $this->rate_options = array_merge($this->rate_options_defaults, $this->rate_options);
@@ -1564,6 +1556,40 @@ class TransitQuote_Pro_Public {
         $this->rounding_type = self::get_rounding_type();
         $this->return_percentage = self::get_return_percentage();        
     }
+
+    public function get_parser_for_journey_type($journey_type){
+
+        $request_parser_config = array( 'debugging'=>$this->debug,
+                                        'location_fields'=>$location_fields,
+                                        'journey_fields'=>$journey_fields,
+                                        'journeys_locations_fields'=>$journeys_locations_fields,
+                                        'post_data'=>$_POST,
+                                        'distance_unit'=> $this->distance_unit
+                                    );
+
+
+        switch ($journey_type) {
+            case 'StandardJourney':
+                return new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
+            break;
+            case 'StandardJourneyFixedStart':
+                return new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
+            break;
+            case 'ReturnJourney':
+                return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollection($request_parser_config);
+            break;           
+            case 'ReturnJourneyFixedStart':
+                return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollection($request_parser_config);
+            break;
+            case 'ReturnToBase':
+                return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToBase($request_parser_config);
+            break;             
+            case 'ReturnToBaseFixedStart':
+                return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollectionAndBase($request_parser_config);
+            break;
+        }
+    }
+
     public function get_quote() {
         
       /*  var_dump($this->rate_options);

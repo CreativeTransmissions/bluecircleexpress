@@ -21,7 +21,7 @@
  * @author     Andrew van Duivenbode <hq@transitquote.co.uk>
  */
 namespace TransitQuote_Pro4;
-class TQ_RequestParserGetQuote {
+class TQ_RequestParserGetQuoteReturnToBase {
 
  	private $default_config = array();  // final or all
 
@@ -305,7 +305,10 @@ class TQ_RequestParserGetQuote {
             };             
             if((int)$legIdx > 0){
                 return 'standard';
-            };            
+            };    
+            if($legIdx === (count($this->legs)-1) ){
+                return 'return to base';
+            };           
         } else {
             return 'standard';
         }
@@ -316,12 +319,12 @@ class TQ_RequestParserGetQuote {
         if($this->using_dispatch_rates()){
             if($legIdx === 0 ){
                 return 1;
+            };       
+            if($legIdx > 0){
+                return 2;
             };
             if($legIdx === (count($this->legs)-1) ){
                 return 3;
-            };            
-            if($legIdx > 0){
-                return 2;
             };            
         } else {
             return 1;

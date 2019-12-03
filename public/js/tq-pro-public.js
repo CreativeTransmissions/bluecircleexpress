@@ -249,7 +249,8 @@
 						return html;
 					},
 
-					afterQuote: function(){
+					afterQuote: function(quoteData){
+						$('#journey_type').val(quoteData.journeyType);
 						that.checkPolygonsForPlace();						
 						if(that.validateGetQuote()){
 							that.updateFormAction('tq_pro4_get_quote');

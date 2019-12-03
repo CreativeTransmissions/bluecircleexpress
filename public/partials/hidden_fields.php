@@ -13,7 +13,7 @@
 <input type="hidden" id="tax_cost" name="tax_cost" value=""/>
 <input type="hidden" id="breakdown" name="breakdown" value=""/>
 <input type="hidden" id="surcharge_areas" name="surcharge_areas" value=""/>
-
+<input type="hidden" id="journey_type" name="journey_type" value=""/>
 
 <?php
     $has_services = $this->has_services(); 
