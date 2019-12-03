@@ -1538,10 +1538,7 @@ class TransitQuote_Pro_Public {
         $this->response_msg = 'There was an error calculating the quote'; //default error
 
 
-        //fields to get from request for loacation record
-        $location_fields = $this->cdb->get_table_col_names('locations');
-        $journey_fields = $this->cdb->get_table_col_names('journeys');
-        $journeys_locations_fields = $this->cdb->get_table_col_names('journeys_locations');
+     
 
         $journey_type = $this->ajax->param(array('name' => 'journey_type', 'optional' => true));
 
@@ -1559,12 +1556,19 @@ class TransitQuote_Pro_Public {
 
     public function get_parser_for_journey_type($journey_type){
 
+        //fields to get from request for loacation record
+        $location_fields = $this->cdb->get_table_col_names('locations');
+        $journey_fields = $this->cdb->get_table_col_names('journeys');
+        $journeys_locations_fields = $this->cdb->get_table_col_names('journeys_locations');
+
         $request_parser_config = array( 'debugging'=>$this->debug,
                                         'location_fields'=>$location_fields,
                                         'journey_fields'=>$journey_fields,
                                         'journeys_locations_fields'=>$journeys_locations_fields,
                                         'post_data'=>$_POST,
-                                        'distance_unit'=> $this->distance_unit
+                                        'distance_unit'=> $this->distance_unit,
+                                        'use_dispatch_rates'=>$this->use_dispatch_rates,
+                                        'use_return_to_base_rates'=>$this->use_return_to_base_rates
                                     );
 
 
@@ -1585,6 +1589,12 @@ class TransitQuote_Pro_Public {
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToBase($request_parser_config);
             break;             
             case 'ReturnToBaseFixedStart':
+                return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToBase($request_parser_config);
+            break;   
+            case 'ReturnToCollectionFixedStart':
+                return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollectionAndBase($request_parser_config);
+            break;
+            case 'ReturnToCollectionAndBaseFixedStart':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollectionAndBase($request_parser_config);
             break;
         }
@@ -1813,13 +1823,21 @@ class TransitQuote_Pro_Public {
             $stage_quote = $this->calc_quote_for_stage($rate_options_for_stage);
             $this->stage_data[$key]['quote'] = $stage_quote;
 
-            if($key===0){
-                $this->stages_html .= '<tr><td>Dispatch Distance</td><td>'.$rate_options_for_stage['distance'].'</td><tr>';
-                $this->stages_html .= '<tr><td>Dispatch Cost</td><td>'.$stage_quote['total'].'</td><tr>';
-            } else {
-                $this->stages_html .= '<tr><td>Delivery Distance</td><td>'.$rate_options_for_stage['distance'].'</td><tr>';
-                $this->stages_html .= '<tr><td>Delivery Cost</td><td>'.$stage_quote['total'].'</td><tr>';
+            switch ($stage_data['leg_type']) {
+                case 'standard':
+                    $label = 'Delivery';
+                    break;                
+                case 'return_to_base':
+                    $label = 'Return to Base';
+                    break;
+                default:
+                    $label = ucfirst($stage_data['leg_type']);
+                    break;
             };
+
+            $this->stages_html .= '<tr><td>'.$label.' Distance</td><td>'.$rate_options_for_stage['distance'].'</td><tr>';
+            $this->stages_html .= '<tr><td>'.$label.' Travel Time (hours)</td><td>'.round($rate_options_for_stage['hours'], 1).'</td><tr>';
+            $this->stages_html .= '<tr><td>'.$label.' Cost</td><td>'.$stage_quote['total'].'</td><tr>';
 
 
             $basic_cost_total = $basic_cost_total + $stage_quote['basic_cost'];
@@ -2348,7 +2366,7 @@ class TransitQuote_Pro_Public {
 
         $no_journey_stages = count($this->journey_stages);
         $stage_data_length = count($this->stage_data);
-echo 'save_quote_stages>>>>>>'.json_encode($this->stage_data).'<<<<<';
+//echo 'save_quote_stages>>>>>>'.json_encode($this->stage_data).'<<<<<';
         if($no_journey_stages != $stage_data_length){
             trigger_error(' save_quote_stage mismatch: stage_data length:'. $stage_data_length.', no_journey_stages:'.$no_journey_stages, E_USER_ERROR);            
 

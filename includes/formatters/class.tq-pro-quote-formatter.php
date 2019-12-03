@@ -201,13 +201,26 @@ class TQ_QuoteFormatter {
     }
 
     public function get_rate_type_for_id($rate_type_id){
-        if((int)$rate_type_id==0){
-            $rate_type = $this->labels['dispatch_stage_label'];
-        } else {
-            $rate_type = $this->labels['standard_stage_label'];
+        switch((int)$rate_type_id){
+            case 1:
+                $rate_type = $this->labels['dispatch_stage_label'];
+            break;
+            case 2:
+                $rate_type = $this->labels['standard_stage_label'];
+            break;
+            case 3:
+                $rate_type = $this->labels['return_to_base_stage_label'];
+            break;
+            case 4:
+                $rate_type = $this->labels['return_to_collection_stage_label'];
+            break;
+            default:
+                echo 'unknown rate_type_id: '.$rate_type_id;
+            break;
         };
         return $rate_type;
     }
+
     public function format_surcharge_for_output($surcharge_row){
         $value_html =  $surcharge_row['amount'];
         return $value_html;

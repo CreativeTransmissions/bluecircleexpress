@@ -118,7 +118,9 @@ class TQ_LabelFetcher {
                         'total'=>'Total (' . $this->currency . ')',
                         'rates'=>'Rates',
                     	'dispatch_stage_label'=>'Dispatch',
-                    	'standard_stage_label'=>'Standard');
+                    	'standard_stage_label'=>'Standard',
+                    	'return_to_collection_stage_label'=>'Return To Collection',
+                    	'return_to_base_stage_label'=>'Return To Base');
 	}	
 
 	private function fetch_booking_view_labels(){
@@ -184,7 +186,9 @@ class TQ_LabelFetcher {
                         'total'=>'Total (' . $this->currency . ')',
                         'rates'=>'Rates',
                     	'dispatch_stage_label'=>'Dispatch',
-                    	'standard_stage_label'=>'Standard');
+                    	'standard_stage_label'=>'Standard',
+                    	'return_to_collection_stage_label'=>'Return To Collection',
+                    	'return_to_base_stage_label'=>'Return To Base');
 	}
 
 	private function fetch_customer_email_labels(){
@@ -242,7 +246,9 @@ class TQ_LabelFetcher {
                         'total'=>'Total (' . $this->currency . ')',
                         'rates'=>'Rates',
                     	'dispatch_stage_label'=>'Dispatch',
-                    	'standard_stage_label'=>'Standard');
+                    	'standard_stage_label'=>'Standard',
+                    	'return_to_collection_stage_label'=>'Return To Collection',
+                    	'return_to_base_stage_label'=>'Return To Base');
 	}	
 }
 
