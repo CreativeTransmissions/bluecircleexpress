@@ -43,45 +43,21 @@
 				if(!this.initEvents()){
 					return false
 				};
-
 			},
 
 			initData: function(){
 				this.log('initData');
-				this.log('sandbox: '+this.settings.data.sandbox);
-				if(!this.initDataRates()){
-					return false;
-				};
 				this.initDataMapSettings();
 				this.initDataJourneyRestrictions();
 				this.payPalInitialized = false;
 				return true;
 			},
 
-			initDataRates: function(){
-				this.log('initDataRates');
-				var limits = [];
-				var rates = [];
-				var costPerUnit = []; //cost for additional miles
-				if(!this.settings.data.rates){
-					this.log('Warning: no Rates supplied');
-					return false;
-
-				} else {
-					this.rates = this.settings.data.rates;
-				}
-				
-				this.limits = limits;
-				
-				this.log('initDataRates');
-				this.log(this.limits);
-				this.log(this.rates);
-				return true;
-			},
 
 			initDataMapSettings: function(){
 				//Initialize map settings
-
+				console.log('initDataMapSettings');
+				console.log(this.settings.data);
 				this.geolocate = (this.settings.data.geolocate=='true')?true:false;
 
 				this.mapSettings = {
@@ -964,7 +940,7 @@
 					trimmedLegs.push(trimmed);
 				});
 				console.log('saving '+trimmedLegs.length+' legs');
-
+				console.log(trimmedLegs);
 				//serialize form
 				var data = $(this.element).serialize();
 					//add button value to determine if request is for a quote or payment

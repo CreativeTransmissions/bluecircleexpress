@@ -159,7 +159,13 @@ class TransitQuote_Pro_Public {
 
         wp_enqueue_script($this->plugin_slug . '-ReturnJourneyRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.ReturnJourneyRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
 
+        wp_enqueue_script($this->plugin_slug . '-ReturnToBaseOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.ReturnToBaseOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
         wp_enqueue_script($this->plugin_slug . '-ReturnToBaseFixedStartRouteOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.ReturnToBaseFixedStartRouteOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
+        wp_enqueue_script($this->plugin_slug . '-ReturnJourneyReturnToBaseOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.ReturnJourneyReturnToBaseOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
+
+        wp_enqueue_script($this->plugin_slug . '-ReturnJourneyReturnToBaseFixedStartOptionsBuilder', plugins_url('js/js-transitquote/classes/class.tq.ReturnJourneyReturnToBaseFixedStartOptionsBuilder.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
 
         wp_enqueue_script($this->plugin_slug . '-RouteRequest', plugins_url('js/js-transitquote/classes/class.tq.RouteRequest.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);  
 
@@ -1601,12 +1607,8 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_quote() {
-        
-      /*  var_dump($this->rate_options);
-        if ($this->rate_options['distance'] <= 0) {
-            $this->response_msg = 'Distance must be greater than 0';
-            return self::build_get_quote_response();
-        };*/
+       return self::get_quote_multi_stage();
+       /*
         if(($this->use_dispatch_rates === true)||($this->use_return_to_base_rates)){
          //   echo ' ************ MuLTI STAGE *******';
             return self::get_quote_multi_stage();
@@ -1614,7 +1616,7 @@ class TransitQuote_Pro_Public {
            // echo ' ************ SINGLE STAGE *******';
 
             return self::get_quote_single_stage();
-        };
+        };*/
     }
 
     public function get_quote_multi_stage(){
@@ -2315,7 +2317,7 @@ class TransitQuote_Pro_Public {
 
         
         $journey_data = $this->request_parser_get_quote->get_journey_data();
-
+echo 'no of journey legs: '.count($journey_data['legs']);
         $this->journey_repo = new \TQ_JourneyRepository($repo_config);        
         $this->journey = $this->journey_repo->save($journey_data['journey']);
 
