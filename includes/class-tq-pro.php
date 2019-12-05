@@ -372,6 +372,11 @@ class TransitQuote_Pro4 {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/parsers/class-tq-request-parser-get-quote-return-to-collection-and-base.php';
 
 		/**
+		 * The class responsible for parsing get quote requests
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/parsers/class-tq-request-parser-get-quote-return-journey-return-to-base.php';
+
+		/**
 		 * The class responsible for parsing save job requests
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/parsers/class-tq-request-parser-save-job.php';

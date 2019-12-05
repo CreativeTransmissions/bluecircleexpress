@@ -21,7 +21,7 @@
  * @author     Andrew van Duivenbode <hq@transitquote.co.uk>
  */
 namespace TransitQuote_Pro4;
-class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
+class TQ_RequestParserGetQuoteReturnJourneyReturnToBase {
 
  	private $default_config = array();  // final or all
 
@@ -224,23 +224,20 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
         };
 
         $legs = $this->get_leg_data();
-        echo 'legs to parse: '.count($legs);
+       // echo 'legs to pars: '.count($legs);
         foreach ($legs as $key => $leg) {
-            echo 'leg idx: '.$key.' = type: '.$leg['leg_type_id'].PHP_EOL;
+           // echo 'leg idx: '.$key.' = type: '.$leg['leg_type_id'].PHP_EOL;
             switch ($leg['leg_type_id']) {
                 case 1: // dispatch
+
                     $this->stage_data = array();
                     $stage_data['leg_type'] = $this->get_leg_type($key);
                     $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
                     $stage_data['hours'] = $this->get_leg_duration_hours($key); 
-                    echo ' -- dispatch leg type: '.$stage_data['leg_type'];
-
-                    $this->stage_data[] = $stage_data;   
-                    echo '** added dispatch at index '.$key;
+                    $this->stage_data[] = $stage_data;      
                  
                     break;
                 case 2: // standard
-
                     if($legs[$key-1]!=2){
                         echo '** started standard at index '.$key;                        
                         //start stage totals at 0 as standard stage can have multiple stops
@@ -252,30 +249,22 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
 
                     // add leg data to stage totals
                     $stage_data['distance'] = $stage_data['distance'] + $this->get_leg_distance($key, $this->config['distance_unit']);
-                    $stage_data['hours'] = $stage_data['hours'] + $this->get_leg_duration_hours($key);                  
-                    break;
-                case 3: // return to collectino
-                    // save the standard stage data:
-                    echo '** save the standard stage data at index '.$key;
-                    $this->stage_data[] = $stage_data;      
-
-                    // create and save return to collection stage
-                    $stage_data['leg_type'] = $this->get_leg_type($key);
-                    $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
-                    $stage_data['hours'] = $this->get_leg_duration_hours($key); 
-                    $this->stage_data[] = $stage_data;           
-                    echo '** save the return_to_base stage data at index '.$key;                       
+                    $stage_data['hours'] = $stage_data['hours'] + $this->get_leg_duration_hours($key);  
                     break;                    
                 case 4: // return to base
+                    // save the standard stage data:
+                     echo '** save the standard stage data at index '.$key;                        
+                    $this->stage_data[] = $stage_data;      
+
                     // create and save final stage
                     $stage_data['leg_type'] = $this->get_leg_type($key);
                     $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
                     $stage_data['hours'] = $this->get_leg_duration_hours($key); 
                     $this->stage_data[] = $stage_data;      
                     echo '** save the return_to_base stage data at index '.$key;                       
-                    break;                    
+                    break;
                 default:
-                    trigger_error('unrecognised: leg_type_id '.$this->get_leg_type_id($key), E_USER_WARNING);            
+                    trigger_error('unrecognised: get_leg_type_id '.$this->get_leg_type_id($key), E_USER_WARNING);            
                     break;
             };
         };
@@ -311,24 +300,19 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
     }
 
     public function get_leg_type($legIdx){
-        $leg_type = 'standard';
+        $leg_type = 'standard'; //default to standard
 
-        if((int)$legIdx === (count($this->legs)-2) ){
-            $leg_type = 'return_to_collection';
-        };          
-        if((int)$legIdx === (count($this->legs)-1) ){
+        if($legIdx === count($this->legs)-1){
             $leg_type = 'return_to_base';
-        };  
-        return $leg_type;     
+        };            
+        echo '----get_leg_type for legIdx: '.$legIdx.' = '. $leg_type.' no of legs: '.count($this->legs);
+
+        return $leg_type;
     }
 
     public function get_leg_type_id($legIdx){
-        $leg_type_id = 2;
-        // 1 = dispatch, 2 = standard, 3 = return to collection, 4 = return to base
-
-        if($legIdx === (count($this->legs)-2) ){
-            $leg_type_id = 3;
-        };         
+        // 1 = dispatch , 2 = standard, 3 = return to base, 4 = return to collection
+        $leg_type_id = 2; //default to standard
 
         if($legIdx === (count($this->legs)-1) ){
             $leg_type_id = 4;
@@ -355,7 +339,6 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
 
     public function get_leg($legIdx = null){
         if(!is_numeric($legIdx)){
-            echo 'non-numeric leg';
             return false;
         };
 
@@ -377,7 +360,6 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
         $leg_distance = false;
 
         if(!is_numeric($legIdx)){
-            echo 'get_leg_distance: non-numeric legIdx';                        
             return false;
         };
 
@@ -394,7 +376,7 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
                 $leg_distance = $this->get_leg_distance_miles($legIdx);
                 break;
             default:
-                echo 'invalid distance_unit: '.$distance_unit;
+                trigger_error('invalid distance_unit: '.$distance_unit, E_USER_WARNING);                            
                 break;
         };
        
@@ -403,12 +385,11 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
 
     public function get_leg_distance_kilometers($legIdx = null){
         if(!is_numeric($legIdx)){
-            echo 'get_leg_distance: non-numeric leg';                        
+            trigger_error('get_leg_distance: non-numeric leg'.$legIdx, E_USER_WARNING);                            
             return false;
         };
         $leg_meters = $this->get_leg_distance_meters($legIdx);
         if(!is_numeric($leg_meters)){
-            trigger_error('get_leg_distance_kilometers: non-numeric leg_meters', E_USER_WARNING);            
             return false;
         };
         
@@ -534,8 +515,6 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
         };
 
         if(!is_array($this->legs)){
-            echo ' no legs';
-var_dump($this->legs);
             return false;
         };
 
