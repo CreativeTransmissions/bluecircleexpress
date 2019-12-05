@@ -244,7 +244,7 @@ class TQ_RequestParserGetQuoteDispatch {
                 case 2: // standard
 
                     if($legs[$key-1]!=2){
-                    echo '** started standard at index '.$key;                        
+                        echo '** started standard at index '.$key;                        
                         //start stage totals at 0 as standard stage can have multiple stops
                         //reset values
                         $stage_data = array('distance'=>0,'hours'=>0);   

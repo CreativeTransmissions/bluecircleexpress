@@ -25,7 +25,6 @@ final class TQ_RequestParserGetQuoteStandardJourneyFixedStartDispatchTest extend
         $stage_data = $this->request_parser_get_quote_standard_journey_dispatch->get_stage_data();
 
         $this->assertTrue(is_array($stage_data), ' stage_data is not array');
-        var_dump($stage_data);
         $this->assertCount(2, $this->request_parser_get_quote_standard_journey_dispatch->legs, ' not 2 legs');
 
         $this->assertCount(2, $stage_data, ' stage_data does not have 2 stages');
