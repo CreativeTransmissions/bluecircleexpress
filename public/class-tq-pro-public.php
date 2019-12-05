@@ -1583,7 +1583,11 @@ echo json_encode($request_parser_config);
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
             break;
             case 'StandardJourneyFixedStart':
-                return new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
+                if($this->use_dispatch_rates){
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteDispatch($request_parser_config);
+                } else {
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
+                };
             break;
             case 'ReturnJourney':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollection($request_parser_config);
