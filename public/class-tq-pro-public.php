@@ -1577,7 +1577,7 @@ class TransitQuote_Pro_Public {
                                         'use_return_to_base_rates'=>$this->use_return_to_base_rates
                                     );
 
-
+echo json_encode($request_parser_config);
         switch ($journey_type) {
             case 'StandardJourney':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
@@ -1833,7 +1833,7 @@ class TransitQuote_Pro_Public {
                     $label = 'Return to Base';
                     break;
                 default:
-                    $label = ucfirst($stage_data['leg_type']);
+                    $label = 'default: '.ucfirst($stage_data['leg_type']);
                     break;
             };
 
@@ -2317,7 +2317,7 @@ class TransitQuote_Pro_Public {
 
         
         $journey_data = $this->request_parser_get_quote->get_journey_data();
-echo 'no of journey legs: '.count($journey_data['legs']);
+        //echo 'no of journey legs: '.count($journey_data['legs']);
         $this->journey_repo = new \TQ_JourneyRepository($repo_config);        
         $this->journey = $this->journey_repo->save($journey_data['journey']);
 

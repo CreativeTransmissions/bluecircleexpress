@@ -203,14 +203,14 @@ class TQ_RequestParserGetQuote {
             $leg_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
             $leg_data['time'] =  $this->get_leg_duration_hours($key);
             $leg_data['leg_order'] =  $key;
-            $leg_data['leg_type_id'] = $this->get_leg_type_id($key);
+            $leg_data['leg_type_id'] = 2; // always standard
             $leg_data['directions_response'] = json_encode($leg);
             $this->leg_data[] = $leg_data;
         };
         return $this->leg_data;
     }
 
-    public function get_stage_data($legIdx = null){
+    public function get_stage_data(){
         //return array of stages with data (delivery distance can be multiple legs)
         /* 
         - leg_type
@@ -218,56 +218,25 @@ class TQ_RequestParserGetQuote {
         - hours
         */
 
-        $this->stage_data = array();
-        $stage_data = array(); // init stage totals
-        $stage_data['leg_type'] = $this->get_leg_type(0);
-        $stage_data['distance'] = 0;
-        $stage_data['hours'] = 0;
 
         if(!isset($this->legs)){
             $this->parse_legs();
         };
 
-        foreach ($this->legs as $key => $leg) {
-            switch ($leg) {
-                case 'value':
-                    # code...
-                    break;
-                
-                default:
-                    # code...
-                    break;
-            }
-            if($this->is_dispatch_leg($key)){
-                // store dispatch stage
-                $stage_data['leg_type'] = $this->get_leg_type($key);
-                $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
-                $stage_data['hours'] = $this->get_leg_duration_hours($key); 
-                $this->stage_data[] = $stage_data;      
+        $legs = $this->get_leg_data();
+        echo 'legs to pars: '.count($legs);
+        $stage_data = array('distance'=>0,'hours'=>0);  
+        $stage_data['leg_type'] = $this->get_leg_type(0); // request parser is for standard journey
 
-                //reset values
-                $stage_data = array('distance'=>0,'hours'=>0);
-            };
-
-            if($this->is_return_leg($key)){
-                // store return stage
-                $stage_data['leg_type'] = $this->get_leg_type($key);
-                $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
-                $stage_data['hours'] = $this->get_leg_duration_hours($key); 
-                $this->stage_data[] = $stage_data;      
-
-                //reset values
-                $stage_data = array('distance'=>0,'hours'=>0);
-            };
-
+        foreach ($legs as $key => $leg) {
+           echo 'leg idx: '.$key.' = type: '.$leg['leg_type_id'].PHP_EOL;
             // add leg data to stage totals
             $stage_data['distance'] = $stage_data['distance'] + $this->get_leg_distance($key, $this->config['distance_unit']);
-            $stage_data['hours'] = $stage_data['hours'] + $this->get_leg_duration_hours($key);                  
-            $stage_data['leg_type'] = $this->get_leg_type($key);
-
+            $stage_data['hours'] = $stage_data['hours'] + $this->get_leg_duration_hours($key); 
         };
 
-        $this->stage_data[] = $stage_data; // add last stage
+        $this->stage_data[] = $stage_data;
+
         return $this->stage_data;
     }
 
@@ -299,16 +268,7 @@ class TQ_RequestParserGetQuote {
     }
 
     public function get_leg_type($legIdx){
-        if($this->using_dispatch_rates()){
-            if((int)$legIdx === 0 ){
-                return 'dispatch';
-            };             
-            if((int)$legIdx > 0){
-                return 'standard';
-            };            
-        } else {
-            return 'standard';
-        }
+        return 'standard';
     }
 
     public function get_leg_type_id($legIdx){

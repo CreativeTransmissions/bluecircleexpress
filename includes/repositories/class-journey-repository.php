@@ -50,11 +50,12 @@ class TQ_JourneyRepository
         
         $this->leg_recs = array();
         $this->stage_recs = array();        
-
+        $this->current_stage = array('leg_type_id'=>null);
         
         foreach ($this->legs as $key => $leg) {
 
-            //echo ' swithc leg type id: '.$leg['leg_type_id'];
+            
+          //  echo ' switch leg type id: '.$leg['leg_type_id'];
             switch ($leg['leg_type_id']) {
                 case 1: // dispatcj
                     // start dispatch stage
@@ -69,7 +70,7 @@ class TQ_JourneyRepository
                     break;
                 case 2: // standard
 
-                    if($this->current_stage['leg_type_id']===1){ // last stage was dispatch
+                    if($this->current_stage['leg_type_id']!=2){ // last stage was dispatch
                         $stage_data = $this->create_stage_record(count($this->stage_recs));
                         $this->current_stage = $this->save_journey_stage($stage_data);
                         $leg_data = $this->create_leg_record($key, $leg); 
