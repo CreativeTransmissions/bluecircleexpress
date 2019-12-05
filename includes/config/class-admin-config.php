@@ -668,15 +668,21 @@ class Admin_Config {
                                                         'help'=>'If enabled, this option will enable charging a different set of rates for the journey from base to pickup.',
                                                         'default'=>0),
 
-
                                                       'use_return_to_base_rates'=>array(
                                                         'id'=>'use_return_to_base_rates',
                                                         'label'=>'Enable Return To Base Rates',
                                                         'type'=>'checkbox',
-                                                        'help'=>'If enabled, this option will enable charging a different set of rates for the journey from the final dropoff back to your business address.',
+                                                        'help'=>'If enabled, this option will enable charging a different set of rates for the journey from the final destination address back to your business address.',
                                                         'default'=>0),
 
 
+                                                      'use_return_to_collection_rates'=>array(
+                                                        'id'=>'use_return_to_collection_rates',
+                                                        'label'=>'Enable Return To Collection Rates',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'If enabled, this option will enable charging a different set of rates for the journey from the final destination address back to the collection address.',
+                                                        'default'=>0),
+                                                      
                                                       'use_out_of_hours_rates'=>array(
                                                         'id'=>'use_out_of_hours_rates',
                                                         'label'=>'Enable Out Of Hours Rates',

@@ -253,6 +253,8 @@ class TransitQuote_Pro_Public {
         $this->use_holiday_rates = self::get_use_holiday_rates();        
         $this->use_dispatch_rates = self::get_use_dispatch_rates();
         $this->use_return_to_base_rates = self::get_use_return_to_base_rates();        
+        $this->use_return_to_collection_rates = self::get_use_return_to_collection_rates();        
+
         $this->distance_unit = self::get_distance_unit();        
     }
 
@@ -398,7 +400,8 @@ class TransitQuote_Pro_Public {
             'date_format' => $get_date_format,
             'time_format' => $get_time_format,
             'use_out_of_hours_rates'=>self::bool_to_text($this->use_out_of_hours_rates),
-            'use_return_to_base_rates'=>self::bool_to_text($this->use_return_to_base_rates)
+            'use_return_to_base_rates'=>self::bool_to_text($this->use_return_to_base_rates),            
+            'use_return_to_collection_rates'=>self::bool_to_text($this->use_return_to_collection_rates)
         );
 
         if (!empty($this->api_key)) {
@@ -1574,6 +1577,7 @@ class TransitQuote_Pro_Public {
                                         'post_data'=>$_POST,
                                         'distance_unit'=> $this->distance_unit,
                                         'use_dispatch_rates'=>$this->use_dispatch_rates,
+                                        'use_return_to_collection_rates'=>$this->use_return_to_collection_rates,
                                         'use_return_to_base_rates'=>$this->use_return_to_base_rates
                                     );
 
@@ -1775,6 +1779,10 @@ echo json_encode($request_parser_config);
 
     public function get_use_return_to_base_rates() {
         return  (bool)self::get_setting('', 'use_return_to_base_rates', 0);
+    }
+
+    public function get_use_return_to_collection_rates() {
+        return  (bool)self::get_setting('', 'use_return_to_collection_rates', 0);
     }
 
     public function calc_quote() {

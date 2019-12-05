@@ -137,6 +137,7 @@
 
 					pickStartAddress: this.settings.data.pick_start_address,
 					returnToBase: this.settings.data.use_return_to_base_rates,
+					returnToCollection: this.settings.data.use_return_to_collection_rates,
 
 					startPlaceName: this.settings.data.startPlaceName,
 					maxDistance: this.settings.data.max_distance,

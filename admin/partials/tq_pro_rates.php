@@ -141,6 +141,24 @@
 			</div>	
 		</fieldset>
 	</div>		
+		
+	<div class="row row-rates">		
+		<fieldset>
+			<legend>Return To Collection Rates (for journey from final destination back to first collection address)</legend>
+			<div class="inline-field">
+				<label for="hour">Set Price Return To Collection</label>
+				<input class="input-long" type="text" name="amount_return_to_pickup" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per <?php echo $this->admin->distance_unit; ?> Return To Collection</label>
+				<input class="input-long" type="text" name="unit_return_to_pickup" />
+			</div>
+			<div class="inline-field">
+				<label for="hour">Price Per Hour Return To Collection</label>
+				<input class="input-long" type="text" name="hour_return_to_pickup" />
+			</div>	
+		</fieldset>
+	</div>
 
 	<input type="hidden" name="id" value=""/>
 	<input type="hidden" name="action" value="tq_pro4_save_record"/>
@@ -202,9 +220,13 @@
 			<th>Dispatch Price Per <?php echo $this->admin->distance_unit; ?></th>
 			<th>Dispatch Price Per Hour</th>
 
-			<th>Return Set Price</th>
-			<th>Return Price Per <?php echo $this->admin->distance_unit; ?></th>
-			<th>Return Price Per Hour</th>
+			<th>Return To Base Set Price</th>
+			<th>Return To Base Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th>Return To Base Price Per Hour</th>
+
+			<th>Return To Collect Set Price</th>
+			<th>Return To Collect Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th>Return To Collect Price Per Hour</th>
 
 			<th class="actions"><div class="spinner"></div></tr>
 		</thead>
