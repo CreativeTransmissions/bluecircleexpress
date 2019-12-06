@@ -225,10 +225,8 @@ class TQ_RequestParserGetQuoteDispatch {
         };
 
         $legs = $this->get_leg_data();
-        echo 'legs to pars: '.count($legs);
-        var_dump($legs);
+
         foreach ($legs as $key => $leg) {
-            echo 'leg idx: '.$key.' = type: '.$leg['leg_type_id'].PHP_EOL;
             switch ($leg['leg_type_id']) {
                 case 1: // dispatch
                     $this->stage_data = array();
@@ -238,12 +236,11 @@ class TQ_RequestParserGetQuoteDispatch {
                     // echo ' -- dispatch leg type: '.$stage_data['leg_type'];
 
                     $this->stage_data[] = $stage_data;   
-                    echo '** added dispatch at index '.$key;
                  
                     break;
                 case 2: // standard
+                    if($key===1){ //start counting standard stops after the first leg
 
-                    if($legs[$key-1]!=2){
                         //echo '** started standard at index '.$key;                        
                         //start stage totals at 0 as standard stage can have multiple stops
                         //reset values
@@ -513,8 +510,6 @@ class TQ_RequestParserGetQuoteDispatch {
         };
 
         if(!is_array($this->legs)){
-            echo ' no legs';
-var_dump($this->legs);
             return false;
         };
 

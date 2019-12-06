@@ -706,7 +706,7 @@ class Admin_Config {
 
                                                       'show_deliver_and_return'=>array(
                                                         'id'=>'show_deliver_and_return',
-                                                        'label'=>'Charge for  Return Journey',
+                                                        'label'=>'Return To Collection Address',
                                                         'type'=>'select',
                                                         'options'=>array('Always', 'Never', 'Ask'),
                                                         'help'=>'Choose whether or not to include the return journey from the final drop off address back to the collection address. If Ask is selected customers see deliver and return as an option.',

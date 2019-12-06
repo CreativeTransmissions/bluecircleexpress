@@ -1582,23 +1582,53 @@ class TransitQuote_Pro_Public {
                                     );
 
         switch ($journey_type) {
+
+
             case 'StandardJourney':
-                return new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
-            break;
-            case 'StandardJourneyFixedStart':
+                if(($this->use_dispatch_rates)&&($this->use_return_to_base_rates)){
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToBase($request_parser_config);
+                };         
                 if($this->use_dispatch_rates){
                     return new TransitQuote_Pro4\TQ_RequestParserGetQuoteDispatch($request_parser_config);
+                };
+                if($this->use_return_to_base_rates){
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToBase($request_parser_config);
+                };                            
+                return new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
+            break;            
+            case 'ReturnJourney':
+                if(($this->use_dispatch_rates)&&($this->use_return_to_collection_rates)&&($this->use_return_to_base_rates)){
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnJourneyDispatchReturnToBase($request_parser_config);
+                };
+                if(($this->use_dispatch_rates)&&($this->use_return_to_collection_rates)){
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnJourneyReturnToBase($request_parser_config);
+                }; 
+                if(($this->use_return_to_collection_rates)&&($this->use_return_to_base_rates)){
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnJourneyReturnToBase($request_parser_config);
+                };
+                if(($this->use_dispatch_rates)&&($this->use_return_to_base_rates)){
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnJourneyReturnToBase($request_parser_config);
+                };                
+                if($this->use_dispatch_rates){
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnJourneyReturn($request_parser_config);
+                };
+                if($this->use_return_to_collection_rates){
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnJourneyReturn($request_parser_config);
+                };
+                if($this->use_return_to_base_rates){
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnJourneyReturn($request_parser_config);
+                };   
+                return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollection($request_parser_config);            
+            break;           
+            case 'StandardJourneyFixedStart':
+                if($this->use_dispatch_rates){
+                //    echo 'StandardJourneyFixedStart: TQ_RequestParserGetQuoteDispatch';
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteDispatch($request_parser_config);
                 } else {
+                //    echo 'StandardJourneyFixedStart: TQ_RequestParserGetQuote';
                     return new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
                 };
-            break;
-            case 'ReturnJourney':
-                if($this->use_return_to_collection_rates){
-                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnJourneyReturn($request_parser_config);                    
-                } else {
-                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollection($request_parser_config);
-                }
-            break;           
+            break;            
             case 'ReturnJourneyFixedStart':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollection($request_parser_config);
             break;
@@ -1789,7 +1819,7 @@ class TransitQuote_Pro_Public {
     }
 
     public function calc_quote() {
-        $this->stages_html = '<table><tr><th>Item</th><th>Price</th><tr>';
+        $this->stages_html = '<table><tr><th colspan="2">Itemized Quote</th><tr>';
 
         $this->rate_selector = new TransitQuote_Pro4\TQ_RateSelector(array('cdb'=>$this->cdb,'rate_options'=>$this->rate_options));
 
@@ -1830,7 +1860,7 @@ class TransitQuote_Pro_Public {
         $distance_cost_total = 0;
         $time_cost_total = 0;
         $this->initial_stage_data = $this->stage_data = $this->request_parser_get_quote->get_stage_data();
-        $this->stages_html = '<table><tr><th>Item</th><th>Price</th><tr>';
+        $this->stages_html = '<table><tr><th colspan="2">Itemized Quote</th><tr>';
         foreach ($this->stage_data as $key => $stage_data) {
             // override distance and hours with that for the stage
             $rate_options_for_stage = array_merge($this->rate_options, $stage_data);
@@ -1841,9 +1871,15 @@ class TransitQuote_Pro_Public {
             $this->stage_data[$key]['quote'] = $stage_quote;
 
             switch ($stage_data['leg_type']) {
+                case 'dispatch':
+                    $label = 'Dispatch';
+                    break;                
                 case 'standard':
                     $label = 'Delivery';
-                    break;                
+                    break;      
+                case 'return_to_collection':
+                    $label = 'Return to Base';
+                    break;
                 case 'return_to_base':
                     $label = 'Return to Base';
                     break;
@@ -1852,8 +1888,8 @@ class TransitQuote_Pro_Public {
                     break;
             };
 
-            $this->stages_html .= '<tr><td>'.$label.' Distance</td><td>'.$rate_options_for_stage['distance'].'</td><tr>';
-            $this->stages_html .= '<tr><td>'.$label.' Travel Time (hours)</td><td>'.round($rate_options_for_stage['hours'], 1).'</td><tr>';
+            $this->stages_html .= '<tr><td>'.$label.' Distance</td><td>'.round($rate_options_for_stage['distance'], 1).' '.$this->distance_unit.'s</td><tr>';
+            $this->stages_html .= '<tr><td>'.$label.' Travel Time </td><td>'.round($rate_options_for_stage['hours'], 1).' Hours</td><tr>';
             $this->stages_html .= '<tr><td>'.$label.' Cost</td><td>'.$stage_quote['total'].'</td><tr>';
 
 
@@ -1905,9 +1941,12 @@ class TransitQuote_Pro_Public {
                                                                                 'weight_unit_name'=>$this->rate_options['weight_unit_name'],
                                                                                 'weight_surcharge_id'=>$weight_surcharge_id));
             $surcharges = $this->surcharge_calculator->run();
-            $this->quote = array_merge($this->quote, $surcharges);
-            $this->quote['basic_cost'] = $this->quote['basic_cost']+$surcharges['weight_cost'];
-            $this->stages_html .= '<tr><td>Weight Cost</td><td>'.$surcharges['weight_cost'].'</td><tr>';
+            if(is_array($surcharges)){
+                $this->quote = array_merge($this->quote, $surcharges);
+                $this->quote['basic_cost'] = $this->quote['basic_cost']+$surcharges['weight_cost'];
+                $this->stages_html .= '<tr><td>Weight Cost</td><td>'.$surcharges['weight_cost'].'</td><tr>';
+            }
+
         };
 
         if($this->rate_options['surcharge_ids']!==''){
@@ -2332,7 +2371,7 @@ class TransitQuote_Pro_Public {
 
         
         $journey_data = $this->request_parser_get_quote->get_journey_data();
-        //echo 'no of journey legs: '.count($journey_data['legs']);
+       // echo 'no of journey legs: '.count($journey_data['legs']);
         $this->journey_repo = new \TQ_JourneyRepository($repo_config);        
         $this->journey = $this->journey_repo->save($journey_data['journey']);
 
