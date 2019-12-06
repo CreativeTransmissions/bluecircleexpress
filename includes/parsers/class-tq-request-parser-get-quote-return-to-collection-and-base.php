@@ -233,7 +233,7 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
                     $stage_data['leg_type'] = $this->get_leg_type($key);
                     $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
                     $stage_data['hours'] = $this->get_leg_duration_hours($key); 
-                    echo ' -- dispatch leg type: '.$stage_data['leg_type'];
+                    // echo ' -- dispatch leg type: '.$stage_data['leg_type'];
 
                     $this->stage_data[] = $stage_data;   
                     echo '** added dispatch at index '.$key;
@@ -242,13 +242,13 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
                 case 2: // standard
 
                     if($legs[$key-1]!=2){
-                        echo '** started standard at index '.$key;                        
+                        //echo '** started standard at index '.$key;                        
                         //start stage totals at 0 as standard stage can have multiple stops
                         //reset values
                         $stage_data = array('distance'=>0,'hours'=>0);   
                         $stage_data['leg_type'] = $this->get_leg_type($key);
                     };
-                    echo '** added to standard dispatch at index '.$key;                        
+                    // echo '** added to standard dispatch at index '.$key;                        
 
                     // add leg data to stage totals
                     $stage_data['distance'] = $stage_data['distance'] + $this->get_leg_distance($key, $this->config['distance_unit']);
@@ -256,7 +256,7 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
                     break;
                 case 3: // return to collectino
                     // save the standard stage data:
-                    echo '** save the standard stage data at index '.$key;
+                    // echo '** save the standard stage data at index '.$key;
                     $this->stage_data[] = $stage_data;      
 
                     // create and save return to collection stage
@@ -264,7 +264,7 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
                     $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
                     $stage_data['hours'] = $this->get_leg_duration_hours($key); 
                     $this->stage_data[] = $stage_data;           
-                    echo '** save the return_to_base stage data at index '.$key;                       
+                    // echo '** save the return_to_base stage data at index '.$key;                       
                     break;                    
                 case 4: // return to base
                     // create and save final stage
@@ -272,7 +272,7 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
                     $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
                     $stage_data['hours'] = $this->get_leg_duration_hours($key); 
                     $this->stage_data[] = $stage_data;      
-                    echo '** save the return_to_base stage data at index '.$key;                       
+                    // echo '** save the return_to_base stage data at index '.$key;                       
                     break;                    
                 default:
                     trigger_error('unrecognised: leg_type_id '.$this->get_leg_type_id($key), E_USER_WARNING);            

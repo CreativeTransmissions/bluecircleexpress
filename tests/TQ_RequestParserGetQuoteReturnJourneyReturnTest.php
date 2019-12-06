@@ -47,7 +47,6 @@ final class TQ_RequestParserGetQuoteReturnJourneyReturnTest extends TestCase
         $stage_data = $this->request_parser_get_quote_return_journey_two_drops->get_stage_data();
 
         $this->assertTrue(is_array($stage_data), ' stage_data is not array');
-        var_dump($stage_data);
 
         $this->assertCount(3, $this->request_parser_get_quote_return_journey_two_drops->legs, ' not 3 legs');        ;
         $this->assertCount(2, $stage_data, ' stage_data does not have 2 stages');
@@ -63,7 +62,7 @@ final class TQ_RequestParserGetQuoteReturnJourneyReturnTest extends TestCase
         $this->assertEquals('return_to_collection', $stage_data[2]['leg_type'], ' stage_data 2 is not return_to_collection');
         $this->assertEquals(16.825978868863, $stage_data[2]['distance'], ' stage_data 2 incorrect distance');
         $this->assertEquals(0.71277777777778, $stage_data[2]['hours'], ' stage_data 2 incorrect hours');
-        
+
     }
   
 }

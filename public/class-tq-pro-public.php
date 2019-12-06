@@ -1581,7 +1581,6 @@ class TransitQuote_Pro_Public {
                                         'use_return_to_base_rates'=>$this->use_return_to_base_rates
                                     );
 
-echo json_encode($request_parser_config);
         switch ($journey_type) {
             case 'StandardJourney':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuote($request_parser_config);
@@ -1594,7 +1593,11 @@ echo json_encode($request_parser_config);
                 };
             break;
             case 'ReturnJourney':
-                return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollection($request_parser_config);
+                if($this->use_return_to_collection_rates){
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnJourneyReturn($request_parser_config);                    
+                } else {
+                    return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollection($request_parser_config);
+                }
             break;           
             case 'ReturnJourneyFixedStart':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollection($request_parser_config);

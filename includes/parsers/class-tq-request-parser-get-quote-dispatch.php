@@ -235,7 +235,7 @@ class TQ_RequestParserGetQuoteDispatch {
                     $stage_data['leg_type'] = $this->get_leg_type($key);
                     $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
                     $stage_data['hours'] = $this->get_leg_duration_hours($key); 
-                    echo ' -- dispatch leg type: '.$stage_data['leg_type'];
+                    // echo ' -- dispatch leg type: '.$stage_data['leg_type'];
 
                     $this->stage_data[] = $stage_data;   
                     echo '** added dispatch at index '.$key;
@@ -244,13 +244,13 @@ class TQ_RequestParserGetQuoteDispatch {
                 case 2: // standard
 
                     if($legs[$key-1]!=2){
-                        echo '** started standard at index '.$key;                        
+                        //echo '** started standard at index '.$key;                        
                         //start stage totals at 0 as standard stage can have multiple stops
                         //reset values
                         $stage_data = array('distance'=>0,'hours'=>0);   
                         $stage_data['leg_type'] = $this->get_leg_type($key);
                     };
-                    echo '** added to standard dispatch at index '.$key;                        
+                    // echo '** added to standard dispatch at index '.$key;                        
 
                     // add leg data to stage totals
                     $stage_data['distance'] = $stage_data['distance'] + $this->get_leg_distance($key, $this->config['distance_unit']);
