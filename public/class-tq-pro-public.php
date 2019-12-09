@@ -1645,26 +1645,14 @@ class TransitQuote_Pro_Public {
             case 'ReturnToCollectionFixedStart':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollectionAndBase($request_parser_config);
             break;
-            case 'ReturnToCollectionAndBaseFixedStart':
+            case 'ReturnJourneyReturnToBaseFixedStart':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollectionAndBase($request_parser_config);
             break;
         }
     }
 
     public function get_quote() {
-       return self::get_quote_multi_stage();
-       /*
-        if(($this->use_dispatch_rates === true)||($this->use_return_to_base_rates)){
-         //   echo ' ************ MuLTI STAGE *******';
-            return self::get_quote_multi_stage();
-        } else {
-           // echo ' ************ SINGLE STAGE *******';
 
-            return self::get_quote_single_stage();
-        };*/
-    }
-
-    public function get_quote_multi_stage(){
         $this->quote = self::calc_quote_multi_leg();
         self::add_surcharges_to_quote();
         self::add_tax_to_quote();
@@ -1899,7 +1887,7 @@ class TransitQuote_Pro_Public {
 
             $this->stages_html .= '<tr><td>'.$label.' Distance</td><td>'.round($rate_options_for_stage['distance'], 1).' '.$this->distance_unit.'s</td><tr>';
             $this->stages_html .= '<tr><td>'.$label.' Travel Time </td><td>'.round($rate_options_for_stage['hours'], 1).' Hours</td><tr>';
-            $this->stages_html .= '<tr><td>'.$label.' Cost</td><td>'.$stage_quote['total'].'</td><tr>';
+            $this->stages_html .= '<tr><td>'.$label.' Stage Cost</td><td>'.$stage_quote['total'].'</td><tr>';
 
 
             $basic_cost_total = $basic_cost_total + $stage_quote['basic_cost'];
@@ -1908,6 +1896,7 @@ class TransitQuote_Pro_Public {
 
         };
 
+        $this->stages_html .= '<tr><td>Time Cost</td><td>'.$time_cost_total.'</td><tr>';
 
         $this->tax_rate = self::get_tax_rate();        
         $this->tax_cost = ($this->tax_rate/100)*$basic_cost_total; 
@@ -1974,7 +1963,7 @@ class TransitQuote_Pro_Public {
                 $this->quote['basic_cost'] = $this->quote['basic_cost']+$area_surcharges['area_surcharges_cost'];
             };
         };
-    }
+    } 
 
     private function add_tax_to_quote(){
         $calculator = new TransitQuote_Pro4\TQ_CalculationTax(array('tax_name'=>$this->rate_options['tax_name'],
@@ -2014,14 +2003,13 @@ class TransitQuote_Pro_Public {
                 'data' => array('quote' => $this->quote,
                                 'journey'=>$this->journey,
                                 'rate_options' => $this->rate_options,
-                    'html'=>$this->stages_html));
+                                'html'=>$this->stages_html));
 
         } else {
             $response = array('success' => 'false',
                 'msg' => $this->response_msg,
                 'data' => array('rates' =>  $this->quote['rates'],
-                    'rate_options' => $this->rate_options));
-                echo 'QUOTE IS NOT ARRRAY:'.$this->response_msg;
+                'rate_options' => $this->rate_options));
 
         }
         return $response;
@@ -2380,8 +2368,8 @@ class TransitQuote_Pro_Public {
 
         
         $journey_data = $this->request_parser_get_quote->get_journey_data();
-
        // echo 'no of journey legs: '.count($journey_data['legs']);
+        //var_dump($journey_data['journey'])
         $this->journey_repo = new \TQ_JourneyRepository($repo_config);        
         $this->journey = $this->journey_repo->save($journey_data['journey']);
 
@@ -2435,7 +2423,7 @@ class TransitQuote_Pro_Public {
 //echo 'save_quote_stages>>>>>>'.json_encode($this->stage_data).'<<<<<';
         if($no_journey_stages != $stage_data_length){
             $this->error_detail = 'Please check configuration.';
-            //trigger_error(' save_quote_stage mismatch: stage_data length:'. $stage_data_length.', no_journey_stages:'.$no_journey_stages, E_USER_ERROR);            
+            trigger_error(' save_quote_stage mismatch: stage_data length:'. $stage_data_length.', no_journey_stages:'.$no_journey_stages, E_USER_ERROR);            
 
             return false;
         };

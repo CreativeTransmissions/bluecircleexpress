@@ -169,7 +169,7 @@ class TQ_RequestParserGetQuoteReturnJourneyReturn {
 
         $journey = [];
         $journey['distance'] = $this->get_journey_distance();
-        $journey['duration'] = $this->get_journey_duration_hours();
+        $journey['time'] = $this->get_journey_duration();
         $journey['deliver_and_return'] = $this->get_deliver_and_return();
         $journey['optimize_route'] = $this->get_optimize_route();
 

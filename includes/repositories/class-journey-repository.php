@@ -69,7 +69,6 @@ class TQ_JourneyRepository
                     $this->stage_recs[] = $this->current_stage;      
                     break;
                 case 2: // standard
-
                     if($this->current_stage['leg_type_id']!=2){ // last stage was dispatch
                         $stage_data = $this->create_stage_record(count($this->stage_recs));
                         $this->current_stage = $this->save_journey_stage($stage_data);

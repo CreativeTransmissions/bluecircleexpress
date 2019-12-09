@@ -169,7 +169,7 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
 
         $journey = [];
         $journey['distance'] = $this->get_journey_distance();
-        $journey['duration'] = $this->get_journey_duration_hours();
+        $journey['time'] = $this->get_journey_duration();
         $journey['deliver_and_return'] = $this->get_deliver_and_return();
         $journey['optimize_route'] = $this->get_optimize_route();
 
@@ -242,8 +242,13 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
                  
                     break;
                 case 2: // standard
-
-                    if($legs[$key-1]!=2){
+                    if($key===0){
+                        //echo '** started standard at index '.$key;                        
+                        //start stage totals at 0 as standard stage can have multiple stops
+                        //reset values
+                        $stage_data = array('distance'=>0,'hours'=>0);   
+                        $stage_data['leg_type'] = $this->get_leg_type($key);
+                    } elseif ($legs[$key-1]!=2){
                         //echo '** started standard at index '.$key;                        
                         //start stage totals at 0 as standard stage can have multiple stops
                         //reset values
