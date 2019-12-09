@@ -1630,7 +1630,11 @@ class TransitQuote_Pro_Public {
                 };
             break;            
             case 'ReturnJourneyFixedStart':
+            if($this->use_dispatch_rates){
+                return new TransitQuote_Pro4\TQ_RequestParserGetQuoteDispatchReturnToCollection($request_parser_config);    
+            } else {
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollection($request_parser_config);
+            };
             break;
             case 'ReturnToBase':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToBase($request_parser_config);
@@ -1883,7 +1887,7 @@ class TransitQuote_Pro_Public {
                     $label = 'Delivery';
                     break;      
                 case 'return_to_collection':
-                    $label = 'Return to Base';
+                    $label = 'Return to Collection';
                     break;
                 case 'return_to_base':
                     $label = 'Return to Base';
@@ -2376,6 +2380,7 @@ class TransitQuote_Pro_Public {
 
         
         $journey_data = $this->request_parser_get_quote->get_journey_data();
+
        // echo 'no of journey legs: '.count($journey_data['legs']);
         $this->journey_repo = new \TQ_JourneyRepository($repo_config);        
         $this->journey = $this->journey_repo->save($journey_data['journey']);
@@ -2429,7 +2434,8 @@ class TransitQuote_Pro_Public {
         $stage_data_length = count($this->stage_data);
 //echo 'save_quote_stages>>>>>>'.json_encode($this->stage_data).'<<<<<';
         if($no_journey_stages != $stage_data_length){
-            trigger_error(' save_quote_stage mismatch: stage_data length:'. $stage_data_length.', no_journey_stages:'.$no_journey_stages, E_USER_ERROR);            
+            $this->error_detail = 'Please check configuration.';
+            //trigger_error(' save_quote_stage mismatch: stage_data length:'. $stage_data_length.', no_journey_stages:'.$no_journey_stages, E_USER_ERROR);            
 
             return false;
         };

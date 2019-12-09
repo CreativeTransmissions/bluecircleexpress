@@ -384,6 +384,10 @@ class TransitQuote_Pro4 {
 		/**
 		 * The class responsible for parsing get quote requests
 		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/parsers/class-tq-request-parser-get-quote-return-journey-dispatch-collection.php';
+		/**
+		 * The class responsible for parsing get quote requests
+		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/parsers/class-tq-request-parser-get-quote-return-journey-return.php';
 
 		/**

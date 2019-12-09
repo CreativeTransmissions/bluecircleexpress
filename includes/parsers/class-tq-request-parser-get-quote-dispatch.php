@@ -206,6 +206,8 @@ class TQ_RequestParserGetQuoteDispatch {
             $leg_data['leg_type_id'] = $this->get_leg_type_id($key);
             $leg_data['leg_type'] = $this->get_leg_type($key);
             $leg_data['directions_response'] = json_encode($leg);
+            $this->journey_distance = $this->journey_distance + $leg_data['distance'];
+            $this->journey_duration = $this->journey_duration + $leg_data['time'];
             $this->leg_data[] = $leg_data;
         };
         return $this->leg_data;
