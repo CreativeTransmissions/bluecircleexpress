@@ -574,9 +574,9 @@ class Admin_Config {
                                                       'help'=>'Restrict search results to within a radius of your business address.'),
                                                     'pick_start_address'=>array(
                                                       'id'=>'pick_start_address',
-                                                      'label'=>'Allow customer to choose collection location',
+                                                      'label'=>'Include distance from business address in quote.',
                                                       'type'=>'checkbox',
-                                                      'help'=>'When this box is ticked the customer can choose the collection address. Untick to use the same starting address for all jobs. For example: Untick if you are always delivering from your start address to the customers address.',
+                                                      'help'=>'When this box is ticked the customer will be billed for the distance from the business address to the first collection address in addition to the delivery distance.',
                                                       'default'=>1),
                                                     'geolocate'=>array(
                                                       'id'=>'geolocate',

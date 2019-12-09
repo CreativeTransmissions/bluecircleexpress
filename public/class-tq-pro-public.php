@@ -227,7 +227,7 @@ class TransitQuote_Pro_Public {
         $this->quote_element = $this->get_setting('tq_pro_quote_options', 'quote_element', 'quote');
         $this->api_key = self::get_api_key();
         $this->api_string = self::get_api_string();
-        $this->pick_start_address = (bool) $this->get_setting('', 'pick_start_address', true);
+        $this->pick_start_address = self::get_pick_start_address();
         $geolocate = self::get_geolocate();
         $sandbox = self::get_sandbox();
         $this->sandbox = self::bool_to_text_sandbox($sandbox);
@@ -982,7 +982,7 @@ class TransitQuote_Pro_Public {
         $this->cdb = $plugin->get_custom_db();
         $this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb' => $this->cdb, 'debugging' => $this->debug));
 
-        $this->pick_start_address = (bool) $this->get_setting('', 'pick_start_address', true);
+        $this->pick_start_address = self::get_pick_start_address();
 
         $this->show_deliver_and_return = $this->get_setting('', 'show_deliver_and_return');
         if ($this->show_deliver_and_return) {
@@ -1032,7 +1032,7 @@ class TransitQuote_Pro_Public {
         $this->cdb = $plugin->get_custom_db();
         $this->ajax = new TransitQuote_Pro4\CT_AJAX(array('cdb' => $this->cdb, 'debugging' => $this->debug));
 
-        $this->pick_start_address = (bool) $this->get_setting('', 'pick_start_address', true);
+        $this->pick_start_address = self::get_pick_start_address();
         $this->ask_for_unit_no = (bool) $this->get_setting('', 'ask_for_unit_no', false);
         $this->ask_for_postcode = (bool) $this->get_setting('', 'ask_for_postcode', false);
         $this->show_contact_name = (bool) $this->get_setting('', 'show_contact_name', false);
@@ -1774,6 +1774,11 @@ class TransitQuote_Pro_Public {
         return self::get_setting('', 'cost_per_weight_unit', 0.10);
     }
 
+    public function get_pick_start_address(){
+        $pick_start_address = (bool) $this->get_setting('', 'pick_start_address', true);
+        return !$pick_start_address; //option name changed, so now its the opposite
+    }
+    
     public function get_tax_rate() {
         return self::get_setting('', 'tax_rate', 0);
 
