@@ -918,7 +918,30 @@
 				if(deliveryDate === ''){
 					this.log('deliveryDate empty');
 					return false;
-				};					
+				};			
+				var routeData = this.calculator.getMapData();
+				if(!routeData){
+					this.log('no routeData');
+					return false;
+				};
+				var routeData = this.calculator.getMapData();
+				if(!routeData.response){
+					this.log('no routeData response: ');
+					console.log(routeData);
+
+					return false;
+				};
+		
+				var routeData = this.calculator.getMapData();
+				if(!routeData.response.routes){
+					this.log('no routeData response routes');
+					return false;
+				};
+				var routeData = this.calculator.getMapData();
+				if(!routeData.response.routes[0]){
+					this.log('no routeData response route 0');
+					return false;
+				};				
 				return true;
 			},
 
@@ -932,6 +955,8 @@
 				$('.paypal-msg-failure').hide();
 
 				var routeData = this.calculator.getMapData();
+				console.log('submitFormGetQuote: routeData');
+				console.log(routeData);
 				var route = $.extend({},routeData.response.routes[0]);
 				var legs = route.legs;
 				var trimmedLegs = [];

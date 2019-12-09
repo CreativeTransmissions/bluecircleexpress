@@ -238,7 +238,12 @@ class TQ_RequestParserGetQuoteReturnToBase {
                  
                     break;
                 case 2: // standard
-                    if($legs[$key-1]!=2){
+                    if($key===0){
+                        //start stage totals at 0 as standard stage can have multiple stops
+                        //reset values
+                        $stage_data = array('distance'=>0,'hours'=>0);   
+                        $stage_data['leg_type'] = $this->get_leg_type($key);              
+                    } elseif ($legs[$key-1]!=2){
                         //echo '** started standard at index '.$key;                        
                         //start stage totals at 0 as standard stage can have multiple stops
                         //reset values
@@ -301,7 +306,6 @@ class TQ_RequestParserGetQuoteReturnToBase {
 
     public function get_leg_type($legIdx){
         $leg_type = 'standard'; //default to standard
-        echo '----get_leg_type for legIdx: '.$legIdx;
         if($legIdx === 0 ){
             if($this->using_dispatch_rates()){
                $leg_type = 'dispatch';
@@ -311,7 +315,6 @@ class TQ_RequestParserGetQuoteReturnToBase {
         if($legIdx === count($this->legs)-1){
             $leg_type = 'return_to_base';
         };            
-        echo '----get_leg_type for legIdx: '.$legIdx.' = '. $leg_type.' no of legs: '.count($this->legs);
 
         return $leg_type;
     }
