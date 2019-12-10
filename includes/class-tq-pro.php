@@ -1084,6 +1084,7 @@ class TransitQuote_Pro4 {
 						      'auto' => '',
 						      'default' => '',
 							  'after'=>'after amount_dispatch');
+			$cdb->add_column('rates',$col_def);			
 		}
 
 		if(!$cdb->col_exists('rates','hour_dispatch')){
@@ -1093,6 +1094,7 @@ class TransitQuote_Pro4 {
 						      'auto' => '',
 						      'default' => '',
 							  'after'=>'after unit_dispatch');
+			$cdb->add_column('rates',$col_def);			
 		}		
 
 		if(!$cdb->col_exists('rates','hour_dispatch')){
@@ -1102,6 +1104,7 @@ class TransitQuote_Pro4 {
 						      'auto' => '',
 						      'default' => '',
 							  'after'=>'after unit_dispatch');
+			$cdb->add_column('rates',$col_def);			
 		}	
 
 		if(!$cdb->col_exists('rates','amount_return_to_pickup')){
@@ -1111,6 +1114,7 @@ class TransitQuote_Pro4 {
 						      'auto' => '',
 						      'default' => '',
 							  'after'=>'after hour_dispatch');
+			$cdb->add_column('rates',$col_def);			
 		}	
 
 		if(!$cdb->col_exists('rates','unit_return_to_pickup')){
@@ -1120,6 +1124,7 @@ class TransitQuote_Pro4 {
 						      'auto' => '',
 						      'default' => '',
 							  'after'=>'after amount_return_to_pickup');
+			$cdb->add_column('rates',$col_def);			
 		}	
 
 		if(!$cdb->col_exists('rates','hour_return_to_pickup')){
@@ -1129,6 +1134,7 @@ class TransitQuote_Pro4 {
 						      'auto' => '',
 						      'default' => '',
 							  'after'=>'after unit_return_to_pickup');
+			$cdb->add_column('rates',$col_def);			
 		}
 
 		if(!$cdb->col_exists('rates','amount_return_to_base')){
@@ -1138,6 +1144,7 @@ class TransitQuote_Pro4 {
 						      'auto' => '',
 						      'default' => '',
 							  'after'=>'after hour_return_to_pickup');
+			$cdb->add_column('rates',$col_def);			
 		}
 
 		if(!$cdb->col_exists('rates','unit_return_to_base')){
@@ -1147,6 +1154,7 @@ class TransitQuote_Pro4 {
 						      'auto' => '',
 						      'default' => '',
 							  'after'=>'after amount_return_to_base');
+			$cdb->add_column('rates',$col_def);			
 		}
 
 		if(!$cdb->col_exists('rates','hour_return_to_base')){
@@ -1156,6 +1164,7 @@ class TransitQuote_Pro4 {
 						      'auto' => '',
 						      'default' => '',
 							  'after'=>'after unit_return_to_base');
+			$cdb->add_column('rates',$col_def);			
 		}
 	}
 
