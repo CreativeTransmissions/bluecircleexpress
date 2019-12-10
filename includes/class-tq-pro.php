@@ -1065,6 +1065,98 @@ class TransitQuote_Pro4 {
 							 'after'=>'after breakdown');
 			$cdb->add_column('quotes',$col_def);
 		}
+
+		// column updates for  version 4.4
+		if(!$cdb->col_exists('rates','amount_dispatch')){
+			$col_def = array( 'name' => 'amount_dispatch',
+						      'type' => 'decimal(10,2)',
+						      'null' => 'null',
+						      'auto' => '',
+						      'default' => '',
+							  'after'=>'after hour_out_of_hours');
+			$cdb->add_column('rates',$col_def);
+		}
+
+		if(!$cdb->col_exists('rates','unit_dispatch')){
+			$col_def = array( 'name' => 'unit_dispatch',
+						      'type' => 'decimal(10,2)',
+						      'null' => 'null',
+						      'auto' => '',
+						      'default' => '',
+							  'after'=>'after amount_dispatch');
+		}
+
+		if(!$cdb->col_exists('rates','hour_dispatch')){
+			$col_def = array( 'name' => 'hour_dispatch',
+						      'type' => 'decimal(10,2)',
+						      'null' => 'null',
+						      'auto' => '',
+						      'default' => '',
+							  'after'=>'after unit_dispatch');
+		}		
+
+		if(!$cdb->col_exists('rates','hour_dispatch')){
+			$col_def = array( 'name' => 'hour_dispatch',
+						      'type' => 'decimal(10,2)',
+						      'null' => 'null',
+						      'auto' => '',
+						      'default' => '',
+							  'after'=>'after unit_dispatch');
+		}	
+
+		if(!$cdb->col_exists('rates','amount_return_to_pickup')){
+			$col_def = array( 'name' => 'amount_return_to_pickup',
+						      'type' => 'decimal(10,2)',
+						      'null' => 'null',
+						      'auto' => '',
+						      'default' => '',
+							  'after'=>'after hour_dispatch');
+		}	
+
+		if(!$cdb->col_exists('rates','unit_return_to_pickup')){
+			$col_def = array( 'name' => 'unit_return_to_pickup',
+						      'type' => 'decimal(10,2)',
+						      'null' => 'null',
+						      'auto' => '',
+						      'default' => '',
+							  'after'=>'after amount_return_to_pickup');
+		}	
+
+		if(!$cdb->col_exists('rates','hour_return_to_pickup')){
+			$col_def = array( 'name' => 'hour_return_to_pickup',
+						      'type' => 'decimal(10,2)',
+						      'null' => 'null',
+						      'auto' => '',
+						      'default' => '',
+							  'after'=>'after unit_return_to_pickup');
+		}
+
+		if(!$cdb->col_exists('rates','amount_return_to_base')){
+			$col_def = array( 'name' => 'amount_return_to_base',
+						      'type' => 'decimal(10,2)',
+						      'null' => 'null',
+						      'auto' => '',
+						      'default' => '',
+							  'after'=>'after hour_return_to_pickup');
+		}
+
+		if(!$cdb->col_exists('rates','unit_return_to_base')){
+			$col_def = array( 'name' => 'unit_return_to_base',
+						      'type' => 'decimal(10,2)',
+						      'null' => 'null',
+						      'auto' => '',
+						      'default' => '',
+							  'after'=>'after amount_return_to_base');
+		}
+
+		if(!$cdb->col_exists('rates','hour_return_to_base')){
+			$col_def = array( 'name' => 'hour_return_to_base',
+						      'type' => 'decimal(10,2)',
+						      'null' => 'null',
+						      'auto' => '',
+						      'default' => '',
+							  'after'=>'after unit_return_to_base');
+		}
 	}
 
 
