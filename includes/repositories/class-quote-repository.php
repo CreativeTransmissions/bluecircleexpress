@@ -211,8 +211,8 @@ class TQ_QuoteRepository
         $surcharges_table_name = $this->cdb->get_table_full_name('surcharges');        
 
         $sql = 'SELECT quote_id, s.name, surcharge_id, qs.amount 
-                    FROM tailwind.wp_tq_pro4_quote_surcharges qs 
-                    inner join tailwind.wp_tq_pro4_surcharges s 
+                    FROM '.$quote_surcharges_table_name.' qs 
+                    inner join '.$surcharges_table_name.' s 
                         on qs.surcharge_id = s.id 
                     where quote_id = '.$quote_id;
 

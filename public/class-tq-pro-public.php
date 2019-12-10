@@ -1890,13 +1890,13 @@ class TransitQuote_Pro_Public {
             $this->stages_html .= '<tr><td>'.$label.' Stage Cost</td><td>'.$stage_quote['total'].'</td><tr>';
 
 
-            $basic_cost_total = $basic_cost_total + $stage_quote['basic_cost'];
+            $basic_cost_total = $basic_cost_total + $stage_quote['basic_cost']; // distance cost and time cost
             $distance_cost_total = $distance_cost_total + $stage_quote['distance_cost'];
             $time_cost_total = $time_cost_total + $stage_quote['time_cost'];            
 
         };
 
-        $this->stages_html .= '<tr><td>Time Cost</td><td>'.$time_cost_total.'</td><tr>';
+        // $this->stages_html .= '<tr><td>Time Cost</td><td>'.$time_cost_total.'</td><tr>'; // already included in basic cost
 
         $this->tax_rate = self::get_tax_rate();        
         $this->tax_cost = ($this->tax_rate/100)*$basic_cost_total; 
