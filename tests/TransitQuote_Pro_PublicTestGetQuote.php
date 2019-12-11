@@ -19,7 +19,7 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
    
 /*
     public function test_get_quote_multi_stage() {
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
 
         $_POST = $_REQUEST = $this->test_get_quote_job_post_data;
         $public->get_plugin_settings();        
@@ -46,7 +46,7 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
     }*/
 
     public function test_get_quote_multi_stage_2_dispatch_and_standard() {
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
 
         $_POST = $_REQUEST = $this->post_data_2_dispatch_and_standard;
         $public->get_plugin_settings();
@@ -84,7 +84,7 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
     }    
 /*
     public function test_get_quote_single_stage() {
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
 
         $_POST = $_REQUEST = $this->test_get_quote_job_post_data;
         $public->get_plugin_settings();
@@ -113,7 +113,7 @@ final class TransitQuote_Pro_PublicTestGetQuote extends TestCase
     }*/
 
     public function test_get_quote_area_surchrages() {
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
 
         $_POST = $_REQUEST = $this->test_get_quote_job_post_data_area_surcharges;
         $public->get_plugin_settings();

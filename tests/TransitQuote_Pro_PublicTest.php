@@ -28,7 +28,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
    
 /*
     public function test_save_job() {
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
 
         $_REQUEST = $this->test_job;
         $public->get_plugin_settings();
@@ -45,7 +45,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
     }
 */
  /*   public function test_save_job_multiple_addresses() {
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
 
         $_REQUEST = $this->test_job_multi_addresses;
 
@@ -87,7 +87,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
 */ 
 /*
     public function test_all_email_fields() {
-        $this->public = $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $this->public = $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
 
         $_REQUEST = $this->test_for_email_post_data;
 
@@ -210,7 +210,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
     }
 
     public function test_get_rates_for_journey_options(){
-          $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+          $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
 
           $public->rate_options = json_decode('{"delivery_date":"16-7-2019","delivery_time":"11:00 AM","vehicle_id":"1","service_id":"1","distance":"31.75","return_time":0,"deliver_and_return":0,"return_distance":0,"no_destinations":1,"hours":0,"use_holiday_rates":false,"use_weekend_rates":false,"use_out_of_hours_rates":false}', true);
 
@@ -221,7 +221,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
 */
 
     public function test_get_job_details_from_id(){
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
         $public->cdb = TransitQuote_Pro4::get_custom_db();
 
         $success = $public->get_job_details_from_id(16);

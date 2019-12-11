@@ -24,7 +24,7 @@ final class TQ_QuoteFormatterTest extends TestCase
    
   /*  public function test_format() {
 
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
         $label_fetcher = new TransitQuote_Pro4\TQ_LabelFetcher(array('public' => $public));
         $labels = $label_fetcher->fetch_labels_for_view('dashboard');
 
@@ -60,7 +60,7 @@ final class TQ_QuoteFormatterTest extends TestCase
 
     public function test_format_non_zero_only() {
 
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
         $label_fetcher = new TransitQuote_Pro4\TQ_LabelFetcher(array('public' => $public));
         $labels = $label_fetcher->fetch_labels_for_view('dashboard');
 
@@ -96,7 +96,7 @@ final class TQ_QuoteFormatterTest extends TestCase
 */
     public function test_format_non_zero_only_ss() {
 
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
         $label_fetcher = new TransitQuote_Pro4\TQ_LabelFetcher(array('public' => $public));
         $labels = $label_fetcher->fetch_labels_for_view('dashboard');
 

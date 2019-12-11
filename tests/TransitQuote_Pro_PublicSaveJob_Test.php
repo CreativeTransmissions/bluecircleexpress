@@ -17,7 +17,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
     }
    
     public function test_save_new_job(){
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
 
         $_POST = $_REQUEST = $this->save_job_test_data;
         $public->get_plugin_settings();
@@ -34,7 +34,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
     }
  
     public function test_save_job_callback() {
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
 
         $_POST = $_REQUEST = $this->save_job_test_data;
         $public->get_plugin_settings();
@@ -55,7 +55,7 @@ final class TransitQuote_Pro_PublicTest extends TestCase
     }
 
     public function test_save_job_callback_all_surcharges(){
-        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.3.4.1');
+        $public = new TransitQuote_Pro_Public('TransitQuote Pro', 'tq-pro','4.4');
 
         $_POST = $_REQUEST = $this->save_job_test_data_all_surcharges;
         $public->get_plugin_settings();
