@@ -202,6 +202,7 @@ class TransitQuote_Pro_Admin {
 			$config = $this->tab_config[$tab_key];
 
 		 	// include plugin_slug for use in tab name
+		 	$config['plugin'] =  $this->plugin;		 	
 		 	$config['admin'] =  $this;
 		 	$config['plugin_slug'] = $this->plugin_slug;
 		 	$config['partials_path'] =  'partials/';
@@ -839,11 +840,14 @@ class TransitQuote_Pro_Admin {
 				);
 			break;			
 			case 'rates':
+				$default_col_classes = array( 'vehicle_id'=>'hidden', 'service_id'=>'hidden');
+				$optional_col_classes = self::get_optional_column_classes();
+				$col_classes = array_merge($default_col_classes, $optional_col_classes);
 				// by default use standard options for table_rows to allow for only returning a single row to ui after an update
 				$defaults = array(
 							'table'=>'rates',
 							'fields'=>array('id', 'vehicle_id', 'service_id', 'distance','amount','unit','hour','amount_holiday', 'unit_holiday', 'hour_holiday','amount_weekend', 'unit_weekend', 'hour_weekend', 'amount_out_of_hours', 'unit_out_of_hours', 'hour_out_of_hours', 'amount_dispatch', 'unit_dispatch', 'hour_dispatch','amount_return_to_base', 'unit_return_to_base', 'hour_return_to_base', 'amount_return_to_pickup', 'unit_return_to_pickup', 'hour_return_to_pickup'),
-							'classes'=>array( 'vehicle_id'=>'hidden', 'service_id'=>'hidden'),
+							'classes'=>$col_classes,
 							'inputs'=>false,
 							'actions'=>array('Edit', 'Delete')
 						);
@@ -1019,6 +1023,65 @@ class TransitQuote_Pro_Admin {
 		};
 
 		return $rows;
+	}
+
+	public function get_optional_column_classes(){
+
+		$weekend_col_cls = 'hidden';
+		if($this->plugin->get_use_weekend_rates()){
+			$weekend_col_cls = '';
+		};
+
+		$holiday_col_cls = 'hidden';
+		if($this->plugin->get_use_holiday_rates()){
+			$holiday_col_cls = '';
+		};
+
+		$out_of_hours_col_cls = 'hidden';
+		if($this->plugin->get_use_out_of_hours_rates()){
+			$out_of_hours_col_cls = '';
+		};		
+
+		$dispatch_col_cls = 'hidden';
+		if($this->plugin->get_use_dispatch_rates()){
+			$dispatch_col_cls = '';
+		};
+
+		$return_collection_col_cls = 'hidden';
+		if($this->plugin->get_use_return_to_collection_rates()){
+			$return_collection_col_cls = '';
+		};
+
+		$return_base_col_cls = 'hidden';	
+		if($this->plugin->get_use_return_to_base_rates()){
+			$return_base_col_cls = '';
+		};	
+
+		$classes = array(	'amount_weekend'=>$weekend_col_cls,
+							'unit_weekend'=>$weekend_col_cls,
+							'hour_weekend'=>$weekend_col_cls,
+
+							'amount_holiday'=>$holiday_col_cls,
+							'unit_holiday'=>$holiday_col_cls,
+							'hour_holiday'=>$holiday_col_cls,
+
+							'amount_out_of_hours'=>$out_of_hours_col_cls,
+							'unit_out_of_hours'=>$out_of_hours_col_cls,
+							'hour_out_of_hours'=>$out_of_hours_col_cls,
+
+							'amount_dispatch'=>$dispatch_col_cls,
+							'unit_dispatch'=>$dispatch_col_cls,
+							'hour_dispatch'=>$dispatch_col_cls,
+
+							'amount_return_to_base'=>$return_base_col_cls,
+							'unit_return_to_base'=>$return_base_col_cls,
+							'hour_return_to_base'=>$return_base_col_cls,
+
+							'amount_return_to_pickup'=>$return_collection_col_cls,
+							'unit_return_to_pickup'=>$return_collection_col_cls,
+							'hour_return_to_pickup'=>$return_collection_col_cls);
+
+		return $classes;
 	}
 	public function get_sort_params(){
 		$orderby = $this->ajax->param(array('name'=>'orderby', 'optional'=>true, 'type'=>'alpha'));

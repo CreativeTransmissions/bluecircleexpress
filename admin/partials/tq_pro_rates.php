@@ -1,5 +1,36 @@
 <?php settings_fields( 'tq_pro_rates' ); ?>
 <?php do_settings_sections( 'tq_pro_rates' ); ?>
+<?php 
+	$weekend_col_cls = 'hidden';
+	if($this->config['plugin']->get_use_weekend_rates()){
+		$weekend_col_cls = '';
+	};
+
+	$holiday_col_cls = 'hidden';
+	if($this->config['plugin']->get_use_holiday_rates()){
+		$holiday_col_cls = '';
+	};
+
+	$out_of_hours_col_cls = 'hidden';
+	if($this->config['plugin']->get_use_out_of_hours_rates()){
+		$out_of_hours_col_cls = '';
+	};		
+
+	$dispatch_col_cls = 'hidden';
+	if($this->config['plugin']->get_use_dispatch_rates()){
+		$dispatch_col_cls = '';
+	};
+
+	$return_collection_col_cls = 'hidden';
+	if($this->config['plugin']->get_use_return_to_collection_rates()){
+		$return_collection_col_cls = '';
+	};
+
+	$return_base_col_cls = 'hidden';	
+	if($this->config['plugin']->get_use_return_to_base_rates()){
+		$return_base_col_cls = '';
+	};		
+?>
 <p>The prices on each row apply to the parts of the journey up to the boundary distance. For example if you enter a boundary distance of 20 and a set price of £10, the first 20 miles will be charged adt £10.</p>
 <p>Prices entered against a distance boundary of 0 will apply to all remaining miles after the highest distance boundary. For example if you have a boundary of 20 miles and a boundary of 0 miles, the first 20 miles will be charged with the 20 mile boundary rate and the remaining miles will be charged with the 0 boundary rate.</p> 
 <p>You can charge with a different set of rates depending on journey length or the vehicle or service selected by the customer. When entering a rate, use the drop down boxes to select the options that will cause the rate to be used. For example if you select Maximum Distance = 50, Vehicle = Large Van, Service = Express, the rates will only apply to journeys of up to 50 miles when the customer has selected Large Van as the vehicle and Express as the service.</p>
@@ -54,7 +85,7 @@
 			</div>
 		</fieldset>				
 	</div>
-	<div class="row row-rates">				
+	<div class="row row-rates <?php echo $holiday_col_cls; ?>">				
 		<fieldset>
 			<legend>Holiday Rates</legend>
 			<div class="inline-field">
@@ -71,7 +102,7 @@
 			</div>
 		</fieldset>
 	</div>
-	<div class="row row-rates">				
+	<div class="row row-rates <?php echo $weekend_col_cls; ?>">				
 		<fieldset>
 			<legend>Weekend Rates</legend>
 			<div class="inline-field">
@@ -88,7 +119,7 @@
 			</div>
 		</fieldset>
 	</div>
-	<div class="row row-rates">		
+	<div class="row row-rates <?php echo $out_of_hours_col_cls; ?>">		
 		<fieldset>
 			<legend>Out Of Hours Rates</legend>
 			<div class="inline-field">
@@ -106,7 +137,7 @@
 		</fieldset>
 	</div>
 
-	<div class="row row-rates">		
+	<div class="row row-rates <?php echo $dispatch_col_cls; ?>">		
 		<fieldset>
 			<legend>Dispatch Rates (for journey from base/depo to first pickup)</legend>
 			<div class="inline-field">
@@ -124,7 +155,7 @@
 		</fieldset>
 	</div>	
 		
-	<div class="row row-rates">		
+	<div class="row row-rates <?php echo $return_base_col_cls; ?>">		
 		<fieldset>
 			<legend>Return To Base Rates (for journey from final destination back to base/depo)</legend>
 			<div class="inline-field">
@@ -142,7 +173,7 @@
 		</fieldset>
 	</div>		
 		
-	<div class="row row-rates">		
+	<div class="row row-rates <?php echo $return_collection_col_cls; ?>">		
 		<fieldset>
 			<legend>Return To Collection Rates (for journey from final destination back to first collection address)</legend>
 			<div class="inline-field">
@@ -204,29 +235,29 @@
 			<th>Price Per <?php echo $this->admin->distance_unit; ?></th>
 			<th>Price Per Hour</th>
 			
-			<th>Holiday Set Price</th>
-			<th>Holiday Price Per <?php echo $this->admin->distance_unit; ?></th>
-			<th>Holiday Price Per Hour</th>
+			<th class="amount_holiday <?php echo $holiday_col_cls; ?>">Holiday Set Price</th>
+			<th class="unit_holiday <?php echo $holiday_col_cls; ?>">Holiday Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th class="hour_holiday <?php echo $holiday_col_cls; ?>">Holiday Price Per Hour</th>
 
-			<th>Weekend Set Price</th>
-			<th>Weekend Price Per <?php echo $this->admin->distance_unit; ?></th>
-			<th>Weekend Price Per Hour</th>
+			<th class="amount_weekend <?php echo $weekend_col_cls; ?>">Weekend Set Price</th>
+			<th class="unit_weekend <?php echo $weekend_col_cls; ?>">Weekend Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th class="hour_weekend <?php echo $weekend_col_cls; ?>">Weekend Price Per Hour</th>
 
-			<th>Out of Hours Set Price</th>
-			<th>Out of Hours Price Per <?php echo $this->admin->distance_unit; ?></th>
-			<th>Out of Hours Price Per Hour</th>
+			<th class="amount_out_of_hours <?php echo $out_of_hours_col_cls; ?>">Out of Hours Set Price</th>
+			<th class="unit_out_of_hours <?php echo $out_of_hours_col_cls; ?>">Out of Hours Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th class="hour_out_of_hours <?php echo $out_of_hours_col_cls; ?>">Out of Hours Price Per Hour</th>
 
-			<th>Dispatch Set Price</th>
-			<th>Dispatch Price Per <?php echo $this->admin->distance_unit; ?></th>
-			<th>Dispatch Price Per Hour</th>
+			<th class="amount_dispatch <?php echo $dispatch_col_cls; ?>">Dispatch Set Price</th>
+			<th class="unit_dispatch <?php echo $dispatch_col_cls; ?>">Dispatch Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th class="hour_dispatch <?php echo $dispatch_col_cls; ?>">Dispatch Price Per Hour</th>
 
-			<th>Return To Base Set Price</th>
-			<th>Return To Base Price Per <?php echo $this->admin->distance_unit; ?></th>
-			<th>Return To Base Price Per Hour</th>
+			<th class="amount_return_to_base <?php echo $return_base_col_cls; ?>">Return To Base Set Price</th>
+			<th class="unit_return_to_base <?php echo $return_base_col_cls; ?>">Return To Base Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th class="hour_return_to_base <?php echo $return_base_col_cls; ?>">Return To Base Price Per Hour</th>
 
-			<th>Return To Collect Set Price</th>
-			<th>Return To Collect Price Per <?php echo $this->admin->distance_unit; ?></th>
-			<th>Return To Collect Price Per Hour</th>
+			<th class="amount_return_to_pickup <?php echo $return_collection_col_cls; ?>">Return To Collect Set Price</th>
+			<th class="unit_return_to_pickup <?php echo $return_collection_col_cls; ?>">Return To Collect Price Per <?php echo $this->admin->distance_unit; ?></th>
+			<th class="hour_return_to_pickup <?php echo $return_collection_col_cls; ?>">Return To Collect Price Per Hour</th>
 
 			<th class="actions"><div class="spinner"></div></tr>
 		</thead>
