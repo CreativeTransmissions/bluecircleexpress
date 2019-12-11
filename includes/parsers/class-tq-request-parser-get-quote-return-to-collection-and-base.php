@@ -226,9 +226,9 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
         };
 
         $legs = $this->get_leg_data();
-        echo 'legs to parse: '.count($legs);
+        //echo 'legs to parse: '.count($legs);
         foreach ($legs as $key => $leg) {
-            echo 'leg idx: '.$key.' = type: '.$leg['leg_type_id'].PHP_EOL;
+            //echo 'leg idx: '.$key.' = type: '.$leg['leg_type_id'].PHP_EOL;
             switch ($leg['leg_type_id']) {
                 case 1: // dispatch
                     $this->stage_data = array();
@@ -238,7 +238,7 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
                     // echo ' -- dispatch leg type: '.$stage_data['leg_type'];
 
                     $this->stage_data[] = $stage_data;   
-                    echo '** added dispatch at index '.$key;
+                    //echo '** added dispatch at index '.$key;
                  
                     break;
                 case 2: // standard
@@ -249,7 +249,7 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
                         $stage_data = array('distance'=>0,'hours'=>0);   
                         $stage_data['leg_type'] = $this->get_leg_type($key);
                     } elseif ($legs[$key-1]!=2){
-                        //echo '** started standard at index '.$key;                        
+                      //  echo '** started standard at index '.$key;                        
                         //start stage totals at 0 as standard stage can have multiple stops
                         //reset values
                         $stage_data = array('distance'=>0,'hours'=>0);   
@@ -271,7 +271,7 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
                     $stage_data['distance'] = $this->get_leg_distance($key, $this->config['distance_unit']);
                     $stage_data['hours'] = $this->get_leg_duration_hours($key); 
                     $this->stage_data[] = $stage_data;           
-                    // echo '** save the return_to_base stage data at index '.$key;                       
+                     //echo '** save the return_to_collection stage data at index '.$key;                       
                     break;                    
                 case 4: // return to base
                     // create and save final stage
@@ -319,7 +319,11 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
 
     public function get_leg_type($legIdx){
         $leg_type = 'standard';
-
+        if($this->using_dispatch_rates()){
+            if((int)$legIdx === (count($this->legs)-2) ){
+                $leg_type = 'dispatch';
+            };               
+        };
         if((int)$legIdx === (count($this->legs)-2) ){
             $leg_type = 'return_to_collection';
         };          
@@ -332,7 +336,12 @@ class TQ_RequestParserGetQuoteReturnToCollectionAndBase {
     public function get_leg_type_id($legIdx){
         $leg_type_id = 2;
         // 1 = dispatch, 2 = standard, 3 = return to collection, 4 = return to base
-
+        if($this->using_dispatch_rates()){
+            if($legIdx === 0 ){
+                $leg_type_id = 1;
+            };           
+        };
+ 
         if($legIdx === (count($this->legs)-2) ){
             $leg_type_id = 3;
         };         

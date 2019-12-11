@@ -1642,9 +1642,6 @@ class TransitQuote_Pro_Public {
             case 'ReturnToBaseFixedStart':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToBase($request_parser_config);
             break;   
-            case 'ReturnToCollectionFixedStart':
-                return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollectionAndBase($request_parser_config);
-            break;
             case 'ReturnJourneyReturnToBaseFixedStart':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollectionAndBase($request_parser_config);
             break;
@@ -1942,8 +1939,10 @@ class TransitQuote_Pro_Public {
             if(is_array($surcharges)){
                 $this->quote = array_merge($this->quote, $surcharges);
                 $this->quote['basic_cost'] = $this->quote['basic_cost']+$surcharges['weight_cost'];
-                $this->stages_html .= '<tr><td>Weight Cost</td><td>'.$surcharges['weight_cost'].'</td><tr>';
-            }
+                if($surcharges['weight_cost']>0){
+                    $this->stages_html .= '<tr><td>Weight Cost</td><td>'.$surcharges['weight_cost'].'</td><tr>';
+                };
+            };
 
         };
 
@@ -1958,7 +1957,9 @@ class TransitQuote_Pro_Public {
             if(is_array($area_surcharges)){
                 $this->quote = array_merge($this->quote, $area_surcharges);
                // echo 'adding basic_cost to area_surcharges_cost:'.$area_surcharges['area_surcharges_cost'];
-                $this->stages_html .= '<tr><td>Area Surcharge</td><td>'.$area_surcharges['area_surcharges_cost'].'</td><tr>';
+                if($area_surcharges['area_surcharges_cost']>0){
+                    $this->stages_html .= '<tr><td>Area Surcharge</td><td>'.$area_surcharges['area_surcharges_cost'].'</td><tr>';
+                };
 
                 $this->quote['basic_cost'] = $this->quote['basic_cost']+$area_surcharges['area_surcharges_cost'];
             };

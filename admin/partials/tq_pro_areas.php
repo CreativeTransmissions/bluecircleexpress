@@ -6,7 +6,7 @@
 		
 		<div class="row row-areas">
 			<div class="inline-field">
-				<label for="name">Area Name</label>
+				<label for="name">Zone Name</label>
 				<input class="input-long" type="text" name="name" />
 			</div>
 			<div class="inline-field">
@@ -39,7 +39,7 @@
 <form id="table-form" class="admin-form" method="post" action="options.php" autocomplete="false">
 	<table id="areas_table" class="settings-table">
 		<thead>
-			<tr><th>Area</th><th>Surcharge Name</th><th>Surcharge Amount</th><th class="actions"><div class="spinner"></div></tr>
+			<tr><th>Zone</th><th>Surcharge Name</th><th>Surcharge Amount</th><th class="actions"><div class="spinner"></div></tr>
 		</thead>
 		<tbody>
 		</tbody>

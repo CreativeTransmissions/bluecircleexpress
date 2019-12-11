@@ -305,6 +305,9 @@ td.email input{
   	color: #000;
 	display: none;
 }
+.row-areas .inline-field {
+	padding-bottom: 1em;
+}
 .row-rates legend {
 	margin-top: 2em;
 }

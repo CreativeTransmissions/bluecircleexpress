@@ -57,7 +57,7 @@ class TQ_JourneyRepository
             
           //  echo ' switch leg type id: '.$leg['leg_type_id'];
             switch ($leg['leg_type_id']) {
-                case 1: // dispatcj
+                case 1: // dispatch
                     // start dispatch stage
                     $stage_data = $this->create_stage_record(count($this->stage_recs));
                     $this->current_stage = $this->save_journey_stage($stage_data);
@@ -95,15 +95,23 @@ class TQ_JourneyRepository
                     $this->stage_recs[] = $this->current_stage;
 
                     break;
+                case 4: // return to base
+                    //final leg
+                    $stage_data = $this->create_stage_record(count($this->stage_recs));
+                    $this->current_stage = $this->save_journey_stage($stage_data);
+
+                    $leg_data = $this->create_leg_record($key, $leg); 
+                    $leg_data = $this->save_journey_leg($leg_data);                         
+                    $this->current_stage['leg_type_id'] = $leg_data['leg_type_id']; // add leg_type_id to be stored against stage
+                    $this->stage_recs[] = $this->current_stage;
+
+                    break;                    
             };
             $this->leg_recs[] = $leg_data;
 
         };
 
-     /*   echo '>>stage recs created: ';
-        echo  json_encode($this->stage_recs);
-                echo '<<<<<<< ';
-*/
+//var_dump($this->stage_recs);
     }
 
     public function is_dispatch_leg($legIdx){

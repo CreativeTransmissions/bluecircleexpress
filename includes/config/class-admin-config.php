@@ -91,7 +91,7 @@ class Admin_Config {
 
               'tq_pro_areas'=>array(
                               'key'=>'tq_pro_areas',
-                              'title'=>'Areas',
+                              'title'=>'Zones',
                               'table'=>'areas',
                               'sections'=>array()
                               ),
