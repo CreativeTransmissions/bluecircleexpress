@@ -156,6 +156,7 @@ form.tq-form table tr th {
 .quote-breakdown {
     font-size: 16px;
     font-weight: normal;
+    margin-top: 1em;
 };
 .quote-breakdown form.tq-form table tr td, form.tq-form table tr td,
 .quote-breakdown form.tq-form table tr td, form.tq-form table tr th {

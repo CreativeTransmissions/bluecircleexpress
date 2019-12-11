@@ -248,13 +248,14 @@
 				if(this.calculator){
 					this.calculator.filterAvailableVehicles();
 					this.calculator.updateQuote();
-				} else {
-					if(this.validateGetQuote()){
-						this.updateFormAction('tq_pro4_get_quote');
-						console.log('submitForm callbackChangeServiceId');
-						this.submitFormGetQuote('get_quote');
-					};	
-				}
+				};
+				
+				if(this.validateGetQuote()){
+					this.updateFormAction('tq_pro4_get_quote');
+					console.log('submitForm callbackChangeServiceId');
+					this.submitFormGetQuote('get_quote');
+				};	
+				
 			},
 
 			callbackChangeVehicleId: function(el){
@@ -267,13 +268,14 @@
 				$('.vehicle-selected').html(vehicleText);
 				if(this.calculator){
 					this.calculator.updateQuote();
-				} else {
-					if(this.validateGetQuote()){
-						this.updateFormAction('tq_pro4_get_quote');
-						console.log('submitForm callbackChangeVehicleId');
-						this.submitFormGetQuote('get_quote');
-					};	
-				}
+				};
+
+				if(this.validateGetQuote()){
+					this.updateFormAction('tq_pro4_get_quote');
+					console.log('submitForm callbackChangeVehicleId');
+					this.submitFormGetQuote('get_quote');
+				};	
+				
 			},
 
 			callbackChangeWeight: function(){

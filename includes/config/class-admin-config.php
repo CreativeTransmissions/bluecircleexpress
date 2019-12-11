@@ -473,7 +473,7 @@ class Admin_Config {
                                                                   'label'=>'Quote Label',
                                                                   'type'=>'input',
                                                                   'default'=>'Your Quote',
-                                                                  'help'=>'This will appear above the qutoe in the quote section.'
+                                                                  'help'=>'This will appear above the quote in the quote section.'
                                                                 ),                                                          
 
                                                                 'sub_total_label'=>array(
@@ -618,6 +618,13 @@ class Admin_Config {
                                                         'label'=>'Custom Currency Symbol',
                                                         'type'=>'input',
                                                         'help'=>'If your currency is not in the above list but you know it is accepted by WooCommerce you can enter the currency symbol (for example $ or £) here and it will be used instead.'),
+
+                                                      'display_breakdown'=>array(
+                                                        'id'=>'display_breakdown',
+                                                        'label'=>'Show Itemized Quote Table',
+                                                        'type'=>'checkbox',
+                                                        'default'=>0,
+                                                        'help'=>'Show a breakdown of costs by delivery stage when customers get a quote.'),
 
                                                       'tax_rate'=>array(
                                                         'id'=>'tax_rate',

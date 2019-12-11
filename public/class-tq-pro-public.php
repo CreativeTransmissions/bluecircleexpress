@@ -254,7 +254,7 @@ class TransitQuote_Pro_Public {
         $this->use_dispatch_rates = self::get_use_dispatch_rates();
         $this->use_return_to_base_rates = self::get_use_return_to_base_rates();        
         $this->use_return_to_collection_rates = self::get_use_return_to_collection_rates();        
-
+        $this->display_breakdown = self::get_display_breakdown();
         $this->distance_unit = self::get_distance_unit();        
     }
 
@@ -1753,6 +1753,11 @@ class TransitQuote_Pro_Public {
                     'tax_name'=>$this->tax_name,
                     'tax_rate'=>$this->tax_rate                    
                 );
+    }
+
+
+    public function get_display_breakdown(){
+        return self::get_setting('', 'display_breakdown', 0);
     }
 
     public function get_weight_unit_name(){
