@@ -14,7 +14,7 @@
 		defaults = {
 			ajaxUrl: '',
 			customer: false,
-			debug: true,
+			debug: false,
 			quoteResult: 'quote',
 			timepickerSelector: 'input[name="delivery_time"]',
 			datepickerSelector: 'input[name="date"]'
