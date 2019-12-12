@@ -719,12 +719,12 @@ class Admin_Config {
                                                         'help'=>'Choose whether or not to include the return journey from the final drop off address back to the collection address. If Ask is selected customers see deliver and return as an option.',
                                                         'default'=>'Never'),
 
-                                                      'return_journey_adjustment'=>array(
+                                                    /* 'return_journey_adjustment'=>array(
                                                         'id'=>'return_journey_adjustment',
                                                         'label'=>'Return Journey Adjustment',
                                                         'type'=>'number',
                                                         'help'=>'Enter a percentage to apply to the return journey cost',
-                                                        'default'=>100),
+                                                        'default'=>100),*/ 
 
                                                       'show_driving_time'=>array(
                                                         'id'=>'show_driving_time',
