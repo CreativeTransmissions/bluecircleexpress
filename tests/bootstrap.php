@@ -4,8 +4,8 @@
  *
  * @package Transitquote_Pro
  */
- error_reporting(E_ALL );
- ini_set('display_errors', 1);
+/* error_reporting(E_ALL );
+ ini_set('display_errors', 1);*/
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
