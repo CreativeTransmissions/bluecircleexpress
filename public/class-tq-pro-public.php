@@ -351,7 +351,7 @@ class TransitQuote_Pro_Public {
         $this->country_code = $this->get_setting('', 'country_code', '');
         $this->city_code = $this->get_setting('', 'city_code', '');
         $this->search_radius = $this->get_setting('', 'search_radius', '');
-		$this->route_type = $this->get_setting('', 'route_type','');
+        $this->route_type = $this->get_setting('', 'route_type','');
 
         $tq_settings = array('ajaxurl' => $ajax_url,
             'ask_for_unit_no' => self::bool_to_text($this->ask_for_unit_no),
@@ -383,7 +383,7 @@ class TransitQuote_Pro_Public {
             'max_travel_time_msg' => $this->max_travel_time_msg,
             'quote_element' => $this->quote_element,
             'max_address_pickers' => $this->max_address_pickers,
-							'route_type'=>$this->route_type,
+                            'route_type'=>$this->route_type,
             'sandbox' => $this->sandbox,
             'insert_dest_link_text' => $this->insert_dest_link_text,
             'remove_dest_link_text' => $this->remove_dest_link_text,
@@ -649,18 +649,18 @@ class TransitQuote_Pro_Public {
         $rates_table_name = $this->cdb->get_table_full_name('rates');
         // get ordered list of rates with distance 0 as the final record
         $sql = "select distinct *
-    				from (select distinct *
-								from " . $rates_table_name . "
-								where distance <> 0
-								" . $filter_sql . "
-							order by service_id, vehicle_id, distance
-							) r
-					union
-				select distinct * from (
-					select distinct *
-						from " . $rates_table_name . "
-					where distance = 0
-					" . $filter_sql . ") r2;";
+                    from (select distinct *
+                                from " . $rates_table_name . "
+                                where distance <> 0
+                                " . $filter_sql . "
+                            order by service_id, vehicle_id, distance
+                            ) r
+                    union
+                select distinct * from (
+                    select distinct *
+                        from " . $rates_table_name . "
+                    where distance = 0
+                    " . $filter_sql . ") r2;";
         //echo $sql;
         $data = $this->cdb->query($sql);
         return $data;
@@ -722,10 +722,10 @@ class TransitQuote_Pro_Public {
 
     public function api_key_notice() {
         ?><div class="update-nag notice">
-    		<h3>TransitQuote Pro Setup Notice</h3>
-    		<?php echo $this->api_setup_message; ?>
-    	</div>
-    	<?php
+            <h3>TransitQuote Pro Setup Notice</h3>
+            <?php echo $this->api_setup_message; ?>
+        </div>
+        <?php
 }
     public function display_quote_page($atts) {
         // display the quote and payment page
@@ -1111,15 +1111,15 @@ class TransitQuote_Pro_Public {
         $rates_table_name = $this->cdb->get_table_full_name('rates');
         // get ordered list of rates with distance 0 as the final record
         $sql = "select distinct s.*
-				FROM " . $services_table_name . " s
-				inner join " . $rates_table_name . " r
-					on r.service_id = s.id
-				inner join " . $vehicles_table_name . " v
-					on r.vehicle_id = v.id
-				inner join " . $journey_lengths_table_name . " jl
-					on r.journey_length_id = jl.id
-				order by s.id asc
-				limit 1;";
+                FROM " . $services_table_name . " s
+                inner join " . $rates_table_name . " r
+                    on r.service_id = s.id
+                inner join " . $vehicles_table_name . " v
+                    on r.vehicle_id = v.id
+                inner join " . $journey_lengths_table_name . " jl
+                    on r.journey_length_id = jl.id
+                order by s.id asc
+                limit 1;";
         //echo $sql;
         $services = $this->cdb->query($sql);
         if (count($services) > 0) {
@@ -1136,15 +1136,15 @@ class TransitQuote_Pro_Public {
         $rates_table_name = $this->cdb->get_table_full_name('rates');
         // get ordered list of rates with distance 0 as the final record
         $sql = "select distinct v.*
-				FROM wp_tq_pro4_services s
-				inner join " . $rates_table_name . " r
-					on r.service_id = s.id
-				inner join " . $vehicles_table_name . " v
-					on r.vehicle_id = v.id
-				inner join " . $journey_lengths_table_name . " jl
-					on r.journey_length_id = jl.id
-				order by v.id asc
-				limit 1;";
+                FROM wp_tq_pro4_services s
+                inner join " . $rates_table_name . " r
+                    on r.service_id = s.id
+                inner join " . $vehicles_table_name . " v
+                    on r.vehicle_id = v.id
+                inner join " . $journey_lengths_table_name . " jl
+                    on r.journey_length_id = jl.id
+                order by v.id asc
+                limit 1;";
         //echo $sql;
         $vehicles = $this->cdb->query($sql);
         if (count($vehicles) > 0) {
@@ -1160,15 +1160,15 @@ class TransitQuote_Pro_Public {
         $vehicles_table_name = $this->cdb->get_table_full_name('vehicles_table_name');
         // get ordered list of rates with distance 0 as the final record
         $sql = "select distinct jl.*
-				FROM wp_tq_pro4_services s
-				inner join " . $services_table_name . " r
-					on r.service_id = s.id
-				inner join " . $vehicles_table_name . " v
-					on r.vehicle_id = v.id
-				inner join " . $journey_lengths_table_name . " jl
-					on r.journey_length_id = jl.id
-				order by jl.id asc
-				limit 1;";
+                FROM wp_tq_pro4_services s
+                inner join " . $services_table_name . " r
+                    on r.service_id = s.id
+                inner join " . $vehicles_table_name . " v
+                    on r.vehicle_id = v.id
+                inner join " . $journey_lengths_table_name . " jl
+                    on r.journey_length_id = jl.id
+                order by jl.id asc
+                limit 1;";
         //echo $sql;
         $services = $this->cdb->query($sql);
         if (count($services) > 0) {
@@ -1213,8 +1213,8 @@ class TransitQuote_Pro_Public {
                             $this->job_details = $this->tq_woocommerce_customer->get_latest_job_details($job);
                             $search_fields_include = 'repeat_customer_search_fields';
                         } else {
-							$search_fields_include = 'search_fields';
-						}
+                            $search_fields_include = 'search_fields';
+                        }
                     } else {
                         $search_fields_include = 'search_fields';
                     }
@@ -1550,7 +1550,9 @@ class TransitQuote_Pro_Public {
      
 
         $journey_type = $this->ajax->param(array('name' => 'journey_type', 'optional' => true));
-
+        if(empty($journey_type)){
+            return false;
+        };
         $this->request_parser_get_quote = self::get_parser_for_journey_type($journey_type);
         $this->rate_options_defaults = $this->get_default_rate_affecting_options();
         $this->rate_options = $this->request_parser_get_quote->get_rate_affecting_options();
@@ -1644,6 +1646,9 @@ class TransitQuote_Pro_Public {
             break;   
             case 'ReturnJourneyReturnToBaseFixedStart':
                 return new TransitQuote_Pro4\TQ_RequestParserGetQuoteReturnToCollectionAndBase($request_parser_config);
+            break;
+            default:
+                return false;
             break;
         }
     }
@@ -2088,7 +2093,7 @@ class TransitQuote_Pro_Public {
             $response = array('success' => false,
                 'msg' => 'Sorry, an error occured and we are unable to process this request.');
         };
-		do_action('tq_pro_get_quote', $response);
+        do_action('tq_pro_get_quote', $response);
         $this->ajax->respond($response);
     }
 
@@ -2179,21 +2184,21 @@ class TransitQuote_Pro_Public {
 
         } else {
             $this->response = self::build_invalid_job_response();
-		};
-		
-		// callback hooks for other plugins to use start
-		$this->job_id = $job_update_id = $this->ajax->param(array('name' => 'job_id', 'optional' => true));
+        };
+        
+        // callback hooks for other plugins to use start
+        $this->job_id = $job_update_id = $this->ajax->param(array('name' => 'job_id', 'optional' => true));
 
-		if(self::get_job_details_from_id($job_id)){
-			$data = array('data'=>$this->job);
-			if(empty($job_update_id)){//
-				do_action('tq_pro_new_job', $data);
-			} else {
-				do_action('tq_pro_updated_job', $data);
-			}
-		}
-		
-		
+        if(self::get_job_details_from_id($job_id)){
+            $data = array('data'=>$this->job);
+            if(empty($job_update_id)){//
+                do_action('tq_pro_new_job', $data);
+            } else {
+                do_action('tq_pro_updated_job', $data);
+            }
+        }
+        
+        
         $this->ajax->respond($this->response);
     }
 
@@ -2867,6 +2872,7 @@ class TransitQuote_Pro_Public {
     }
 
     public function get_job_details($job = null) {
+
         $plugin = new TransitQuote_Pro4();
         $this->cdb = $plugin->get_custom_db();
         $repo_config = array('cdb' => $this->cdb, 'debugging' => $this->debug);
@@ -4207,14 +4213,14 @@ class TransitQuote_Pro_Public {
 
         // get ordered list of rates with distance 0 as the final record
         $sql = "delete r
-				 from " . $rates_table_name . " r
-					left join " . $vehicle_table_name . " v
-						on r.vehicle_id = v.id
-					left join " . $services_table_name . " s
-						on r.service_id = s.id
-					left join " . $journey_lengths_table_name . " jl
-						on r.journey_length_id = jl.id
-					where v.id is null or s.id is null or jl.id is null;";
+                 from " . $rates_table_name . " r
+                    left join " . $vehicle_table_name . " v
+                        on r.vehicle_id = v.id
+                    left join " . $services_table_name . " s
+                        on r.service_id = s.id
+                    left join " . $journey_lengths_table_name . " jl
+                        on r.journey_length_id = jl.id
+                    where v.id is null or s.id is null or jl.id is null;";
         //echo $sql;
         $success = $this->cdb->query($sql);
         return $success;
@@ -4259,27 +4265,27 @@ class TransitQuote_Pro_Public {
         $form_text_color = self::get_setting('tq_pro_form_options', 'form_color', '#3e80fa');
         $form_background_color = self::get_setting('tq_pro_form_options', 'form_background_color', '#fbfbfb');
         echo '<style type="text/css">
-				.requestform form#quote-form.tq-form.tq-primary-color {
-					color: '.$form_text_color.' !important;
-				}
-				.requestform form#quote-form.tq-form .tq-form-title-color{
-					background-color: '.$title_background_color.' !important;
-				}
-				.requestform form#quote-form.tq-form .tq-form-bg-color{
-					background-color: '.$form_background_color.' !important;
-				}
+                .requestform form#quote-form.tq-form.tq-primary-color {
+                    color: '.$form_text_color.' !important;
+                }
+                .requestform form#quote-form.tq-form .tq-form-title-color{
+                    background-color: '.$title_background_color.' !important;
+                }
+                .requestform form#quote-form.tq-form .tq-form-bg-color{
+                    background-color: '.$form_background_color.' !important;
+                }
 
                 .tq-form .radio-label .checkmark {
                     background-color:  '.$form_text_color.' !important;
                 }
-				.requestform form#quote-form button.tq-button,
-				.woocommerce a.button,
-				.woocommerce button.button  {
-					background-color:  '.$form_text_color.' !important;
-					color: '.$form_background_color.' !important;
-				}
+                .requestform form#quote-form button.tq-button,
+                .woocommerce a.button,
+                .woocommerce button.button  {
+                    background-color:  '.$form_text_color.' !important;
+                    color: '.$form_background_color.' !important;
+                }
                 .
-			</style>';
+            </style>';
     }
 
     /*

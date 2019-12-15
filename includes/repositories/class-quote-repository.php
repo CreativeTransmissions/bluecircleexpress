@@ -4,11 +4,11 @@ ini_set('display_errors', 1);*/
 class TQ_QuoteRepository  
 {  
 
-	public function __construct($config = array()) { 
+    public function __construct($config = array()) { 
 
         $this->debug = true;
 
-    	//Apply passed conifg 
+        //Apply passed conifg 
         $defaults = array();
 
         $this->config = array_merge($defaults,$config);
@@ -160,10 +160,10 @@ class TQ_QuoteRepository
         if(empty($quote_id)){
             return false;          
         }; 
+
         $quote = $this->cdb->get_row('quotes', $quote_id);
         if ($quote === false) {
-            echo 'Could not load quote rec from database: '.$quote_id;
-            echo $this->cdb->last_query;
+            trigger_error('Could not load quote rec from database: '.$quote_id, E_USER_WARNING);                  
             return false;
         };
         $quote['stages'] = $this->load_quote_stages($quote_id);
@@ -174,7 +174,6 @@ class TQ_QuoteRepository
 
     public function load_quote_stages($quote_id = null){
         if(empty($quote_id)){
-            echo 'load_quote_stages: not quote_id';
             return false;          
         }; 
 
@@ -190,13 +189,12 @@ class TQ_QuoteRepository
 
         $quotes_stages = $this->cdb->query($sql);
         if (!is_array($quotes_stages)) {
-            echo 'Could not load quotes_stages: '.$quote_id;
             return false;
         };
         if (empty($quotes_stages)) {
-            echo 'Quote has no stages: '.$quote_id;
+            /*echo 'load_quote_stages: Quote has no stages: '.$quote_id;
             var_dump($quotes_stages);
-            echo $this->cdb->last_query;
+            echo $this->cdb->last_query;*/
             return false;            
         };        
         return $quotes_stages; 
