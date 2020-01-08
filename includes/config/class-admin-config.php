@@ -711,6 +711,27 @@ class Admin_Config {
                                                         'help'=>'If enabled, this option will use the Holiday rates set in the Rates tab whenever a booking data falls on one of the holidays set in the Holiday Dates tab.',
                                                         'default'=>0),
 
+                                                      'ref_prefix'=>array(
+                                                        'id'=>'ref_prefix',
+                                                        'label'=>'Job Reference Prefix',
+                                                        'type'=>'input',
+                                                        'help'=>'Enter prefix to append to the beginning of the job reference number which will be provided to the customer, such as: <b>TQ</b>12324',
+                                                        'default'=>''),
+
+                                                      'ref_length'=>array(
+                                                        'id'=>'ref_length',
+                                                        'label'=>'Job Reference Length',
+                                                        'type'=>'number',
+                                                        'help'=>'Enter the number of characters to which the reference number should be padded.<br/>Reference numbers will be padded with 0 to make up the length. i.e: 000123 is 6 digit reference number.<br/>The prefix is not included in the reference number length.',
+                                                        'default'=>''),
+
+                                                      'ref_random'=>array(
+                                                        'id'=>'ref_random',
+                                                        'label'=>'Random Job Reference',
+                                                        'type'=>'checkbox',
+                                                        'help'=>'When enabled a unique random number will be generated instead of a sequential number.',
+                                                        'default'=>0),
+
                                                       'show_deliver_and_return'=>array(
                                                         'id'=>'show_deliver_and_return',
                                                         'label'=>'Return To Collection Address',

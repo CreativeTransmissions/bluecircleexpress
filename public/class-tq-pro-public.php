@@ -432,7 +432,7 @@ class TransitQuote_Pro_Public {
         $month_pos = $date_pos = 'no'; //dummy value
         foreach ($month_symboles as $month_symbole) {
             $pos = stripos($date_format, $month_symbole);
-            if (($pos !== false)) {
+            if ($pos !== false) {
                 $month_pos = $pos;
                 break;
             }
@@ -1822,6 +1822,18 @@ class TransitQuote_Pro_Public {
         return  (bool)self::get_setting('', 'use_return_to_collection_rates', 0);
     }
 
+    public function get_job_ref_prefix() {
+        return  self::get_setting('', 'ref_prefix', '');
+    }    
+
+    public function get_job_ref_length() {
+        return  self::get_setting('', 'ref_length', '');
+    } 
+
+    public function get_job_ref_random() {
+        return  self::get_setting('', 'ref_random', '');
+    }
+
     public function calc_quote() {
         $this->stages_html = '<table><tr><th colspan="2">Itemized Quote</th><tr>';
 
@@ -2336,11 +2348,56 @@ class TransitQuote_Pro_Public {
         //To do: create a many to many address relationship with job with an order index
         //save job, passing id values not included in post data
 
-        $this->job = self::save('jobs', null, array('customer_id' => $this->customer['id'],
-            'accepted_quote_id' => $quote_id));
+
+
+        
+
+        $job_rec = array('customer_id' => $this->customer['id'],
+                         'accepted_quote_id' => $quote_id);
+
+        $ref_prefix = $this->get_job_ref_prefix();
+        $ref_length = $this->get_job_ref_length();
+        $ref_random = $this->get_job_ref_random();        
+        if($ref_random){
+            $ref_generator = new TransitQuote_Pro4\TQ_RefGenerator(array('cdb'=>$this->cdb,
+                                                                        'prefix'=>$ref_prefix,
+                                                                        'length'=>$ref_length,
+                                                                        'random'=>$ref_random));
+            $job_ref = $ref_generator->genearte_unique_ref();            
+            $job_rec['job_ref'] = $job_ref;
+
+            $this->job = self::save('jobs', null, $job_rec);
+            if(empty($this->job)){
+                return false;
+            };            
+        } else {
+
+            $this->job = self::save('jobs', null, $job_rec);
+            if(empty($this->job)){
+                return false;
+            };
+
+            $job_ref = $this->job['id'];
+
+            if(is_numeric($ref_length)){
+                //pad ref
+                $job_ref = str_pad($job_ref, $ref_length, '0', STR_PAD_LEFT);
+            };
+        
+            if($ref_prefix!=''){
+                $job_ref = $ref_prefix.$job_ref;
+            };
+
+        };
+
+        $job_rec['id'] = $this->job['id'];
+        $job_rec['job_ref'] = $job_ref;
+        $this->job = self::save('jobs', null, $job_rec);
         if(empty($this->job)){
             return false;
-        };
+        };            
+
+
 
         $this->job_id = $this->job['id'];
         

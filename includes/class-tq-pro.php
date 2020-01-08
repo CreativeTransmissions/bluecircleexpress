@@ -429,6 +429,11 @@ class TransitQuote_Pro4 {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/repositories/class-quote-repository.php';	
 
+		/**
+		 * The class responsible for generating ref numbers
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-ref-generator.php';	
+
 		$this->loader = new TransitQuote_Pro_Loader();
 	}
 	/**

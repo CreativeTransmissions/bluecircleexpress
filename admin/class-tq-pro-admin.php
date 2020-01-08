@@ -385,6 +385,7 @@ class TransitQuote_Pro_Admin {
 
 		$sql = "SELECT distinct	jobs.id,
     							jobs.id as job_id,
+    							job_ref,
     							status_type_id,
 								l.address as pick_up,
 								ld.address as drop_off,
