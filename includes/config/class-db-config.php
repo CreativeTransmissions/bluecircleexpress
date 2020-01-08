@@ -1030,6 +1030,15 @@ private function config_jobs(){
       'default' => '',
       'format' => '%d'
     ),
+    'job_ref' => 
+    array (
+      'name' => 'job_ref',
+      'type' => 'varchar(12)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),    
     'delivery_contact_name' => 
     array (
       'name' => 'delivery_contact_name',
@@ -1138,6 +1147,24 @@ private function config_jobs(){
       'default' => '',
       'format' => '%d'
     ),
+    'customer_reference' => 
+    array (
+      'name' => 'customer_reference',
+      'type' => 'varchar(256)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'weight' => 
+    array (
+      'name' => 'weight',
+      'type' => 'decimal(10,2)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%f'
+    ),    
     'created' => 
     array (
       'name' => 'created',
@@ -2131,7 +2158,7 @@ private function config_journeys_locations(){
       'default' => '',
       'format' => '%s',
     ),
-	'contact_phone' => 
+	 'contact_phone' => 
     array (
       'name' => 'contact_phone',
       'type' => 'varchar(45)',
@@ -2139,6 +2166,33 @@ private function config_journeys_locations(){
       'auto' => '',
       'default' => '',
       'format' => '%s',
+    ),
+  'collection_date' => 
+    array (
+      'name' => 'collection_date',
+      'type' => 'datetime',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'time_type' => 
+    array (
+      'name' => 'time_type',
+      'type' => 'varchar(32)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
+    ),
+    'visit_type' => 
+    array (
+      'name' => 'visit_type',
+      'type' => 'varchar(32)',
+      'null' => 'null',
+      'auto' => '',
+      'default' => '',
+      'format' => '%s'
     )
   ),
   'pk' => 'id',

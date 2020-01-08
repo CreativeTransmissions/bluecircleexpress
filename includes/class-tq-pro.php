@@ -908,6 +908,37 @@ class TransitQuote_Pro4 {
 			$cdb->add_column('quotes',$col_def);
 		}
 
+		if(!$cdb->col_exists('jobs','weight')){
+			$col_def = array('name'=>'weight',
+						      'type' => 'decimal(10,2)',
+						      'null' => 'null',
+						      'default' => '',
+						      'format' => '%f',
+							  'after'=>'after service_id');
+			$cdb->add_column('jobs',$col_def);
+		}		
+
+		if(!$cdb->col_exists('jobs','customer_reference')){
+			$col_def = array('name'=>'customer_reference',
+						      'type' => 'varchar(256)',
+						      'null' => 'null',
+						      'default' => '',
+						      'format' => '%s',
+							  'after'=>'after service_id');
+			$cdb->add_column('jobs',$col_def);
+		}
+
+		if(!$cdb->col_exists('jobs','job_ref')){
+			$col_def = array('name' => 'job_ref',
+					       'type' => 'varchar(12)',
+					       'null' => 'null',
+					       'auto' => '',
+					       'default' => '',
+					       'format' => '%s',
+					       'after'=>'after id');
+			$cdb->add_column('jobs',$col_def);
+		}
+
 		if(!$cdb->col_exists('journeys','optimize_route')){
 			$col_def = array('name'=>'optimize_route',
 						     'type' => 'tinyint(1)',
@@ -957,7 +988,37 @@ class TransitQuote_Pro4 {
 							'after'=>'after journey_id');
 			$cdb->add_column('journeys_locations',$col_def);
 		}
+
+		if(!$cdb->col_exists('journeys_locations','collection_date')){
+			$col_def = array('name' => 'collection_date',
+						     'type' => 'datetime',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							'after'=>'after contact_phone');
+			$cdb->add_column('journeys_locations',$col_def);
+		}		
 		
+		if(!$cdb->col_exists('journeys_locations','time_type')){
+			$col_def = array( 'name' => 'time_type',
+						      'type' => 'varchar(32)',
+						      'null' => 'null',
+						      'auto' => '',
+						      'default' => '',
+							'after'=>'after collection_date');
+			$cdb->add_column('journeys_locations',$col_def);
+		}
+
+		if(!$cdb->col_exists('journeys_locations','visit_type')){
+			$col_def = array('name' => 'visit_type',
+						     'type' => 'varchar(32)',
+						     'null' => 'null',
+						     'auto' => '',
+						     'default' => '',
+							 'after'=>'after collection_date');
+			$cdb->add_column('journeys_locations',$col_def);
+		}		
+
 		if(!$cdb->col_exists('locations','place_id')){
 			$col_def = array('name' => 'place_id',
 						     'type' => 'varchar(256)',
