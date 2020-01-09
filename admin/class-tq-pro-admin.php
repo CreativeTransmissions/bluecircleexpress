@@ -896,6 +896,7 @@ class TransitQuote_Pro_Admin {
 									'fields'=>array(
 													'status_type_id',
 													'id as job_id',
+													'job_ref',
 													'created',
 													'c.last_name as last_name',
 													'l.address as pick_up',
@@ -920,6 +921,7 @@ class TransitQuote_Pro_Admin {
 										)
 										
 									),
+									'classes'=>array('job_id'=>'hidden'),
 									'inputs'=>false,
 									'table'=>'jobs',
 									'actions'=>array('Delete'),

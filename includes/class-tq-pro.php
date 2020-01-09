@@ -1247,4 +1247,17 @@ class TransitQuote_Pro4 {
 	public function delete_orphaned_rates(){
 		$this->plugin_public->delete_orphaned_rates();
 	}
+
+	public function update_job_ref($cdb){
+
+        $jobs_table_name = $cdb->get_table_full_name('jobs');
+
+        // update new job ref column with new format
+        $sql = "update ".$jobs_table_name . " j
+					set job_ref = id
+					where job_ref is null;";
+        //echo $sql;
+        $success = $cdb->query($sql);
+        return $success;
+	}
 }

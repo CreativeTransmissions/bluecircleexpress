@@ -21,7 +21,8 @@
 	<table id="jobs_table" class="settings-table">
 		<thead>
 			<tr><th>Status</th>
-			<th data-sortby='id' data-order='DESC'>Ref<span class="sorting"></span></th>
+			<th data-sortby='id' data-order='DESC' class="hidden">ID<span class="sorting"></span></th>
+			<th data-sortby='job_ref' data-order='DESC'>Job Ref<span class="sorting"></span></th>			
 			<th data-sortby='created' data-order='DESC'>Received<span class="sorting"></span></th>
 			<th data-sortby='name' data-order='ASC'>Customer Name<span class="sorting"></span></th>
 			<th data-sortby='pick_up' data-order='ASC'>Collection Address<span class="sorting"></span></th>

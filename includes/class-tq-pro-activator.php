@@ -50,6 +50,8 @@ class TransitQuote_Pro_Activator {
 		$plugin->update_default_data($cdb);
 		$plugin->delete_orphaned_rates();
 		self::add_cap();
+		$plugin->update_job_ref($cdb);
+		
 	}
 
 	private static function add_cap(){
