@@ -9,6 +9,42 @@
                         <i class="icon icon-icn-collection-address"></i><?php echo $this->view_labels['collection_address_label']; ?>
                     </span>
                     <div class="address-wrap">
+                        <div class="tq-row">
+                            <div class="half left">
+                                <span class="sub_title">Purpose of visit</span>
+                                <div class="bt-flabels__wrapper select-wrap">
+                                    <select class="visit_type" name="address_0_visit_type" id="address_0_visit_type">
+                                        <option>Collection</option>
+                                        <option>Delivery</option>
+                                        <option>Collection and Delivery</option>
+                                    </select>
+                                </div>       
+                            </div>
+                            <div class="half right">
+                                <span class="sub_title"><span class="address-type-subtitle">Collection</span> Time</span>
+                                <div class="bt-flabels__wrapper select-wrap">
+                                    <select class="time_type" name="address_0_time_type" id="address_0_time_type">
+                                        <option>ASAP</option>
+                                        <option class="address-type-subtitle">Collection At</option>
+                                        <option class="address-type-subtitle">Collection By</option>
+                                    </select>
+                                </div>       
+                            </div>                    
+                        </div>
+                        <div class="tq-row optional-date-time" style="display: none;">
+                        <?php if($this->ask_for_collection_date_per_address){ ?>    
+                            <div class="coll_date_wrap bt-flabels__wrapper">
+                                <input name="address_0_collection_date" id="address_0_collection_date" data-parsley-trigger="select change" required readonly="" class="left collection_date dateclass placeholderclass datepicker" type="text" placeholder="<?php echo self::get_setting('tq_pro_form_options','collection_date_label', 'Collection Date'); ?>">
+                                <span class="bt-flabels__error-desc">Required / Invalid <?php echo self::get_setting('tq_pro_form_options','collection_date_label', 'Collection Date'); ?></span>
+                            </div>
+                        <?php } ?>
+                        <?php if($this->ask_for_collection_time_per_address){ ?>
+                            <div class="coll_time_wrap bt-flabels__wrapper">
+                                <input class="right collection_time dateclass placeholderclass timepicker" readonly="" type="text" data-parsley-trigger="select change" placeholder="<?php echo self::get_setting('tq_pro_form_options','collection_time_label', 'Collection Time'); ?>" name="address_0_collection_time" id="address_0_collection_time" required>
+                                <span class="bt-flabels__error-desc">Required / Invalid <?php echo self::get_setting('tq_pro_form_options','collection_time_label', 'Collection Time'); ?></span>
+                            </div>
+                        <?php } ?>
+                    </div>  
                         <span class="transit_noadress"><a href="#" class="no-address no-address-1"><?php echo $this->view_labels['cant_find_address_text']; ?></a></span>
                         <div class="bt-flabels__wrapper full">
                             <input tabindex="10" class="text addresspicker" required type="text" name="address_1_address" id="address_1" value="" autocomplete="false" placeholder = "<?php echo $this->view_labels['collection_address_label']; ?>"/>
@@ -42,7 +78,30 @@
                             <div class="destination_title_wrap">
                                 <span class="sub_title">
                                     <i class="icon icon-icn-collection-address"></i><?php echo $this->view_labels['destination_address_label']; ?>
-                                </span>                    
+                                </span>
+                                <div class="tq-row">
+                                    <div class="half left">
+                                        <span class="sub_title"></i>Purpose of visit</span>
+                                        <div class="bt-flabels__wrapper select-wrap">
+                                            <select class="visit_type" name="address_1_visit_type" id="address_1_visit_type">
+                                                <option>Collection</option>
+                                                <option selected="selected">Delivery</option>
+                                                <option>Collection and Delivery</option>
+                                            </select>
+                                        </div>       
+                                    </div>
+                                    <div class="half right">
+                                        <span class="sub_title"><span class="address-type-subtitle">Delivery</span> Time</span>
+                                        <div class="bt-flabels__wrapper select-wrap">
+                                            <select class="time_type" name="address_1_time_type" id="address_1_time_type">
+                                                <option>ASAP</option>
+                                                <option class="address-type-subtitle">Delivery At</option>
+                                                <option class="address-type-subtitle">Delivery By</option>
+                                            </select>
+                                        </div>       
+                                    </div>                    
+                                </div>
+                                <?php include( "date_time.php" );?>                       
                                 <a href="#" class="transit_noadress no-address no-address-2"><?php echo $this->view_labels['cant_find_address_text']; ?></a>
                             </div>
                             <div class="full bt-flabels__wrapper">
