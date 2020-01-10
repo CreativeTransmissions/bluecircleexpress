@@ -105,7 +105,7 @@ class TransitQuote_Pro_Public {
          * class.
          */
 
-        $this->theme = self::get_setting('tq_pro_form_options', 'form_theme', 'classic');
+        $this->theme = self::get_form_theme();
         wp_enqueue_style($this->plugin_slug . '-calc-styles', plugins_url('js/js-transitquote/css/map-quote-calculator.css', __FILE__), array(), $this->version);
         wp_enqueue_style($this->plugin_slug . '-jqueryui-styles', plugins_url('css/jquery-ui.css', __FILE__), array(), $this->version);
         wp_enqueue_style($this->plugin_slug . '-timepicker-styles', plugins_url('css/jquery-ui-timepicker-addon.css', __FILE__), array(), $this->version);
@@ -1097,10 +1097,15 @@ class TransitQuote_Pro_Public {
             $this->build_form_include_list_popup();
             $this->view = 'partials/tq-pro-popup-view.php';
         };
-        $this->theme = self::get_setting('tq_pro_form_options', 'form_theme', 'light');
+        $this->theme = self::get_form_theme();
         ob_start();
         include $this->view;
         return ob_get_clean();
+    }
+
+    public function get_form_theme(){
+        $theme_name = self::get_setting('tq_pro_form_options', 'form_theme', 'light');
+        return str_replace(' ', '_', $theme_name);
     }
 
     public function get_default_service() {

@@ -108,7 +108,7 @@ class Admin_Config {
                                                         'id'=>'form_theme',
                                                         'label'=>'Form Theme',
                                                         'type'=>'select',
-                                                        'options'=>array('Classic', 'Light'),
+                                                        'options'=>array('Classic', 'Light', 'Blue Circle'),
                                                         'default'=>'Light',
                                                         'help'=>'Please select a theme to change the appearance of the order form.'),
                                                       'form_header_color' => array(
