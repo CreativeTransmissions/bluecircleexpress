@@ -450,8 +450,8 @@
 					this.editForm = $('#edit_area_form')[0];
 					this.editTable = $('#areas_table')[0];
 
-					this.editRecordMessage = 'Editing Area';
-					this.newRecordMessage = 'Draw New Area'
+					this.editRecordMessage = 'Editing Zone';
+					this.newRecordMessage = 'Draw New Zone'
 
 					//Clear / New Area
 					$('#clear_area').on('click', function(e){

@@ -2,7 +2,7 @@
 <?php do_settings_sections( 'areas' ); ?>
 <form class="admin-form tq-admin-form box-form round" id="edit_area_form" method="post" autocomplete="false">
 	<fieldset>
-		<legend>Add a new area by entering the details below:</legend>
+		<legend>Add a new zone by entering the details below:</legend>
 		
 		<div class="row row-areas">
 			<div class="inline-field">
@@ -22,7 +22,7 @@
 
 	<div class="buttons">
 		<div class="inline-field">
-			<?php submit_button('Save area', 'primary', 'save_area', true, array('class'=>'submit')); ?>
+			<?php submit_button('Save Zone', 'primary', 'save_area', true, array('class'=>'submit')); ?>
 		</div>
 		<div class="inline-field">
 			<?php submit_button('Clear Form', 'primary', 'clear_area', true, array('class'=>'submit')); ?>

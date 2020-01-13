@@ -1182,7 +1182,8 @@ class TransitQuote_Pro_Admin {
 					return '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no jobs with the selected status in the database.</td></tr>';				
 				break;
 			case 'areas':
-				$empty_colspan = 2;
+				$empty_colspan = 3;
+					return '<tr><td colspan="'.$empty_colspan.'" class="empty-table">There are no zones in the database yet.</td></tr>';
 				break;				
 			case 'customers':
 				$empty_colspan = 4;
