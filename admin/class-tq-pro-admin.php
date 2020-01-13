@@ -830,6 +830,10 @@ class TransitQuote_Pro_Admin {
 			case 'areas':
 
 				$area_data = $this->plugin->get_areas();
+				if(count($area_data)==0){
+					// if not data return empty message
+					return self::render_empty_table($table);
+				};
 
 				$defaults = array(
 					'table'=>'areas',
@@ -957,6 +961,10 @@ class TransitQuote_Pro_Admin {
 			case 'surcharges':
 
 				$surcharges_data = $this->plugin->get_surcharges_except_weight();
+				if(count($surcharges_data)==0){
+					// if not data return empty message
+					return self::render_empty_table($table);
+				};
 
 				$defaults = array(
 					'table'=>'surcharges',

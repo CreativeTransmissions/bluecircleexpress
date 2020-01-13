@@ -71,6 +71,10 @@ input.wide {
 	margin: 0;
 	display: block;
 }
+
+.tq-admin-form .inline-field select[name="surcharge_id"] {
+	min-width: 10em;
+}
 .tq-admin-form .service-filters{
 	margin-bottom: 1em;
 }

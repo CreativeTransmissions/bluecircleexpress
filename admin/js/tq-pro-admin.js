@@ -912,7 +912,7 @@
 							resizable: false,
 							modal: true,
 							buttons: {
-								"Delete Request": function() {
+								"Delete": function() {
 									$( this ).dialog( "close" );
 									
 									//Get record id

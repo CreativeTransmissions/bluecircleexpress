@@ -185,6 +185,8 @@
 					dropOfLng: 'address_1_lng',
 
 					restrictToCountry: this.settings.data.restrict_to_country,
+					showSurchargeZones: this.settings.data.show_surcharge_zones,
+
 					countryCode: this.settings.data.country_code,
 					searchRadius: this.settings.data.search_radius,
 					//This will override the template in map-quote-calculator.js and can be used to change the html for dynamically added destinations
@@ -614,8 +616,10 @@
 	                surchargeName: polygon.surcharge_name
 	            });
 
-	         //   var map = this.calculator.getMap();
-			  //  polygon.setMap(map);
+	            if(this.settings.data.show_surcharge_zones  ==='true') {
+		            var map = this.calculator.getMap();
+				    polygon.setMap(map);
+	            };
 
 			    this.polygons.push(polygon);
 			},

@@ -4040,7 +4040,7 @@ class TransitQuote_Pro_Public {
 
     public function render_surcharge_options($selected_id = 1) {
         // get list of vehicles from db
-        $surcharges = $this->get_surcharges();
+        $surcharges = $this->get_surcharges_except_weight();
         return $this->render_select_options($surcharges, $selected_id);
     }
 
