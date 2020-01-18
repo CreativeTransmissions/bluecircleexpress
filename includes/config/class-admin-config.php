@@ -572,6 +572,12 @@ class Admin_Config {
                                                       'label'=>'Search Radius',
                                                       'type'=>'number',
                                                       'help'=>'Restrict search results to within a radius of your business address.'),
+                                                     'show_surcharge_zones'=>array(
+                                                      'id'=>'show_surcharge_zones',
+                                                      'label'=>'Show Surcharge Zones',
+                                                      'type'=>'checkbox',
+                                                      'default'=>0,
+                                                      'help'=>'When this box is checked, you will see Surcharge Zones on the customer facing Google Map. This is useful for testing your surcharge zones'),
                                                     'pick_start_address'=>array(
                                                       'id'=>'pick_start_address',
                                                       'label'=>'Include distance from business address in quote.',

@@ -361,31 +361,6 @@
 					});
 				},
 
-				initAreaTabEvents: function(){
-					var that = this;
-					//set form to read/populate
-					this.editForm = $('#edit_customer_form')[0];
-					this.editTable = $('#customers_table')[0];
-
-					this.editRecordMessage = 'Editing Customer Details';
-					this.newRecordMessage = 'Enter New Customer Details'
-
-					//Clear / New Plaza
-					$('#clear_customer').on('click', function(e){
-						e.preventDefault();
-						that.clearForm(this);
-						that.updateLegend(that.editForm, that.newRecordMessage);
-					});
-
-					//Save Plaza
-					$(this.editForm).on('submit',function(e) {
-					    e.preventDefault();
-					    that.spinner(true);
-					    that.saveRecord(this);
-					});
-					
-				},
-
 				initCustomersTabEvents: function(){
 					var that = this;
 					//set form to read/populate
@@ -473,10 +448,10 @@
 
 					//set form to read/populate
 					this.editForm = $('#edit_area_form')[0];
-					this.editTable = $('#area_table')[0];
+					this.editTable = $('#areas_table')[0];
 
-					this.editRecordMessage = 'Editing Area';
-					this.newRecordMessage = 'Draw New Area'
+					this.editRecordMessage = 'Editing Zone';
+					this.newRecordMessage = 'Draw New Zone'
 
 					//Clear / New Area
 					$('#clear_area').on('click', function(e){
@@ -937,7 +912,7 @@
 							resizable: false,
 							modal: true,
 							buttons: {
-								"Delete Request": function() {
+								"Delete": function() {
 									$( this ).dialog( "close" );
 									
 									//Get record id
@@ -1512,6 +1487,7 @@
 							that.updateLegend(that.editTable, that.newRecordMessage);
 							if(response.id){
 								//update row
+								console.log('editTable: '+that.editTable)
 								if(that.editTable){
 									var row = $(that.editTable).find('tr[data-id="'+response.id+'"]');
 									$(row).replaceWith(response.html);								

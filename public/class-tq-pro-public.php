@@ -343,6 +343,7 @@ class TransitQuote_Pro_Public {
         $this->destination_address_label = $this->get_setting('', 'destination_address_label', 'Destination Address');
         $this->show_contact_number = (bool) $this->get_setting('', 'show_contact_number', false);
         $this->restrict_to_country = (bool) $this->get_setting('', 'restrict_to_country', false);
+        $this->show_surcharge_zones = (bool) $this->get_setting('', 'show_surcharge_zones', false);
 
         $this->destination_address_label = $this->get_setting('', 'destination_address_label', 'Destination Address');
         $this->insert_dest_link_text = $this->get_setting('', 'insert_destination_link', '+ Insert Destination');
@@ -358,6 +359,7 @@ class TransitQuote_Pro_Public {
             'ask_for_postcode' => self::bool_to_text($this->ask_for_postcode),
             'country_code' => $this->country_code,
             'restrict_to_country' => self::bool_to_text($this->restrict_to_country),
+            'show_surcharge_zones'=>self::bool_to_text($this->show_surcharge_zones),
             'search_radius' => $this->search_radius,
             'destination_address_label' => $this->destination_address_label,
             'show_contact_name' => self::bool_to_text($this->show_contact_name),
@@ -4043,7 +4045,7 @@ class TransitQuote_Pro_Public {
 
     public function render_surcharge_options($selected_id = 1) {
         // get list of vehicles from db
-        $surcharges = $this->get_surcharges();
+        $surcharges = $this->get_surcharges_except_weight();
         return $this->render_select_options($surcharges, $selected_id);
     }
 
