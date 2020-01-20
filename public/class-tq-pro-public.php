@@ -132,6 +132,7 @@ class TransitQuote_Pro_Public {
         self::get_plugin_settings();
 
         $tq_settings = self::get_settings_for_js();
+        $theme_js_file_name = self::get_theme_js_file();
 
         self::dequeue_maps(); // uncomment to debug multiple maps installs
 
@@ -144,6 +145,10 @@ class TransitQuote_Pro_Public {
         wp_enqueue_script($this->plugin_slug . '-picker-date', plugins_url('js/picker.date.js', __FILE__), array('jquery', $this->plugin_slug . '-picker'), '', True);
         wp_enqueue_script($this->plugin_slug . '-picker-time', plugins_url('js/picker.time.js', __FILE__), array('jquery', $this->plugin_slug . '-picker-date'), '', True);
         wp_enqueue_script($this->plugin_slug . '-picker-legacy', plugins_url('js/legacy.js', __FILE__), array('jquery', $this->plugin_slug . '-picker-time'), '', True);
+
+        if(is_string($theme_js_file_name)){
+            wp_enqueue_script($this->plugin_slug . '-ThemeFunctions', $theme_js_file_name, array($this->plugin_slug . '-picker-time'), '', True);            
+        };
 
         wp_enqueue_script($this->plugin_slug . '-FormReader', plugins_url('js/js-transitquote/classes/class.tq.FormReader.js', __FILE__), array('jquery', $this->plugin_slug . '-jqui', $this->plugin_slug . '-jqui-maps'), '', True);
 
@@ -199,6 +204,16 @@ class TransitQuote_Pro_Public {
         wp_enqueue_script($this->plugin_slug . '-plugin-script', plugins_url('js/public-main.js', __FILE__), array($this->plugin_slug . '-tq-pro'), $this->version, true);
         wp_localize_script($this->plugin_slug . '-plugin-script', 'TransitQuoteProSettings', $tq_settings);
 
+    }
+
+    public function get_theme_js_file(){
+        $theme_js_file_name = plugin_dir_url(__FILE__) . 'themes/' . strtolower($this->theme) . '/js/theme.js' ;
+       /* if(!file_exists($theme_js_file_name)){
+            echo $theme_js_file_name . 'does not exist.';
+            return false;
+        };*/
+
+        return $theme_js_file_name;
     }
 
     public function get_plugin_settings() {

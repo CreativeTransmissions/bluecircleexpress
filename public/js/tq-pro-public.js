@@ -30,8 +30,13 @@
 		}
 
 		Plugin.prototype = {
+
 			/* initialization code */
 			init: function () {	
+
+				if(!this.initTheme()){
+					return false;
+				};
 			
 				if(!this.initData()){
 					return false;
@@ -44,6 +49,19 @@
 					return false
 				};
 			},
+
+			initTheme: function(){
+				console.log('initTheme');
+				if(!$.fn.ThemeFunctions){
+					console.log('theme has no js file');
+					return true;
+				};
+
+				this.themeFuncs = new $.fn.ThemeFunctions({public: this});
+				
+				return true;
+			},
+			
 
 			initData: function(){
 				this.log('initData');
@@ -95,7 +113,7 @@
 			initUI: function () {					
 				this.initCalculator();
 				this.initTimePicker();
-				this.initDatePicker();				
+				//this.initDatePicker();				
 				this.initParsleyValidation();
 				this.initPolygons();
 				$('.notice-field').hide();
@@ -226,6 +244,11 @@
                     		html += '</div>';
 
 						return html;
+					},
+
+					afterInsertAddress: function(templateData){
+
+						return true;
 					},
 
 					afterQuote: function(quoteData){

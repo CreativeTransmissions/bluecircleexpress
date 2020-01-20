@@ -9,7 +9,8 @@
                         <div class="destination_wrap">
                             <div class="destination_title_wrap">
                                 <span class="sub_title">
-                                    <i class="icon icon-icn-collection-address"></i><?php echo $this->view_labels['destination_address_label']; ?>
+                                    <i class="icon icon-icn-collection-address"></i>
+                                    <span class="address-type-subtitle"><?php echo $this->view_labels['destination_address_label']; ?></span>
                                 </span>                    
                                 <a href="#" class="transit_noadress no-address no-address-1"><?php echo $this->view_labels['cant_find_address_text']; ?></a>
                             </div>
