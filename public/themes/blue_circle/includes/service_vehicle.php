@@ -76,7 +76,7 @@ if (!((empty($get_services_by_id)) && (empty($get_services_with_rates_by_id)))) 
 					<input tabindex="7" name="service_id" id="service_id" value="<?php echo($attributes['service']);?>" type="hidden">
 				<?php }else{ ?>
 					<div class="left full">
-						<span class="sub_title"><i class="icon icon-icn-service"></i><?php echo $this->view_labels['service_id']; ?></span>
+						<span class="sub_title"><i class="icon icon-icn-service"></i><?php echo $this->view_labels['service_label']; ?></span>
 						<div class="bt-flabels__wrapper select-wrap">
 							<select tabindex="7" name="service_id" id="service_id">
 							<?php $this->render_service_options_with_rates(); ?>
