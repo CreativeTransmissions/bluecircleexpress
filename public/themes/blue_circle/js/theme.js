@@ -262,18 +262,100 @@
 
 			},
 
-			afterInsertAddress: function(){
+			afterInsertAddress: function(templateData){
 				var timepickerSelector = 'input[name="address_'+templateData.idx+'_collection_time"]';
 				var elExists = $(timepickerSelector);
 				if(elExists.length>0){						
-					that.initNewTimePicker(timepickerSelector);
+					this.initNewTimePicker(timepickerSelector);
 				};
 
 				var datepickerSelector = 'input[name="address_'+templateData.idx+'_collection_date"]';
 				var elExists = $(datepickerSelector);
 				if(elExists.length>0){							
-					that.initNewDatePicker(datepickerSelector);
+					this.initNewDatePicker(datepickerSelector);
 				};			
+			},
+
+			getCalcConfig: function(){
+				return {
+					addressPickerTemplate: function(data){
+						if(!data.idx){
+							return false;
+						};
+						
+						var idx = data.idx;
+
+                        	var html = '<span class="sub_title tq-primary-color">';
+                        		html += '	<i class="icon icon-icn-destination-address"></i>';
+                        		html += '	<span class="address-type-subtitle">'+TransitQuoteProSettings.destination_address_label+'</span></span>';
+                        		html += '	<a href="#" class="remove-address no-address-'+idx+'">'+TransitQuoteProSettings.remove_dest_link_text+'</a>';
+	                    	    html += '<div class="address-wrap"><div class="tq-row">';
+	                    		html += '	<div class="half left">';
+	                         	html += '		<span class="sub_title">Purpose of visit</span>';
+	                         	html += '		<div class="bt-flabels__wrapper select-wrap">';
+	                            html += '			<select class="visit_type" name="address_'+idx+'_visit_type" id="address_'+idx+'_visit_type">';
+	                            html += '				<option>Collection</option>';
+	                            html += '				<option selected="selected">Delivery</option>';
+	                            html += '				<option>Collection and Delivery</option>';
+	                            html += '			</select>';
+	                         	html += '		</div>';
+	                     		html += '	</div>';
+			                    html += '	<div class="half right">';
+			                    html += '		<span class="sub_title"><span class="address-type-subtitle">Delivery</span> Time</span>';
+			                    html += '		<div class="bt-flabels__wrapper select-wrap">';
+			                    html += '   		<select class="time_type" name="address_'+idx+'_time_type" id="address_'+idx+'_time_type">';
+			                    html += '       		<option>ASAP</option>';
+			                    html += '       		<option class="address-type-subtitle">Delivery At</option>';
+			                    html += '       		<option class="address-type-subtitle">Delivery By</option>';
+			                    html += '   		</select>';
+			                    html += '		</div>';
+			                    html += '	</div>';              
+			                    html += '</div>';						
+								html += '<div class="tq-row optional-date-time" style="display: none;">';
+
+								html += '<div class="coll_date_wrap bt-flabels__wrapper">';
+			                    html += '	<input name="address_' + idx + '_collection_date" id="address_' + idx + '_collection_date" data-parsley-trigger="select change" required readonly="" class="left collection_date dateclass placeholderclass datepicker" type="text" placeholder="Collection Date">';
+			                    html += '	<span class="bt-flabels__error-desc">Required / Invalid </span>';
+			                    html += '</div>';
+								html += '	<div class="coll_time_wrap bt-flabels__wrapper">';
+			                    html += '        <input name="address_' + idx + '_collection_time" class="right collection_time dateclass placeholderclass timepicker" readonly="" type="text" data-parsley-trigger="select change" placeholder="Collection Time" id="address_' + idx + '_collection_time" required>';
+			                    html += '        <span class="bt-flabels__error-desc">Required / Invalid </span>';
+			                    html += '   </div>';
+	                    		html += '	</div>';
+
+							html += '	<div class="field bt-flabels__wrapper full-width full">';
+                        	html += '		<span class="transit_noadress"><a href="#" class="no-address no-address-'+idx+'">'+TransitQuoteProSettings.cant_find_address_text+'</a></span>';
+                        	html += '		<input class="text addresspicker" required type="text" name="address_'+idx+'_address" id="address_'+idx+'" value="" autocomplete="false" placeholder="'+TransitQuoteProSettings.destination_address_label+'"/>';
+                        	html += '		<span class="bt-flabels__error-desc">Required '+TransitQuoteProSettings.destination_address_label+'</span>';
+							html += '	</div>';
+							if(TransitQuoteProSettings.ask_for_unit_no === 'true'){
+	                    		html += '	<div class="inline-block bt-flabels__wrapper half left">';
+	                        	html += '		<input class="inline-block half-field" type="text" id="address_'+idx+'_appartment_no" name="address_'+idx+'_appartment_no" placeholder="'+data.unitNoLabel+'" value=""/>';
+								html += '	</div>';
+							};
+							if(TransitQuoteProSettings.ask_for_postcode === 'true'){
+	                    		html += '	<div class="inline-block bt-flabels__wrapper half right last-address-field">';
+	                        	html += '		<input class="inline-block postcode half-field half-field-right" type="text" id="address_'+idx+'_postal_code" name="address_'+idx+'_postal_code" placeholder="'+TransitQuoteProSettings.postal_code_label+'" value=""/>';
+	                    		html += '	</div>';
+	                    	};
+							if(TransitQuoteProSettings.show_contact_name === 'true'){
+	                    		html += '	<div class="inline-block bt-flabels__wrapper half left last-address-field">';
+	                        	html += '		<input class="inline-block half-field" id="address_'+idx+'_contact_name" type="text" name="address_'+idx+'_contact_name" placeholder="'+TransitQuoteProSettings.contact_name_label+'" value=""/>';
+	                    		html += '	</div>';
+	                    	};
+							if(TransitQuoteProSettings.show_contact_number === 'true'){
+	                    		html += '	<div class="inline-block bt-flabels__wrapper half right last-address-field">';
+	                        	html += '		<input class="inline-block postcode half-field half-field-right" type="text" id="address_'+idx+'_contact_phone" name="address_'+idx+'_contact_phone" placeholder="'+TransitQuoteProSettings.contact_phone_label+'" value=""/>';
+	                    		html += '	</div>';
+	                    	};
+
+	                    	    
+	                    		html += '</div>';
+
+						return html;
+					}
+
+				}
 			}
 
 		

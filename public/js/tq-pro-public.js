@@ -122,8 +122,20 @@
 
 			initCalculator: function(){
 				var that = this;
+
+				var calcConfig = this.getDefaultCalcConfig();
+				var themeCalcConfig = this.getThemeCalcConfig();
+				if(themeCalcConfig){
+					calcConfig = $.extend(calcConfig, themeCalcConfig);
+				};
 				//Initialize Google Maps Quote Calculator jquery plugin
-				this.calculator = $('#map').mapQuoteCalculator({
+				this.calculator = $('#map').mapQuoteCalculator(calcConfig);
+			},
+
+			getDefaultCalcConfig: function(){
+				var that = this;
+				
+				return {
 					routeType: this.settings.data.route_type,
 					ajaxUrl: TransitQuoteProSettings.ajaxurl,
 					debug: this.settings.debug,
@@ -247,7 +259,7 @@
 					},
 
 					afterInsertAddress: function(templateData){
-
+						that.themeFuncs.afterInsertAddress(templateData);
 						return true;
 					},
 
@@ -261,7 +273,15 @@
 
 					}
 
-				});
+				};
+			},
+
+			getThemeCalcConfig: function(){
+				if(!this.themeFuncs){
+					return false;
+				};
+
+				return this.themeFuncs.getCalcConfig();
 			},
 					
 			callbackChangeServiceId: function(serviceId){
