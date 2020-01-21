@@ -164,7 +164,7 @@
 
 				if(this.public.validateGetQuote()){
 					this.public.updateFormAction('tq_pro4_get_quote');
-					this.public.submitForm('get_quote');
+					this.public.submitFormGetQuote('get_quote');
 				};
 			},
 

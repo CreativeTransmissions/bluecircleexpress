@@ -960,7 +960,7 @@
 				var deliveryTime = $('input[name="delivery_time"]').val();
 				if(deliveryTime === ''){
 					this.log('deliveryTime empty');
-					return false;
+					return true;
 				};
 
 				var deliveryDate = $('input[name="delivery_date"]').val();

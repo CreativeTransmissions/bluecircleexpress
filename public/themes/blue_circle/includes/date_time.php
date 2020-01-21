@@ -7,7 +7,7 @@
     <?php } ?>
 	<?php if($this->ask_for_time){ ?>
 	    <div class="coll_time_wrap bt-flabels__wrapper">
-	    	<input class="right collection_time dateclass placeholderclass timepicker" readonly="" type="text" data-parsley-trigger="select change" placeholder="<?php echo self::get_setting('tq_pro_form_options','collection_time_label', 'Delivery Time'); ?>" name="delivery_time" id="delivery_time" required>
+	    	<input class="right collection_time dateclass placeholderclass timepicker" readonly="" type="text" data-parsley-trigger="select change" placeholder="<?php echo self::get_setting('tq_pro_form_options','collection_time_label', 'Delivery Time'); ?>" name="delivery_time" id="delivery_time">
 	    	<span class="bt-flabels__error-desc">Required / Invalid <?php echo self::get_setting('tq_pro_form_options','collection_time_label', 'Delivery Time'); ?></span>
 	    </div>
 	<?php } ?>
