@@ -70,19 +70,19 @@ class TQ_LabelFetcher {
         				'collection_address_label' => $this->public->get_setting('tq_pro_form_options','collection_address_label', 'Collection Address'),
         				'destination_address_label' => $this->public->get_setting('tq_pro_form_options','destination_address_label', 'Destination Details'),
         				'cant_find_address_text'=> $this->public->get_setting('tq_pro_form_options', 'cant_find_address_text','I can&#39;t find my address.'),
-        				'first_name' => $this->public->get_setting('tq_pro_form_options','first_name_label', 'First Name'),
-        				'last_name' => $this->public->get_setting('tq_pro_form_options','last_name_label', 'Last Name'),
-        				'phone' => $this->public->get_setting('tq_pro_form_options','phone_label', 'Phone Number'),
-        				'email' => $this->public->get_setting('tq_pro_form_options','email_label', 'Email Address'),
-						'service_id' => $this->public->get_setting('tq_pro_form_options','service_label', 'Service'),
+        				'first_name_label' => $this->public->get_setting('tq_pro_form_options','first_name_label', 'First Name'),
+        				'last_name_label' => $this->public->get_setting('tq_pro_form_options','last_name_label', 'Last Name'),
+        				'phone_label' => $this->public->get_setting('tq_pro_form_options','phone_label', 'Phone Number'),
+        				'email_label' => $this->public->get_setting('tq_pro_form_options','email_label', 'Email Address'),
+						'service_label' => $this->public->get_setting('tq_pro_form_options','service_label', 'Service'),
 						'view_service_link_text' => $this->public->get_setting('tq_pro_form_options','view_service_link_text', 'View Service Details...'),						
-						'vehicle_id' => $this->public->get_setting('tq_pro_form_options','vehicle_label', 'Vehicle'),
+						'vehicle_label' => $this->public->get_setting('tq_pro_form_options','vehicle_label', 'Vehicle'),
 						'view_vehicle_link_text' => $this->public->get_setting('tq_pro_form_options','view_vehicle_link_text', 'View Vehicle Details...'),						
 
 						'journey_title' => $this->public->get_setting('tq_pro_form_options','journey_title', ''),
 						'payment_info_header' => $this->public->get_setting('tq_pro_form_options','payment_info_header', ''),
-						'distance' => $this->public->get_setting('tq_pro_form_options','distance_label', ''),						
-						'time' => $this->public->get_setting('tq_pro_form_options','time_label', ''),
+						'distance_label' => $this->public->get_setting('tq_pro_form_options','distance_label', ''),						
+						'time_label' => $this->public->get_setting('tq_pro_form_options','time_label', ''),
 						'optimize_route_label' => $this->public->get_setting('tq_pro_form_options','optimize_route_label', ''),
 						'deliver_and_return_label' => $this->public->get_setting('tq_pro_form_options','deliver_and_return_label', ''),
 						'appartment_no' => $this->public->get_setting('tq_pro_form_options','appartment_no_label', ''),
@@ -176,7 +176,9 @@ class TQ_LabelFetcher {
 						'date_and_time_title' => $this->public->get_setting('tq_pro_form_options','date_and_time_title', 'Date and Time'),
 						'delivery_cost_label' => $this->public->get_setting('tq_pro_form_options','delivery_cost_label', 'Delivery Cost'),
 						'total_cost_label' => $this->public->get_setting('tq_pro_form_options','total_cost_label', 'Total Cost'),
-						'tax_name' => $this->public->get_setting('tq_pro_form_options','tax_name', 'VAT')						
+						'tax_name' => $this->public->get_setting('tq_pro_form_options','tax_name', 'VAT'),
+						'dispatch_stage_label'=>'Dispatch',
+                    	'standard_stage_label'=>'Standard'				
         			);
 	}
 
@@ -225,7 +227,9 @@ class TQ_LabelFetcher {
 						'date_and_time_title' => $this->public->get_setting('tq_pro_form_options','date_and_time_title', 'Date and Time'),
 						'delivery_cost_label' => $this->public->get_setting('tq_pro_form_options','delivery_cost_label', 'Delivery Cost'),
 						'total_cost_label' => $this->public->get_setting('tq_pro_form_options','total_cost_label', 'Total Cost'),
-						'tax_name' => $this->public->get_setting('tq_pro_form_options','tax_name', 'VAT')						
+						'tax_name' => $this->public->get_setting('tq_pro_form_options','tax_name', 'VAT'),
+						'dispatch_stage_label'=>'Dispatch',
+                    	'standard_stage_label'=>'Standard'						
         			);
 	}	
 }

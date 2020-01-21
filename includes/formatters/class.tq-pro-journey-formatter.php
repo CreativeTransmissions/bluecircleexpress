@@ -103,19 +103,20 @@ class TQ_JourneyFormatter {
 		$value = $this->journey[$key];
         $field = array();
         $field['name'] = $key;
+        $label = $this->labels[$key.'_label'];        
         switch ($key) {
             case 'distance':
-                $field['label'] = $this->labels[$key].' (' . $this->distance_unit . 's)';
+                $field['label'] = $label.' (' . $this->distance_unit . 's)';
                 $field['value'] = number_format((float) $value, 2, '.', '');
                 $field['type'] = 'number';                
                 break;
             case 'time':
-                $field['label'] = $this->labels[$key].' (Hours)';
+                $field['label'] = $label.' (Hours)';
                 $field['value'] = number_format((float) $value, 2, '.', '');
                 $field['type'] = 'number';
                 break;            
             default:
-                $field['label'] = $this->labels[$key];
+                $field['label'] = $label;
                 $field['value'] = $value;
                 $field['type'] = 'text';
                 break;                

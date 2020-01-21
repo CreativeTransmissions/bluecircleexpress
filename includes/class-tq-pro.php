@@ -434,6 +434,17 @@ class TransitQuote_Pro4 {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tq-pro-ref-generator.php';	
 
+
+		$this->plugin_public = new TransitQuote_Pro_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_slug());		
+
+		$theme_name = $this->plugin_public->get_form_theme();
+
+		/**
+		 * The class responsible for generating ref numbers
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/themes/' . strtolower($theme_name) . '/config/class-theme-config.php';	
+
+
 		$this->loader = new TransitQuote_Pro_Loader();
 	}
 	/**

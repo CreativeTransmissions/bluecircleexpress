@@ -99,7 +99,7 @@ class TQ_CustomerFormatter {
 		
         $name = $key;        
 		$valueType = $this->format_value($key);
-        $label = $this->labels[$key];
+        $label = $this->labels[$key.'_label'];
 
 		$field = array('label'=>$label,
                         'name'=>$name,

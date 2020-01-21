@@ -109,7 +109,8 @@ class TQ_JobFormatter {
 	public function format_field($key){
         $name = $key;        
 		$valueType = $this->format_value($key);
-        $label = $this->labels[$key];
+        $label_name = str_replace('_id','_label', $key);
+        $label = $this->labels[$label_name];
 
 		$field = array('label'=>$label,
                         'name'=>$name,

@@ -2882,7 +2882,7 @@ class TransitQuote_Pro_Public {
                     $date = new DateTime();
                 };
 
-                $delivery_time = $this->ajax->param(array('name' => 'delivery_time_submit', 'optional' => !$this->ask_for_time));
+                $delivery_time = $this->ajax->param(array('name' => 'delivery_time_submit', 'optional' => true));
                 if (!empty($delivery_time)) {
                     $time_parts = explode(':', $delivery_time);
                     $hours = $time_parts[0];
